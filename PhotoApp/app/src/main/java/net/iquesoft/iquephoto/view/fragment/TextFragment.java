@@ -57,7 +57,7 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.text_layout, container, false);
+        View v = inflater.inflate(R.layout.fragment_text, container, false);
 
         unbinder = ButterKnife.bind(this, v);
 

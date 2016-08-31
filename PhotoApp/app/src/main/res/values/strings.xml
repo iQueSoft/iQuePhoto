@@ -64,7 +64,7 @@
     <string name="filter_normal">Normal</string>
     <string name="filter_gross_process">Gross Process</string>
 
-    <!-- For brash tool. -->
+    <!-- For brush tool. -->
     <string name="brush">Brush</string>
     <string name="brush_size">Brush Size</string>
 

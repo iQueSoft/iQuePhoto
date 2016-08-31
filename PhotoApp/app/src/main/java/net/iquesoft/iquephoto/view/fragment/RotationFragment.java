@@ -79,7 +79,7 @@ public class RotationFragment extends BaseFragment implements IRotationFragmentV
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.rotate_tool, container, false);
+        View v = inflater.inflate(R.layout.fragment_rotate, container, false);
 
         unbinder = ButterKnife.bind(this, v);
 

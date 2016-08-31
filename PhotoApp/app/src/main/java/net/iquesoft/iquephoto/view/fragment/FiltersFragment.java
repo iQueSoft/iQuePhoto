@@ -53,7 +53,7 @@ public class FiltersFragment extends BaseFragment implements IFiltersFragmentVie
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.filters_layout, container, false);
+        View v = inflater.inflate(R.layout.fragment_filters, container, false);
 
 
         unbinder = ButterKnife.bind(this, v);

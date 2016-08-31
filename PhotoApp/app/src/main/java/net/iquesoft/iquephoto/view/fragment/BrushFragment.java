@@ -51,7 +51,7 @@ public class BrushFragment extends BaseFragment implements IBrushFragmentView {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.brash_frag, container, false);
+        View v = inflater.inflate(R.layout.fragment_brush, container, false);
 
         unbinder = ButterKnife.bind(this, v);
 

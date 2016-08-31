@@ -5,15 +5,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import net.iquesoft.iquephoto.DataHolder;
-import net.iquesoft.iquephoto.PhotoEditorView;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseFragment;
 import net.iquesoft.iquephoto.di.components.IMainActivityComponent;
+import net.iquesoft.iquephoto.presenter.BrushFragmentPresenterImpl;
+import net.iquesoft.iquephoto.view.IBrushFragmentView;
 import net.iquesoft.iquephoto.view.dialog.ColorPickerDialog;
-import net.iquesoft.iquephoto.view.dialog.TextDialog;
-import net.iquesoft.iquephoto.presenter.TextFragmentPresenterImpl;
-import net.iquesoft.iquephoto.view.ITextFragmentView;
 
 import javax.inject.Inject;
 
@@ -21,32 +18,23 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-public class TextFragment extends BaseFragment implements ITextFragmentView {
-
-    private int color;
-
-    private Unbinder unbinder;
-
-    private PhotoEditorView photoEditorView;
-
-    private TextDialog textDialog;
-    private ColorPickerDialog colorPickerDialog;
+/**
+ * @author Sergey
+ */
+public class BrushFragment extends BaseFragment implements IBrushFragmentView {
 
     @Inject
-    TextFragmentPresenterImpl presenter;
+    BrushFragmentPresenterImpl presenter;
 
-    @OnClick(R.id.textColorButton)
-    public void onClickTextColorButton() {
-        colorPickerDialog.show();
-    }
+    private Unbinder unbinder;
+    private ColorPickerDialog colorPickerDialog;
 
-    @OnClick(R.id.textButton)
-    public void onClickTextButton() {
-        textDialog.show();
-    }
-
-    public static TextFragment newInstance() {
-        return new TextFragment();
+    public static BrushFragment newInstance() {
+        /*Bundle b = new Bundle();
+        b.putString("msg", text);
+        b.putString("color", color);
+        f.setArguments(b);*/
+        return new BrushFragment();
     }
 
     @Override
@@ -56,23 +44,20 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.text_layout, container, false);
-
-        unbinder = ButterKnife.bind(this, v);
-
-        photoEditorView = DataHolder.getInstance().getPhotoEditorView();
-
-        textDialog = new TextDialog(v.getContext());
-        colorPickerDialog = new ColorPickerDialog(v.getContext());
-
-        return v;
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         presenter.init(this);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.brash_frag, container, false);
+
+        unbinder = ButterKnife.bind(this, v);
+
+        colorPickerDialog = new ColorPickerDialog(v.getContext());
+
+        return v;
     }
 
     @Override
@@ -80,4 +65,10 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
         super.onDestroyView();
         unbinder.unbind();
     }
+
+    @OnClick(R.id.brushColorButton)
+    public void onClickBrushColor() {
+        colorPickerDialog.show();
+    }
+
 }

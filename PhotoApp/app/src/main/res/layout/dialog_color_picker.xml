@@ -139,7 +139,7 @@
     </GridLayout>
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/colorApplyButton"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -152,15 +152,15 @@
         android:theme="@style/FlatButton" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/colorCancelButton"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/button"
+        android:layout_alignTop="@+id/colorApplyButton"
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
-        android:layout_toLeftOf="@+id/button"
-        android:layout_toStartOf="@+id/button"
+        android:layout_toLeftOf="@+id/colorApplyButton"
+        android:layout_toStartOf="@+id/colorApplyButton"
         android:text="@string/cancel"
         android:theme="@style/FlatButton" />
 

@@ -4,7 +4,7 @@ import android.app.Fragment;
 import android.support.annotation.Nullable;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.view.fragment.BrashFragment;
+import net.iquesoft.iquephoto.view.fragment.BrushFragment;
 import net.iquesoft.iquephoto.view.fragment.BrightnessFragment;
 import net.iquesoft.iquephoto.view.fragment.FiltersFragment;
 import net.iquesoft.iquephoto.view.fragment.RotationFragment;
@@ -39,7 +39,7 @@ public class Tool {
             new Tool(R.string.tool_crop, R.drawable.ic_crop),
             new Tool(R.string.tool_rotate, R.drawable.ic_rotation, RotationFragment.newInstance()),
             new Tool(R.string.brightness, R.drawable.ic_brightness, BrightnessFragment.newInstance()),
-            new Tool(R.string.brush, R.drawable.ic_brush, BrashFragment.newInstance()),
+            new Tool(R.string.brush, R.drawable.ic_brush, BrushFragment.newInstance()),
             new Tool(R.string.tool_text, R.drawable.ic_letters, TextFragment.newInstance()),
     };
 

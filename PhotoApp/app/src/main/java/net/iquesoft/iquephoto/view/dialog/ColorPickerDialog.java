@@ -1,4 +1,4 @@
-package net.iquesoft.iquephoto.dialogs;
+package net.iquesoft.iquephoto.view.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -14,6 +14,7 @@ import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * @author Sergey
@@ -74,6 +75,11 @@ public class ColorPickerDialog extends Dialog implements DiscreteSeekBar.OnProgr
         return color;
     }
 
+    @OnClick(R.id.colorCancelButton)
+    public void onClickCancel() {
+        dismiss();
+    }
+
     @Override
     public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
         switch (seekBar.getId()) {
@@ -104,4 +110,6 @@ public class ColorPickerDialog extends Dialog implements DiscreteSeekBar.OnProgr
     public void onStopTrackingTouch(DiscreteSeekBar seekBar) {
 
     }
+
+
 }

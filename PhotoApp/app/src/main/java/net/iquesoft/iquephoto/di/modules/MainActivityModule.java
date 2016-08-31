@@ -1,6 +1,7 @@
 package net.iquesoft.iquephoto.di.modules;
 
 import net.iquesoft.iquephoto.presenter.BrightnessFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presenter.BrushFragmentPresenterImpl;
 import net.iquesoft.iquephoto.presenter.FiltersFragmentPresenterImpl;
 import net.iquesoft.iquephoto.presenter.MainActivityPresenterImpl;
 import net.iquesoft.iquephoto.presenter.RotationFragmentPresenterImpl;
@@ -47,5 +48,10 @@ public class MainActivityModule {
     @Provides
     public TextFragmentPresenterImpl provideTextFragmentPresenterImpl() {
         return new TextFragmentPresenterImpl();
+    }
+
+    @Provides
+    public BrushFragmentPresenterImpl provideBrushFragmentPresenterImpl() {
+        return new BrushFragmentPresenterImpl();
     }
 }

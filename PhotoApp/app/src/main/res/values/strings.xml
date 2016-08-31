@@ -81,6 +81,7 @@
     <!-- For alerts. -->
     <string name="on_back_alert">All your current edits will be lost and you will return to start screen!</string>
     <string name="ok">OK</string>
+    <string name="add_text">ADD</string>
 
     <!-- For font dialog. -->
     <string name="font">Font</string>

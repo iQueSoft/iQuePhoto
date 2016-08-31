@@ -1,4 +1,4 @@
-package net.iquesoft.iquephoto.dialogs;
+package net.iquesoft.iquephoto.view.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Window;
+import android.widget.Button;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapters.FontsAdapter;
@@ -13,6 +14,7 @@ import net.iquesoft.iquephoto.model.Font;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * @author Sergey
@@ -38,6 +40,16 @@ public class TextDialog extends Dialog {
         ButterKnife.bind(this);
 
         initFontsList();
+    }
+
+    @OnClick(R.id.addTextButton)
+    public void onClickAddText() {
+
+    }
+
+    @OnClick(R.id.textCancelButton)
+    public void onClickCancel() {
+        dismiss();
     }
 
     public void initFontsList() {

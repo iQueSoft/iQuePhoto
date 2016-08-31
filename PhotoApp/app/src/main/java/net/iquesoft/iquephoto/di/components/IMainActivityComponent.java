@@ -3,6 +3,7 @@ package net.iquesoft.iquephoto.di.components;
 import net.iquesoft.iquephoto.di.ActivityScope;
 import net.iquesoft.iquephoto.di.modules.MainActivityModule;
 import net.iquesoft.iquephoto.view.fragment.BrightnessFragment;
+import net.iquesoft.iquephoto.view.fragment.BrushFragment;
 import net.iquesoft.iquephoto.view.fragment.FiltersFragment;
 import net.iquesoft.iquephoto.view.activity.MainActivity;
 import net.iquesoft.iquephoto.view.fragment.RotationFragment;
@@ -25,4 +26,6 @@ public interface IMainActivityComponent {
     void inject(BrightnessFragment brightnessFragment);
 
     void inject(TextFragment textFragment);
+
+    void inject(BrushFragment brushFragment);
 }

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ZoomHeaderViewPager">
+        <attr name="textSize" format="dimension" type="integer" />
+        <attr name="textColor" format="color" type="integer" />
+        <attr name="hvTextColorActiveTab" format="color" type="integer" />
+        <attr name="hvTextAlpha" format="float" type="integer" />
+        <attr name="hvTextAlphaActiveTab" format="float" type="integer" />
+        <attr name="hvTextScale" format="float" type="integer" />
+        <attr name="hvTextScaleActiveTab" format="float" type="integer" />
+        <attr name="hvPadding" format="dimension" type="integer" />
+    </declare-styleable>
+
+    <declare-styleable name="GiantSquareView">
+        <!-- Number of columns active items -->
+        <attr name="numColumns" format="integer" />
+        <!-- Number of rows active items -->
+        <attr name="numRows" format="integer" />
+        <!-- Padding between columns -->
+        <attr name="columnStreakSize" format="dimension" />
+        <!-- Padding between columns -->
+        <attr name="rowStreakSize" format="dimension" />
+        <!--Padding between columns and row -->
+        <attr name="streakSize" format="dimension" />
+        <!--Padding between columns and row -->
+        <attr name="fitType" format="enum">
+            <enum name="fit" value="0" />
+            <enum name="center" value="1" />
+        </attr>
+        <attr name="textBackgroundColor" format="color" />
+        <attr name="textPadding" format="dimension" />
+        <attr name="textAlign" format="enum">
+            <enum name="rightBottom" value="0" />
+            <enum name="rightTop" value="1" />
+            <enum name="leftTop" value="2" />
+            <enum name="leftBottom" value="3" />
+            <enum name="center" value="4" />
+        </attr>
+        <attr name="isShowImageNumbers" format="boolean" />
+        <attr name="selectUncheckedDrawable" format="reference" />
+        <attr name="selectCheckedDrawable" format="reference" />
+        <attr name="editUncheckedDrawable" format="reference" />
+        <attr name="editCheckedDrawable" format="reference" />
+        <attr name="deleteUncheckedDrawable" format="reference" />
+        <attr name="deleteCheckedDrawable" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="GiantSquareEditorView">
+        <attr name="defaultTextColor" format="color" />
+        <attr name="emptyColor" format="color" />
+        <attr name="defaultTextSize" format="dimension" />
+        <attr name="emptyBackground" format="reference" />
+        <attr name="emptyText" format="string" />
+    </declare-styleable>
+</resources>

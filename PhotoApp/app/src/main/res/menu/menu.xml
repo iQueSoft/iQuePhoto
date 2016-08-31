@@ -1,0 +1,98 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/none"
+        android:showAsAction="never"
+        android:title="@string/none" />
+    <item
+        android:id="@+id/autofix"
+        android:showAsAction="never"
+        android:title="@string/autofix" />
+    <item
+        android:id="@+id/bw"
+        android:showAsAction="never"
+        android:title="@string/bw" />
+    <item
+        android:id="@+id/brightness"
+        android:showAsAction="never"
+        android:title="@string/brightness" />
+    <item
+        android:id="@+id/contrast"
+        android:showAsAction="never"
+        android:title="@string/contrast" />
+    <item
+        android:id="@+id/crossprocess"
+        android:showAsAction="never"
+        android:title="@string/crossprocess" />
+    <item
+        android:id="@+id/documentary"
+        android:showAsAction="never"
+        android:title="@string/documentary" />
+    <item
+        android:id="@+id/duotone"
+        android:showAsAction="never"
+        android:title="@string/duotone" />
+    <item
+        android:id="@+id/filllight"
+        android:showAsAction="never"
+        android:title="@string/filllight" />
+    <item
+        android:id="@+id/fisheye"
+        android:showAsAction="never"
+        android:title="@string/fisheye" />
+    <item
+        android:id="@+id/flipvert"
+        android:showAsAction="never"
+        android:title="@string/flipvert" />
+    <item
+        android:id="@+id/fliphor"
+        android:showAsAction="never"
+        android:title="@string/fliphor" />
+    <item
+        android:id="@+id/grain"
+        android:showAsAction="never"
+        android:title="@string/grain" />
+    <item
+        android:id="@+id/grayscale"
+        android:showAsAction="never"
+        android:title="@string/grayscale" />
+    <item
+        android:id="@+id/lomoish"
+        android:showAsAction="never"
+        android:title="@string/lomoish" />
+    <item
+        android:id="@+id/negative"
+        android:showAsAction="never"
+        android:title="@string/negative" />
+    <item
+        android:id="@+id/posterize"
+        android:showAsAction="never"
+        android:title="@string/posterize" />
+    <item
+        android:id="@+id/rotateCloseButton"
+        android:showAsAction="never"
+        android:title="@string/rotate" />
+    <item
+        android:id="@+id/saturate"
+        android:showAsAction="never"
+        android:title="@string/saturate" />
+    <item
+        android:id="@+id/sepia"
+        android:showAsAction="never"
+        android:title="@string/sepia" />
+    <item
+        android:id="@+id/sharpen"
+        android:showAsAction="never"
+        android:title="@string/sharpen" />
+    <item
+        android:id="@+id/temperature"
+        android:showAsAction="never"
+        android:title="@string/temperature" />
+    <item
+        android:id="@+id/tint"
+        android:showAsAction="never"
+        android:title="@string/tint" />
+    <item
+        android:id="@+id/vignette"
+        android:showAsAction="never"
+        android:title="@string/vignette" />
+</menu>

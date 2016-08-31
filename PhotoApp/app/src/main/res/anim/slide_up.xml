@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+    <objectAnimator xmlns:android="http://schemas.android.com/apk/res/android"
+        android:duration="1500"
+        android:interpolator="@android:anim/accelerate_decelerate_interpolator"
+        android:propertyName="y"
+        android:valueFrom="-1280"
+        android:valueTo="0"
+        android:valueType="floatType" />
+</set>

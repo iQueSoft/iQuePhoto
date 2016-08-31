@@ -1,0 +1,88 @@
+<resources>
+    <string name="app_name">iQuePhoto</string>
+
+    <!-- For start screen. -->
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
+    <string name="error">Image wasn\'t selected!</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="none">None</string>
+    <string name="autofix">Autofix</string>
+    <string name="bw">Min/Max Color Intensity</string>
+    <string name="brightness">Brightness</string>
+    <string name="contrast">Contrast</string>
+    <string name="crossprocess">Cross Process</string>
+    <string name="documentary">Documentary</string>
+    <string name="duotone">Duo Tone</string>
+    <string name="filllight">Fill Light</string>
+    <string name="fisheye">Fish Eye</string>
+    <string name="flipvert">Flip Vertical</string>
+    <string name="fliphor">Flip Horizontal</string>
+    <string name="grain">Grain</string>
+    <string name="grayscale">Grayscale</string>
+    <string name="lomoish">Lomoish</string>
+    <string name="negative">Negative</string>
+    <string name="posterize">Posterize</string>
+    <string name="rotate">Rotate</string>
+    <string name="saturate">Saturate</string>
+    <string name="sepia">Sepia</string>
+    <string name="sharpen">Sharpen</string>
+    <string name="temperature">Temperature</string>
+    <string name="tint">Tint</string>
+    <string name="vignette">Vignette</string>
+
+    <string name="tool_brightness">Brightness</string>
+
+    <string name="tool_text">Text</string>
+
+    <string name="opacity">Opacity</string>
+
+    <string name="save_image">Save Image</string>
+    <string name="successfully_saved">Image successfully saved!</string>
+
+    <!-- For crop tool. -->
+    <string name="tool_crop">Crop</string>
+    <string name="crop_free">Free</string>
+    <string name="crop_original">Original</string>
+    <string name="crop_1_1">1 : 1</string>
+    <string name="crop_4_3">4 : 3</string>
+    <string name="crop_6_3">6 : 4</string>
+    <string name="crop_16_9">6 : 4</string>
+
+    <!-- For stickers tool. -->
+    <string name="tool_stickers">Stickers</string>
+
+    <!-- For rotate tool. -->
+    <string name="tool_rotate">Rotate</string>
+    <string name="straighten">Straighten\nAngle</string>
+
+    <!-- For text tool. -->
+    <string name="tool_add_text">Text</string>
+
+    <!-- For filters -->
+    <string name="tool_filters">Filters</string>
+    <string name="filter_normal">Normal</string>
+    <string name="filter_gross_process">Gross Process</string>
+
+    <!-- For brash tool. -->
+    <string name="brush">Brush</string>
+    <string name="brush_size">Brush Size</string>
+
+    <!-- For frame tool. -->
+    <string name="tool_frame">Frame</string>
+
+    <!-- For color picker. -->
+    <string name="cancel">Cancel</string>
+    <string name="apply">Apply</string>
+    <string name="RGB_R">R</string>
+    <string name="RGB_G">G</string>
+    <string name="RGB_B">B</string>
+
+    <!-- For alerts. -->
+    <string name="on_back_alert">All your current edits will be lost and you will return to start screen!</string>
+    <string name="ok">OK</string>
+
+    <!-- For font dialog. -->
+    <string name="font">Font</string>
+    <string name="start_typing">Start typing…</string>
+</resources>

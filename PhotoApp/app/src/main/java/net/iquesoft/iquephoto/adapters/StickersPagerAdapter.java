@@ -5,11 +5,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import net.iquesoft.iquephoto.model.StickersSet;
 import net.iquesoft.iquephoto.view.fragment.ShowStickersFragment;
 
 /**
- * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
- * one of the sections/tabs/pages.
+ * Adapter for ViewPager in {@link net.iquesoft.iquephoto.view.fragment.StickersFragment} that returns a fragment corresponding to
+ * one of the pages with stickers sets {@link StickersSet}.
  */
 public class StickersPagerAdapter extends FragmentPagerAdapter {
 
@@ -19,15 +20,12 @@ public class StickersPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        // getItem is called to instantiate the fragment for the given page.
-        // Return a PlaceholderFragment (defined as a static inner class below).
-        return ShowStickersFragment.newInstance();
+        return ShowStickersFragment.newInstance(position);
     }
 
     @Override
     public int getCount() {
-        // Show 3 total pages.
-        return 3;
+        return StickersSet.getStickersSetsList().size();
     }
 
     @Override

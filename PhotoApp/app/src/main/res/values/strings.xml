@@ -51,14 +51,16 @@
     <!-- For stickers tool. -->
     <string name="stickers">Stickers</string>
 
-    <!-- Flag stickers. -->
+    <!-- START - Flag stickers. -->
+    <string name="flags">Flags</string>
     <string name="flag_ukraine">Ukraine</string>
     <string name="flag_germany">Germany</string>
     <string name="flag_brazil">Brazil</string>
     <string name="flag_russia">Russia</string>
-    <!-- Flag stickers end. -->
+    <!-- Flag stickers - END. -->
 
-    <!-- Emoticons stickers. -->
+    <!-- START - Emoticons stickers. -->
+    <string name="emoticons">Emoticons</string>
     <string name="emoticon_happy">Happy</string>
     <string name="emoticon_in_love">In love</string>
     <string name="emoticon_smile">Smile</string>
@@ -77,7 +79,7 @@
     <string name="emoticon_nerd">Nerd</string>
     <string name="emoticon_smart">Smart</string>
     <string name="emoticon_embarrassed">Embarrassed</string>
-    <!-- Emoticons stickers end. -->
+    <!-- Emoticons stickers - END. -->
 
     <!-- For rotate tool. -->
     <string name="rotation">Rotation</string>

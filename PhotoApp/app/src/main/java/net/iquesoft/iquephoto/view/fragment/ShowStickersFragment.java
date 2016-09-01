@@ -12,6 +12,7 @@ import net.iquesoft.iquephoto.adapters.StickersAdapter;
 import net.iquesoft.iquephoto.common.BaseFragment;
 import net.iquesoft.iquephoto.di.components.IMainActivityComponent;
 import net.iquesoft.iquephoto.model.Sticker;
+import net.iquesoft.iquephoto.model.StickersSet;
 import net.iquesoft.iquephoto.presenter.ShowStickersFragmentPresenterImpl;
 import net.iquesoft.iquephoto.view.IShowStickersFragmentView;
 
@@ -29,8 +30,8 @@ import butterknife.Unbinder;
 public class ShowStickersFragment extends BaseFragment implements IShowStickersFragmentView {
 
     private int position;
+
     private Unbinder unbinder;
-    private List<Sticker> stickers;
 
     @BindView(R.id.stickersRecyclerView)
     RecyclerView recyclerView;
@@ -38,18 +39,17 @@ public class ShowStickersFragment extends BaseFragment implements IShowStickersF
     @Inject
     ShowStickersFragmentPresenterImpl presenter;
 
-    public ShowStickersFragment() {
-
-    }
-
-    public static ShowStickersFragment newInstance() {
+    public static ShowStickersFragment newInstance(int position) {
         /*Bundle b = new Bundle();
         b.putString("msg", text);
         b.putString("color", color);
         f.setArguments(b);*/
-        return new ShowStickersFragment();
+        return new ShowStickersFragment(position);
     }
 
+    public ShowStickersFragment(int position) {
+        this.position = position;
+    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -70,7 +70,8 @@ public class ShowStickersFragment extends BaseFragment implements IShowStickersF
 
         unbinder = ButterKnife.bind(this, v);
 
-        StickersAdapter adapter = new StickersAdapter(Sticker.getEmoticonsStickersList());
+
+        StickersAdapter adapter = new StickersAdapter(getStickers(position));
         recyclerView.setLayoutManager(new GridLayoutManager(v.getContext(), 4));
         recyclerView.setAdapter(adapter);
 
@@ -83,11 +84,11 @@ public class ShowStickersFragment extends BaseFragment implements IShowStickersF
         unbinder.unbind();
     }
 
-    public List<Sticker> getStickers() {
-        return stickers;
+    private List<Sticker> getStickers(int position) {
+        return StickersSet.getStickersSetsList().get(position).getStickers();
     }
 
-    public void setStickers(List<Sticker> stickers) {
-        this.stickers = stickers;
+    public void setPosition(int position) {
+        this.position = position;
     }
 }

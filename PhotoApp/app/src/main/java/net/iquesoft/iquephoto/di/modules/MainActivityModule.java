@@ -5,6 +5,8 @@ import net.iquesoft.iquephoto.presenter.BrushFragmentPresenterImpl;
 import net.iquesoft.iquephoto.presenter.FiltersFragmentPresenterImpl;
 import net.iquesoft.iquephoto.presenter.MainActivityPresenterImpl;
 import net.iquesoft.iquephoto.presenter.RotationFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presenter.ShowStickersFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presenter.StickersFragmentPresenterImpl;
 import net.iquesoft.iquephoto.presenter.TextFragmentPresenterImpl;
 import net.iquesoft.iquephoto.view.IMainActivityView;
 
@@ -53,5 +55,15 @@ public class MainActivityModule {
     @Provides
     public BrushFragmentPresenterImpl provideBrushFragmentPresenterImpl() {
         return new BrushFragmentPresenterImpl();
+    }
+
+    @Provides
+    public StickersFragmentPresenterImpl provideStickersFragmentPresenterImpl() {
+        return new StickersFragmentPresenterImpl();
+    }
+
+    @Provides
+    public ShowStickersFragmentPresenterImpl provideShowStickersFragmentPresenterImpl() {
+        return new ShowStickersFragmentPresenterImpl();
     }
 }

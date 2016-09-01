@@ -1,6 +1,6 @@
 package net.iquesoft.iquephoto.common;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 
 import net.iquesoft.iquephoto.di.IHasComponent;
 

@@ -7,6 +7,8 @@ import net.iquesoft.iquephoto.view.fragment.BrushFragment;
 import net.iquesoft.iquephoto.view.fragment.FiltersFragment;
 import net.iquesoft.iquephoto.view.activity.MainActivity;
 import net.iquesoft.iquephoto.view.fragment.RotationFragment;
+import net.iquesoft.iquephoto.view.fragment.ShowStickersFragment;
+import net.iquesoft.iquephoto.view.fragment.StickersFragment;
 import net.iquesoft.iquephoto.view.fragment.TextFragment;
 
 import dagger.Component;
@@ -28,4 +30,8 @@ public interface IMainActivityComponent {
     void inject(TextFragment textFragment);
 
     void inject(BrushFragment brushFragment);
+
+    void inject(StickersFragment stickersFragment);
+
+    void inject(ShowStickersFragment showStickersFragment);
 }

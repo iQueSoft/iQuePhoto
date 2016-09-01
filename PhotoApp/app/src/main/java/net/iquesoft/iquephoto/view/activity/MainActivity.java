@@ -1,25 +1,19 @@
 package net.iquesoft.iquephoto.view.activity;
 
-import android.app.FragmentTransaction;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.Window;
-import android.media.effect.Effect;
-import android.media.effect.EffectContext;
-import android.opengl.GLES20;
-import android.opengl.GLSurfaceView;
-import android.opengl.GLUtils;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import net.iquesoft.iquephoto.DataHolder;
-import net.iquesoft.iquephoto.PhotoEditorText;
 import net.iquesoft.iquephoto.PhotoEditorView;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapters.ToolsAdapter;
@@ -34,8 +28,6 @@ import net.iquesoft.iquephoto.presenter.MainActivityPresenterImpl;
 import net.iquesoft.iquephoto.view.IMainActivityView;
 
 import javax.inject.Inject;
-import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.opengles.GL10;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,7 +35,7 @@ import butterknife.ButterKnife;
 /**
  * @author Sergey Belenkiy
  */
-public class MainActivity extends BaseActivity implements IMainActivityView, IHasComponent<IMainActivityComponent>, PhotoEditorView.OnSquareEditorListener {
+public class MainActivity extends BaseActivity implements IMainActivityView, IHasComponent<IMainActivityComponent> {
 
     @Inject
     MainActivityPresenterImpl presenter;
@@ -76,7 +68,7 @@ public class MainActivity extends BaseActivity implements IMainActivityView, IHa
         bitmap = BitmapFactory.decodeFile(getIntent().getStringExtra("bitmap_path"));
 
         photoEditorView.setImageBitmap(bitmap);
-        photoEditorView.setSquareEditorListener(this);
+        //photoEditorView.setSquareEditorListener(this);
 
         DataHolder.getInstance().setPhotoEditorView(photoEditorView);
     }
@@ -118,7 +110,7 @@ public class MainActivity extends BaseActivity implements IMainActivityView, IHa
     @Override
     public void changeTool(Tool tool) {
         toolSettingsContainer.setVisibility(View.VISIBLE);
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
         //fragmentTransaction.setCustomAnimations(R.anim.slide_up, R.anim.slide_down);
         fragmentTransaction.replace(toolSettingsContainer.getId(), tool.getFragment()).commit();
@@ -149,8 +141,8 @@ public class MainActivity extends BaseActivity implements IMainActivityView, IHa
         return mainActivityComponent;
     }
 
-    @Override
+    /*@Override
     public void editText(PhotoEditorText giantSquareText) {
 
-    }
+    }*/
 }

@@ -1,13 +1,14 @@
 package net.iquesoft.iquephoto.model;
 
-import android.app.Fragment;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.view.fragment.BrushFragment;
 import net.iquesoft.iquephoto.view.fragment.BrightnessFragment;
 import net.iquesoft.iquephoto.view.fragment.FiltersFragment;
 import net.iquesoft.iquephoto.view.fragment.RotationFragment;
+import net.iquesoft.iquephoto.view.fragment.StickersFragment;
 import net.iquesoft.iquephoto.view.fragment.TextFragment;
 
 import java.util.Arrays;
@@ -34,10 +35,10 @@ public class Tool {
      */
     public static Tool tools[] = {
             new Tool(R.string.tool_filters, R.drawable.ic_filter, new FiltersFragment()),
-            new Tool(R.string.tool_stickers, R.drawable.ic_stiker),
+            new Tool(R.string.stickers, R.drawable.ic_stiker, StickersFragment.newInstance()),
             new Tool(R.string.tool_frame, R.drawable.ic_frame),
             new Tool(R.string.tool_crop, R.drawable.ic_crop),
-            new Tool(R.string.tool_rotate, R.drawable.ic_rotation, RotationFragment.newInstance()),
+            new Tool(R.string.rotation, R.drawable.ic_rotation, RotationFragment.newInstance()),
             new Tool(R.string.brightness, R.drawable.ic_brightness, BrightnessFragment.newInstance()),
             new Tool(R.string.brush, R.drawable.ic_brush, BrushFragment.newInstance()),
             new Tool(R.string.tool_text, R.drawable.ic_letters, TextFragment.newInstance()),

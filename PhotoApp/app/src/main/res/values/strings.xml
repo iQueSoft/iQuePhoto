@@ -62,9 +62,21 @@
     <string name="emoticon_happy">Happy</string>
     <string name="emoticon_in_love">In love</string>
     <string name="emoticon_smile">Smile</string>
+    <string name="emoticon_angry">Angry</string>
+    <string name="emoticon_wink">Wink</string>
+    <string name="emoticon_unhappy">Unhappy</string>
+    <string name="emoticon_quiet">Quiet</string>
+    <string name="emoticon_surprised">Surprised</string>
     <string name="emoticon_sad">Sad</string>
     <string name="emoticon_mad">Mad</string>
     <string name="emoticon_tongue_out">Tongue out</string>
+    <string name="emoticon_bored">Bored</string>
+    <string name="emoticon_ill">Ill</string>
+    <string name="emoticon_kissing">Kissing</string>
+    <string name="emoticon_suspicious">Suspicious</string>
+    <string name="emoticon_nerd">Nerd</string>
+    <string name="emoticon_smart">Smart</string>
+    <string name="emoticon_embarrassed">Embarrassed</string>
     <!-- Emoticons stickers end. -->
 
     <!-- For rotate tool. -->
@@ -78,7 +90,7 @@
 
     <!-- For filters -->
     <string name="tool_filters">Filters</string>
-    <string name="filter_normal">Normal</string>
+    <string name="filter_original">Original</string>
     <string name="filter_gross_process">Gross Process</string>
 
     <!-- For brush tool. -->

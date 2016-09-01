@@ -40,7 +40,7 @@ public class Filter {
      * Array with all filters;
      */
     public static Filter[] filters = {
-            new Filter(R.string.filter_normal, R.drawable.image_1),
+            new Filter(R.string.filter_original, R.drawable.image_1),
             new Filter(R.string.filter_gross_process, R.drawable.image_1),
             new Filter(R.string.filter_gross_process, R.drawable.image_1),
     };

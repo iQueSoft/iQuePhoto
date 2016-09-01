@@ -58,6 +58,11 @@ public class FiltersAdapter extends RecyclerView.Adapter<FiltersAdapter.ViewHold
         holder.filterTitle.setText(context.getResources().getString(filter.getTitle()));
         holder.filterIcon.setImageDrawable(context.getResources().getDrawable(filter.getImage()));
 
+        // Todo: Check current filter
+        if (position == 0) {
+            holder.filterChecked.setVisibility(View.VISIBLE);
+        }
+
         holder.filterIcon.setOnClickListener(view -> filtersListener.onClick(filter));
     }
 
@@ -73,6 +78,9 @@ public class FiltersAdapter extends RecyclerView.Adapter<FiltersAdapter.ViewHold
 
         @BindView(R.id.filterImage)
         public ImageView filterIcon;
+
+        @BindView(R.id.filterChecked)
+        public ImageView filterChecked;
 
         public ViewHolder(View itemView) {
             super(itemView);

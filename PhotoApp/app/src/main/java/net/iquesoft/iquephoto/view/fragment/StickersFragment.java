@@ -64,7 +64,7 @@ public class StickersFragment extends BaseFragment implements IStickersFragmentV
 
         unbinder = ButterKnife.bind(this, v);
 
-        pagerAdapter = new StickersPagerAdapter(getActivity().getSupportFragmentManager());
+        pagerAdapter = new StickersPagerAdapter(getChildFragmentManager());
         viewPager.setAdapter(pagerAdapter);
 
         return v;

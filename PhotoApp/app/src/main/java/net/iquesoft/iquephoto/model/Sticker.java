@@ -33,7 +33,16 @@ public class Sticker {
             new Sticker(R.string.emoticon_tongue_out, R.drawable.emoticon_tongue_out),
             new Sticker(R.string.emoticon_sad, R.drawable.emoticon_sad),
             new Sticker(R.string.emoticon_mad, R.drawable.emoticon_mad),
-
+            new Sticker(R.string.emoticon_wink, R.drawable.emoticon_wink),
+            new Sticker(R.string.emoticon_quiet, R.drawable.emoticon_quiet),
+            new Sticker(R.string.emoticon_unhappy, R.drawable.emoticon_unhappy),
+            new Sticker(R.string.emoticon_bored, R.drawable.emoticon_bored),
+            new Sticker(R.string.emoticon_ill, R.drawable.emoticon_ill),
+            new Sticker(R.string.emoticon_nerd, R.drawable.emoticon_nerd),
+            new Sticker(R.string.emoticon_kissing, R.drawable.emoticon_kissing),
+            new Sticker(R.string.emoticon_embarrassed, R.drawable.emoticon_embarrassed),
+            new Sticker(R.string.emoticon_smart, R.drawable.emoticon_smart),
+            new Sticker(R.string.emoticon_surprised, R.drawable.emoticon_surprised)
 
     };
 

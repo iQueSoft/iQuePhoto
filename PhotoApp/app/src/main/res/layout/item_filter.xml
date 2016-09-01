@@ -18,11 +18,12 @@
             android:src="@drawable/image_1" />
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/filterChecked"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:src="@drawable/ic_check" />
+            android:src="@drawable/ic_check"
+            android:visibility="gone" />
     </FrameLayout>
 
     <FrameLayout
@@ -34,7 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/filter_normal"
+            android:text="@string/filter_original"
             android:textColor="@android:color/white"
             android:textSize="14sp"
             android:layout_marginBottom="2.5dp"

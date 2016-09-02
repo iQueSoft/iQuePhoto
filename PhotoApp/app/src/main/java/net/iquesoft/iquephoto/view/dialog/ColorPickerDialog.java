@@ -75,6 +75,11 @@ public class ColorPickerDialog extends Dialog implements DiscreteSeekBar.OnProgr
         return color;
     }
 
+    @OnClick()
+    public void onClickApplyButton() {
+        
+    }
+
     @OnClick(R.id.colorCancelButton)
     public void onClickCancel() {
         dismiss();

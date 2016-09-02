@@ -1,21 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="50dp"
-    android:gravity="center_vertical">
-
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textCheckBox"
-        android:theme="@style/MyCheckBox" />
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
 
     <TextView
+        android:id="@+id/fontTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
         android:text="@string/app_name"
-        android:id="@+id/fontTextView"
         android:textColor="@android:color/black"
-        android:textSize="22sp"
-        android:layout_marginLeft="10dp" />
+        android:textSize="22sp" />
 </LinearLayout>

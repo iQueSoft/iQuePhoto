@@ -7,7 +7,7 @@ android {
     buildToolsVersion "24.0.1"
 
     defaultConfig {
-        applicationId "net.iquesoft.photoapp"
+        applicationId "net.iquesoft.iquephoto"
         minSdkVersion 15
         targetSdkVersion 24
         versionCode 1

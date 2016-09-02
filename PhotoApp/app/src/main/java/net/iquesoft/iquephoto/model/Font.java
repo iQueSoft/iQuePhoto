@@ -46,7 +46,7 @@ public class Font {
     }
 
     public String getTypeface() {
-        return typeface;
+        return "fonts/" + typeface;
     }
 
     public void setTypeface(String typeface) {

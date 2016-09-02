@@ -19,6 +19,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
+import net.iquesoft.iquephoto.model.Sticker;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -34,7 +36,9 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
     private static final long LONG_PRESS_TEXT_MILLISECOND = 2000;
 
     private List<Bitmap> imageList = new ArrayList<>();
-    private List<PhotoEditorText> textList = new LinkedList<PhotoEditorText>();
+
+    private List<PhotoEditorText> textsList = new LinkedList<PhotoEditorText>();
+    private List<Sticker> stickersList = new LinkedList<Sticker>();
 
     // display width height.
     // double tap for determining
@@ -97,6 +101,9 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
         return photoEditorImage.getBitmap();
     }
 
+    /**
+     *
+     */
     public void rotateImage(float angle) {
         Bitmap photoEditorImageBitmap = photoEditorImage.getBitmap();
         Matrix matrix = new Matrix();
@@ -112,6 +119,9 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
         }
     }
 
+    /**
+     *
+     */
     public void horizontalFlip() {
         Bitmap photoEditorImageBitmap = photoEditorImage.getBitmap();
         Matrix matrix = new Matrix();
@@ -124,6 +134,9 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
         }
     }
 
+    /**
+     *
+     */
     public void verticalFlip() {
         Bitmap photoEditorImageBitmap = photoEditorImage.getBitmap();
         Matrix matrix = new Matrix();
@@ -136,6 +149,9 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
         }
     }
 
+    /**
+     *
+     */
     public void doBrightness(int value) {
         int width = getBitamp().getWidth();
         int height = getBitamp().getHeight();
@@ -179,6 +195,54 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
             }
 
             setImageBitmap(bitmap);
+        }
+    }
+
+    private void drawStickers(Canvas canvas, Paint paint) {
+        if (isSaveInProccess) {
+            for (PhotoEditorText text : textsList) {
+                paint.setTypeface(text.getTypeface());
+                float pixelDensity = scalingForSave;
+                paint.setTextSize(text.getSize() * pixelDensity);
+                paint.setColor(text.getColor());
+                canvas.drawText(text.getText(), text.getX() * pixelDensity, text.getY() * pixelDensity + paint.getTextSize(), paint);
+            }
+        } else {
+            for (int i = 0; i < textsList.size(); i++) {
+                PhotoEditorText text = textsList.get(i);
+                text.setPaintParams(paint);
+                canvas.drawText(text.getText(), text.getX(), text.getY() + text.getSize(), paint);
+                if (drawTextBorder) {
+                    if (checkedTextId == -1 || (checkedTextId != -1 && checkedTextId == i)) {
+                        paint.setColor(PhotoEditorText.TEXT_BACKGROUND_COLOR);
+                        canvas.drawRect(text.getTextArea(), paint);
+                    }
+                }
+            }
+        }
+    }
+
+    private void drawTexts(Canvas canvas, Paint paint) {
+        if (isSaveInProccess) {
+            for (PhotoEditorText text : textsList) {
+                paint.setTypeface(text.getTypeface());
+                float pixelDensity = scalingForSave;
+                paint.setTextSize(text.getSize() * pixelDensity);
+                paint.setColor(text.getColor());
+                canvas.drawText(text.getText(), text.getX() * pixelDensity, text.getY() * pixelDensity + paint.getTextSize(), paint);
+            }
+        } else {
+            for (int i = 0; i < textsList.size(); i++) {
+                PhotoEditorText text = textsList.get(i);
+                text.setPaintParams(paint);
+                canvas.drawText(text.getText(), text.getX(), text.getY() + text.getSize(), paint);
+                if (drawTextBorder) {
+                    if (checkedTextId == -1 || (checkedTextId != -1 && checkedTextId == i)) {
+                        paint.setColor(PhotoEditorText.TEXT_BACKGROUND_COLOR);
+                        canvas.drawRect(text.getTextArea(), paint);
+                    }
+                }
+            }
         }
     }
 
@@ -230,7 +294,7 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
         if (text.getTypeface() == null) {
             text.setTypeface(textTypeface);
         }
-        this.textList.add(text);
+        this.textsList.add(text);
         invalidate();
     }
 
@@ -334,29 +398,6 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
         canvas.drawBitmap(photoEditorImage.getBitmap(), matrix, paint);
     }
 
-    private void drawTexts(Canvas canvas, Paint paint) {
-        if (isSaveInProccess) {
-            for (PhotoEditorText text : textList) {
-                paint.setTypeface(text.getTypeface());
-                float pixelDensity = scalingForSave;
-                paint.setTextSize(text.getSize() * pixelDensity);
-                paint.setColor(text.getColor());
-                canvas.drawText(text.getText(), text.getX() * pixelDensity, text.getY() * pixelDensity + paint.getTextSize(), paint);
-            }
-        } else {
-            for (int i = 0; i < textList.size(); i++) {
-                PhotoEditorText text = textList.get(i);
-                text.setPaintParams(paint);
-                canvas.drawText(text.getText(), text.getX(), text.getY() + text.getSize(), paint);
-                if (drawTextBorder) {
-                    if (checkedTextId == -1 || (checkedTextId != -1 && checkedTextId == i)) {
-                        paint.setColor(PhotoEditorText.TEXT_BACKGROUND_COLOR);
-                        canvas.drawRect(text.getTextArea(), paint);
-                    }
-                }
-            }
-        }
-    }
 
     private void calculateImagePart() {
         if (!isEmpty()) {
@@ -506,8 +547,8 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
     }
 
     private void findCheckedText(int x, int y) {
-        for (int i = textList.size() - 1; i >= 0; i--) {
-            if (textList.get(i).getTextArea().contains(x, y)) {
+        for (int i = textsList.size() - 1; i >= 0; i--) {
+            if (textsList.get(i).getTextArea().contains(x, y)) {
                 checkedTextId = i;
                 return;
             }
@@ -587,7 +628,7 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
                                     photoEditorImage.setFreeScale(photoEditorImage.getScale() * scale);
                                 }
                             } else {
-                                textList.get(checkedTextId).setSize(textList.get(checkedTextId).getSize() * scale);
+                                textsList.get(checkedTextId).setSize(textsList.get(checkedTextId).getSize() * scale);
                             }
                             longClick = false;
                         } else if (!isScaling) {
@@ -609,7 +650,7 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
                                     }
                                 }
                             } else {
-                                PhotoEditorText text = textList.get(checkedTextId);
+                                PhotoEditorText text = textsList.get(checkedTextId);
                                 text.setX(text.getX() - Math.round(distanceX));
                                 text.setY(text.getY() - Math.round(distanceY));
                                 if (longClick && System.currentTimeMillis() > mLastTime + LONG_PRESS_TEXT_MILLISECOND) {
@@ -639,7 +680,7 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
                                     //  photoEditorImage.setBitmap(rotateImage(photoEditorImage.getBitmap(), angle));
                                 } else {
                                     if (squareEditorListener != null) {
-                                        squareEditorListener.editText(textList.get(checkedTextId));
+                                        squareEditorListener.editText(textsList.get(checkedTextId));
                                     }
                                 }
                             }
@@ -769,8 +810,8 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
     }
 
     public void deleteText(PhotoEditorText text) {
-        if (textList != null && textList.contains(text)) {
-            textList.remove(text);
+        if (textsList != null && textsList.contains(text)) {
+            textsList.remove(text);
             invalidate();
             requestLayout();
         }
@@ -785,15 +826,15 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
     }
 
     public void duplicateText(int id) {
-        if (textList != null && id >= 0 && id < textList.size()) {
-            PhotoEditorText initText = textList.get(id);
+        if (textsList != null && id >= 0 && id < textsList.size()) {
+            PhotoEditorText initText = textsList.get(id);
             PhotoEditorText newText = new PhotoEditorText();
             newText.setColor(initText.getColor());
             newText.setSize(initText.getSize());
             newText.setText(initText.getText());
             newText.setTypeface(initText.getTypeface());
             newText.setTypefacePath(initText.getTypefacePath());
-            textList.add(newText);
+            textsList.add(newText);
         }
     }
 

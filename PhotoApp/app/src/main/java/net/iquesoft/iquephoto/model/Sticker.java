@@ -1,5 +1,8 @@
 package net.iquesoft.iquephoto.model;
 
+import android.graphics.Paint;
+import android.graphics.Rect;
+
 import net.iquesoft.iquephoto.R;
 
 import java.util.Arrays;
@@ -12,6 +15,10 @@ import java.util.List;
 public class Sticker {
     private int title;
     private int image;
+
+    private int x, y;
+
+    private Rect stickerArea = new Rect();
 
     /**
      * Array with "Flag" stickers;
@@ -80,4 +87,36 @@ public class Sticker {
     public static List<Sticker> getEmoticonsStickersList() {
         return Arrays.asList(emoticonsStickers);
     }
+
+    public int getX() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public Rect getStickerArea() {
+        return stickerArea;
+    }
+
+    /*public void setStickerArea(Rect stickerArea) {
+        if (getText() != null && typeface != null) {
+            Paint paint = new Paint();
+            setPaintParams(paint);
+            paint.getTextBounds(getText(), 0, getText().length(), textArea);
+            textArea.top += getSize() + getY() - TEXT_AREA_MARGIN;
+            textArea.bottom += getSize() + getY() + TEXT_AREA_MARGIN;
+            textArea.left += getX() - TEXT_AREA_MARGIN;
+            textArea.right += getX() + TEXT_AREA_MARGIN;
+        }
+    }*/
 }

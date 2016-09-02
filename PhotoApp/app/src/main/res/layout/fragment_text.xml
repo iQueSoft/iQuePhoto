@@ -10,94 +10,174 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="5dp">
+        android:paddingRight="10dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
             android:text="@string/tool_text"
             android:textColor="@android:color/white"
             android:textSize="16sp"
-            android:textStyle="bold"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true" />
+            android:textStyle="bold" />
 
         <ImageView
-            android:id="@+id/imageView3"
+            android:id="@+id/hideTextSettingsButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_expand"
-            android:layout_alignParentRight="true" />
+            android:layout_alignParentRight="true"
+            android:src="@drawable/ic_expand" />
 
     </RelativeLayout>
 
-    <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
-        android:id="@+id/view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:dsb_indicatorColor="@android:color/white"
-        app:dsb_indicatorTextAppearance="@android:color/black"
-        app:dsb_max="100"
-        app:dsb_min="-100"
-        app:dsb_progressColor="@android:color/white"
-        app:dsb_rippleColor="@android:color/white"
-        app:dsb_trackColor="@android:color/white"
-        app:dsb_value="0" />
-
     <LinearLayout
+        android:id="@+id/textSettingsLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp">
+        android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/imageView2"
+        <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
+            android:id="@+id/view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_delete_off" />
-
-        <ImageView
-            android:id="@+id/textColorButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@drawable/ic_color" />
+            android:layout_marginTop="5dp"
+            app:dsb_indicatorColor="@android:color/white"
+            app:dsb_indicatorTextAppearance="@android:color/black"
+            app:dsb_max="100"
+            app:dsb_min="-100"
+            app:dsb_progressColor="@android:color/white"
+            app:dsb_rippleColor="@android:color/white"
+            app:dsb_trackColor="@android:color/white"
+            app:dsb_value="0" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
 
-            <TextView
-                android:id="@+id/textView5"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="0"
-                android:textColor="@android:color/white"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/textView3"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="@string/text_style"
+                    android:textColor="@android:color/white"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/textColorButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:src="@drawable/ic_color" />
+
+                    <ImageView
+                        android:id="@+id/textButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:src="@drawable/ic_font" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginBottom="5dp"
-                android:text="@string/opacity"
-                android:textColor="@android:color/white"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textView5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="0"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="5dp"
+                    android:text="@string/opacity"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="@string/text_action"
+                    android:textColor="@android:color/white"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/deleteTextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:src="@drawable/ic_delete_off" />
+
+                    <ImageView
+                        android:id="@+id/addTextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:src="@drawable/ic_add_40" />
+                </LinearLayout>
+
+            </LinearLayout>
+
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/textButton"
-            android:layout_width="wrap_content"
+        <EditText
+            android:id="@+id/textField"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:src="@drawable/ic_font" />
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:hint="@string/start_typing"
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/white"
+            android:theme="@style/MyEditText" />
 
     </LinearLayout>
 

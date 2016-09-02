@@ -19,6 +19,10 @@
         <item name="colorControlHighlight">@color/red</item>
     </style>
 
+    <style name="FlatButtonControlWhite" parent="Theme.AppCompat.Light">
+        <item name="colorControlHighlight">@color/white</item>
+    </style>
+
     <style name="MyAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
         <!-- Used for the buttons -->
         <item name="colorAccent">#FFFFFF</item>
@@ -37,5 +41,10 @@
     <style name="AppTheme.NoActionBar.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.NoActionBar.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="MyEditText" parent="Theme.AppCompat.Light">
+        <item name="colorControlNormal">@color/white</item>
+        <item name="colorControlActivated">@color/white</item>
+    </style>
 
 </resources>

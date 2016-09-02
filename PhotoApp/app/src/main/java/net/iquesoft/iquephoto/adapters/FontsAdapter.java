@@ -80,6 +80,6 @@ public class FontsAdapter extends RecyclerView.Adapter<FontsAdapter.ViewHolder> 
      * @return typeface from assets;
      */
     private Typeface getTypeface(String path) {
-        return Typeface.createFromAsset(context.getAssets(), "fonts/" + path);
+        return Typeface.createFromAsset(context.getAssets(), path);
     }
 }

@@ -5,18 +5,31 @@
     android:orientation="vertical"
     android:padding="10dp">
 
-    <EditText
-        android:id="@+id/editText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/start_typing" />
-
     <TextView
-        android:id="@+id/textView6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="10dp"
+        android:text="@string/text_preview"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textPreview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="15dp"
+        android:text="@string/text"
+        android:textColor="@android:color/black"
+        android:textSize="26sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
         android:text="@string/font"
         android:textColor="@android:color/black"
         android:textSize="20sp"
@@ -34,20 +47,20 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/textCancelButton"
+            android:id="@+id/cancelTextStyle"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/cancel"
-            android:theme="@style/FlatButton" />
+            android:theme="@style/FlatButtonControlWhite" />
 
         <Button
-            android:id="@+id/addTextButton"
+            android:id="@+id/applyTextStyle"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/add_text"
-            android:theme="@style/FlatButton" />
+            android:text="@string/apply"
+            android:theme="@style/FlatButtonControlWhite" />
     </LinearLayout>
 
 </LinearLayout>

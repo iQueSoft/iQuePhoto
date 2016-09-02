@@ -48,7 +48,7 @@
     <string name="crop_6_3">6 : 4</string>
     <string name="crop_16_9">6 : 4</string>
 
-    <!-- For stickers tool. -->
+    <!-- START - Stickers. -->
     <string name="stickers">Stickers</string>
 
     <!-- START - Flag stickers. -->
@@ -80,6 +80,7 @@
     <string name="emoticon_smart">Smart</string>
     <string name="emoticon_embarrassed">Embarrassed</string>
     <!-- Emoticons stickers - END. -->
+    <!-- Stickers - END. -->
 
     <!-- For rotate tool. -->
     <string name="rotation">Rotation</string>
@@ -87,8 +88,16 @@
     <string name="flip">Flip</string>
     <string name="angle">Angle</string>
 
-    <!-- For text tool. -->
-    <string name="tool_add_text">Text</string>
+    <!-- START - Text tool. -->
+    <string name="text">Text</string>
+    <string name="text_style">Style</string>
+    <string name="text_action">Action</string>
+    <string name="text_preview">Text preview</string>
+    <string name="text_added">Text added!</string>
+    <string name="text_is_empty">Text field is empty, please type text before add it!</string>
+    <string name="text_delete_enabled">Removing text is enabled!</string>
+    <string name="text_delete_disabled">Removing text is disabled!</string>
+    <!-- Text tool - END. -->
 
     <!-- For filters -->
     <string name="tool_filters">Filters</string>

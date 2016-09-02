@@ -23,12 +23,18 @@ public class TextFragmentPresenterImpl implements ITextFragmentPresenter {
     }
 
     @Override
-    public void addText(String text, int color, Typeface typeface) {
+    public void addText(String text, int color, Typeface typeface, int opacity) {
         PhotoEditorText photoEditorText = new PhotoEditorText();
         photoEditorText.setTypeface(typeface);
         photoEditorText.setText(text);
         photoEditorText.setColor(color);
+        photoEditorText.setOpacity(opacity);
 
-        view.onAddComplete(photoEditorText);
+        view.onAddTextComplete(photoEditorText);
+    }
+
+    @Override
+    public void deleteText(PhotoEditorText photoEditorText) {
+        view.onDeleteTextComplete(photoEditorText);
     }
 }

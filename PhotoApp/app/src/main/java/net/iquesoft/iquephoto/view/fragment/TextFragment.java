@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import net.iquesoft.iquephoto.DataHolder;
@@ -21,6 +22,8 @@ import net.iquesoft.iquephoto.view.dialog.ColorPickerDialog;
 import net.iquesoft.iquephoto.view.dialog.TextDialog;
 import net.iquesoft.iquephoto.presenter.TextFragmentPresenterImpl;
 import net.iquesoft.iquephoto.view.ITextFragmentView;
+
+import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
 import javax.inject.Inject;
 
@@ -43,6 +46,7 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
     private Unbinder unbinder;
 
     private PhotoEditorView photoEditorView;
+
     private PhotoEditorText photoEditorText;
 
     private TextDialog textDialog;
@@ -50,6 +54,12 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
 
     @Inject
     TextFragmentPresenterImpl presenter;
+
+    @BindView(R.id.textOpacityValue)
+    TextView opacityValueTextView;
+
+    @BindView(R.id.textOpacitySeekBar)
+    DiscreteSeekBar seekBar;
 
     @BindView(R.id.hideTextSettingsButton)
     ImageView hideTextSettings;
@@ -87,6 +97,25 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
         textDialog = new TextDialog(v.getContext(), this);
         colorPickerDialog = new ColorPickerDialog(v.getContext());
 
+        opacityValueTextView.setText(String.valueOf(seekBar.getProgress()));
+
+        seekBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
+            @Override
+            public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
+                opacityValueTextView.setText(String.valueOf(value));
+            }
+
+            @Override
+            public void onStartTrackingTouch(DiscreteSeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(DiscreteSeekBar seekBar) {
+
+            }
+        });
+
         return v;
     }
 
@@ -109,7 +138,7 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
             color = colorPickerDialog.getColor();
             typeface = textDialog.getTypeface();
 
-            presenter.addText(text, color, typeface);
+            presenter.addText(text, color, typeface, seekBar.getProgress());
         } else {
             Toast.makeText(context, getResources().getString(R.string.text_is_empty), Toast.LENGTH_SHORT).show();
         }
@@ -146,6 +175,9 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
         if (!isDeleteActive) {
             isDeleteActive = true;
             deleteTextButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_delete_on));
+
+            // Todo: Delete text from PhotoEditorView.
+            //presenter.deleteText(photoEditorView.getTextsList().get(photoEditorView.getCheckedTextId()));
             Toast.makeText(context, getResources().getString(R.string.text_delete_enabled), Toast.LENGTH_SHORT).show();
         } else {
             isDeleteActive = false;
@@ -168,8 +200,15 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
     }
 
     @Override
-    public void onAddComplete(PhotoEditorText photoEditorText) {
+    public void onAddTextComplete(PhotoEditorText photoEditorText) {
         photoEditorView.addText(photoEditorText);
         Toast.makeText(context, getResources().getString(R.string.text_added), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDeleteTextComplete(PhotoEditorText photoEditorText) {
+        if (isDeleteActive) {
+            photoEditorView.deleteText(photoEditorText);
+        }
     }
 }

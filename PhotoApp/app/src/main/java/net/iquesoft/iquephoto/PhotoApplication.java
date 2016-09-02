@@ -3,8 +3,8 @@ package net.iquesoft.iquephoto;
 import android.app.Application;
 import android.content.Context;
 
-import net.iquesoft.iquephoto.di.components.IApplicationComponent;
 import net.iquesoft.iquephoto.di.components.DaggerIApplicationComponent;
+import net.iquesoft.iquephoto.di.components.IApplicationComponent;
 import net.iquesoft.iquephoto.di.modules.ApplicationModule;
 
 public class PhotoApplication extends Application {

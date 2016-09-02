@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapters.StickersPagerAdapter;
@@ -33,6 +34,9 @@ public class StickersFragment extends BaseFragment implements IStickersFragmentV
 
     @BindView(R.id.hideStickersButton)
     ImageView hideStickersButton;
+
+    @BindView(R.id.stickersLayout)
+    LinearLayout stickersLayout;
 
     @BindView(R.id.stickersViewPager)
     ViewPager viewPager;
@@ -77,14 +81,14 @@ public class StickersFragment extends BaseFragment implements IStickersFragmentV
     }
 
     @OnClick(R.id.hideStickersButton)
-    public void onClickHideStickers(View view) {
+    public void onClickHideStickers() {
         if (!isHide) {
             hideStickersButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_expand_less));
-            viewPager.setVisibility(View.GONE);
+            stickersLayout.setVisibility(View.GONE);
             isHide = true;
         } else {
             hideStickersButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_expand));
-            viewPager.setVisibility(View.VISIBLE);
+            stickersLayout.setVisibility(View.VISIBLE);
             isHide = false;
         }
     }

@@ -25,6 +25,8 @@ import butterknife.OnClick;
  */
 public class TextDialog extends Dialog {
 
+    // Todo: Make text style like as normal, bold and italic text.
+
     //private static final String TAG = TextDialog.class.getSimpleName();
     private Context context;
     private TextFragment textFragment;
@@ -85,7 +87,6 @@ public class TextDialog extends Dialog {
         fontsList.setAdapter(fontsAdapter);
 
     }
-
 
     /**
      * Show this dialog.

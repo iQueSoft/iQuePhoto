@@ -16,6 +16,7 @@ public class PhotoEditorText {
     private int color;
     private int x;
     private int y;
+    private int opacity;
     private Rect textArea = new Rect();
 
     public int getX() {
@@ -115,5 +116,13 @@ public class PhotoEditorText {
 
     public void setTypefacePath(String typefacePath) {
         this.typefacePath = typefacePath;
+    }
+
+    public int getOpacity() {
+        return opacity;
+    }
+
+    public void setOpacity(int opacity) {
+        this.opacity = opacity;
     }
 }

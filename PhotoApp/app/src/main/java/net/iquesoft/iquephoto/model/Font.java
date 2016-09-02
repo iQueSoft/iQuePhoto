@@ -8,6 +8,8 @@ import java.util.List;
  */
 public class Font {
 
+    // Todo: Add more fonts.
+
     private String title;
     private String typeface;
 
@@ -24,6 +26,7 @@ public class Font {
     public static Font fonts[] = {
             new Font("Black sword", "Blacksword.otf"),
             new Font("Summer Hearts", "SummerHearts-Regular.otf"),
+            new Font("Cigarettes &amp Coffee", "CigarettesAndCoffee.ttf"),
             new Font("Abys", "Abys-Regular.otf"),
             new Font("Reis", "REIS-Regular.ttf"),
     };

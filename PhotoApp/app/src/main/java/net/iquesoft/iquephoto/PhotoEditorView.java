@@ -57,7 +57,7 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
     private float mIndependentAngle;
     private PhotoEditorImage photoEditorImage;
     private int emptyColor;
-    private float defaultTextSize = 14f;
+    private float defaultTextSize = 22f;
     private int defaultTextColor;
     private Typeface textTypeface;
 
@@ -99,6 +99,14 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
 
     public Bitmap getBitamp() {
         return photoEditorImage.getBitmap();
+    }
+
+    public List<PhotoEditorText> getTextsList() {
+        return textsList;
+    }
+
+    public int getCheckedTextId() {
+        return checkedTextId;
     }
 
     /**
@@ -198,30 +206,70 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
         }
     }
 
+    // Todo: Make sticker adding.
+
+    /**
+     *
+     */
+    public void addSticker(Sticker sticker) {
+        /*if (text.getSize() == 0) {
+            text.setSize(defaultTextSize);
+        }
+        if (text.getColor() == 0) {
+            text.setColor(defaultTextColor);
+        }
+        if (text.getTypeface() == null) {
+            text.setTypeface(textTypeface);
+        }*/
+        this.stickersList.add(sticker);
+        invalidate();
+    }
+
     private void drawStickers(Canvas canvas, Paint paint) {
         if (isSaveInProccess) {
-            for (PhotoEditorText text : textsList) {
-                paint.setTypeface(text.getTypeface());
-                float pixelDensity = scalingForSave;
-                paint.setTextSize(text.getSize() * pixelDensity);
-                paint.setColor(text.getColor());
-                canvas.drawText(text.getText(), text.getX() * pixelDensity, text.getY() * pixelDensity + paint.getTextSize(), paint);
+            for (Sticker sticker : stickersList) {
+                Bitmap bitmap = BitmapFactory.decodeResource(getResources(), sticker.getImage());
+                canvas.drawBitmap(bitmap, 0, 0, paint);
             }
         } else {
-            for (int i = 0; i < textsList.size(); i++) {
-                PhotoEditorText text = textsList.get(i);
-                text.setPaintParams(paint);
-                canvas.drawText(text.getText(), text.getX(), text.getY() + text.getSize(), paint);
+            for (int i = 0; i < stickersList.size(); i++) {
+                Sticker sticker = stickersList.get(i);
+                Bitmap bitmap = BitmapFactory.decodeResource(getResources(), sticker.getImage());
+                canvas.drawBitmap(bitmap, 0, 0, paint);
+                //canvas.drawText(text.getText(), text.getX(), text.getY() + text.getSize(), paint);
                 if (drawTextBorder) {
                     if (checkedTextId == -1 || (checkedTextId != -1 && checkedTextId == i)) {
                         paint.setColor(PhotoEditorText.TEXT_BACKGROUND_COLOR);
-                        canvas.drawRect(text.getTextArea(), paint);
+                        canvas.drawRect(sticker.getStickerArea(), paint);
                     }
                 }
             }
         }
     }
 
+    /**
+     *
+     */
+    public void addText(PhotoEditorText text) {
+        if (text.getSize() == 0) {
+            text.setSize(defaultTextSize);
+        }
+        if (text.getColor() == 0) {
+            text.setColor(defaultTextColor);
+        }
+        if (text.getTypeface() == null) {
+            text.setTypeface(textTypeface);
+        }
+        this.textsList.add(text);
+        invalidate();
+    }
+
+
+    // Todo: Make text opacity.
+
+    /**
+     *
+     */
     private void drawTexts(Canvas canvas, Paint paint) {
         if (isSaveInProccess) {
             for (PhotoEditorText text : textsList) {
@@ -229,6 +277,7 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
                 float pixelDensity = scalingForSave;
                 paint.setTextSize(text.getSize() * pixelDensity);
                 paint.setColor(text.getColor());
+                paint.setAlpha(text.getOpacity());
                 canvas.drawText(text.getText(), text.getX() * pixelDensity, text.getY() * pixelDensity + paint.getTextSize(), paint);
             }
         } else {
@@ -284,19 +333,6 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
         requestLayout();
     }
 
-    public void addText(PhotoEditorText text) {
-        if (text.getSize() == 0) {
-            text.setSize(defaultTextSize);
-        }
-        if (text.getColor() == 0) {
-            text.setColor(defaultTextColor);
-        }
-        if (text.getTypeface() == null) {
-            text.setTypeface(textTypeface);
-        }
-        this.textsList.add(text);
-        invalidate();
-    }
 
     public void setMaxScaleSize(float scale) {
         photoEditorImage.setMaxScaleSize(scale);

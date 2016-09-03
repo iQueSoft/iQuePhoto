@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
@@ -39,6 +40,9 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
 
     private List<PhotoEditorText> textsList = new LinkedList<PhotoEditorText>();
     private List<Sticker> stickersList = new LinkedList<Sticker>();
+
+    private boolean hasFilter = false;
+    private ColorMatrixColorFilter matrixColorFilter;
 
     // display width height.
     // double tap for determining
@@ -107,6 +111,16 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
 
     public int getCheckedTextId() {
         return checkedTextId;
+    }
+
+    public void setImageBitmap(Bitmap bitmap) {
+        imageList.add(bitmap);
+        photoEditorImage = new PhotoEditorImage();
+        photoEditorImage.setBitmap(bitmap);
+        calculatePadding = true;
+        this.initialize();
+        invalidate();
+        requestLayout();
     }
 
     /**
@@ -225,6 +239,14 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
         invalidate();
     }
 
+    public void setFilter(ColorMatrixColorFilter matrixColorFilter) {
+        if (matrixColorFilter != null) {
+            hasFilter = true;
+            this.matrixColorFilter = matrixColorFilter;
+            invalidate();
+        }
+    }
+
     private void drawStickers(Canvas canvas, Paint paint) {
         if (isSaveInProccess) {
             for (Sticker sticker : stickersList) {
@@ -293,6 +315,52 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
                 }
             }
         }
+    }
+
+    private void drawImage(Canvas canvas, Paint paint) {
+        calculateImagePart();
+        Matrix matrix = new Matrix();
+        float scale = photoEditorImage.getScale() / getImageScaleForUnionArea(imageSquare, photoEditorImage);
+        if (isSaveInProccess) {
+            matrix.setScale(scale * scalingForSave, scale * scalingForSave);
+        } else {
+            matrix.setScale(scale, scale);
+        }
+        matrix.postRotate(-photoEditorImage.getRoationDegrees());
+        float ab = (float) (mRotateCenterDistance * Math.cos(Math.toRadians(mRotateCenterAngle)));
+        float aB = (float) (mRotateCenterDistance * Math.cos(Math.toRadians(mRotateCenterAngle - mIndependentAngle))) * mIndependentScale;
+        float ac = (float) (mRotateCenterDistance * Math.sin(Math.toRadians(mRotateCenterAngle)));
+        float aC = (float) (mRotateCenterDistance * Math.sin(Math.toRadians(mRotateCenterAngle - mIndependentAngle))) * mIndependentScale;
+
+        if (isSaveInProccess) {
+            matrix.postTranslate(scalingForSave * (ab - aB - photoEditorImage.getLeft()), scalingForSave * (ac - aC - photoEditorImage.getTop()));
+        } else {
+            matrix.postTranslate((ab - aB) - photoEditorImage.getLeft(), (ac - aC) - photoEditorImage.getTop());
+        }
+        canvas.drawBitmap(photoEditorImage.getBitmap(), matrix, paint);
+    }
+
+    private void drawImageWithFilter(Canvas canvas, Paint paint) {
+        calculateImagePart();
+        Matrix matrix = new Matrix();
+        float scale = photoEditorImage.getScale() / getImageScaleForUnionArea(imageSquare, photoEditorImage);
+        if (isSaveInProccess) {
+            matrix.setScale(scale * scalingForSave, scale * scalingForSave);
+        } else {
+            matrix.setScale(scale, scale);
+        }
+        matrix.postRotate(-photoEditorImage.getRoationDegrees());
+        float ab = (float) (mRotateCenterDistance * Math.cos(Math.toRadians(mRotateCenterAngle)));
+        float aB = (float) (mRotateCenterDistance * Math.cos(Math.toRadians(mRotateCenterAngle - mIndependentAngle))) * mIndependentScale;
+        float ac = (float) (mRotateCenterDistance * Math.sin(Math.toRadians(mRotateCenterAngle)));
+        float aC = (float) (mRotateCenterDistance * Math.sin(Math.toRadians(mRotateCenterAngle - mIndependentAngle))) * mIndependentScale;
+
+        if (isSaveInProccess) {
+            matrix.postTranslate(scalingForSave * (ab - aB - photoEditorImage.getLeft()), scalingForSave * (ac - aC - photoEditorImage.getTop()));
+        } else {
+            matrix.postTranslate((ab - aB) - photoEditorImage.getLeft(), (ac - aC) - photoEditorImage.getTop());
+        }
+        canvas.drawBitmap(photoEditorImage.getBitmap(), matrix, paint);
     }
 
     public boolean isFreeTransform() {
@@ -407,31 +475,12 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
         } else {
             canvas.drawColor(imagePaddingColor);
             drawImage(canvas, paint);
+            if (hasFilter) {
+                paint.setColorFilter(matrixColorFilter);
+                drawImageWithFilter(canvas, paint);
+            }
             drawTexts(canvas, new Paint());
         }
-    }
-
-    private void drawImage(Canvas canvas, Paint paint) {
-        calculateImagePart();
-        Matrix matrix = new Matrix();
-        float scale = photoEditorImage.getScale() / getImageScaleForUnionArea(imageSquare, photoEditorImage);
-        if (isSaveInProccess) {
-            matrix.setScale(scale * scalingForSave, scale * scalingForSave);
-        } else {
-            matrix.setScale(scale, scale);
-        }
-        matrix.postRotate(-photoEditorImage.getRoationDegrees());
-        float ab = (float) (mRotateCenterDistance * Math.cos(Math.toRadians(mRotateCenterAngle)));
-        float aB = (float) (mRotateCenterDistance * Math.cos(Math.toRadians(mRotateCenterAngle - mIndependentAngle))) * mIndependentScale;
-        float ac = (float) (mRotateCenterDistance * Math.sin(Math.toRadians(mRotateCenterAngle)));
-        float aC = (float) (mRotateCenterDistance * Math.sin(Math.toRadians(mRotateCenterAngle - mIndependentAngle))) * mIndependentScale;
-
-        if (isSaveInProccess) {
-            matrix.postTranslate(scalingForSave * (ab - aB - photoEditorImage.getLeft()), scalingForSave * (ac - aC - photoEditorImage.getTop()));
-        } else {
-            matrix.postTranslate((ab - aB) - photoEditorImage.getLeft(), (ac - aC) - photoEditorImage.getTop());
-        }
-        canvas.drawBitmap(photoEditorImage.getBitmap(), matrix, paint);
     }
 
 
@@ -536,15 +585,6 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
         return createBitmap(newWidth, newHeight, Bitmap.Config.ARGB_8888);
     }
 
-    public void setImageBitmap(Bitmap bitmap) {
-        imageList.add(bitmap);
-        photoEditorImage = new PhotoEditorImage();
-        photoEditorImage.setBitmap(bitmap);
-        calculatePadding = true;
-        this.initialize();
-        invalidate();
-        requestLayout();
-    }
 
     public Bitmap createBitmap(int newWidth, int newHeight, Bitmap.Config config) throws OutOfMemoryError {
         Bitmap bmp = null;
@@ -872,6 +912,14 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
             newText.setTypefacePath(initText.getTypefacePath());
             textsList.add(newText);
         }
+    }
+
+    public ColorMatrixColorFilter getMatrixColorFilter() {
+        return matrixColorFilter;
+    }
+
+    public void setMatrixColorFilter(ColorMatrixColorFilter matrixColorFilter) {
+        this.matrixColorFilter = matrixColorFilter;
     }
 
 

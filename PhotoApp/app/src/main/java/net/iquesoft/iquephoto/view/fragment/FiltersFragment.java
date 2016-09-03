@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import net.iquesoft.iquephoto.DataHolder;
+import net.iquesoft.iquephoto.PhotoEditorView;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapters.FiltersAdapter;
 import net.iquesoft.iquephoto.common.BaseFragment;
@@ -29,6 +31,8 @@ public class FiltersFragment extends BaseFragment implements IFiltersFragmentVie
     private boolean isHide = false;
 
     private Unbinder unbinder;
+
+    private PhotoEditorView photoEditorView;
 
     @Inject
     FiltersFragmentPresenterImpl presenter;
@@ -65,6 +69,8 @@ public class FiltersFragment extends BaseFragment implements IFiltersFragmentVie
 
         unbinder = ButterKnife.bind(this, v);
 
+        photoEditorView = DataHolder.getInstance().getPhotoEditorView();
+
         return v;
     }
 
@@ -83,6 +89,9 @@ public class FiltersFragment extends BaseFragment implements IFiltersFragmentVie
     @Override
     public void setFiltersAdapter() {
         FiltersAdapter filtersAdapter = new FiltersAdapter(Filter.getFiltersList());
+        filtersAdapter.setFiltersListener(filter -> {
+            photoEditorView.setFilter(filter.getMatrixColorFilter());
+        });
         filtersList.setLayoutManager(new LinearLayoutManager(null, LinearLayout.HORIZONTAL, false));
         filtersList.setAdapter(filtersAdapter);
     }

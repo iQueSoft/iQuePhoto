@@ -38,4 +38,5 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.3.0'
     compile 'com.google.dagger:dagger:2.5'
     compile 'com.android.support:design:24.1.1'
+    compile 'com.mikhaellopez:circularimageview:3.0.2'
 }

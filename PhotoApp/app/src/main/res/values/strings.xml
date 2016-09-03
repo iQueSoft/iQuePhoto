@@ -102,7 +102,11 @@
     <!-- For filters -->
     <string name="tool_filters">Filters</string>
     <string name="filter_original">Original</string>
-    <string name="filter_gross_process">Gross Process</string>
+    <string name="filter_morning">Morning</string>
+    <string name="filter_purple">Purple</string>
+    <string name="filter_goldie">Goldie</string>
+    <string name="filter_neon">Neon</string>
+    <string name="filter_grayscale">Grayscale</string>
 
     <!-- For brush tool. -->
     <string name="brush">Brush</string>

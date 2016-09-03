@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="70dp"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -7,15 +8,16 @@
     <FrameLayout
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:padding="2.5dp"
-        android:layout_gravity="center">
+        android:layout_gravity="center"
+        android:padding="2.5dp">
 
-        <ImageView
+        <com.mikhaellopez.circularimageview.CircularImageView
             android:id="@+id/filterImage"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@drawable/image_1" />
+            android:src="@drawable/image_1"
+            app:civ_border_width="1dp" />
 
         <ImageView
             android:id="@+id/filterChecked"
@@ -35,11 +37,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginBottom="2.5dp"
+            android:gravity="center"
             android:text="@string/filter_original"
             android:textColor="@android:color/white"
-            android:textSize="14sp"
-            android:layout_marginBottom="2.5dp"
-            android:gravity="center" />
+            android:textSize="14sp" />
     </FrameLayout>
 
 </LinearLayout>

@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.mikhaellopez.circularimageview.CircularImageView;
+
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.model.Filter;
 import net.iquesoft.iquephoto.view.fragment.FiltersFragment;
@@ -77,7 +79,7 @@ public class FiltersAdapter extends RecyclerView.Adapter<FiltersAdapter.ViewHold
         public TextView filterTitle;
 
         @BindView(R.id.filterImage)
-        public ImageView filterIcon;
+        public CircularImageView filterIcon;
 
         @BindView(R.id.filterChecked)
         public ImageView filterChecked;

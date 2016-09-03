@@ -1,9 +1,7 @@
 package net.iquesoft.iquephoto.model;
 
-import android.media.effect.Effect;
-import android.media.effect.EffectContext;
-import android.media.effect.EffectFactory;
-import android.support.annotation.Nullable;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 
 import net.iquesoft.iquephoto.R;
 
@@ -12,22 +10,13 @@ import java.util.List;
 
 /**
  * @author Sergey Belenkiy
- *         Filter model class how works with EffectFactory api.
+ *         Filter model class how works with {@link ColorMatrixColorFilter}.
  */
 public class Filter {
 
     private int title;
     private int image;
-    private Effect effect;
-
-    private EffectContext effectContext;
-    private EffectFactory effectFactory;
-
-    private static Filter instance = new Filter();
-
-    public static Filter getInstance() {
-        return instance;
-    }
+    private ColorMatrixColorFilter matrixColorFilter;
 
     /**
      * @return list with all editor tools for adapter usage;
@@ -41,10 +30,37 @@ public class Filter {
      */
     public static Filter[] filters = {
             new Filter(R.string.filter_original, R.drawable.image_1),
-            new Filter(R.string.filter_gross_process, R.drawable.image_1),
-            new Filter(R.string.filter_gross_process, R.drawable.image_1),
-    };
 
+            new Filter(R.string.filter_morning, R.drawable.image_1, new ColorMatrixColorFilter(new ColorMatrix(new float[]{
+                    1, 0, 0, 0, 0,
+                    0, 1, 0, 0, 0,
+                    0, 0, 0, 0, 0,
+                    0, 0, 0, 1, 0}))),
+
+            new Filter(R.string.filter_purple, R.drawable.image_1, new ColorMatrixColorFilter(new ColorMatrix(new float[]{
+                    1, 0, 0, 0.2f, 0,
+                    0, 1, 0, 0, 0,
+                    0, 0, 1, 0.2f, 0,
+                    0, 0, 0, 1, 0}))),
+
+            new Filter(R.string.filter_goldie, R.drawable.image_1, new ColorMatrixColorFilter(new ColorMatrix(new float[]{
+                    0.55f, 0, 0, 0.34f, 0,
+                    0, 0.25f, 0, 0.2f, 0,
+                    0, 0, 0.11f, 0, 0,
+                    0, 0, 0, 2.85f, 0}))),
+
+            new Filter(R.string.filter_neon, R.drawable.image_1, new ColorMatrixColorFilter(new ColorMatrix(new float[]{
+                    1, 0.3f, 0, 0, 0,
+                    0, 1, 0, 0, 0,
+                    0, 0.3f, 0, 0, 0,
+                    0, 0, 0, 1, 0}))),
+
+            new Filter(R.string.filter_grayscale, R.drawable.image_1, new ColorMatrixColorFilter(new ColorMatrix(new float[]{
+                    0.3f, 0.75f, 0.11f, 0, 1,
+                    0.3f, 0.75f, 0.11f, 0, 1,
+                    0.3f, 0.75f, 0.11f, 0, 1,
+                    0, 0, 0, 1.3f, 0}))),
+    };
 
     public Filter() {
 
@@ -55,10 +71,10 @@ public class Filter {
         this.image = image;
     }
 
-    public Filter(int title, int image, @Nullable Effect effect) {
+    public Filter(int title, int image, ColorMatrixColorFilter matrixColorFilter) {
         this.title = title;
         this.image = image;
-        this.effect = effect;
+        this.matrixColorFilter = matrixColorFilter;
     }
 
     public int getTitle() {
@@ -77,34 +93,12 @@ public class Filter {
         this.image = image;
     }
 
-    public Effect getEffect() {
-        return effect;
+    public ColorMatrixColorFilter getMatrixColorFilter() {
+        return matrixColorFilter;
     }
 
-    public void setEffect(Effect effect) {
-        this.effect = effect;
-    }
+    public void setMatrixColorFilter(ColorMatrixColorFilter matrixColorFilter) {
 
-    public EffectContext getEffectContext() {
-        return effectContext;
-    }
-
-    public void setEffectContext(EffectContext effectContext) {
-        this.effectContext = effectContext;
-    }
-
-    public EffectFactory getEffectFactory() {
-        return effectFactory;
-    }
-
-    public void setEffectFactory(EffectFactory effectFactory) {
-        this.effectFactory = effectFactory;
-    }
-
-    /**
-     * @return effect object for "Gross Process" filter;
-     */
-    private Effect getCrossProcess() {
-        return effectFactory.createEffect(EffectFactory.EFFECT_CROSSPROCESS);
+        this.matrixColorFilter = matrixColorFilter;
     }
 }

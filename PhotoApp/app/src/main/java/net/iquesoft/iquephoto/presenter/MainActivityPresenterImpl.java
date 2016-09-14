@@ -54,7 +54,7 @@ public class MainActivityPresenterImpl implements IMainActivityPresenter {
         Random generator = new Random();
         int n = 10000;
         n = generator.nextInt(n);
-        String fname = "Image-" + n + ".jpg";
+        String fname = "EditorImage-" + n + ".jpg";
         File file = new File(myDir, fname);
         if (file.exists()) file.delete();
         try {

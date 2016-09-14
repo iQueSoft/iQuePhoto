@@ -14,7 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import net.iquesoft.iquephoto.DataHolder;
-import net.iquesoft.iquephoto.PhotoEditorView;
+import net.iquesoft.iquephoto.EditorView;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapters.ToolsAdapter;
 import net.iquesoft.iquephoto.common.BaseActivity;
@@ -25,7 +25,10 @@ import net.iquesoft.iquephoto.di.components.IMainActivityComponent;
 import net.iquesoft.iquephoto.di.modules.MainActivityModule;
 import net.iquesoft.iquephoto.model.Tool;
 import net.iquesoft.iquephoto.presenter.MainActivityPresenterImpl;
+import net.iquesoft.iquephoto.utils.ImageHelper;
 import net.iquesoft.iquephoto.view.IMainActivityView;
+import net.iquesoft.iquephoto.view.fragment.CropFragment;
+import net.iquesoft.iquephoto.view.fragment.TextFragment;
 
 import javax.inject.Inject;
 
@@ -43,7 +46,7 @@ public class MainActivity extends BaseActivity implements IMainActivityView, IHa
     private IMainActivityComponent mainActivityComponent;
 
     @BindView(R.id.photoEditorView)
-    PhotoEditorView photoEditorView;
+    EditorView editorView;
 
     @BindView(R.id.toolsView)
     RecyclerView tools;
@@ -67,10 +70,11 @@ public class MainActivity extends BaseActivity implements IMainActivityView, IHa
 
         bitmap = BitmapFactory.decodeFile(getIntent().getStringExtra("bitmap_path"));
 
-        photoEditorView.setImageBitmap(bitmap);
+        editorView.setImageBitmap(bitmap);
+        //photoEditorView.setFreeTransform(true);
         //photoEditorView.setSquareEditorListener(this);
 
-        DataHolder.getInstance().setPhotoEditorView(photoEditorView);
+        DataHolder.getInstance().setEditorView(editorView);
     }
 
     @Override
@@ -93,6 +97,18 @@ public class MainActivity extends BaseActivity implements IMainActivityView, IHa
             if (tool != currentTool) {
                 try {
                     presenter.changeTool(tool);
+                    switch (tool.getTitle()) {
+                        case R.string.crop:
+                            editorView.setCropActivated(true);
+                            break;
+                        case R.string.text:
+                            editorView.setTextActivated(true);
+                            break;
+                        default:
+                            editorView.setCropActivated(false);
+                            editorView.setTextActivated(false);
+                            break;
+                    }
                 } catch (NullPointerException e) {
                     e.printStackTrace();
 
@@ -122,10 +138,23 @@ public class MainActivity extends BaseActivity implements IMainActivityView, IHa
     public void showAlertDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyAlertDialogStyle);
         builder.setMessage(getString(R.string.on_back_alert));
-        builder.setPositiveButton("OK", (dialogInterface, i) -> {
+
+        builder.setPositiveButton(getString(R.string.ok), (dialogInterface, i) -> {
             finish();
         });
-        builder.setNegativeButton("Cancel", (dialogInterface, i1) -> {
+
+        // Todo: Make save button in AlertDialog
+        builder.setNeutralButton(getString(R.string.save), ((dialogInterface1, i) -> {
+            String path = ImageHelper.getPath(getString(R.string.app_name));
+            /*try {
+                photoEditorView.saveImages(path);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }*/
+
+        }));
+
+        builder.setNegativeButton(getString(R.string.cancel), (dialogInterface, i1) -> {
             dialogInterface.dismiss();
         });
         builder.show();
@@ -141,8 +170,4 @@ public class MainActivity extends BaseActivity implements IMainActivityView, IHa
         return mainActivityComponent;
     }
 
-    /*@Override
-    public void editText(PhotoEditorText giantSquareText) {
-
-    }*/
 }

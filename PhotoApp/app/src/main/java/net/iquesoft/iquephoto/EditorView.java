@@ -6,13 +6,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -20,29 +20,51 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
+import net.iquesoft.iquephoto.crop.OnCropBoxChangedListener;
+import net.iquesoft.iquephoto.model.CropBox;
+import net.iquesoft.iquephoto.model.EditorImage;
+import net.iquesoft.iquephoto.model.Text;
 import net.iquesoft.iquephoto.model.Sticker;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class PhotoEditorView extends View implements View.OnTouchListener {
+public class EditorView extends View implements View.OnTouchListener {
 
-    private final String TAG = PhotoEditorView.class.getSimpleName();
+    private final String TAG = EditorView.class.getSimpleName();
 
     private static final int LONG_PRESS_MILLISECOND = 1000;
     private static final long LONG_PRESS_TEXT_MILLISECOND = 2000;
 
     private List<Bitmap> imageList = new ArrayList<>();
 
-    private List<PhotoEditorText> textsList = new LinkedList<PhotoEditorText>();
+    private EditorImage editorImage;
+
+    private boolean cropActivated = false;
+    private boolean textActivated = false;
+
+    // For meme
+    private String topMemeText;
+    private String bottomMemeText;
+
+    // For text
+    private int checkedTextId = -1;
+    private boolean deleteTextActivated = false;
+    private float defaultTextSize = 22f;
+    private int defaultTextColor;
+    private Typeface textTypeface;
+    private List<Text> textsList = new LinkedList<Text>();
+
+    // For stickers
+    private int checkedStickerId = -1;
     private List<Sticker> stickersList = new LinkedList<Sticker>();
 
     private boolean hasFilter = false;
+
     private ColorMatrixColorFilter matrixColorFilter;
+
+    private ColorMatrix brightnessMatrix;
 
     // display width height.
     // double tap for determining
@@ -59,19 +81,16 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
     private double mRotateCenterAngle = 0;
     private float mIndependentScale = 1f;
     private float mIndependentAngle;
-    private PhotoEditorImage photoEditorImage;
     private int emptyColor;
-    private float defaultTextSize = 22f;
-    private int defaultTextColor;
-    private Typeface textTypeface;
 
-    private Rect imageSquare;
+    private Rect imageRect;
     private Rect allSquare;
+
     private int imagePadding;
     private Rect imagePart;
     private int imagePaddingColor = Color.BLACK;
     private boolean freeTransform;
-    private int checkedTextId = -1;
+
     private Bitmap emptryBackgroung = null;
     private OnSquareEditorListener squareEditorListener;
     private String emptyText;
@@ -80,15 +99,37 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
     private boolean calculatePadding = true;
     private boolean longClick;
     private boolean changeImage;
-    private OnSquareEditorPictureClickListener onSquareEditorPictureClickListener;
-    private boolean imageCentering;
-    private boolean drawTextBorder;
 
-    public PhotoEditorView(Context context) {
+    private OnSquareEditorPictureClickListener onSquareEditorPictureClickListener;
+
+    // For crop
+    private Paint cropPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private CropBox cropBox;
+    private int cropX;
+    private int cropY;
+
+    private float cropLineWidth = 10f;
+    private float cropCornerWidth = 10f;
+    private float cropCornerLength = 50f;
+    private float cropOffset = cropLineWidth / 4;
+    private float cropOffset2 = cropLineWidth;
+
+    private int cropLineColor = getContext().getResources().getColor(R.color.white);
+    private int cropCornerColor = getContext().getResources().getColor(R.color.white);
+    private int cropShadowColor = getContext().getResources().getColor(R.color.colorBackground);
+
+    private OnCropBoxChangedListener onCropBoxChangedListener;
+
+    private boolean imageCentering;
+
+    private boolean drawTextBorder;
+    private boolean drawStickerBorder;
+
+    public EditorView(Context context) {
         super(context);
     }
 
-    public PhotoEditorView(Context context, AttributeSet attrs) {
+    public EditorView(Context context, AttributeSet attrs) {
         super(context, attrs);
         TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.GiantSquareEditorView, 0, 0);
         defaultTextColor = a.getColor(R.styleable.GiantSquareEditorView_defaultTextColor, Color.DKGRAY);
@@ -101,11 +142,71 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
         emptyText = a.getString(R.styleable.GiantSquareEditorView_emptyText);
     }
 
-    public Bitmap getBitamp() {
-        return photoEditorImage.getBitmap();
+    @Override
+    protected void onDraw(Canvas canvas) {
+        Paint paint = new Paint();
+        if (isEmpty()) {
+            if (emptryBackgroung == null) {
+                paint.setColor(emptyColor);
+                canvas.drawRect(imageRect, paint);
+            } else {
+                canvas.drawBitmap(emptryBackgroung, null, imageRect, paint);
+            }
+            /*if (!TextUtils.isEmpty(emptyText)) {
+                Paint paint1 = new Paint();
+                paint1.setTypeface(textTypeface);
+                paint1.setColor(Color.argb(128, 0, 0, 0));
+                float textSize = 10f;
+                paint1.setAntiAlias(true);
+                paint1.setTextSize(textSize);
+                Rect bounds = new Rect();
+                paint1.getTextBounds(emptyText, 0, emptyText.indexOf("\n"), bounds);
+                while ((float) bounds.width() / imageRect.width() < 0.7) {
+                    paint1.setTextSize(++textSize);
+                    paint1.getTextBounds(emptyText, 0, emptyText.indexOf("\n"), bounds);
+                }
+                int y = imageRect.centerY() + bounds.height() * 2;
+                for (String line : emptyText.split("\n")) {
+                    paint1.getTextBounds(line, 0, line.length(), bounds);
+                    canvas.drawText(line, imageRect.centerX() - bounds.width() / 2, y, paint1);
+                    y += bounds.height() + bounds.height() / 2;
+                }
+                //  canvas.drawText(emptyText, imageArea.centerX() - bounds.width() / 2, imageArea.centerY() + bounds.height() * 2, paint1);
+                paint1.setTextSize(textSize + 60);
+                paint1.getTextBounds("+", 0, 1, bounds);
+                canvas.drawText("+", imageRect.centerX() - bounds.width() / 2, imageArea.centerY(), paint1);
+            }*/
+        } else {
+            canvas.drawColor(imagePaddingColor);
+            drawImage(canvas, paint);
+            if (hasFilter) {
+                Paint filterPaint = new Paint();
+                filterPaint.setColorFilter(matrixColorFilter);
+                drawImageWithFilter(canvas, filterPaint);
+            }
+            drawTexts(canvas, new Paint());
+            if (stickersList.size() > 0) {
+                drawSticker(canvas, new Paint());
+            }
+            if (cropActivated) {
+                drawCropLines(canvas);
+                drawCropCorner(canvas);
+                //drawShadow(canvas);
+            }
+            if (topMemeText != null) {
+                drawTopMemeText(canvas);
+            }
+            if (bottomMemeText != null) {
+                drawBottomMemeText(canvas);
+            }
+        }
     }
 
-    public List<PhotoEditorText> getTextsList() {
+    public Bitmap getBitamp() {
+        return editorImage.getBitmap();
+    }
+
+    public List<Text> getTextsList() {
         return textsList;
     }
 
@@ -115,19 +216,119 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
 
     public void setImageBitmap(Bitmap bitmap) {
         imageList.add(bitmap);
-        photoEditorImage = new PhotoEditorImage();
-        photoEditorImage.setBitmap(bitmap);
+        editorImage = new EditorImage();
+        editorImage.setBitmap(bitmap);
         calculatePadding = true;
         this.initialize();
         invalidate();
         requestLayout();
     }
 
+    public void setHasNotFiler() {
+        this.hasFilter = false;
+        this.invalidate();
+    }
+
+    private void drawShadow(Canvas canvas) {
+
+        cropPaint.setStrokeWidth(0.0f);
+        cropPaint.setColor(cropShadowColor);
+
+        canvas.drawRect(cropX, cropY, cropX + getBitamp().getWidth(), cropBox.getY1(), cropPaint);
+        canvas.drawRect(cropX, cropBox.getY1(), cropBox.getX1(), cropBox.getY2(), cropPaint);
+        canvas.drawRect(cropBox.getX2(), cropBox.getY1(), cropX + getBitamp().getWidth(), cropBox.getY2(), cropPaint);
+        canvas.drawRect(cropX, cropBox.getY2(), cropX + getBitamp().getWidth(), cropY + getBitamp().getHeight(), cropPaint);
+    }
+
+    private void drawCropLines(Canvas canvas) {
+        cropPaint.setStrokeWidth(cropLineWidth);
+        cropPaint.setColor(cropLineColor);
+
+        canvas.drawLine(cropBox.getX1(), cropBox.getY1(), cropBox.getX2(), cropBox.getY1(), cropPaint);
+        canvas.drawLine(cropBox.getX2(), cropBox.getY1(), cropBox.getX2(), cropBox.getY2(), cropPaint);
+        canvas.drawLine(cropBox.getX2(), cropBox.getY2(), cropBox.getX1(), cropBox.getY2(), cropPaint);
+        canvas.drawLine(cropBox.getX1(), cropBox.getY2(), cropBox.getX1(), cropBox.getY1(), cropPaint);
+    }
+
+    public void drawTopMemeText(Canvas canvas) {
+        float x = (getBitamp().getWidth() / 2) + getMemePaint().measureText(topMemeText);
+        float y = 85;
+
+        canvas.drawText(topMemeText, x, y, getMemePaint());
+        canvas.drawText(topMemeText, x, y, getMemeStrokePaint());
+    }
+
+    public void drawBottomMemeText(Canvas canvas) {
+        float x = (getBitamp().getWidth() / 2) + getMemePaint().measureText(bottomMemeText);
+        float y = (getBitamp().getHeight() - 42.5f);
+
+        canvas.drawText(bottomMemeText, x, y, getMemePaint());
+        canvas.drawText(bottomMemeText, x, y, getMemeStrokePaint());
+    }
+
+    private Paint getMemeStrokePaint() {
+        Paint paint = new Paint();
+        paint.setColor(Color.BLACK);
+        paint.setTextSize(75);
+        paint.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "fonts/Impact.ttf"));
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(2);
+
+        return paint;
+    }
+
+    private Paint getMemePaint() {
+        Paint paint = new Paint();
+        paint.setColor(Color.WHITE);
+        paint.setTextSize(75);
+        paint.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "fonts/Impact.ttf"));
+        paint.setStrokeWidth(2);
+
+        return paint;
+    }
+
+    private void drawCropCorner(Canvas canvas) {
+        cropPaint.setStrokeWidth(cropCornerWidth);
+        cropPaint.setColor(cropCornerColor);
+
+        int x1 = cropBox.getX1();
+        int x2 = cropBox.getX2();
+        int y1 = cropBox.getY1();
+        int y2 = cropBox.getY2();
+
+        int minSize = (int) cropCornerLength;
+
+        canvas.drawLine(x1 - cropOffset2, y1 - cropOffset, x1 - cropOffset + minSize, y1 - cropOffset, cropPaint);
+        canvas.drawLine(x1 - cropOffset, y1 - cropOffset2, x1 - cropOffset, y1 - cropOffset + minSize, cropPaint);
+
+        canvas.drawLine(x2 + cropOffset2, y1 - cropOffset, x2 + cropOffset - minSize, y1 - cropOffset, cropPaint);
+        canvas.drawLine(x2 + cropOffset, y1 - cropOffset2, x2 + cropOffset, y1 - cropOffset + minSize, cropPaint);
+
+        canvas.drawLine(x1 - cropOffset2, y2 + cropOffset, x1 - cropOffset + minSize, y2 + cropOffset, cropPaint);
+        canvas.drawLine(x1 - cropOffset, y2 + cropOffset2, x1 - cropOffset, y2 + cropOffset - minSize, cropPaint);
+
+        canvas.drawLine(x2 + cropOffset2, y2 + cropOffset, x2 + cropOffset - minSize, y2 + cropOffset, cropPaint);
+        canvas.drawLine(x2 + cropOffset, y2 + cropOffset2, x2 + cropOffset, y2 + cropOffset - minSize, cropPaint);
+    }
+
+    public void setCropBox(CropBox cropBox) {
+        this.cropBox = cropBox;
+        invalidate();
+    }
+
+    public CropBox getCropBox() {
+        return cropBox;
+    }
+
+    public void setOnCropBoxChangedListener(OnCropBoxChangedListener onCropBoxChangedListener) {
+        this.onCropBoxChangedListener = onCropBoxChangedListener;
+    }
+
     /**
-     *
+     * Rotate editorImage.
      */
     public void rotateImage(float angle) {
-        Bitmap photoEditorImageBitmap = photoEditorImage.getBitmap();
+        Bitmap photoEditorImageBitmap = editorImage.getBitmap();
         Matrix matrix = new Matrix();
         matrix.postRotate(angle);
         try {
@@ -136,7 +337,7 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
                 setImageBitmap(bitmap);
             }
         } catch (OutOfMemoryError error) {
-            Log.e(TAG, "Too low mamory for rotate image", error);
+            Log.e(TAG, "Too low mamory for rotate editorImage", error);
             //Toast.makeText(getContext(), R.string.error_low_memory, Toast.LENGTH_SHORT).show();
         }
     }
@@ -145,7 +346,7 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
      *
      */
     public void horizontalFlip() {
-        Bitmap photoEditorImageBitmap = photoEditorImage.getBitmap();
+        Bitmap photoEditorImageBitmap = editorImage.getBitmap();
         Matrix matrix = new Matrix();
         matrix.preScale(-1, 1);
 
@@ -160,7 +361,7 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
      *
      */
     public void verticalFlip() {
-        Bitmap photoEditorImageBitmap = photoEditorImage.getBitmap();
+        Bitmap photoEditorImageBitmap = editorImage.getBitmap();
         Matrix matrix = new Matrix();
         matrix.preScale(1, -1);
 
@@ -174,68 +375,14 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
     /**
      *
      */
-    public void doBrightness(int value) {
-        int width = getBitamp().getWidth();
-        int height = getBitamp().getHeight();
-
-        Bitmap bitmap = Bitmap.createBitmap(width, height, getBitamp().getConfig());
-        if (bitmap != null) {
-            for (int x = 0; x < width; ++x) {
-                for (int y = 0; y < height; ++y) {
-                    // get pixel color
-                    int pixel = getBitamp().getPixel(x, y);
-                    int A = Color.alpha(pixel);
-                    int R = Color.red(pixel);
-                    int G = Color.green(pixel);
-                    int B = Color.blue(pixel);
-
-                    // increase/decrease each channel
-                    R += value;
-                    if (R > 255) {
-                        R = 255;
-                    } else if (R < 0) {
-                        R = 0;
-                    }
-
-                    G += value;
-                    if (G > 255) {
-                        G = 255;
-                    } else if (G < 0) {
-                        G = 0;
-                    }
-
-                    B += value;
-                    if (B > 255) {
-                        B = 255;
-                    } else if (B < 0) {
-                        B = 0;
-                    }
-
-                    // apply new pixel color to output bitmap
-                    bitmap.setPixel(x, y, Color.argb(A, R, G, B));
-                }
-            }
-
-            setImageBitmap(bitmap);
-        }
-    }
-
-    // Todo: Make sticker adding.
-
-    /**
-     *
-     */
-    public void addSticker(Sticker sticker) {
-        /*if (text.getSize() == 0) {
-            text.setSize(defaultTextSize);
-        }
-        if (text.getColor() == 0) {
-            text.setColor(defaultTextColor);
-        }
-        if (text.getTypeface() == null) {
-            text.setTypeface(textTypeface);
-        }*/
-        this.stickersList.add(sticker);
+    public void doBrightness(float value) {
+        brightnessMatrix = new ColorMatrix();
+        brightnessMatrix.set(new float[]{1, 0, 0, 0, value,
+                0, 1, 0, 0, value,
+                0, 0, 1, 0, value,
+                0, 0, 0, 1, 0});
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        paint.setColorFilter(new ColorMatrixColorFilter(brightnessMatrix));
         invalidate();
     }
 
@@ -259,9 +406,12 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
                 Bitmap bitmap = BitmapFactory.decodeResource(getResources(), sticker.getImage());
                 canvas.drawBitmap(bitmap, 0, 0, paint);
                 //canvas.drawText(text.getText(), text.getX(), text.getY() + text.getSize(), paint);
+
+                // Todo: Draw sticker border.
+
                 if (drawTextBorder) {
                     if (checkedTextId == -1 || (checkedTextId != -1 && checkedTextId == i)) {
-                        paint.setColor(PhotoEditorText.TEXT_BACKGROUND_COLOR);
+                        paint.setColor(Text.TEXT_BACKGROUND_COLOR);
                         canvas.drawRect(sticker.getStickerArea(), paint);
                     }
                 }
@@ -272,7 +422,7 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
     /**
      *
      */
-    public void addText(PhotoEditorText text) {
+    public void addText(Text text) {
         if (text.getSize() == 0) {
             text.setSize(defaultTextSize);
         }
@@ -286,6 +436,16 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
         invalidate();
     }
 
+    /**
+     *
+     */
+    public void addSticker(Sticker sticker) {
+        sticker.setX(100);
+        sticker.setY(100);
+        this.stickersList.add(sticker);
+        invalidate();
+    }
+
 
     // Todo: Make text opacity.
 
@@ -294,7 +454,7 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
      */
     private void drawTexts(Canvas canvas, Paint paint) {
         if (isSaveInProccess) {
-            for (PhotoEditorText text : textsList) {
+            for (Text text : textsList) {
                 paint.setTypeface(text.getTypeface());
                 float pixelDensity = scalingForSave;
                 paint.setTextSize(text.getSize() * pixelDensity);
@@ -304,12 +464,12 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
             }
         } else {
             for (int i = 0; i < textsList.size(); i++) {
-                PhotoEditorText text = textsList.get(i);
+                Text text = textsList.get(i);
                 text.setPaintParams(paint);
                 canvas.drawText(text.getText(), text.getX(), text.getY() + text.getSize(), paint);
                 if (drawTextBorder) {
                     if (checkedTextId == -1 || (checkedTextId != -1 && checkedTextId == i)) {
-                        paint.setColor(PhotoEditorText.TEXT_BACKGROUND_COLOR);
+                        paint.setColor(Text.TEXT_BACKGROUND_COLOR);
                         canvas.drawRect(text.getTextArea(), paint);
                     }
                 }
@@ -317,50 +477,117 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
         }
     }
 
+    private void findCheckedText(int x, int y) {
+        for (int i = textsList.size() - 1; i >= 0; i--) {
+            if (textsList.get(i).getTextArea().contains(x, y)) {
+                checkedTextId = i;
+                Log.d("Text", textsList.get(i).getText());
+                if (deleteTextActivated) {
+                    deleteText(textsList.get(i));
+                } else {
+                    return;
+                }
+            }
+        }
+        checkedTextId = -1;
+    }
+
+    public void deleteText(Text text) {
+        if (textsList != null && textsList.contains(text)) {
+            textsList.remove(text);
+            invalidate();
+            requestLayout();
+            String string = String.format(getResources().getString(R.string.text_deleted), text.getText());
+            Toast.makeText(getContext(), string, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     *
+     */
+    private void drawSticker(Canvas canvas, Paint paint) {
+        //if (isSaveInProccess) {
+        for (Sticker sticker : stickersList) {
+
+            float pixelDensity = scalingForSave;
+
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), sticker.getImage());
+            canvas.drawBitmap(bitmap, 100 * pixelDensity, 100 * pixelDensity, paint);
+            //if (drawStickerBorder) {
+            paint.setColor(Sticker.STICKER_BACKGROUND_COLOR);
+            canvas.drawRect(sticker.getStickerArea(), paint);
+            //}
+        }
+        /*} else {
+            for (int i = 0; i < textsList.size(); i++) {
+                Text text = textsList.get(i);
+                text.setPaintParams(paint);
+                canvas.drawText(text.getText(), text.getX(), text.getY() + text.getSize(), paint);
+                if (drawTextBorder) {
+                    if (checkedTextId == -1 || (checkedTextId != -1 && checkedTextId == i)) {
+                        paint.setColor(Text.STICKER_BACKGROUND_COLOR);
+                        canvas.drawRect(text.getTextArea(), paint);
+                    }
+                }
+            }
+        }*/
+    }
+
+    private void findCheckedSticker(int x, int y) {
+        for (int i = stickersList.size() - 1; i >= 0; i--) {
+            if (stickersList.get(i).getStickerArea().contains(x, y)) {
+                checkedStickerId = i;
+                Log.d("Sticker", stickersList.get(i).toString());
+                return;
+            }
+        }
+        checkedStickerId = -1;
+    }
+
     private void drawImage(Canvas canvas, Paint paint) {
         calculateImagePart();
         Matrix matrix = new Matrix();
-        float scale = photoEditorImage.getScale() / getImageScaleForUnionArea(imageSquare, photoEditorImage);
+        float scale = editorImage.getScale() / getImageScaleForUnionArea(imageRect, editorImage);
         if (isSaveInProccess) {
             matrix.setScale(scale * scalingForSave, scale * scalingForSave);
         } else {
             matrix.setScale(scale, scale);
         }
-        matrix.postRotate(-photoEditorImage.getRoationDegrees());
+        matrix.postRotate(-editorImage.getRoationDegrees());
         float ab = (float) (mRotateCenterDistance * Math.cos(Math.toRadians(mRotateCenterAngle)));
         float aB = (float) (mRotateCenterDistance * Math.cos(Math.toRadians(mRotateCenterAngle - mIndependentAngle))) * mIndependentScale;
         float ac = (float) (mRotateCenterDistance * Math.sin(Math.toRadians(mRotateCenterAngle)));
         float aC = (float) (mRotateCenterDistance * Math.sin(Math.toRadians(mRotateCenterAngle - mIndependentAngle))) * mIndependentScale;
 
         if (isSaveInProccess) {
-            matrix.postTranslate(scalingForSave * (ab - aB - photoEditorImage.getLeft()), scalingForSave * (ac - aC - photoEditorImage.getTop()));
+            matrix.postTranslate(scalingForSave * (ab - aB - editorImage.getLeft()), scalingForSave * (ac - aC - editorImage.getTop()));
         } else {
-            matrix.postTranslate((ab - aB) - photoEditorImage.getLeft(), (ac - aC) - photoEditorImage.getTop());
+            matrix.postTranslate((ab - aB) - editorImage.getLeft(), (ac - aC) - editorImage.getTop());
         }
-        canvas.drawBitmap(photoEditorImage.getBitmap(), matrix, paint);
+        canvas.drawBitmap(editorImage.getBitmap(), matrix, paint);
     }
 
     private void drawImageWithFilter(Canvas canvas, Paint paint) {
-        calculateImagePart();
         Matrix matrix = new Matrix();
-        float scale = photoEditorImage.getScale() / getImageScaleForUnionArea(imageSquare, photoEditorImage);
+        float scale = editorImage.getScale() / getImageScaleForUnionArea(imageRect, editorImage);
         if (isSaveInProccess) {
             matrix.setScale(scale * scalingForSave, scale * scalingForSave);
         } else {
             matrix.setScale(scale, scale);
         }
-        matrix.postRotate(-photoEditorImage.getRoationDegrees());
+        matrix.postRotate(-editorImage.getRoationDegrees());
         float ab = (float) (mRotateCenterDistance * Math.cos(Math.toRadians(mRotateCenterAngle)));
         float aB = (float) (mRotateCenterDistance * Math.cos(Math.toRadians(mRotateCenterAngle - mIndependentAngle))) * mIndependentScale;
         float ac = (float) (mRotateCenterDistance * Math.sin(Math.toRadians(mRotateCenterAngle)));
         float aC = (float) (mRotateCenterDistance * Math.sin(Math.toRadians(mRotateCenterAngle - mIndependentAngle))) * mIndependentScale;
 
         if (isSaveInProccess) {
-            matrix.postTranslate(scalingForSave * (ab - aB - photoEditorImage.getLeft()), scalingForSave * (ac - aC - photoEditorImage.getTop()));
+            matrix.postTranslate(scalingForSave * (ab - aB - editorImage.getLeft()), scalingForSave * (ac - aC - editorImage.getTop()));
         } else {
-            matrix.postTranslate((ab - aB) - photoEditorImage.getLeft(), (ac - aC) - photoEditorImage.getTop());
+            matrix.postTranslate((ab - aB) - editorImage.getLeft(), (ac - aC) - editorImage.getTop());
         }
-        canvas.drawBitmap(photoEditorImage.getBitmap(), matrix, paint);
+        canvas.drawBitmap(editorImage.getBitmap(), matrix, paint);
+        //canvas.drawBitmap(editorImage.getBitmap(), editorImage.getHeight(), editorImage.getWidth(), paint);
     }
 
     public boolean isFreeTransform() {
@@ -382,7 +609,7 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
 
     public int getImagePadding() {
         if (isSaveInProccess) {
-            float pixelDensity = (float) (imagePart.width()) / (imageSquare.width());
+            float pixelDensity = (float) (imagePart.width()) / (imageRect.width());
             return (int) (imagePadding * pixelDensity);
         } else {
             return imagePadding;
@@ -391,7 +618,7 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
 
     public void setImagePadding(int padding) {
         if (imageCentering == true) {
-            setFirstImageState();
+            //setFirstImageState();
             imageCentering = false;
         } else {
             this.imagePadding = padding;
@@ -403,7 +630,7 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
 
 
     public void setMaxScaleSize(float scale) {
-        photoEditorImage.setMaxScaleSize(scale);
+        editorImage.setMaxScaleSize(scale);
     }
 
     public Typeface getTextTypeface() {
@@ -438,87 +665,42 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
         this.emptyColor = emptyColor;
     }
 
-    @Override
-    protected void onDraw(Canvas canvas) {
-        Paint paint = new Paint();
-        if (isEmpty()) {
-            if (emptryBackgroung == null) {
-                paint.setColor(emptyColor);
-                canvas.drawRect(allSquare, paint);
-            } else {
-                canvas.drawBitmap(emptryBackgroung, null, allSquare, paint);
-            }
-            if (!TextUtils.isEmpty(emptyText)) {
-                Paint paint1 = new Paint();
-                paint1.setTypeface(textTypeface);
-                paint1.setColor(Color.argb(128, 0, 0, 0));
-                float textSize = 10f;
-                paint1.setAntiAlias(true);
-                paint1.setTextSize(textSize);
-                Rect bounds = new Rect();
-                paint1.getTextBounds(emptyText, 0, emptyText.indexOf("\n"), bounds);
-                while ((float) bounds.width() / allSquare.width() < 0.7) {
-                    paint1.setTextSize(++textSize);
-                    paint1.getTextBounds(emptyText, 0, emptyText.indexOf("\n"), bounds);
-                }
-                int y = allSquare.centerY() + bounds.height() * 2;
-                for (String line : emptyText.split("\n")) {
-                    paint1.getTextBounds(line, 0, line.length(), bounds);
-                    canvas.drawText(line, allSquare.centerX() - bounds.width() / 2, y, paint1);
-                    y += bounds.height() + bounds.height() / 2;
-                }
-                //  canvas.drawText(emptyText, allSquare.centerX() - bounds.width() / 2, allSquare.centerY() + bounds.height() * 2, paint1);
-                paint1.setTextSize(textSize + 60);
-                paint1.getTextBounds("+", 0, 1, bounds);
-                canvas.drawText("+", allSquare.centerX() - bounds.width() / 2, allSquare.centerY(), paint1);
-            }
-        } else {
-            canvas.drawColor(imagePaddingColor);
-            drawImage(canvas, paint);
-            if (hasFilter) {
-                paint.setColorFilter(matrixColorFilter);
-                drawImageWithFilter(canvas, paint);
-            }
-            drawTexts(canvas, new Paint());
-        }
-    }
-
 
     private void calculateImagePart() {
         if (!isEmpty()) {
 
-            PhotoEditorImage image = photoEditorImage;
-            Rect unionImageArea = imageSquare;
-            float imageScaleForWrapArea = getImageScaleForUnionArea(unionImageArea, image);
-            image.setMinLeft(-Integer.MAX_VALUE);
-            image.setMinTop(-Integer.MAX_VALUE);
-            image.setMaxTop(Integer.MAX_VALUE);
-            image.setMaxLeft(Integer.MAX_VALUE);
+            EditorImage editorImage = this.editorImage;
+            Rect unionImageArea = imageRect;
+            float imageScaleForWrapArea = getImageScaleForUnionArea(unionImageArea, editorImage);
+            editorImage.setMinLeft(-Integer.MAX_VALUE);
+            editorImage.setMinTop(-Integer.MAX_VALUE);
+            editorImage.setMaxTop(Integer.MAX_VALUE);
+            editorImage.setMaxLeft(Integer.MAX_VALUE);
 
-            Rect sqRect = imageSquare;
-            int left = Math.round((sqRect.left - unionImageArea.left) * imageScaleForWrapArea / image.getScale() + image.getLeft());
-            int top = Math.round((sqRect.top - unionImageArea.top) * imageScaleForWrapArea / image.getScale() + image.getTop());
-            int right = Math.round((sqRect.right - unionImageArea.left) * imageScaleForWrapArea / image.getScale() + image.getLeft());
-            int bottom = Math.round((sqRect.bottom - unionImageArea.top) * imageScaleForWrapArea / image.getScale() + image.getTop());
+            Rect sqRect = imageRect;
+            int left = Math.round((sqRect.left - unionImageArea.left) * imageScaleForWrapArea / editorImage.getScale() + editorImage.getLeft());
+            int top = Math.round((sqRect.top - unionImageArea.top) * imageScaleForWrapArea / editorImage.getScale() + editorImage.getTop());
+            int right = Math.round((sqRect.right - unionImageArea.left) * imageScaleForWrapArea / editorImage.getScale() + editorImage.getLeft());
+            int bottom = Math.round((sqRect.bottom - unionImageArea.top) * imageScaleForWrapArea / editorImage.getScale() + editorImage.getTop());
             imagePart = new Rect(left, top, right, bottom);
 
         }
 
     }
 
-    private float getImageScaleForUnionArea(Rect unionImageArea, PhotoEditorImage image) {
+    private float getImageScaleForUnionArea(Rect unionImageArea, EditorImage editorImage) {
         int biggerImageAreaSideSize = unionImageArea.width() < unionImageArea.height() ? unionImageArea.height() : unionImageArea.width();
         float imageScaleForWrapArea;
-        if (image.getHeight() > image.getWidth()) {
-            imageScaleForWrapArea = (float) image.getHeight() / biggerImageAreaSideSize;
+        if (editorImage.getHeight() > editorImage.getWidth()) {
+            imageScaleForWrapArea = (float) editorImage.getHeight() / biggerImageAreaSideSize;
         } else {
-            imageScaleForWrapArea = (float) image.getWidth() / biggerImageAreaSideSize;
+            imageScaleForWrapArea = (float) editorImage.getWidth() / biggerImageAreaSideSize;
         }
         return imageScaleForWrapArea;
     }
 
     public boolean isEmpty() {
-        return photoEditorImage == null || photoEditorImage.getBitmap() == null;
+        return editorImage == null || editorImage.getBitmap() == null;
     }
 
     @Override
@@ -526,7 +708,7 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
         int parentWidth = MeasureSpec.getSize(widthMeasureSpec);
         int parentHeight = MeasureSpec.getSize(heightMeasureSpec);
         calculateActiveSquare(parentWidth, parentHeight);
-        setMeasuredDimension(imageSquare.width() + 2 * (getImagePadding()), imageSquare.height() + 2 * (getImagePadding()));
+        setMeasuredDimension(imageRect.width() + 2 * (getImagePadding()), imageRect.height() + 2 * (getImagePadding()));
     }
 
     public void calculateActiveSquare(int width, int height) {
@@ -539,40 +721,40 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
             rect = new Rect(addPadding, 0, height + addPadding, height);
         }
         allSquare = rect;
-        if (imageSquare != null && photoEditorImage != null && calculatePadding) {
-            if (imageSquare.left != getImagePadding()) {
-                float scale2 = getImageScaleForUnionArea(imageSquare, photoEditorImage);
-                int translateForCenteringImageLeft = (int) ((imageSquare.width() - photoEditorImage.getWidth() / scale2) / 2);
-                int translateFroCenteringImageTop = (int) ((imageSquare.height() - photoEditorImage.getHeight() / scale2) / 2);
-                photoEditorImage.setLeft(photoEditorImage.getLeft() + (translateForCenteringImageLeft + imageSquare.left));
-                photoEditorImage.setTop(photoEditorImage.getTop() + (translateFroCenteringImageTop + imageSquare.top));
+        if (imageRect != null && editorImage != null && calculatePadding) {
+            if (imageRect.left != getImagePadding()) {
+                float scale2 = getImageScaleForUnionArea(imageRect, editorImage);
+                int translateForCenteringImageLeft = (int) ((imageRect.width() - editorImage.getWidth() / scale2) / 2);
+                int translateFroCenteringImageTop = (int) ((imageRect.height() - editorImage.getHeight() / scale2) / 2);
+                editorImage.setLeft(editorImage.getLeft() + (translateForCenteringImageLeft + imageRect.left));
+                editorImage.setTop(editorImage.getTop() + (translateFroCenteringImageTop + imageRect.top));
             }
-            imageSquare = new Rect(rect.left + getImagePadding(), rect.top + getImagePadding(), rect.right - getImagePadding(), rect.bottom - getImagePadding());
-            float scale3 = getImageScaleForUnionArea(imageSquare, photoEditorImage);
-            int translateFroCenteringImageLeft = (int) ((imageSquare.width() - photoEditorImage.getWidth() / scale3) / 2);
-            int translateFroCenteringImageTop = (int) ((imageSquare.height() - photoEditorImage.getHeight() / scale3) / 2);
-            photoEditorImage.setLeft(photoEditorImage.getLeft() - (translateFroCenteringImageLeft + imageSquare.left));
-            photoEditorImage.setTop(photoEditorImage.getTop() - (translateFroCenteringImageTop + imageSquare.top));
+            imageRect = new Rect(rect.left + getImagePadding(), rect.top + getImagePadding(), rect.right - getImagePadding(), rect.bottom - getImagePadding());
+            float scale3 = getImageScaleForUnionArea(imageRect, editorImage);
+            int translateFroCenteringImageLeft = (int) ((imageRect.width() - editorImage.getWidth() / scale3) / 2);
+            int translateFroCenteringImageTop = (int) ((imageRect.height() - editorImage.getHeight() / scale3) / 2);
+            editorImage.setLeft(editorImage.getLeft() - (translateFroCenteringImageLeft + imageRect.left));
+            editorImage.setTop(editorImage.getTop() - (translateFroCenteringImageTop + imageRect.top));
             calculatePadding = false;
         } else {
-            imageSquare = new Rect(rect.left + getImagePadding(), rect.top + getImagePadding(), rect.right - getImagePadding(), rect.bottom - getImagePadding());
+            imageRect = new Rect(rect.left + getImagePadding(), rect.top + getImagePadding(), rect.right - getImagePadding(), rect.bottom - getImagePadding());
         }
 
     }
 
     public void setFirstImageState() {
-        if (imageSquare != null && photoEditorImage != null) {
-            photoEditorImage.setLeft(0);
-            photoEditorImage.setTop(0);
-            photoEditorImage.setRoationDegrees(0);
-            photoEditorImage.setScale(1);
+        if (imageRect != null && editorImage != null) {
+            editorImage.setLeft(0);
+            editorImage.setTop(0);
+            editorImage.setRoationDegrees(0);
+            editorImage.setScale(1);
             mIndependentScale = 1;
             mIndependentAngle = 0;
-            float scale3 = getImageScaleForUnionArea(imageSquare, photoEditorImage);
-            int translateFroCenteringImageLeft = (int) ((imageSquare.width() - photoEditorImage.getWidth() / scale3) / 2);
-            int translateFroCenteringImageTop = (int) ((imageSquare.height() - photoEditorImage.getHeight() / scale3) / 2);
-            photoEditorImage.setLeft(photoEditorImage.getLeft() - (translateFroCenteringImageLeft + imageSquare.left));
-            photoEditorImage.setTop(photoEditorImage.getTop() - (translateFroCenteringImageTop + imageSquare.top));
+            float scale3 = getImageScaleForUnionArea(imageRect, editorImage);
+            int translateFroCenteringImageLeft = (int) ((imageRect.width() - editorImage.getWidth() / scale3) / 2);
+            int translateFroCenteringImageTop = (int) ((imageRect.height() - editorImage.getHeight() / scale3) / 2);
+            editorImage.setLeft(editorImage.getLeft() - (translateFroCenteringImageLeft + imageRect.left));
+            editorImage.setTop(editorImage.getTop() - (translateFroCenteringImageTop + imageRect.top));
         }
         invalidate();
         requestLayout();
@@ -595,14 +777,10 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
             if (newWidth > 3 && newHeight > 3) {
                 bmp = createBitmap((int) (newWidth * 0.75), (int) (newHeight * 0.75), config);
             } else {
-                throw new OutOfMemoryError("Cann't create image for save");
+                throw new OutOfMemoryError("Cann't create editorImage for save");
             }
         }
         return bmp;
-    }
-
-    public boolean isChangeImage() {
-        return changeImage;
     }
 
     private void initialize() {
@@ -622,21 +800,13 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
         return (float) Math.sqrt(getWidth() * getWidth() + getHeight() * getHeight());
     }
 
-    private void findCheckedText(int x, int y) {
-        for (int i = textsList.size() - 1; i >= 0; i--) {
-            if (textsList.get(i).getTextArea().contains(x, y)) {
-                checkedTextId = i;
-                return;
-            }
-        }
-        checkedTextId = -1;
-    }
 
     private LongClickAsyncTask longClickAsyncTask;
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-
+        int currentX = (int) event.getRawX();
+        int currentY = (int) event.getRawY();
         if (!isEmpty()) {
             int touchCount = event.getPointerCount();
             switch (event.getAction()) {
@@ -651,13 +821,13 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
                                 float aB = (float) (mRotateCenterDistance * Math.cos(Math.toRadians(mRotateCenterAngle - mIndependentAngle))) * mIndependentScale;
                                 float ac = (float) (mRotateCenterDistance * Math.sin(Math.toRadians(mRotateCenterAngle)));
                                 float aC = (float) (mRotateCenterDistance * Math.sin(Math.toRadians(mRotateCenterAngle - mIndependentAngle))) * mIndependentScale;
-                                photoEditorImage.setLeft((int) (photoEditorImage.getLeft() + (aB - ab)));
-                                photoEditorImage.setTop((int) (photoEditorImage.getTop() + (aC - ac)));
+                                editorImage.setLeft((int) (editorImage.getLeft() + (aB - ab)));
+                                editorImage.setTop((int) (editorImage.getTop() + (aC - ac)));
                                 mIndependentAngle = 0;
                                 mIndependentScale = 1f;
                                 fingersAngle = rotation(event);
-                                float centerX = (event.getX(0) + event.getX(1)) / 2 + photoEditorImage.getLeft();
-                                float centerY = (event.getY(0) + event.getY(1)) / 2 + photoEditorImage.getTop();
+                                float centerX = (event.getX(0) + event.getX(1)) / 2 + editorImage.getLeft();
+                                float centerY = (event.getY(0) + event.getY(1)) / 2 + editorImage.getTop();
                                 mRotateCenterAngle = Math.toDegrees(Math.atan(centerY / centerX));
                                 mRotateCenterDistance = centerX / Math.cos(Math.toRadians(mRotateCenterAngle));
                             }
@@ -665,8 +835,12 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
                         mPrevDistance = distance;
                         isScaling = true;
                         longClick = false;
+
+                        // Todo: Draw sticker border this.
+
                     } else {
                         drawTextBorder = true;
+                        drawStickerBorder = true;
                         int DOUBLE_TAP_SECOND = 400;
                         if (System.currentTimeMillis() <= mLastTime + DOUBLE_TAP_SECOND) {
                             if (30 > Math.abs(mPrevMoveX - event.getX()) + Math.abs(mPrevMoveY - event.getY())) {
@@ -678,7 +852,8 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
                         mLastTime = System.currentTimeMillis();
                         mPrevMoveX = (int) event.getX();
                         mPrevMoveY = (int) event.getY();
-                        findCheckedText(mPrevMoveX, mPrevMoveY);
+                        findCheckedText(mPrevMoveX, mPrevMoveY); // FIXME: Check it
+                        findCheckedSticker(mPrevMoveX, mPrevMoveY);
                         longClick = true;
                         longClickAsyncTask = new LongClickAsyncTask(this);
                         longClickAsyncTask.execute(checkedTextId);
@@ -695,16 +870,19 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
                             scale = scale * scale;
                             if (checkedTextId == -1) {
                                 if (isFreeTransform()) {
-                                    photoEditorImage.setRoationDegrees(photoEditorImage.getRoationDegrees() + fingersAngle - rotation(event));
+                                    editorImage.setRoationDegrees(editorImage.getRoationDegrees() + fingersAngle - rotation(event));
                                     mIndependentAngle = mIndependentAngle + fingersAngle - rotation(event);
                                     fingersAngle = rotation(event);
-                                    if (photoEditorImage.getScale() * scale > 0 && photoEditorImage.getScale() * scale < photoEditorImage.getMaxScale()) {
+                                    if (editorImage.getScale() * scale > 0 && editorImage.getScale() * scale < editorImage.getMaxScale()) {
                                         mIndependentScale = mIndependentScale * scale;
                                     }
-                                    photoEditorImage.setFreeScale(photoEditorImage.getScale() * scale);
+                                    editorImage.setFreeScale(editorImage.getScale() * scale);
                                 }
                             } else {
                                 textsList.get(checkedTextId).setSize(textsList.get(checkedTextId).getSize() * scale);
+                            }
+                            if (checkedStickerId != -1) {
+                                stickersList.get(checkedStickerId).setSize(stickersList.get(checkedStickerId).getSize() * scale);
                             }
                             longClick = false;
                         } else if (!isScaling) {
@@ -717,8 +895,8 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
                             mPrevMoveY = (int) event.getY();
                             if (checkedTextId == -1) {
                                 if (isFreeTransform()) {
-                                    photoEditorImage.setLeft(photoEditorImage.getLeft() + Math.round(distanceX));
-                                    photoEditorImage.setTop(photoEditorImage.getTop() + Math.round(distanceY));
+                                    editorImage.setLeft(editorImage.getLeft() + Math.round(distanceX));
+                                    editorImage.setTop(editorImage.getTop() + Math.round(distanceY));
                                     if (longClick && System.currentTimeMillis() > mLastTime + LONG_PRESS_MILLISECOND + 100) {
                                         if (onSquareEditorPictureClickListener != null) {
                                             longClick = false;
@@ -726,7 +904,7 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
                                     }
                                 }
                             } else {
-                                PhotoEditorText text = textsList.get(checkedTextId);
+                                Text text = textsList.get(checkedTextId);
                                 text.setX(text.getX() - Math.round(distanceX));
                                 text.setY(text.getY() - Math.round(distanceY));
                                 if (longClick && System.currentTimeMillis() > mLastTime + LONG_PRESS_TEXT_MILLISECOND) {
@@ -735,8 +913,21 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
                                     }
                                 }
                             }
+                            if (checkedStickerId != -1) {
+                                // FIXME: If sticker doesn't move.
+                                Sticker sticker = stickersList.get(checkedStickerId);
+                                sticker.setX(sticker.getX() - Math.round(distanceX));
+                                sticker.setY(sticker.getY() - Math.round(distanceY));
+                            }
+                            if (cropActivated) {
+                                int[] loc = new int[2];
+                                getLocationOnScreen(loc);
+                                int diffX = currentX - cropX;
+                                int diffY = currentY - cropY;
+                                //Todo: cropBox.resizeBox();
+                                invalidate();
+                            }
                         }
-                        calculateImagePart();
                     }
                     break;
                 case MotionEvent.ACTION_UP:
@@ -753,7 +944,7 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
                             if (30 > Math.abs(mDoubleTapX - event.getX()) + Math.abs(mDoubleTapY - event.getY())) {
                                 // angle = 90;
                                 if (checkedTextId == -1) {
-                                    //  photoEditorImage.setBitmap(rotateImage(photoEditorImage.getBitmap(), angle));
+                                    //  editorImage.setBitmap(rotateImage(editorImage.getBitmap(), angle));
                                 } else {
                                     if (squareEditorListener != null) {
                                         squareEditorListener.editText(textsList.get(checkedTextId));
@@ -772,22 +963,22 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
     }
 
     /**
-     * @param path - directory path to saving image with padding and with text/
-     * @return path to saved image
+     * @param path - directory path to saving editorImage with padding and with text/
+     * @return path to saved editorImage
      */
-    public String[] saveImages(String path) throws IOException, OutOfMemoryError {
+    /*public String[] saveImages(String path) throws IOException, OutOfMemoryError {
         if (!isEmpty()) {
             List<String> files = new LinkedList<String>();
-            PhotoEditorImage image = photoEditorImage;
+            EditorImage editorImage = this.editorImage;
             long saveImagesTime = System.currentTimeMillis();
             String fileName = String.format("%d_editor.jpg", saveImagesTime);
             File file = new File(path, fileName);
             FileOutputStream fos = null;
             try {
                 fos = new FileOutputStream(file, false);
-                float pixelDensity = (float) (imagePart.width()) / (imageSquare.width());
+                float pixelDensity = (float) (imagePart.width()) / (imageRect.width());
                 Bitmap processedBitmap = createBitmap(imagePart.width(), imagePart.height(), (int) ((getImagePadding() * pixelDensity)));
-                scalingForSave = (float) processedBitmap.getWidth() / allSquare.width();
+                scalingForSave = (float) processedBitmap.getWidth() / imageArea.width();
                 if (processedBitmap != null && processedBitmap.getWidth() != 0) {
                     isSaveInProccess = true;
                     Canvas canvas = new Canvas(processedBitmap);
@@ -816,19 +1007,19 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
         }
 
         return null;
-    }
+    }*/
 
-    public String[] saveImages(String path, String fileName) throws IOException, OutOfMemoryError {
+    /*public String[] saveImages(String path, String fileName) throws IOException, OutOfMemoryError {
         if (!isEmpty()) {
             List<String> files = new LinkedList<String>();
-            PhotoEditorImage image = photoEditorImage;
+            EditorImage editorImage = this.editorImage;
             File file = new File(path, fileName);
             FileOutputStream fos = null;
             try {
                 fos = new FileOutputStream(file, false);
-                float pixelDensity = (float) (imagePart.width()) / (imageSquare.width());
+                float pixelDensity = (float) (imagePart.width()) / (imageRect.width());
                 Bitmap processedBitmap = createBitmap(imagePart.width(), imagePart.height(), (int) ((getImagePadding() * pixelDensity)));
-                scalingForSave = (float) processedBitmap.getWidth() / allSquare.width();
+                scalingForSave = (float) processedBitmap.getWidth() / imageArea.width();
                 if (processedBitmap != null && processedBitmap.getWidth() != 0) {
                     isSaveInProccess = true;
                     Canvas canvas = new Canvas(processedBitmap);
@@ -857,7 +1048,7 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
         }
 
         return null;
-    }
+    }*/
 
     /**
      * Determine the degree between the first two fingers
@@ -885,35 +1076,6 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
         this.onSquareEditorPictureClickListener = onSquareEditorPictureClickListener;
     }
 
-    public void deleteText(PhotoEditorText text) {
-        if (textsList != null && textsList.contains(text)) {
-            textsList.remove(text);
-            invalidate();
-            requestLayout();
-        }
-    }
-
-    public void clearAll() {
-        if (photoEditorImage != null && photoEditorImage.getBitmap() != null) {
-            //FileUtil.recycle(photoEditorImage.getBitmap());
-            photoEditorImage.setBitmap(null);
-        }
-        photoEditorImage = null;
-    }
-
-    public void duplicateText(int id) {
-        if (textsList != null && id >= 0 && id < textsList.size()) {
-            PhotoEditorText initText = textsList.get(id);
-            PhotoEditorText newText = new PhotoEditorText();
-            newText.setColor(initText.getColor());
-            newText.setSize(initText.getSize());
-            newText.setText(initText.getText());
-            newText.setTypeface(initText.getTypeface());
-            newText.setTypefacePath(initText.getTypefacePath());
-            textsList.add(newText);
-        }
-    }
-
     public ColorMatrixColorFilter getMatrixColorFilter() {
         return matrixColorFilter;
     }
@@ -922,9 +1084,45 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
         this.matrixColorFilter = matrixColorFilter;
     }
 
+    public boolean isDeleteTextActivated() {
+        return deleteTextActivated;
+    }
+
+    public void setDeleteTextActivated(boolean deleteTextActivated) {
+        this.deleteTextActivated = deleteTextActivated;
+    }
+
+    public boolean isCropActivated() {
+        return cropActivated;
+    }
+
+    public void setCropActivated(boolean cropActivated) {
+        this.cropActivated = cropActivated;
+        invalidate();
+    }
+
+    public boolean isTextActivated() {
+        return textActivated;
+    }
+
+    public void setTextActivated(boolean textActivated) {
+        this.textActivated = textActivated;
+    }
+
+    public void setBottomMemeText(String bottomMemeText) {
+        this.bottomMemeText = bottomMemeText.toUpperCase();
+        invalidate();
+        Log.i("Top meme text", bottomMemeText);
+    }
+
+    public void setTopMemeText(String topMemeText) {
+        this.topMemeText = topMemeText.toUpperCase();
+        invalidate();
+        Log.i("Bottom meme text", topMemeText);
+    }
 
     public interface OnSquareEditorListener {
-        public void editText(PhotoEditorText giantSquareText);
+        public void editText(Text giantSquareText);
     }
 
     public interface OnSquareEditorPictureClickListener {
@@ -934,9 +1132,9 @@ public class PhotoEditorView extends View implements View.OnTouchListener {
     }
 
     private static class LongClickAsyncTask extends AsyncTask<Integer, Void, Integer> {
-        private final PhotoEditorView engine;
+        private final EditorView engine;
 
-        private LongClickAsyncTask(PhotoEditorView engine) {
+        private LongClickAsyncTask(EditorView engine) {
             this.engine = engine;
         }
 

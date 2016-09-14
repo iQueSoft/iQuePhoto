@@ -39,4 +39,6 @@ dependencies {
     compile 'com.google.dagger:dagger:2.5'
     compile 'com.android.support:design:24.1.1'
     compile 'com.mikhaellopez:circularimageview:3.0.2'
+    compile 'com.tbruyelle.rxpermissions:rxpermissions:0.7.0@aar'
+    compile 'com.jakewharton.rxbinding:rxbinding:0.4.0'
 }

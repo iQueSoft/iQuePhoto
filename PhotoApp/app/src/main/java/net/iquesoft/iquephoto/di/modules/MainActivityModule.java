@@ -1,9 +1,11 @@
 package net.iquesoft.iquephoto.di.modules;
 
 import net.iquesoft.iquephoto.presenter.BrightnessFragmentPresenterImpl;
-import net.iquesoft.iquephoto.presenter.BrushFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presenter.DrawFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presenter.CropFragmentPresenterImpl;
 import net.iquesoft.iquephoto.presenter.FiltersFragmentPresenterImpl;
 import net.iquesoft.iquephoto.presenter.MainActivityPresenterImpl;
+import net.iquesoft.iquephoto.presenter.MemeFragmentPresenterImpl;
 import net.iquesoft.iquephoto.presenter.RotationFragmentPresenterImpl;
 import net.iquesoft.iquephoto.presenter.ShowStickersFragmentPresenterImpl;
 import net.iquesoft.iquephoto.presenter.StickersFragmentPresenterImpl;
@@ -53,8 +55,8 @@ public class MainActivityModule {
     }
 
     @Provides
-    public BrushFragmentPresenterImpl provideBrushFragmentPresenterImpl() {
-        return new BrushFragmentPresenterImpl();
+    public DrawFragmentPresenterImpl provideBrushFragmentPresenterImpl() {
+        return new DrawFragmentPresenterImpl();
     }
 
     @Provides
@@ -65,5 +67,15 @@ public class MainActivityModule {
     @Provides
     public ShowStickersFragmentPresenterImpl provideShowStickersFragmentPresenterImpl() {
         return new ShowStickersFragmentPresenterImpl();
+    }
+
+    @Provides
+    public CropFragmentPresenterImpl provideCropFragmentPresenterImpl() {
+        return new CropFragmentPresenterImpl();
+    }
+
+    @Provides
+    public MemeFragmentPresenterImpl provideMemeFragmentPresenterImpl() {
+        return new MemeFragmentPresenterImpl();
     }
 }

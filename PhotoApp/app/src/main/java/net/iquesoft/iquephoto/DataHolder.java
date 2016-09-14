@@ -5,7 +5,7 @@ package net.iquesoft.iquephoto;
  */
 public class DataHolder {
 
-    private PhotoEditorView photoEditorView;
+    private EditorView editorView;
 
     private static DataHolder ourInstance = new DataHolder();
 
@@ -16,11 +16,11 @@ public class DataHolder {
     private DataHolder() {
     }
 
-    public PhotoEditorView getPhotoEditorView() {
-        return photoEditorView;
+    public EditorView getEditorView() {
+        return editorView;
     }
 
-    public void setPhotoEditorView(PhotoEditorView photoEditorView) {
-        this.photoEditorView = photoEditorView;
+    public void setEditorView(EditorView editorView) {
+        this.editorView = editorView;
     }
 }

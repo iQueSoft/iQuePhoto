@@ -1,14 +1,20 @@
 package net.iquesoft.iquephoto.view.activity;
 
+import android.Manifest;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.tbruyelle.rxpermissions.RxPermissions;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseActivity;
@@ -18,6 +24,8 @@ import net.iquesoft.iquephoto.di.components.DaggerIStartActivityComponent;
 import net.iquesoft.iquephoto.di.components.IStartActivityComponent;
 import net.iquesoft.iquephoto.di.modules.StartActivityModule;
 import net.iquesoft.iquephoto.presenter.StartActivityPresenterImpl;
+import net.iquesoft.iquephoto.utils.GalleryImageLoader;
+import net.iquesoft.iquephoto.utils.ImageHelper;
 import net.iquesoft.iquephoto.view.IStartActivityView;
 
 import javax.inject.Inject;
@@ -46,6 +54,9 @@ public class StartActivity extends BaseActivity implements IStartActivityView, I
         ButterKnife.bind(this);
 
         applicationTextView.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/Blacksword.otf"));
+
+        // Todo: Gallery image picker
+        //new GalleryImageLoader(this).run();
     }
 
     @Override
@@ -99,9 +110,30 @@ public class StartActivity extends BaseActivity implements IStartActivityView, I
 
     @Override
     public void startGallery() {
-        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-        photoPickerIntent.setType("image/*");
-        startActivityForResult(photoPickerIntent, REQ_GALLERY);
+        RxPermissions.getInstance(this)
+                .request(Manifest.permission.READ_EXTERNAL_STORAGE)
+                .subscribe(granted -> {
+                    if (granted) {
+                        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+                        photoPickerIntent.setType("image/*");
+                        startActivityForResult(photoPickerIntent, REQ_GALLERY);
+                    } else {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
+                                .setTitle(getString(R.string.permission_denied))
+                                .setMessage(getString(R.string.read_storage_permission))
+                                .setPositiveButton(getString(R.string.go_to_app_settings), (dialogInterface, i) -> {
+                                    Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + "net.iquesoft.iquephoto"));
+                                    intent.addCategory(Intent.CATEGORY_DEFAULT);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    startActivity(intent);
+                                    finish();
+                                })
+                                .setNegativeButton(getString(R.string.ok), (dialogInterface, i1) -> {
+                                    dialogInterface.dismiss();
+                                });
+                        builder.show();
+                    }
+                });
     }
 
     @Override

@@ -61,29 +61,32 @@ public class ColorPickerDialog extends Dialog implements DiscreteSeekBar.OnProgr
         g = greenSeekBar.getProgress();
         b = greenSeekBar.getProgress();
 
+        color = Color.rgb(r, g, b);
+
         redSeekBar.setOnProgressChangeListener(this);
         greenSeekBar.setOnProgressChangeListener(this);
         blueSeekBar.setOnProgressChangeListener(this);
     }
 
-    private void setColor(int red, int green, int blue) {
-        this.color = Color.rgb(red, green, blue);
-        colorView.setBackgroundColor(getColor());
-    }
-
-    public int getColor() {
-        return color;
-    }
-
-    @OnClick()
+    @OnClick(R.id.colorApplyButton)
     public void onClickApplyButton() {
-        
+        this.color = Color.rgb(r, g, b);
+        dismiss();
     }
 
     @OnClick(R.id.colorCancelButton)
     public void onClickCancel() {
         dismiss();
     }
+
+    private void setColor(int red, int green, int blue) {
+        colorView.setBackgroundColor(Color.rgb(red, green, blue));
+    }
+
+    public int getColor() {
+        return color;
+    }
+
 
     @Override
     public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {

@@ -1,9 +1,9 @@
 package net.iquesoft.iquephoto.view;
 
-import net.iquesoft.iquephoto.PhotoEditorText;
+import net.iquesoft.iquephoto.model.Text;
 
 public interface ITextFragmentView {
-    void onAddTextComplete(PhotoEditorText photoEditorText);
+    void onAddTextComplete(Text text);
 
-    void onDeleteTextComplete(PhotoEditorText photoEditorText);
+    void onDeleteTextComplete(Text text);
 }

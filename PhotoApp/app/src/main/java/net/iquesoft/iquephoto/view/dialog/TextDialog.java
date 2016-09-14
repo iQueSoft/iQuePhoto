@@ -26,13 +26,9 @@ import butterknife.OnClick;
 public class TextDialog extends Dialog {
 
     // Todo: Make text style like as normal, bold and italic text.
-
-    //private static final String TAG = TextDialog.class.getSimpleName();
-    private Context context;
-    private TextFragment textFragment;
-
     private int color;
     private String text;
+
     private Typeface typeface;
 
     @BindView(R.id.textPreview)
@@ -44,10 +40,8 @@ public class TextDialog extends Dialog {
     private boolean bold;
     private boolean italic;
 
-    public TextDialog(Context context, TextFragment textFragment) {
+    public TextDialog(Context context) {
         super(context);
-        this.context = context;
-        this.textFragment = textFragment;
     }
 
     @Override
@@ -56,19 +50,17 @@ public class TextDialog extends Dialog {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.dialog_text);
 
-        ButterKnife.bind(this);
-
-        if (text.length() != 0)
+        if (!text.isEmpty())
             textPreview.setText(text);
 
-        textPreview.setTextColor(color);
+        ButterKnife.bind(this);
 
         initFontsList();
     }
 
     @OnClick(R.id.applyTextStyle)
     public void onClickApplyTextStyle() {
-        textFragment.setTypeface(typeface);
+        //textFragment.setTypeface(typeface);
         dismiss();
     }
 
@@ -94,9 +86,10 @@ public class TextDialog extends Dialog {
      * @param text  need for text preview;
      * @param color is text preview text color.
      */
-    public void showDialog(@Nullable String text, @Nullable int color) {
-        this.text = text;
-        this.color = color;
+    public void showDialog(String text, int color) {
+        if (text.length() > 0)
+            textPreview.setText(text);
+        textPreview.setTextColor(color);
         show();
     }
 
@@ -122,5 +115,17 @@ public class TextDialog extends Dialog {
 
     public void setBold(boolean bold) {
         this.bold = bold;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
     }
 }

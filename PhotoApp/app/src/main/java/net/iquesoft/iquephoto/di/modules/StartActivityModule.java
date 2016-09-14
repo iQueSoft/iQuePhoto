@@ -1,15 +1,13 @@
 package net.iquesoft.iquephoto.di.modules;
 
+import net.iquesoft.iquephoto.presenter.GalleryImagesPresenterImpl;
+import net.iquesoft.iquephoto.presenter.IGalleryImagesFragmentPresenter;
 import net.iquesoft.iquephoto.presenter.StartActivityPresenterImpl;
 import net.iquesoft.iquephoto.view.IStartActivityView;
 
 import dagger.Module;
 import dagger.Provides;
 
-/**
- * This is a Dagger module. We use this to pass in the View dependency to the
- * {@link net.iquesoft.iquephoto.presenter.StartActivityPresenter}.
- */
 @Module
 public class StartActivityModule {
 
@@ -27,5 +25,10 @@ public class StartActivityModule {
     @Provides
     public IStartActivityView provideStartActivityContractView() {
         return view;
+    }
+
+    @Provides
+    public GalleryImagesPresenterImpl provideGalleryImagesPresenterImpl() {
+        return new GalleryImagesPresenterImpl();
     }
 }

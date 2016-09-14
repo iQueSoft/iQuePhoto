@@ -1,8 +1,8 @@
-package net.iquesoft.iquephoto;
+package net.iquesoft.iquephoto.model;
 
 import android.graphics.Bitmap;
 
-public class PhotoEditorImage {
+public class EditorImage {
     private float maxScaleSize = 4;
     private int id;
     private Bitmap bitmap;

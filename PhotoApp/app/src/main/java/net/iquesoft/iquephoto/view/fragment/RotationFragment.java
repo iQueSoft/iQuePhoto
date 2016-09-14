@@ -4,9 +4,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import net.iquesoft.iquephoto.DataHolder;
-import net.iquesoft.iquephoto.PhotoEditorView;
+import net.iquesoft.iquephoto.EditorView;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseFragment;
 import net.iquesoft.iquephoto.di.components.IMainActivityComponent;
@@ -27,9 +29,11 @@ import butterknife.Unbinder;
  */
 public class RotationFragment extends BaseFragment implements IRotationFragmentView {
 
+    private boolean isHide = false;
+
     private Unbinder unbinder;
 
-    private PhotoEditorView photoEditorView;
+    private EditorView editorView;
 
     @Inject
     RotationFragmentPresenterImpl presenter;
@@ -37,24 +41,30 @@ public class RotationFragment extends BaseFragment implements IRotationFragmentV
     @BindView(R.id.angleSeekBar)
     DiscreteSeekBar angleSeekBar;
 
+    @BindView(R.id.hideRotationButton)
+    ImageView hideButton;
+
+    @BindView(R.id.rotationController)
+    LinearLayout controller;
+
     @OnClick(R.id.rotateRightButton)
     public void onClickRotateRight(View view) {
-        photoEditorView.rotateImage(90);
+        editorView.rotateImage(90);
     }
 
     @OnClick(R.id.rotateLeftButton)
     public void onClickRotateLeft(View view) {
-        photoEditorView.rotateImage(-90);
+        editorView.rotateImage(-90);
     }
 
     @OnClick(R.id.hFlipButton)
     public void onClickHorizontalFlip(View view) {
-        photoEditorView.horizontalFlip();
+        editorView.horizontalFlip();
     }
 
     @OnClick(R.id.vFlipButton)
     public void onClickVerticalFlip(View view) {
-        photoEditorView.verticalFlip();
+        editorView.verticalFlip();
     }
 
     public static RotationFragment newInstance() {
@@ -84,13 +94,13 @@ public class RotationFragment extends BaseFragment implements IRotationFragmentV
 
         unbinder = ButterKnife.bind(this, v);
 
-        photoEditorView = DataHolder.getInstance().getPhotoEditorView();
+        editorView = DataHolder.getInstance().getEditorView();
 
         angleSeekBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
             @Override
             public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
                 // Todo: Fix this bad rotation
-                photoEditorView.rotateImage(value);
+                editorView.rotateImage(value);
             }
 
             @Override
@@ -116,5 +126,18 @@ public class RotationFragment extends BaseFragment implements IRotationFragmentV
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    @OnClick(R.id.hideRotationButton)
+    public void onClickHideButton() {
+        if (!isHide) {
+            hideButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_expand_less));
+            controller.setVisibility(View.GONE);
+            isHide = true;
+        } else {
+            hideButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_expand));
+            controller.setVisibility(View.VISIBLE);
+            isHide = false;
+        }
     }
 }

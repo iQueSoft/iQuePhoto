@@ -1,18 +1,18 @@
-package net.iquesoft.iquephoto;
+package net.iquesoft.iquephoto.model;
 
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 
-public class PhotoEditorText {
+public class Text {
 
     public static final int TEXT_AREA_MARGIN = 7;
     public static final int TEXT_BACKGROUND_COLOR = Color.parseColor("#80404040");
     private String text;
     private Typeface typeface;
     private String typefacePath;
-    private float size;
+    private float size = 120f;
     private int color;
     private int x;
     private int y;
@@ -74,7 +74,7 @@ public class PhotoEditorText {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("GiantSquareText{");
+        final StringBuffer sb = new StringBuffer("Text{");
         sb.append("text='").append(text).append('\'');
         sb.append(", typeface=").append(typeface);
         sb.append(", typefacePath='").append(typefacePath).append('\'');

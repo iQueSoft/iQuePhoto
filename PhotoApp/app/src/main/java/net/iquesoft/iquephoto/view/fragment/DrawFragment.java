@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseFragment;
 import net.iquesoft.iquephoto.di.components.IMainActivityComponent;
-import net.iquesoft.iquephoto.presenter.BrushFragmentPresenterImpl;
-import net.iquesoft.iquephoto.view.IBrushFragmentView;
+import net.iquesoft.iquephoto.presenter.DrawFragmentPresenterImpl;
+import net.iquesoft.iquephoto.view.IDrawFragmentView;
 import net.iquesoft.iquephoto.view.dialog.ColorPickerDialog;
 
 import javax.inject.Inject;
@@ -21,20 +21,20 @@ import butterknife.Unbinder;
 /**
  * @author Sergey
  */
-public class BrushFragment extends BaseFragment implements IBrushFragmentView {
+public class DrawFragment extends BaseFragment implements IDrawFragmentView {
 
     @Inject
-    BrushFragmentPresenterImpl presenter;
+    DrawFragmentPresenterImpl presenter;
 
     private Unbinder unbinder;
     private ColorPickerDialog colorPickerDialog;
 
-    public static BrushFragment newInstance() {
+    public static DrawFragment newInstance() {
         /*Bundle b = new Bundle();
         b.putString("msg", text);
         b.putString("color", color);
         f.setArguments(b);*/
-        return new BrushFragment();
+        return new DrawFragment();
     }
 
     @Override

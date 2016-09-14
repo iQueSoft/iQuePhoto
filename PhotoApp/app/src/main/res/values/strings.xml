@@ -32,21 +32,25 @@
 
     <string name="tool_brightness">Brightness</string>
 
-    <string name="tool_text">Text</string>
-
     <string name="opacity">Opacity</string>
 
     <string name="save_image">Save Image</string>
     <string name="successfully_saved">Image successfully saved!</string>
 
     <!-- For crop tool. -->
-    <string name="tool_crop">Crop</string>
+    <string name="crop">Crop</string>
     <string name="crop_free">Free</string>
     <string name="crop_original">Original</string>
     <string name="crop_1_1">1 : 1</string>
     <string name="crop_4_3">4 : 3</string>
     <string name="crop_6_3">6 : 4</string>
     <string name="crop_16_9">6 : 4</string>
+
+    <!-- START - Meme -->
+    <string name="meme">Meme</string>
+    <string name="meme_top_text">Start typing top text…</string>
+    <string name="meme_bottom_text">Start typing bottom text…</string>
+    <!-- Meme - END -->
 
     <!-- START - Stickers. -->
     <string name="stickers">Stickers</string>
@@ -97,23 +101,34 @@
     <string name="text_is_empty">Text field is empty, please type text before add it!</string>
     <string name="text_delete_enabled">Removing text is enabled!</string>
     <string name="text_delete_disabled">Removing text is disabled!</string>
+    <string name="text_deleted">Text \"%1$s\" deleted!</string>
     <!-- Text tool - END. -->
 
-    <!-- For filters -->
-    <string name="tool_filters">Filters</string>
+    <!-- START - For filters -->
+    <string name="filters">Filters</string>
+    <string name="filter_lime">Lime</string>
+    <string name="filter_sunny">Sunny</string>
+    <string name="filter_darken">Darken</string>
+    <string name="filter_peachy">Peachy</string>
+    <string name="filter_magenta">Magenta</string>
+    <string name="filter_sepia">Sepia</string>
     <string name="filter_original">Original</string>
     <string name="filter_morning">Morning</string>
     <string name="filter_purple">Purple</string>
     <string name="filter_goldie">Goldie</string>
     <string name="filter_neon">Neon</string>
-    <string name="filter_grayscale">Grayscale</string>
+    <string name="filter_light_gray">Light Grey</string>
+    <string name="filter_mid_grey">Mid Grey</string>
+    <string name="filter_dark_grey">Dark Grey</string>
+    <!-- For filters - END -->
 
-    <!-- For brush tool. -->
-    <string name="brush">Brush</string>
+    <!-- START - Draw tool. -->
+    <string name="draw">Draw</string>
     <string name="brush_size">Brush Size</string>
+    <!-- Draw tool - END -->
 
     <!-- For frame tool. -->
-    <string name="tool_frame">Frame</string>
+    <string name="frame">Frame</string>
 
     <!-- For color picker. -->
     <string name="cancel">Cancel</string>
@@ -122,10 +137,16 @@
     <string name="RGB_G">G</string>
     <string name="RGB_B">B</string>
 
-    <!-- For alerts. -->
+    <!-- START - For alerts. -->
+    <string name="permission_denied">Permission denied</string>
+    <string name="go_to_app_settings">Go to app settings</string>
+    <string name="read_storage_permission">To work with the image you need to allow the application
+        use your images. If you selected \"never ask again\" permission you can go to application settings and turn on \"Storage\" permission.</string>
     <string name="on_back_alert">All your current edits will be lost and you will return to start screen!</string>
     <string name="ok">OK</string>
+    <string name="save">Save</string>
     <string name="add_text">ADD</string>
+    <!-- For alerts. - END -->
 
     <!-- For font dialog. -->
     <string name="font">Font</string>

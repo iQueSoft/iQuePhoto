@@ -8,7 +8,7 @@
     android:paddingTop="25dp">
 
 
-    <net.iquesoft.iquephoto.PhotoEditorView
+    <net.iquesoft.iquephoto.EditorView
         android:id="@+id/photoEditorView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

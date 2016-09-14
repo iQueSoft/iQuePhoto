@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import net.iquesoft.iquephoto.DataHolder;
-import net.iquesoft.iquephoto.PhotoEditorView;
+import net.iquesoft.iquephoto.EditorView;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseFragment;
 import net.iquesoft.iquephoto.di.components.IMainActivityComponent;
@@ -26,7 +26,7 @@ public class BrightnessFragment extends BaseFragment implements IBrightnessFragm
 
     private Unbinder unbinder;
 
-    private PhotoEditorView photoEditorView;
+    private EditorView editorView;
 
     @BindView(R.id.brightnessValueTextView)
     TextView brightnessValueTextView;
@@ -55,7 +55,7 @@ public class BrightnessFragment extends BaseFragment implements IBrightnessFragm
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_brightness, container, false);
 
-        photoEditorView = DataHolder.getInstance().getPhotoEditorView();
+        editorView = DataHolder.getInstance().getEditorView();
 
         unbinder = ButterKnife.bind(this, v);
 
@@ -63,7 +63,7 @@ public class BrightnessFragment extends BaseFragment implements IBrightnessFragm
             @Override
             public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
                 brightnessValueTextView.setText(String.valueOf(value));
-                photoEditorView.doBrightness(value);
+                editorView.doBrightness(value);
             }
 
             @Override

@@ -1,6 +1,7 @@
 package net.iquesoft.iquephoto.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +26,8 @@ import butterknife.ButterKnife;
  */
 public class FiltersAdapter extends RecyclerView.Adapter<FiltersAdapter.ViewHolder> {
 
+    private int checkedItem;
+
     private Context context;
 
     private List<Filter> filters;
@@ -32,7 +35,7 @@ public class FiltersAdapter extends RecyclerView.Adapter<FiltersAdapter.ViewHold
     private FiltersListener filtersListener;
 
     public interface FiltersListener {
-        void onClick(Filter filter);
+        void onClick(Filter filter, int position);
     }
 
     public void setFiltersListener(FiltersListener filtersListener) {
@@ -60,12 +63,22 @@ public class FiltersAdapter extends RecyclerView.Adapter<FiltersAdapter.ViewHold
         holder.filterTitle.setText(context.getResources().getString(filter.getTitle()));
         holder.filterIcon.setImageDrawable(context.getResources().getDrawable(filter.getImage()));
 
-        // Todo: Check current filter
-        if (position == 0) {
+        if (filter.isSelected()) {
+            checkedItem = position;
             holder.filterChecked.setVisibility(View.VISIBLE);
+        } else {
+            holder.filterChecked.setVisibility(View.GONE);
         }
 
-        holder.filterIcon.setOnClickListener(view -> filtersListener.onClick(filter));
+        holder.filterIcon.setOnClickListener(view -> {
+
+            filters.get(checkedItem).setSelected(false);
+
+            filters.get(position).setSelected(true);
+
+            filtersListener.onClick(filter, position);
+
+        });
     }
 
 

@@ -1,9 +1,8 @@
 package net.iquesoft.iquephoto.presenter;
 
-import android.graphics.Color;
 import android.graphics.Typeface;
 
-import net.iquesoft.iquephoto.PhotoEditorText;
+import net.iquesoft.iquephoto.model.Text;
 import net.iquesoft.iquephoto.view.ITextFragmentView;
 
 import javax.inject.Inject;
@@ -24,7 +23,7 @@ public class TextFragmentPresenterImpl implements ITextFragmentPresenter {
 
     @Override
     public void addText(String text, int color, Typeface typeface, int opacity) {
-        PhotoEditorText photoEditorText = new PhotoEditorText();
+        Text photoEditorText = new Text();
         photoEditorText.setTypeface(typeface);
         photoEditorText.setText(text);
         photoEditorText.setColor(color);
@@ -34,7 +33,7 @@ public class TextFragmentPresenterImpl implements ITextFragmentPresenter {
     }
 
     @Override
-    public void deleteText(PhotoEditorText photoEditorText) {
-        view.onDeleteTextComplete(photoEditorText);
+    public void deleteText(Text text) {
+        view.onDeleteTextComplete(text);
     }
 }

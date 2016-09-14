@@ -13,8 +13,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import net.iquesoft.iquephoto.DataHolder;
-import net.iquesoft.iquephoto.PhotoEditorText;
-import net.iquesoft.iquephoto.PhotoEditorView;
+import net.iquesoft.iquephoto.model.Text;
+import net.iquesoft.iquephoto.EditorView;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseFragment;
 import net.iquesoft.iquephoto.di.components.IMainActivityComponent;
@@ -35,8 +35,9 @@ import butterknife.Unbinder;
 public class TextFragment extends BaseFragment implements ITextFragmentView {
     private Context context;
 
-    private int color;
-    private String text;
+    private int color = 0x7f0b004f; // Default color white
+
+    private String textString;
     private Typeface typeface;
 
     private boolean hasText;
@@ -45,9 +46,9 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
 
     private Unbinder unbinder;
 
-    private PhotoEditorView photoEditorView;
+    private EditorView editorView;
 
-    private PhotoEditorText photoEditorText;
+    private Text text;
 
     private TextDialog textDialog;
     private ColorPickerDialog colorPickerDialog;
@@ -92,9 +93,9 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
 
         context = v.getContext();
 
-        photoEditorView = DataHolder.getInstance().getPhotoEditorView();
+        editorView = DataHolder.getInstance().getEditorView();
 
-        textDialog = new TextDialog(v.getContext(), this);
+        textDialog = new TextDialog(v.getContext());
         colorPickerDialog = new ColorPickerDialog(v.getContext());
 
         opacityValueTextView.setText(String.valueOf(seekBar.getProgress()));
@@ -123,6 +124,7 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
     public void onResume() {
         super.onResume();
         presenter.init(this);
+
     }
 
     @Override
@@ -133,12 +135,12 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
 
     @OnClick(R.id.addTextButton)
     public void onClickAddText() {
-        text = editText.getText().toString();
-        if (!text.isEmpty()) {
+        textString = editText.getText().toString();
+        if (!textString.isEmpty()) {
             color = colorPickerDialog.getColor();
             typeface = textDialog.getTypeface();
 
-            presenter.addText(text, color, typeface, seekBar.getProgress());
+            presenter.addText(textString, color, typeface, seekBar.getProgress());
         } else {
             Toast.makeText(context, getResources().getString(R.string.text_is_empty), Toast.LENGTH_SHORT).show();
         }
@@ -164,10 +166,11 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
 
     @OnClick(R.id.textButton)
     public void onClickTextButton() {
-        text = editText.getText().toString();
+        textString = editText.getText().toString();
         color = colorPickerDialog.getColor();
-
-        textDialog.showDialog(text, color);
+        textDialog.setText(textString);
+        textDialog.setColor(color);
+        textDialog.show();
     }
 
     @OnClick(R.id.deleteTextButton)
@@ -177,10 +180,12 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
             deleteTextButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_delete_on));
 
             // Todo: Delete text from PhotoEditorView.
+            editorView.setDeleteTextActivated(true);
             //presenter.deleteText(photoEditorView.getTextsList().get(photoEditorView.getCheckedTextId()));
             Toast.makeText(context, getResources().getString(R.string.text_delete_enabled), Toast.LENGTH_SHORT).show();
         } else {
             isDeleteActive = false;
+            editorView.setDeleteTextActivated(false);
             deleteTextButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_delete_off));
             Toast.makeText(context, getResources().getString(R.string.text_delete_disabled), Toast.LENGTH_SHORT).show();
         }
@@ -200,15 +205,15 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
     }
 
     @Override
-    public void onAddTextComplete(PhotoEditorText photoEditorText) {
-        photoEditorView.addText(photoEditorText);
+    public void onAddTextComplete(Text text) {
+        editorView.addText(text);
         Toast.makeText(context, getResources().getString(R.string.text_added), Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void onDeleteTextComplete(PhotoEditorText photoEditorText) {
+    public void onDeleteTextComplete(Text text) {
         if (isDeleteActive) {
-            photoEditorView.deleteText(photoEditorText);
+            editorView.deleteText(text);
         }
     }
 }

@@ -135,7 +135,6 @@
             android:text="0"
             android:textColor="@android:color/black"
             android:textStyle="bold" />
-
     </GridLayout>
 
     <Button
@@ -149,7 +148,7 @@
         android:layout_below="@+id/rgbController"
         android:layout_marginRight="10dp"
         android:text="@string/apply"
-        android:theme="@style/FlatButton" />
+        android:theme="@style/FlatButtonControlWhite" />
 
     <Button
         android:id="@+id/colorCancelButton"
@@ -162,6 +161,6 @@
         android:layout_toLeftOf="@+id/colorApplyButton"
         android:layout_toStartOf="@+id/colorApplyButton"
         android:text="@string/cancel"
-        android:theme="@style/FlatButton" />
+        android:theme="@style/FlatButtonControlWhite" />
 
 </RelativeLayout>

@@ -1,5 +1,6 @@
 package net.iquesoft.iquephoto.model;
 
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
@@ -13,8 +14,13 @@ import java.util.List;
  *         Stiker - model class how used in {@link net.iquesoft.iquephoto.view.fragment.StickersFragment} class.
  */
 public class Sticker {
+    public static final int STICKER_AREA_MARGIN = 7;
+    public static final int STICKER_BACKGROUND_COLOR = Color.parseColor("#80404040");
+
     private int title;
     private int image;
+
+    private float size = 100;
 
     private int x, y;
 
@@ -105,18 +111,33 @@ public class Sticker {
     }
 
     public Rect getStickerArea() {
+        stickerArea.top += getSize() + getY() - STICKER_AREA_MARGIN;
+        stickerArea.bottom += getSize() + getY() + STICKER_AREA_MARGIN;
+        stickerArea.left += getX() - STICKER_AREA_MARGIN;
+        stickerArea.right += getX() + STICKER_AREA_MARGIN;
+
         return stickerArea;
     }
+
+    public float getSize() {
+        return size;
+    }
+
+    public void setSize(float size) {
+        this.size = size;
+        //setStickerArea();
+    }
+}
 
     /*public void setStickerArea(Rect stickerArea) {
         if (getText() != null && typeface != null) {
             Paint paint = new Paint();
             setPaintParams(paint);
             paint.getTextBounds(getText(), 0, getText().length(), textArea);
-            textArea.top += getSize() + getY() - TEXT_AREA_MARGIN;
-            textArea.bottom += getSize() + getY() + TEXT_AREA_MARGIN;
-            textArea.left += getX() - TEXT_AREA_MARGIN;
-            textArea.right += getX() + TEXT_AREA_MARGIN;
+            textArea.top += getSize() + getY() - STICKER_AREA_MARGIN;
+            textArea.bottom += getSize() + getY() + STICKER_AREA_MARGIN;
+            textArea.left += getX() - STICKER_AREA_MARGIN;
+            textArea.right += getX() + STICKER_AREA_MARGIN;
         }
     }*/
-}
+

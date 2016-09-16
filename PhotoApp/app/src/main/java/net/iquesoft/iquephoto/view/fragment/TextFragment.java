@@ -18,7 +18,7 @@ import net.iquesoft.iquephoto.EditorView;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseFragment;
 import net.iquesoft.iquephoto.di.components.IMainActivityComponent;
-import net.iquesoft.iquephoto.view.dialog.ColorPickerDialog;
+import net.iquesoft.iquephoto.view.dialog.RGBColorPickerDialog;
 import net.iquesoft.iquephoto.view.dialog.TextDialog;
 import net.iquesoft.iquephoto.presenter.TextFragmentPresenterImpl;
 import net.iquesoft.iquephoto.view.ITextFragmentView;
@@ -51,7 +51,7 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
     private Text text;
 
     private TextDialog textDialog;
-    private ColorPickerDialog colorPickerDialog;
+    private RGBColorPickerDialog RGBColorPickerDialog;
 
     @Inject
     TextFragmentPresenterImpl presenter;
@@ -96,7 +96,7 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
         editorView = DataHolder.getInstance().getEditorView();
 
         textDialog = new TextDialog(v.getContext());
-        colorPickerDialog = new ColorPickerDialog(v.getContext());
+        RGBColorPickerDialog = new RGBColorPickerDialog(v.getContext());
 
         opacityValueTextView.setText(String.valueOf(seekBar.getProgress()));
 
@@ -137,7 +137,7 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
     public void onClickAddText() {
         textString = editText.getText().toString();
         if (!textString.isEmpty()) {
-            color = colorPickerDialog.getColor();
+            color = RGBColorPickerDialog.getColor();
             typeface = textDialog.getTypeface();
 
             presenter.addText(textString, color, typeface, seekBar.getProgress());
@@ -161,13 +161,13 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
 
     @OnClick(R.id.textColorButton)
     public void onClickTextColorButton() {
-        colorPickerDialog.show();
+        RGBColorPickerDialog.show();
     }
 
     @OnClick(R.id.textButton)
     public void onClickTextButton() {
         textString = editText.getText().toString();
-        color = colorPickerDialog.getColor();
+        color = RGBColorPickerDialog.getColor();
         textDialog.setText(textString);
         textDialog.setColor(color);
         textDialog.show();

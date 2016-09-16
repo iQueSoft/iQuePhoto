@@ -30,6 +30,8 @@
     <string name="tint">Tint</string>
     <string name="vignette">Vignette</string>
 
+    <string name="select_color">Select a color</string>
+
     <string name="tool_brightness">Brightness</string>
 
     <string name="opacity">Opacity</string>
@@ -115,6 +117,7 @@
     <string name="filter_original">Original</string>
     <string name="filter_morning">Morning</string>
     <string name="filter_purple">Purple</string>
+    <string name="filter_polaroid">Polaroid</string>
     <string name="filter_goldie">Goldie</string>
     <string name="filter_neon">Neon</string>
     <string name="filter_light_gray">Light Grey</string>
@@ -123,8 +126,9 @@
     <!-- For filters - END -->
 
     <!-- START - Draw tool. -->
-    <string name="draw">Draw</string>
-    <string name="brush_size">Brush Size</string>
+    <string name="drawing">Drawing</string>
+    <string name="saturation">Saturation</string>
+    <string name="size">Size</string>
     <!-- Draw tool - END -->
 
     <!-- For frame tool. -->

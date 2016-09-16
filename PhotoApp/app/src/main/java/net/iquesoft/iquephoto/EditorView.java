@@ -10,6 +10,7 @@ import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
@@ -41,14 +42,26 @@ public class EditorView extends View implements View.OnTouchListener {
 
     private EditorImage editorImage;
 
+    private float brightnessValue = 0;
+
     private boolean cropActivated = false;
-    private boolean textActivated = false;
+
+    // For drawing
+    private boolean drawingActivated = false;
+    private float drawingX, drawingY;
+    private Paint drawingPaint;
+    private Path drawingPath;
+    private Paint drawingCirclePaint;
+    private Path drawingCirclePath;
+    private Canvas drawingCanvas;
+    private static final float TOUCH_TOLERANCE = 4;
 
     // For meme
     private String topMemeText;
     private String bottomMemeText;
 
     // For text
+    private boolean textActivated = false;
     private int checkedTextId = -1;
     private boolean deleteTextActivated = false;
     private float defaultTextSize = 22f;
@@ -63,8 +76,6 @@ public class EditorView extends View implements View.OnTouchListener {
     private boolean hasFilter = false;
 
     private ColorMatrixColorFilter matrixColorFilter;
-
-    private ColorMatrix brightnessMatrix;
 
     // display width height.
     // double tap for determining
@@ -127,6 +138,8 @@ public class EditorView extends View implements View.OnTouchListener {
 
     public EditorView(Context context) {
         super(context);
+
+
     }
 
     public EditorView(Context context, AttributeSet attrs) {
@@ -140,6 +153,30 @@ public class EditorView extends View implements View.OnTouchListener {
             emptryBackgroung = BitmapFactory.decodeResource(context.getResources(), backgroungId);
         }
         emptyText = a.getString(R.styleable.GiantSquareEditorView_emptyText);
+
+        drawingPath = new Path();
+        drawingCirclePath = new Path();
+        drawingCirclePaint = new Paint();
+    }
+
+    public void setDrawingActivated(boolean drawingActivated) {
+        this.drawingActivated = drawingActivated;
+        Log.i("Drawing", String.valueOf(drawingActivated));
+        drawingCirclePaint.setAntiAlias(true);
+        drawingCirclePaint.setColor(Color.RED);
+        drawingCirclePaint.setStyle(Paint.Style.STROKE);
+        drawingCirclePaint.setStrokeJoin(Paint.Join.MITER);
+        drawingCirclePaint.setStrokeWidth(4f);
+
+
+        drawingPaint = new Paint();
+        drawingPaint.setAntiAlias(true);
+        drawingPaint.setDither(true);
+        drawingPaint.setColor(Color.GREEN);
+        drawingPaint.setStyle(Paint.Style.STROKE);
+        drawingPaint.setStrokeJoin(Paint.Join.ROUND);
+        drawingPaint.setStrokeCap(Paint.Cap.ROUND);
+        drawingPaint.setStrokeWidth(12);
     }
 
     @Override
@@ -193,11 +230,20 @@ public class EditorView extends View implements View.OnTouchListener {
                 drawCropCorner(canvas);
                 //drawShadow(canvas);
             }
+            if (brightnessValue != 0) {
+                drawImage(canvas, getPaintForBrightness(brightnessValue));
+                //drawImage(canvas, getPaintForContrast(brightnessValue));
+                //drawImage(canvas, getPaintForSaturation(brightnessValue));
+            }
             if (topMemeText != null) {
                 drawTopMemeText(canvas);
             }
             if (bottomMemeText != null) {
                 drawBottomMemeText(canvas);
+            }
+            if (drawingActivated) {
+                canvas.drawPath(drawingPath, drawingPaint);
+                canvas.drawPath(drawingCirclePath, drawingCirclePaint);
             }
         }
     }
@@ -251,16 +297,16 @@ public class EditorView extends View implements View.OnTouchListener {
     }
 
     public void drawTopMemeText(Canvas canvas) {
-        float x = (getBitamp().getWidth() / 2) + getMemePaint().measureText(topMemeText);
-        float y = 85;
+        final float x = (getBitamp().getWidth() / 2) - (getMemePaint().measureText(topMemeText) / 2);
+        final float y = 85;
 
         canvas.drawText(topMemeText, x, y, getMemePaint());
         canvas.drawText(topMemeText, x, y, getMemeStrokePaint());
     }
 
     public void drawBottomMemeText(Canvas canvas) {
-        float x = (getBitamp().getWidth() / 2) + getMemePaint().measureText(bottomMemeText);
-        float y = (getBitamp().getHeight() - 42.5f);
+        final float x = (getBitamp().getWidth() / 2) - (getMemePaint().measureText(topMemeText) / 2);
+        final float y = (getBitamp().getHeight() - 42.5f);
 
         canvas.drawText(bottomMemeText, x, y, getMemePaint());
         canvas.drawText(bottomMemeText, x, y, getMemeStrokePaint());
@@ -375,14 +421,54 @@ public class EditorView extends View implements View.OnTouchListener {
     /**
      *
      */
-    public void doBrightness(float value) {
-        brightnessMatrix = new ColorMatrix();
+    private Paint getPaintForBrightness(float value) {
+        Log.i("Brightness", "Value: " + String.valueOf(value));
+        ColorMatrix brightnessMatrix = new ColorMatrix();
         brightnessMatrix.set(new float[]{1, 0, 0, 0, value,
                 0, 1, 0, 0, value,
                 0, 0, 1, 0, value,
                 0, 0, 0, 1, 0});
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setColorFilter(new ColorMatrixColorFilter(brightnessMatrix));
+        return paint;
+    }
+
+    private Paint getPaintForContrast(float value) {
+        float scale = value + 1.f;
+        float translate = (-.5f * scale + .5f) * 255.f;
+        float[] array = new float[]{
+                scale, 0, 0, 0, 0,
+                0, scale, 0, 0, 0,
+                0, 0, scale, 0, 0,
+                0, 0, 0, 1, 0};
+        ColorMatrix matrix = new ColorMatrix(array);
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        paint.setColorFilter(new ColorMatrixColorFilter(matrix));
+        return paint;
+    }
+
+    private Paint getPaintForSaturation(float value) {
+        // Todo: Almost done Saturation.
+        float sat = 0.5f;
+        if (value > 0) {
+            sat = 0.5f + ((value / 100) / 2);
+        } else if (value < 0) {
+            sat = 0.5f - ((value / -100) / 2);
+        }
+        Log.i("Saturation", String.valueOf(sat));
+        ColorMatrix matrix = new ColorMatrix();
+        matrix.setSaturation(sat);
+        Paint paint = new Paint();
+        paint.setColorFilter(new ColorMatrixColorFilter(matrix));
+        return paint;
+    }
+
+    public float getBrightnessValue() {
+        return brightnessValue;
+    }
+
+    public void setBrightnessValue(float brightnessValue) {
+        this.brightnessValue = brightnessValue;
         invalidate();
     }
 
@@ -442,6 +528,8 @@ public class EditorView extends View implements View.OnTouchListener {
     public void addSticker(Sticker sticker) {
         sticker.setX(100);
         sticker.setY(100);
+        Log.i("Sticker", getResources().getString(sticker.getTitle()) + " \nX: "
+                + sticker.getX() + " \nY: " + sticker.getY());
         this.stickersList.add(sticker);
         invalidate();
     }
@@ -477,6 +565,19 @@ public class EditorView extends View implements View.OnTouchListener {
         }
     }
 
+    private void findCheckedSticker(int x, int y) {
+        for (int i = stickersList.size() - 1; i >= 0; i--) {
+            if (stickersList.get(i).getStickerArea().contains(x, y)) {
+                checkedStickerId = i;
+                Sticker sticker = stickersList.get(i);
+                Log.i("Sticker", getResources().getString(sticker.getTitle()) + " \nX: "
+                        + sticker.getX() + " \nY: " + sticker.getY());
+                return;
+            }
+        }
+        checkedStickerId = -1;
+    }
+
     private void findCheckedText(int x, int y) {
         for (int i = textsList.size() - 1; i >= 0; i--) {
             if (textsList.get(i).getTextArea().contains(x, y)) {
@@ -501,6 +602,7 @@ public class EditorView extends View implements View.OnTouchListener {
             Toast.makeText(getContext(), string, Toast.LENGTH_SHORT).show();
         }
     }
+
 
     /**
      *
@@ -533,16 +635,6 @@ public class EditorView extends View implements View.OnTouchListener {
         }*/
     }
 
-    private void findCheckedSticker(int x, int y) {
-        for (int i = stickersList.size() - 1; i >= 0; i--) {
-            if (stickersList.get(i).getStickerArea().contains(x, y)) {
-                checkedStickerId = i;
-                Log.d("Sticker", stickersList.get(i).toString());
-                return;
-            }
-        }
-        checkedStickerId = -1;
-    }
 
     private void drawImage(Canvas canvas, Paint paint) {
         calculateImagePart();
@@ -711,6 +803,13 @@ public class EditorView extends View implements View.OnTouchListener {
         setMeasuredDimension(imageRect.width() + 2 * (getImagePadding()), imageRect.height() + 2 * (getImagePadding()));
     }
 
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+
+        drawingCanvas = new Canvas();
+    }
+
     public void calculateActiveSquare(int width, int height) {
 
         Rect rect;
@@ -803,6 +902,34 @@ public class EditorView extends View implements View.OnTouchListener {
 
     private LongClickAsyncTask longClickAsyncTask;
 
+    private void drawingStart(float x, float y) {
+        //drawingPath.reset();
+        drawingPath.moveTo(x, y);
+        drawingX = x;
+        drawingY = y;
+    }
+
+    private void drawingMove(float x, float y) {
+        float dX = Math.abs(x - drawingX);
+        float dY = Math.abs(y - drawingY);
+        if (dX >= TOUCH_TOLERANCE || dY >= TOUCH_TOLERANCE) {
+            drawingPath.quadTo(drawingX, drawingY, (x + drawingX) / 2, (y + drawingY) / 2);
+            drawingX = x;
+            drawingY = y;
+
+            drawingCirclePath.reset();
+            drawingCirclePath.addCircle(drawingX, drawingY, 30, Path.Direction.CW);
+        }
+    }
+
+    private void drawingStop() {
+        drawingPath.lineTo(drawingX, drawingY);
+        drawingCirclePath.reset();
+        //drawingCanvas.drawPath(drawingPath, drawingPaint);
+        //drawingPath.reset();
+
+    }
+
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         int currentX = (int) event.getRawX();
@@ -811,6 +938,11 @@ public class EditorView extends View implements View.OnTouchListener {
             int touchCount = event.getPointerCount();
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
+                    if (drawingActivated) {
+                        drawingStart(event.getX(), event.getY());
+                        invalidate();
+                        break;
+                    }
                 case MotionEvent.ACTION_POINTER_1_DOWN:
                 case MotionEvent.ACTION_POINTER_2_DOWN:
                     if (touchCount >= 2) {
@@ -839,7 +971,7 @@ public class EditorView extends View implements View.OnTouchListener {
                         // Todo: Draw sticker border this.
 
                     } else {
-                        drawTextBorder = true;
+                        // Todo: drawTextBorder = true;
                         drawStickerBorder = true;
                         int DOUBLE_TAP_SECOND = 400;
                         if (System.currentTimeMillis() <= mLastTime + DOUBLE_TAP_SECOND) {
@@ -861,6 +993,11 @@ public class EditorView extends View implements View.OnTouchListener {
                     break;
                 case MotionEvent.ACTION_MOVE:
                     imageCentering = true;
+                    if (drawingActivated) {
+                        drawingMove(event.getX(), event.getY());
+                        invalidate();
+                        break;
+                    }
                     if (!isEmpty()) {
                         if (touchCount >= 2 && isScaling) {
                             float dist = distance(event.getX(0), event.getX(1), event.getY(0), event.getY(1));
@@ -931,6 +1068,11 @@ public class EditorView extends View implements View.OnTouchListener {
                     }
                     break;
                 case MotionEvent.ACTION_UP:
+                    if (drawingActivated) {
+                        drawingStop();
+                        invalidate();
+                        break;
+                    }
                 case MotionEvent.ACTION_POINTER_UP:
                 case MotionEvent.ACTION_POINTER_2_UP:
                     if (longClickAsyncTask != null) {
@@ -963,16 +1105,16 @@ public class EditorView extends View implements View.OnTouchListener {
     }
 
     /**
-     * @param path - directory path to saving editorImage with padding and with text/
-     * @return path to saved editorImage
+     * @param drawingPath - directory drawingPath to saving editorImage with padding and with text/
+     * @return drawingPath to saved editorImage
      */
-    /*public String[] saveImages(String path) throws IOException, OutOfMemoryError {
+    /*public String[] saveImages(String drawingPath) throws IOException, OutOfMemoryError {
         if (!isEmpty()) {
             List<String> files = new LinkedList<String>();
             EditorImage editorImage = this.editorImage;
             long saveImagesTime = System.currentTimeMillis();
             String fileName = String.format("%d_editor.jpg", saveImagesTime);
-            File file = new File(path, fileName);
+            File file = new File(drawingPath, fileName);
             FileOutputStream fos = null;
             try {
                 fos = new FileOutputStream(file, false);
@@ -1009,11 +1151,11 @@ public class EditorView extends View implements View.OnTouchListener {
         return null;
     }*/
 
-    /*public String[] saveImages(String path, String fileName) throws IOException, OutOfMemoryError {
+    /*public String[] saveImages(String drawingPath, String fileName) throws IOException, OutOfMemoryError {
         if (!isEmpty()) {
             List<String> files = new LinkedList<String>();
             EditorImage editorImage = this.editorImage;
-            File file = new File(path, fileName);
+            File file = new File(drawingPath, fileName);
             FileOutputStream fos = null;
             try {
                 fos = new FileOutputStream(file, false);
@@ -1120,6 +1262,7 @@ public class EditorView extends View implements View.OnTouchListener {
         invalidate();
         Log.i("Bottom meme text", topMemeText);
     }
+
 
     public interface OnSquareEditorListener {
         public void editText(Text giantSquareText);

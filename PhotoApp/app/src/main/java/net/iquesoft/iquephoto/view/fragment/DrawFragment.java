@@ -11,6 +11,7 @@ import net.iquesoft.iquephoto.di.components.IMainActivityComponent;
 import net.iquesoft.iquephoto.presenter.DrawFragmentPresenterImpl;
 import net.iquesoft.iquephoto.view.IDrawFragmentView;
 import net.iquesoft.iquephoto.view.dialog.ColorPickerDialog;
+import net.iquesoft.iquephoto.view.dialog.RGBColorPickerDialog;
 
 import javax.inject.Inject;
 
@@ -27,7 +28,7 @@ public class DrawFragment extends BaseFragment implements IDrawFragmentView {
     DrawFragmentPresenterImpl presenter;
 
     private Unbinder unbinder;
-    private ColorPickerDialog colorPickerDialog;
+    private RGBColorPickerDialog RGBColorPickerDialog;
 
     public static DrawFragment newInstance() {
         /*Bundle b = new Bundle();
@@ -51,12 +52,12 @@ public class DrawFragment extends BaseFragment implements IDrawFragmentView {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_brush, container, false);
+        View v = inflater.inflate(R.layout.fragment_drawing, container, false);
         v.setAlpha(0.8f);
 
         unbinder = ButterKnife.bind(this, v);
 
-        colorPickerDialog = new ColorPickerDialog(v.getContext());
+        RGBColorPickerDialog = new RGBColorPickerDialog(v.getContext());
 
         return v;
     }
@@ -69,7 +70,7 @@ public class DrawFragment extends BaseFragment implements IDrawFragmentView {
 
     @OnClick(R.id.brushColorButton)
     public void onClickBrushColor() {
-        colorPickerDialog.show();
+        new ColorPickerDialog(getContext()).show();
     }
 
 }

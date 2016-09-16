@@ -1,166 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="350dp"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
     android:layout_height="wrap_content"
-    android:paddingBottom="5dp">
+    android:orientation="vertical"
+    android:paddingLeft="20dp"
+    android:paddingTop="20dp"
+    android:paddingRight="20dp">
 
-    <FrameLayout
-        android:id="@+id/colorView"
-        android:layout_width="match_parent"
-        android:layout_height="325dp"
-        android:background="@color/red" />
-
-    <GridLayout
-        android:id="@+id/rgbController"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/colorView"
-        android:columnCount="4"
-        android:padding="10dp"
-        android:rowCount="4">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_column="0"
-            android:layout_columnWeight="1"
-            android:layout_gravity="center"
-            android:layout_row="0"
-            android:text="@string/RGB_R"
-            android:textColor="@android:color/black"
-            android:textStyle="bold" />
-
-        <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
-            android:id="@+id/redSeekBar"
-            android:layout_width="285dp"
-            android:layout_height="wrap_content"
-            android:layout_column="1"
-            android:layout_columnWeight="1"
-            android:layout_row="0"
-            app:dsb_indicatorColor="@color/red"
-            app:dsb_indicatorTextAppearance="@color/white"
-            app:dsb_max="255"
-            app:dsb_min="0"
-            app:dsb_progressColor="@color/red"
-            app:dsb_rippleColor="@color/red"
-            app:dsb_trackColor="@color/red"
-            app:dsb_value="255" />
-
-        <TextView
-            android:id="@+id/redSeekBarValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_column="2"
-            android:layout_columnWeight="1"
-            android:layout_gravity="center"
-            android:layout_row="0"
-            android:text="255"
-            android:textColor="@android:color/black"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_column="0"
-            android:layout_columnWeight="1"
-            android:layout_gravity="center"
-            android:layout_row="1"
-            android:text="@string/RGB_G"
-            android:textColor="@android:color/black"
-            android:textStyle="bold" />
-
-        <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
-            android:id="@+id/greenSeekBar"
-            android:layout_width="285dp"
-            android:layout_height="wrap_content"
-            android:layout_column="1"
-            android:layout_columnWeight="1"
-            app:dsb_indicatorColor="@color/green"
-            app:dsb_indicatorTextAppearance="@color/white"
-            app:dsb_max="255"
-            app:dsb_min="0"
-            app:dsb_progressColor="@color/green"
-            app:dsb_rippleColor="@color/green"
-            app:dsb_trackColor="@color/green"
-            app:dsb_value="0" />
-
-        <TextView
-            android:id="@+id/greenSeekBarValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_column="2"
-            android:layout_columnWeight="1"
-            android:layout_gravity="center"
-            android:layout_row="1"
-            android:text="0"
-            android:textColor="@android:color/black"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_column="0"
-            android:layout_columnWeight="1"
-            android:layout_gravity="center"
-            android:layout_row="2"
-            android:text="@string/RGB_B"
-            android:textColor="@android:color/black"
-            android:textStyle="bold" />
-
-        <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
-            android:id="@+id/blueSeekBar"
-            android:layout_width="285dp"
-            android:layout_height="wrap_content"
-            android:layout_column="1"
-            android:layout_columnWeight="1"
-            android:layout_row="2"
-            app:dsb_indicatorColor="@color/blue"
-            app:dsb_indicatorTextAppearance="@color/white"
-            app:dsb_max="255"
-            app:dsb_min="0"
-            app:dsb_progressColor="@color/blue"
-            app:dsb_rippleColor="@color/blue"
-            app:dsb_trackColor="@color/blue"
-            app:dsb_value="0" />
-
-        <TextView
-            android:id="@+id/blueSeekBarValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_column="2"
-            android:layout_columnWeight="1"
-            android:layout_gravity="center"
-            android:layout_row="2"
-            android:text="0"
-            android:textColor="@android:color/black"
-            android:textStyle="bold" />
-    </GridLayout>
-
-    <Button
-        android:id="@+id/colorApplyButton"
-        style="@style/Widget.AppCompat.Button.Borderless"
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="false"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/rgbController"
-        android:layout_marginRight="10dp"
-        android:text="@string/apply"
-        android:theme="@style/FlatButtonControlWhite" />
+        android:text="@string/select_color"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
-    <Button
-        android:id="@+id/colorCancelButton"
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="wrap_content"
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:id="@+id/colorRecyclerView"
+        android:layout_marginTop="10dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/colorApplyButton"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_toLeftOf="@+id/colorApplyButton"
-        android:layout_toStartOf="@+id/colorApplyButton"
-        android:text="@string/cancel"
-        android:theme="@style/FlatButtonControlWhite" />
+        android:orientation="horizontal"
+        android:paddingTop="10dp"
+        android:gravity="end">
 
-</RelativeLayout>
+        <Button
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:id="@+id/button2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/colorApplyButton"
+            android:layout_toLeftOf="@+id/colorApplyButton"
+            android:layout_toStartOf="@+id/colorApplyButton"
+            android:text="@string/cancel"
+            android:theme="@style/FlatButtonControlWhite" />
+
+        <Button
+            android:id="@+id/button"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/apply"
+            android:theme="@style/FlatButtonControlWhite" />
+    </LinearLayout>
+</LinearLayout>

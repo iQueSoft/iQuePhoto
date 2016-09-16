@@ -104,9 +104,13 @@ public class MainActivity extends BaseActivity implements IMainActivityView, IHa
                         case R.string.text:
                             editorView.setTextActivated(true);
                             break;
+                        case R.string.drawing:
+                            editorView.setDrawingActivated(true);
+                            break;
                         default:
                             editorView.setCropActivated(false);
                             editorView.setTextActivated(false);
+                            editorView.setDrawingActivated(false);
                             break;
                     }
                 } catch (NullPointerException e) {

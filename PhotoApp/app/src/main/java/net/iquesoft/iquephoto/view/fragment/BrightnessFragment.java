@@ -1,5 +1,6 @@
 package net.iquesoft.iquephoto.view.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,8 @@ import net.iquesoft.iquephoto.common.BaseFragment;
 import net.iquesoft.iquephoto.di.components.IMainActivityComponent;
 import net.iquesoft.iquephoto.presenter.BrightnessFragmentPresenterImpl;
 import net.iquesoft.iquephoto.view.IBrightnessFragmentView;
+import net.iquesoft.iquephoto.view.activity.MainActivity;
+import net.iquesoft.iquephoto.view.activity.StartActivity;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
@@ -20,6 +23,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 public class BrightnessFragment extends BaseFragment implements IBrightnessFragmentView {
@@ -63,7 +67,7 @@ public class BrightnessFragment extends BaseFragment implements IBrightnessFragm
             @Override
             public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
                 brightnessValueTextView.setText(String.valueOf(value));
-                editorView.doBrightness(value);
+                editorView.setBrightnessValue(value);
             }
 
             @Override

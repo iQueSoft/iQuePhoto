@@ -45,11 +45,38 @@ public class Filter {
                     0, 0, 0.5f, 0, 0,
                     0, 0, 0, 1, 0}))),
 
+            // Todo: Change filters name
+            new Filter(R.string.filter_darken, R.drawable.darknen, false, new ColorMatrixColorFilter(new ColorMatrix(new float[]{
+                    2, -1, 0, 0, 0,
+                    -1, 2, 0, 0, 0,
+                    0, -1, 2, 0, 0,
+                    0, 0, 0, 1, 0}))),
+
+            new Filter(R.string.filter_purple, R.drawable.purple, false, new ColorMatrixColorFilter(new ColorMatrix(new float[]{
+                    1, 0, 0, 0, 0,
+                    0, 1, 0, 0, 0,
+                    0.50f, 0, 1, 0, 0,
+                    0, 0, 0, 1, 0}))),
+
+            new Filter(R.string.filter_darken, R.drawable.darknen, false, new ColorMatrixColorFilter(new ColorMatrix(new float[]{
+                    1.5f, 0, 0, 0, -40,
+                    0, 1.5f, 0, 0, -40,
+                    0, 0, 1.5f, 0, -40,
+                    0, 0, 0, 1, 0}))),
+
+            /*new Filter(R.string.filter_polaroid, R.drawable.purple, false, new ColorMatrixColorFilter(new ColorMatrix(new float[]{
+                    1.438f, -0.062f, -0.062f, 0, 0,
+                    -0.122f, 1.378f, -0.122f, 0, 0,
+                    -0.016f, -0.016f, 1.483f, 0, 0,
+                    -0.03f, 0.05f, -0.02f, 0, 1}))),*/
+
             new Filter(R.string.filter_purple, R.drawable.purple, false, new ColorMatrixColorFilter(new ColorMatrix(new float[]{
                     1, 0, 0, 0.2f, 0,
                     0, 1, 0, 0, 0,
                     0, 0, 1, 0.2f, 0,
                     0, 0, 0, 1, 0}))),
+
+
 
             /*new Filter(R.string.filter_morning, R.drawable.buldog, false, new ColorMatrixColorFilter(new ColorMatrix(new float[]{
                     1, 0, 0, 0, 0,

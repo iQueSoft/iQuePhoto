@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="@string/draw"
+            android:text="@string/drawing"
             android:textColor="@android:color/white"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -79,7 +79,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginBottom="5dp"
-                android:text="@string/brush_size"
+                android:text="@string/size"
                 android:textColor="@android:color/white"
                 android:textSize="14sp"
                 android:textStyle="bold" />

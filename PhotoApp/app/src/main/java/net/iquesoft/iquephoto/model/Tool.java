@@ -8,7 +8,6 @@ import net.iquesoft.iquephoto.view.fragment.DrawFragment;
 import net.iquesoft.iquephoto.view.fragment.BrightnessFragment;
 import net.iquesoft.iquephoto.view.fragment.CropFragment;
 import net.iquesoft.iquephoto.view.fragment.FiltersFragment;
-import net.iquesoft.iquephoto.view.fragment.MemeFragment;
 import net.iquesoft.iquephoto.view.fragment.RotationFragment;
 import net.iquesoft.iquephoto.view.fragment.StickersFragment;
 import net.iquesoft.iquephoto.view.fragment.TextFragment;
@@ -42,9 +41,9 @@ public class Tool {
             new Tool(R.string.crop, R.drawable.ic_crop, CropFragment.newInstance()),
             new Tool(R.string.rotation, R.drawable.ic_rotation, RotationFragment.newInstance()),
             new Tool(R.string.brightness, R.drawable.ic_brightness, BrightnessFragment.newInstance()),
-            new Tool(R.string.draw, R.drawable.ic_brush, DrawFragment.newInstance()),
+            new Tool(R.string.drawing, R.drawable.ic_brush, DrawFragment.newInstance()),
             new Tool(R.string.text, R.drawable.ic_letters, TextFragment.newInstance()),
-            new Tool(R.string.meme, R.drawable.ic_meme, MemeFragment.newInstance())
+            //new Tool(R.string.meme, R.drawable.ic_meme, MemeFragment.newInstance())
     };
 
     private static Tool tool = new Tool();

@@ -4,11 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/black"
-    tools:context=".view.activity.MainActivity"
+    tools:context=".view.activity.EditorActivity"
     android:paddingTop="25dp">
 
 
-    <net.iquesoft.iquephoto.EditorView
+    <net.iquesoft.iquephoto.core.EditorView
         android:id="@+id/photoEditorView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

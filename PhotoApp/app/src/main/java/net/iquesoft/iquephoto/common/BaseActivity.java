@@ -8,6 +8,7 @@ import net.iquesoft.iquephoto.PhotoApplication;
 import net.iquesoft.iquephoto.di.components.IApplicationComponent;
 
 public abstract class BaseActivity extends AppCompatActivity {
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -4,13 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/colorPrimary"
-    android:orientation="vertical"
-    android:paddingBottom="10dp">
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="5dp">
+        android:paddingRight="10dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -23,7 +22,7 @@
             android:textStyle="bold" />
 
         <ImageView
-            android:id="@+id/imageView3"
+            android:id="@+id/hideDrawingButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -31,67 +30,75 @@
 
     </RelativeLayout>
 
-    <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
-        android:id="@+id/view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:dsb_indicatorColor="@android:color/white"
-        app:dsb_indicatorTextAppearance="@android:color/black"
-        app:dsb_max="100"
-        app:dsb_min="-100"
-        app:dsb_progressColor="@android:color/white"
-        app:dsb_rippleColor="@android:color/white"
-        app:dsb_trackColor="@android:color/white"
-        app:dsb_value="0" />
-
     <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp">
+        android:layout_height="match_parent"
+        android:paddingBottom="10dp"
+        android:id="@+id/drawingSettings">
 
-        <ImageView
-            android:id="@+id/imageView2"
+        <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
+            android:id="@+id/view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_eraser"
-            android:layout_weight="1" />
+            app:dsb_indicatorColor="@android:color/white"
+            app:dsb_indicatorTextAppearance="@android:color/black"
+            app:dsb_max="100"
+            app:dsb_min="-100"
+            app:dsb_progressColor="@android:color/white"
+            app:dsb_rippleColor="@android:color/white"
+            app:dsb_trackColor="@android:color/white"
+            app:dsb_value="0" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
 
-            <TextView
-                android:id="@+id/textView5"
+            <ImageView
+                android:id="@+id/imageView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="0"
-                android:textColor="@android:color/white"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+                android:layout_weight="1"
+                android:src="@drawable/ic_eraser" />
 
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginBottom="5dp"
-                android:text="@string/size"
-                android:textColor="@android:color/white"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textView5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="0"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="5dp"
+                    android:text="@string/size"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/brushColorButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/ic_brush_color" />
+
         </LinearLayout>
-
-        <ImageView
-            android:id="@+id/brushColorButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@drawable/ic_brush_color" />
-
     </LinearLayout>
 
 </LinearLayout>

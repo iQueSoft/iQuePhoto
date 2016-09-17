@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import net.iquesoft.iquephoto.DataHolder;
-import net.iquesoft.iquephoto.EditorView;
+import net.iquesoft.iquephoto.core.EditorView;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapters.StickersAdapter;
 import net.iquesoft.iquephoto.common.BaseFragment;

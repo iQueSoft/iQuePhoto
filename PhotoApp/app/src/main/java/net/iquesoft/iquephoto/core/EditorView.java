@@ -1,4 +1,4 @@
-package net.iquesoft.iquephoto;
+package net.iquesoft.iquephoto.core;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -21,8 +21,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
+import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.crop.OnCropBoxChangedListener;
 import net.iquesoft.iquephoto.model.CropBox;
+import net.iquesoft.iquephoto.model.Drawing;
 import net.iquesoft.iquephoto.model.EditorImage;
 import net.iquesoft.iquephoto.model.Text;
 import net.iquesoft.iquephoto.model.Sticker;
@@ -34,6 +36,8 @@ import java.util.List;
 public class EditorView extends View implements View.OnTouchListener {
 
     private final String TAG = EditorView.class.getSimpleName();
+
+    private Context context;
 
     private static final int LONG_PRESS_MILLISECOND = 1000;
     private static final long LONG_PRESS_TEXT_MILLISECOND = 2000;
@@ -51,10 +55,11 @@ public class EditorView extends View implements View.OnTouchListener {
     private float drawingX, drawingY;
     private Paint drawingPaint;
     private Path drawingPath;
-    private Paint drawingCirclePaint;
+    private Paint drawingCirclePaint = new Paint();
     private Path drawingCirclePath;
     private Canvas drawingCanvas;
     private static final float TOUCH_TOLERANCE = 4;
+    private List<Drawing> drawings = new LinkedList<Drawing>();
 
     // For meme
     private String topMemeText;
@@ -138,7 +143,7 @@ public class EditorView extends View implements View.OnTouchListener {
 
     public EditorView(Context context) {
         super(context);
-
+        this.context = context;
 
     }
 
@@ -154,9 +159,12 @@ public class EditorView extends View implements View.OnTouchListener {
         }
         emptyText = a.getString(R.styleable.GiantSquareEditorView_emptyText);
 
+        drawingPaint = new Paint();
         drawingPath = new Path();
         drawingCirclePath = new Path();
         drawingCirclePaint = new Paint();
+
+        this.context = context;
     }
 
     public void setDrawingActivated(boolean drawingActivated) {
@@ -168,8 +176,6 @@ public class EditorView extends View implements View.OnTouchListener {
         drawingCirclePaint.setStrokeJoin(Paint.Join.MITER);
         drawingCirclePaint.setStrokeWidth(4f);
 
-
-        drawingPaint = new Paint();
         drawingPaint.setAntiAlias(true);
         drawingPaint.setDither(true);
         drawingPaint.setColor(Color.GREEN);
@@ -177,6 +183,11 @@ public class EditorView extends View implements View.OnTouchListener {
         drawingPaint.setStrokeJoin(Paint.Join.ROUND);
         drawingPaint.setStrokeCap(Paint.Cap.ROUND);
         drawingPaint.setStrokeWidth(12);
+    }
+
+    public void setDrawingColor(int color) {
+        Log.i("Drawing", "Color: " + color);
+        drawingPaint.setColor(context.getResources().getColor(color));
     }
 
     @Override
@@ -241,9 +252,16 @@ public class EditorView extends View implements View.OnTouchListener {
             if (bottomMemeText != null) {
                 drawBottomMemeText(canvas);
             }
-            if (drawingActivated) {
+            if (drawings.size() > 0) {
+                for (Drawing drawing : drawings) {
+                    canvas.drawPath(drawing.getPath(), drawing.getPaint());
+                }
+           /* try {
                 canvas.drawPath(drawingPath, drawingPaint);
                 canvas.drawPath(drawingCirclePath, drawingCirclePaint);
+            } catch (NullPointerException e) {
+                Log.i("Drawing", "is null!");
+            }*/
             }
         }
     }
@@ -261,7 +279,7 @@ public class EditorView extends View implements View.OnTouchListener {
     }
 
     public void setImageBitmap(Bitmap bitmap) {
-        imageList.add(bitmap);
+        //imageList.add(bitmap);
         editorImage = new EditorImage();
         editorImage.setBitmap(bitmap);
         calculatePadding = true;
@@ -373,6 +391,7 @@ public class EditorView extends View implements View.OnTouchListener {
     /**
      * Rotate editorImage.
      */
+    // Todo: Make it in new thread.
     public void rotateImage(float angle) {
         Bitmap photoEditorImageBitmap = editorImage.getBitmap();
         Matrix matrix = new Matrix();
@@ -391,6 +410,7 @@ public class EditorView extends View implements View.OnTouchListener {
     /**
      *
      */
+    // Todo: Make it in new thread.
     public void horizontalFlip() {
         Bitmap photoEditorImageBitmap = editorImage.getBitmap();
         Matrix matrix = new Matrix();
@@ -406,6 +426,7 @@ public class EditorView extends View implements View.OnTouchListener {
     /**
      *
      */
+    // Todo: Make it in new thread.
     public void verticalFlip() {
         Bitmap photoEditorImageBitmap = editorImage.getBitmap();
         Matrix matrix = new Matrix();
@@ -534,12 +555,10 @@ public class EditorView extends View implements View.OnTouchListener {
         invalidate();
     }
 
-
-    // Todo: Make text opacity.
-
     /**
      *
      */
+    // Todo: Make text opacity.
     private void drawTexts(Canvas canvas, Paint paint) {
         if (isSaveInProccess) {
             for (Text text : textsList) {
@@ -603,7 +622,6 @@ public class EditorView extends View implements View.OnTouchListener {
         }
     }
 
-
     /**
      *
      */
@@ -634,7 +652,6 @@ public class EditorView extends View implements View.OnTouchListener {
             }
         }*/
     }
-
 
     private void drawImage(Canvas canvas, Paint paint) {
         calculateImagePart();
@@ -719,7 +736,6 @@ public class EditorView extends View implements View.OnTouchListener {
         invalidate();
         requestLayout();
     }
-
 
     public void setMaxScaleSize(float scale) {
         editorImage.setMaxScaleSize(scale);
@@ -859,13 +875,11 @@ public class EditorView extends View implements View.OnTouchListener {
         requestLayout();
     }
 
-
     private Bitmap createBitmap(int width, int height, int padding) throws OutOfMemoryError {
         int newWidth = width + padding * 2;
         int newHeight = height + padding * 2;
         return createBitmap(newWidth, newHeight, Bitmap.Config.ARGB_8888);
     }
-
 
     public Bitmap createBitmap(int newWidth, int newHeight, Bitmap.Config config) throws OutOfMemoryError {
         Bitmap bmp = null;
@@ -899,11 +913,11 @@ public class EditorView extends View implements View.OnTouchListener {
         return (float) Math.sqrt(getWidth() * getWidth() + getHeight() * getHeight());
     }
 
-
     private LongClickAsyncTask longClickAsyncTask;
 
     private void drawingStart(float x, float y) {
-        //drawingPath.reset();
+        drawingPath.reset();
+        Log.i("Drawing", "Start");
         drawingPath.moveTo(x, y);
         drawingX = x;
         drawingY = y;
@@ -912,6 +926,7 @@ public class EditorView extends View implements View.OnTouchListener {
     private void drawingMove(float x, float y) {
         float dX = Math.abs(x - drawingX);
         float dY = Math.abs(y - drawingY);
+        Log.i("Drawing", "Move");
         if (dX >= TOUCH_TOLERANCE || dY >= TOUCH_TOLERANCE) {
             drawingPath.quadTo(drawingX, drawingY, (x + drawingX) / 2, (y + drawingY) / 2);
             drawingX = x;
@@ -922,9 +937,13 @@ public class EditorView extends View implements View.OnTouchListener {
         }
     }
 
+    // FIXME: Problem with drawing from List of Drawings.
     private void drawingStop() {
         drawingPath.lineTo(drawingX, drawingY);
         drawingCirclePath.reset();
+        drawings.add(new Drawing(drawingPaint, drawingPath));
+        Log.i("Drawing", "Stop");
+        Log.i("Drawing", String.valueOf(drawings.size()) + " time(-s).");
         //drawingCanvas.drawPath(drawingPath, drawingPaint);
         //drawingPath.reset();
 
@@ -1251,18 +1270,19 @@ public class EditorView extends View implements View.OnTouchListener {
         this.textActivated = textActivated;
     }
 
-    public void setBottomMemeText(String bottomMemeText) {
-        this.bottomMemeText = bottomMemeText.toUpperCase();
-        invalidate();
-        Log.i("Top meme text", bottomMemeText);
-    }
-
+    // FIXME: Top meme text
     public void setTopMemeText(String topMemeText) {
         this.topMemeText = topMemeText.toUpperCase();
         invalidate();
         Log.i("Bottom meme text", topMemeText);
     }
 
+    // FIXME: Bottom meme text
+    public void setBottomMemeText(String bottomMemeText) {
+        this.bottomMemeText = bottomMemeText.toUpperCase();
+        invalidate();
+        Log.i("Top meme text", bottomMemeText);
+    }
 
     public interface OnSquareEditorListener {
         public void editText(Text giantSquareText);

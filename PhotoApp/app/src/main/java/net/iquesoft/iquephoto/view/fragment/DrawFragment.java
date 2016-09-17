@@ -4,7 +4,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
+import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseFragment;
 import net.iquesoft.iquephoto.di.components.IMainActivityComponent;
@@ -15,6 +18,7 @@ import net.iquesoft.iquephoto.view.dialog.RGBColorPickerDialog;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
@@ -24,8 +28,18 @@ import butterknife.Unbinder;
  */
 public class DrawFragment extends BaseFragment implements IDrawFragmentView {
 
+    private ColorPickerDialog colorPickerDialog;
+
     @Inject
     DrawFragmentPresenterImpl presenter;
+
+    @BindView(R.id.drawingSettings)
+    LinearLayout drawingSettings;
+
+    @BindView(R.id.hideDrawingButton)
+    ImageView hideDrawingButton;
+
+    private boolean isHide;
 
     private Unbinder unbinder;
     private RGBColorPickerDialog RGBColorPickerDialog;
@@ -57,6 +71,10 @@ public class DrawFragment extends BaseFragment implements IDrawFragmentView {
 
         unbinder = ButterKnife.bind(this, v);
 
+        colorPickerDialog = new ColorPickerDialog(v.getContext());
+        colorPickerDialog.setListener(color -> {
+            DataHolder.getInstance().getEditorView().setDrawingColor(color);
+        });
         RGBColorPickerDialog = new RGBColorPickerDialog(v.getContext());
 
         return v;
@@ -70,7 +88,20 @@ public class DrawFragment extends BaseFragment implements IDrawFragmentView {
 
     @OnClick(R.id.brushColorButton)
     public void onClickBrushColor() {
-        new ColorPickerDialog(getContext()).show();
+        colorPickerDialog.show();
+    }
+
+    @OnClick(R.id.hideDrawingButton)
+    public void onClickHideDrawing() {
+        if (!isHide) {
+            isHide = true;
+            hideDrawingButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_expand_less));
+            drawingSettings.setVisibility(View.GONE);
+        } else {
+            isHide = false;
+            hideDrawingButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_expand));
+            drawingSettings.setVisibility(View.VISIBLE);
+        }
     }
 
 }

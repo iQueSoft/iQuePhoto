@@ -1,19 +1,15 @@
 package net.iquesoft.iquephoto.adapters;
 
 import android.content.Context;
-import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.mikhaellopez.circularimageview.CircularImageView;
-
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.core.ColorCircleDrawable;
 import net.iquesoft.iquephoto.model.EditorColor;
-import net.iquesoft.iquephoto.model.Filter;
 
 import java.util.List;
 
@@ -61,16 +57,26 @@ public class ColorAdapter extends RecyclerView.Adapter<ColorAdapter.ViewHolder> 
         final EditorColor color = editorColors.get(position);
 
         holder.colorView.setImageDrawable(new ColorCircleDrawable(context.getResources().getColor(color.getColor())));
-        //holder.colorSelected.setImageDrawable(new ColorCircleDrawable(context.getResources().getColor(color.getColor())));
-        /*holder.colorView.setOnClickListener(view -> {
 
-            *//*editorColors.get(checkedItem)(false);
+        if (color.isSelected()) {
+            holder.colorSelected.setVisibility(View.VISIBLE);
+        } else {
+            holder.colorSelected.setVisibility(View.GONE);
+        }
 
-            filters.get(position).setSelected(true);*//*
+        holder.colorView.setOnClickListener(view -> {
+
+            editorColors.get(checkedItem).setSelected(false);
+            notifyItemChanged(checkedItem);
+
+            checkedItem = position;
+            editorColors.get(position).setSelected(true);
+
+            notifyItemChanged(position);
 
             colorListener.onClick(color);
 
-        });*/
+        });
     }
 
 

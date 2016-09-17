@@ -26,7 +26,7 @@ import butterknife.ButterKnife;
  */
 public class FiltersAdapter extends RecyclerView.Adapter<FiltersAdapter.ViewHolder> {
 
-    private int checkedItem;
+    private int checkedItem = 0;
 
     private Context context;
 
@@ -35,7 +35,7 @@ public class FiltersAdapter extends RecyclerView.Adapter<FiltersAdapter.ViewHold
     private FiltersListener filtersListener;
 
     public interface FiltersListener {
-        void onClick(Filter filter, int position);
+        void onClick(Filter filter);
     }
 
     public void setFiltersListener(FiltersListener filtersListener) {
@@ -63,6 +63,10 @@ public class FiltersAdapter extends RecyclerView.Adapter<FiltersAdapter.ViewHold
         holder.filterTitle.setText(context.getResources().getString(filter.getTitle()));
         holder.filterIcon.setImageDrawable(context.getResources().getDrawable(filter.getImage()));
 
+        // FIXME: Problem with changing position (filterChecked)
+        if (checkedItem == 0)
+            filters.get(checkedItem).setSelected(true);
+
         if (filter.isSelected()) {
             checkedItem = position;
             holder.filterChecked.setVisibility(View.VISIBLE);
@@ -76,7 +80,10 @@ public class FiltersAdapter extends RecyclerView.Adapter<FiltersAdapter.ViewHold
 
             filters.get(position).setSelected(true);
 
-            filtersListener.onClick(filter, position);
+            notifyItemChanged(checkedItem);
+            notifyItemChanged(position);
+
+            filtersListener.onClick(filter);
 
         });
     }

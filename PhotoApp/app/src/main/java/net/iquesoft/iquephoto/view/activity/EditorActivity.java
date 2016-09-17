@@ -14,7 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import net.iquesoft.iquephoto.DataHolder;
-import net.iquesoft.iquephoto.EditorView;
+import net.iquesoft.iquephoto.core.EditorView;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapters.ToolsAdapter;
 import net.iquesoft.iquephoto.common.BaseActivity;
@@ -27,8 +27,6 @@ import net.iquesoft.iquephoto.model.Tool;
 import net.iquesoft.iquephoto.presenter.MainActivityPresenterImpl;
 import net.iquesoft.iquephoto.utils.ImageHelper;
 import net.iquesoft.iquephoto.view.IMainActivityView;
-import net.iquesoft.iquephoto.view.fragment.CropFragment;
-import net.iquesoft.iquephoto.view.fragment.TextFragment;
 
 import javax.inject.Inject;
 
@@ -38,7 +36,7 @@ import butterknife.ButterKnife;
 /**
  * @author Sergey Belenkiy
  */
-public class MainActivity extends BaseActivity implements IMainActivityView, IHasComponent<IMainActivityComponent> {
+public class EditorActivity extends BaseActivity implements IMainActivityView, IHasComponent<IMainActivityComponent> {
 
     @Inject
     MainActivityPresenterImpl presenter;

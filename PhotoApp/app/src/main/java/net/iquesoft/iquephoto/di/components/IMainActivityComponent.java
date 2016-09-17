@@ -6,7 +6,7 @@ import net.iquesoft.iquephoto.view.fragment.BrightnessFragment;
 import net.iquesoft.iquephoto.view.fragment.DrawFragment;
 import net.iquesoft.iquephoto.view.fragment.CropFragment;
 import net.iquesoft.iquephoto.view.fragment.FiltersFragment;
-import net.iquesoft.iquephoto.view.activity.MainActivity;
+import net.iquesoft.iquephoto.view.activity.EditorActivity;
 import net.iquesoft.iquephoto.view.fragment.MemeFragment;
 import net.iquesoft.iquephoto.view.fragment.RotationFragment;
 import net.iquesoft.iquephoto.view.fragment.ShowStickersFragment;
@@ -21,7 +21,7 @@ import dagger.Component;
 
 public interface IMainActivityComponent {
 
-    void inject(MainActivity mainActivity);
+    void inject(EditorActivity editorActivity);
 
     void inject(FiltersFragment filtersFragment);
 

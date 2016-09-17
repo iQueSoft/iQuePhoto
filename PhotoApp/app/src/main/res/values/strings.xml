@@ -1,11 +1,12 @@
 <resources>
     <string name="app_name">iQuePhoto</string>
 
-    <!-- For start screen. -->
+    <!-- START - Start screen. -->
     <string name="camera">Camera</string>
     <string name="gallery">Gallery</string>
     <string name="error">Image wasn\'t selected!</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- Start screen - END. -->
+
     <string name="none">None</string>
     <string name="autofix">Autofix</string>
     <string name="bw">Min/Max Color Intensity</string>
@@ -88,11 +89,12 @@
     <!-- Emoticons stickers - END. -->
     <!-- Stickers - END. -->
 
-    <!-- For rotate tool. -->
-    <string name="rotation">Rotation</string>
+    <!-- START - Orientation tool. -->
+    <string name="orientation">Orientation</string>
     <string name="rotate">Rotate</string>
     <string name="flip">Flip</string>
     <string name="angle">Angle</string>
+    <!-- Orientation tool - END. -->
 
     <!-- START - Text tool. -->
     <string name="text">Text</string>

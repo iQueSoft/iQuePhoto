@@ -18,7 +18,15 @@ import butterknife.ButterKnife;
  * Created by Sergey on 9/16/2016.
  */
 public class ColorPickerDialog extends Dialog {
+    private final static String TAG = ColorPickerDialog.class.getSimpleName();
+
     private Context context;
+    private ColorListener listener;
+
+    public interface ColorListener {
+        void onClick(int color);
+    }
+    
     private ColorAdapter adapter;
 
     @BindView(R.id.colorRecyclerView)
@@ -38,7 +46,16 @@ public class ColorPickerDialog extends Dialog {
         ButterKnife.bind(this);
 
         adapter = new ColorAdapter(EditorColor.getColorsList());
+
+        adapter.setColorListener(editorColor -> {
+            listener.onClick(editorColor.getColor());
+        });
+
         recyclerView.setLayoutManager(new GridLayoutManager(context, 4));
         recyclerView.setAdapter(adapter);
+    }
+
+    public void setListener(ColorListener listener) {
+        this.listener = listener;
     }
 }

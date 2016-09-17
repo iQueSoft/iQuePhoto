@@ -1,5 +1,7 @@
 package net.iquesoft.iquephoto;
 
+import net.iquesoft.iquephoto.core.EditorView;
+
 /**
  * Created by Sergey on 8/30/2016.
  */

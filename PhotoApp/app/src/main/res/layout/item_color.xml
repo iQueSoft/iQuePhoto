@@ -14,7 +14,7 @@
         android:layout_width="25dp"
         android:layout_height="25dp"
         android:src="@drawable/ic_check"
-        android:visibility="visible"
+        android:visibility="gone"
         android:scaleType="fitEnd"
         android:layout_gravity="center" />
 </FrameLayout>

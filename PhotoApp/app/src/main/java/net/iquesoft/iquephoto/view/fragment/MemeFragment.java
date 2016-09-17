@@ -9,7 +9,7 @@ import android.widget.EditText;
 import com.jakewharton.rxbinding.widget.RxTextView;
 
 import net.iquesoft.iquephoto.DataHolder;
-import net.iquesoft.iquephoto.EditorView;
+import net.iquesoft.iquephoto.core.EditorView;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseFragment;
 import net.iquesoft.iquephoto.di.components.IMainActivityComponent;
@@ -21,7 +21,6 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import rx.Subscription;
 
 public class MemeFragment extends BaseFragment implements IMemeFragmentView {
 

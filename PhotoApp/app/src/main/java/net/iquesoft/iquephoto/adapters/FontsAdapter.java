@@ -18,7 +18,7 @@ import butterknife.ButterKnife;
 
 /**
  * @author Sergey Belenkiy;
- *         Adapter for TextDialog;
+ *         Adapter for FontPickerDialog;
  */
 public class FontsAdapter extends RecyclerView.Adapter<FontsAdapter.ViewHolder> {
 

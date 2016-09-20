@@ -4,17 +4,14 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Window;
 import android.widget.TextView;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapters.FontsAdapter;
 import net.iquesoft.iquephoto.model.Font;
-import net.iquesoft.iquephoto.view.fragment.TextFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -23,11 +20,12 @@ import butterknife.OnClick;
 /**
  * @author Sergey
  */
-public class TextDialog extends Dialog {
+public class FontPickerDialog extends Dialog {
 
     // Todo: Make text style like as normal, bold and italic text.
     private int color;
     private String text;
+    private Context context;
 
     private Typeface typeface;
 
@@ -40,32 +38,33 @@ public class TextDialog extends Dialog {
     private boolean bold;
     private boolean italic;
 
-    public TextDialog(Context context) {
+    public FontPickerDialog(Context context) {
         super(context);
+        this.context = context;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.dialog_text);
-
-        if (!text.isEmpty())
-            textPreview.setText(text);
+        setContentView(R.layout.dialog_font_picker);
 
         ButterKnife.bind(this);
+
+        textPreview.setText(text);
+        textPreview.setTextColor(color);
 
         initFontsList();
     }
 
     @OnClick(R.id.applyTextStyle)
-    public void onClickApplyTextStyle() {
+    void onClickApplyTextStyle() {
         //textFragment.setTypeface(typeface);
         dismiss();
     }
 
     @OnClick(R.id.cancelTextStyle)
-    public void onClickCancel() {
+    void onClickCancel() {
         dismiss();
     }
 
@@ -87,9 +86,8 @@ public class TextDialog extends Dialog {
      * @param color is text preview text color.
      */
     public void showDialog(String text, int color) {
-        if (text.length() > 0)
-            textPreview.setText(text);
-        textPreview.setTextColor(color);
+        this.text = text;
+        this.color = color;
         show();
     }
 

@@ -18,8 +18,8 @@ import net.iquesoft.iquephoto.core.EditorView;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseFragment;
 import net.iquesoft.iquephoto.di.components.IMainActivityComponent;
+import net.iquesoft.iquephoto.view.dialog.FontPickerDialog;
 import net.iquesoft.iquephoto.view.dialog.RGBColorPickerDialog;
-import net.iquesoft.iquephoto.view.dialog.TextDialog;
 import net.iquesoft.iquephoto.presenter.TextFragmentPresenterImpl;
 import net.iquesoft.iquephoto.view.ITextFragmentView;
 
@@ -50,7 +50,7 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
 
     private Text text;
 
-    private TextDialog textDialog;
+    private FontPickerDialog fontPickerDialog;
     private RGBColorPickerDialog RGBColorPickerDialog;
 
     @Inject
@@ -95,7 +95,7 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
 
         editorView = DataHolder.getInstance().getEditorView();
 
-        textDialog = new TextDialog(v.getContext());
+        fontPickerDialog = new FontPickerDialog(v.getContext());
         RGBColorPickerDialog = new RGBColorPickerDialog(v.getContext());
 
         opacityValueTextView.setText(String.valueOf(seekBar.getProgress()));
@@ -138,7 +138,7 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
         textString = editText.getText().toString();
         if (!textString.isEmpty()) {
             color = RGBColorPickerDialog.getColor();
-            typeface = textDialog.getTypeface();
+            typeface = fontPickerDialog.getTypeface();
 
             presenter.addText(textString, color, typeface, seekBar.getProgress());
         } else {
@@ -168,9 +168,10 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
     public void onClickTextButton() {
         textString = editText.getText().toString();
         color = RGBColorPickerDialog.getColor();
-        textDialog.setText(textString);
-        textDialog.setColor(color);
-        textDialog.show();
+        if (textString.length() > 0) {
+            fontPickerDialog.showDialog(textString, color);
+        }
+
     }
 
     @OnClick(R.id.deleteTextButton)
@@ -179,9 +180,7 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
             isDeleteActive = true;
             deleteTextButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_delete_on));
 
-            // Todo: Delete text from PhotoEditorView.
             editorView.setDeleteTextActivated(true);
-            //presenter.deleteText(photoEditorView.getTextsList().get(photoEditorView.getCheckedTextId()));
             Toast.makeText(context, getResources().getString(R.string.text_delete_enabled), Toast.LENGTH_SHORT).show();
         } else {
             isDeleteActive = false;

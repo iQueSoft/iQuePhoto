@@ -60,7 +60,7 @@ public class EditorActivity extends BaseActivity implements IMainActivityView, I
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_editor);
 
         ButterKnife.bind(this);
 

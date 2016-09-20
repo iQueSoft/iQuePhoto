@@ -4,7 +4,7 @@ apply plugin: 'me.tatarka.retrolambda'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion "24.0.1"
+    buildToolsVersion "24.0.2"
 
     defaultConfig {
         applicationId "net.iquesoft.iquephoto"
@@ -31,13 +31,13 @@ dependencies {
     apt 'com.jakewharton:butterknife-compiler:8.3.0'
     apt 'com.google.dagger:dagger-compiler:2.5'
     provided 'org.glassfish:javax.annotation:10.0-b28'
-    compile 'com.android.support:appcompat-v7:24.1.1'
-    compile 'com.android.support:support-v4:24.1.1'
-    compile 'com.android.support:recyclerview-v7:24.1.1'
+    compile 'com.android.support:appcompat-v7:24.2.1'
+    compile 'com.android.support:support-v4:24.2.1'
+    compile 'com.android.support:recyclerview-v7:24.2.1'
     compile 'org.adw.library:discrete-seekbar:1.0.1'
     compile 'com.jakewharton:butterknife:8.3.0'
     compile 'com.google.dagger:dagger:2.5'
-    compile 'com.android.support:design:24.1.1'
+    compile 'com.android.support:design:24.2.1'
     compile 'com.mikhaellopez:circularimageview:3.0.2'
     compile 'com.tbruyelle.rxpermissions:rxpermissions:0.7.0@aar'
     compile 'com.jakewharton.rxbinding:rxbinding:0.4.0'

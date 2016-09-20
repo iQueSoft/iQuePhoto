@@ -8,10 +8,9 @@ import java.util.List;
  */
 public class Font {
 
-    // Todo: Add more fonts.
-
     private String title;
     private String typeface;
+    private boolean selected;
 
     /**
      * @return list with all fonts for adapter usage;
@@ -54,6 +53,14 @@ public class Font {
 
     public void setTypeface(String typeface) {
         this.typeface = typeface;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 }
 

@@ -91,8 +91,8 @@ public class FiltersFragment extends BaseFragment implements IFiltersFragmentVie
         FiltersAdapter filtersAdapter = new FiltersAdapter(Filter.getFiltersList());
 
         filtersAdapter.setFiltersListener(filter -> {
-            if (filter.getMatrixColorFilter() != null) {
-                editorView.setFilter(filter.getMatrixColorFilter());
+            if (filter.getColorMatrix() != null) {
+                editorView.setFilter(filter.getColorMatrix());
             } else {
                 editorView.setHasNotFiler();
             }

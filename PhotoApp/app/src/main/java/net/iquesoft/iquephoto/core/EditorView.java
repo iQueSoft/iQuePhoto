@@ -57,9 +57,9 @@ public class EditorView extends View implements View.OnTouchListener {
     private Path drawingPath;
     private Paint drawingCirclePaint = new Paint();
     private Path drawingCirclePath;
-    private Canvas drawingCanvas;
+    //private Canvas drawingCanvas;
     private static final float TOUCH_TOLERANCE = 4;
-    private List<Drawing> drawings = new LinkedList<Drawing>();
+    private ArrayList<Drawing> drawings = new ArrayList<>();
 
     // For meme
     private String topMemeText;
@@ -80,7 +80,7 @@ public class EditorView extends View implements View.OnTouchListener {
 
     private boolean hasFilter = false;
 
-    private ColorMatrixColorFilter matrixColorFilter;
+    private ColorMatrix colorMatrix;
 
     // display width height.
     // double tap for determining
@@ -200,37 +200,13 @@ public class EditorView extends View implements View.OnTouchListener {
             } else {
                 canvas.drawBitmap(emptryBackgroung, null, imageRect, paint);
             }
-            /*if (!TextUtils.isEmpty(emptyText)) {
-                Paint paint1 = new Paint();
-                paint1.setTypeface(textTypeface);
-                paint1.setColor(Color.argb(128, 0, 0, 0));
-                float textSize = 10f;
-                paint1.setAntiAlias(true);
-                paint1.setTextSize(textSize);
-                Rect bounds = new Rect();
-                paint1.getTextBounds(emptyText, 0, emptyText.indexOf("\n"), bounds);
-                while ((float) bounds.width() / imageRect.width() < 0.7) {
-                    paint1.setTextSize(++textSize);
-                    paint1.getTextBounds(emptyText, 0, emptyText.indexOf("\n"), bounds);
-                }
-                int y = imageRect.centerY() + bounds.height() * 2;
-                for (String line : emptyText.split("\n")) {
-                    paint1.getTextBounds(line, 0, line.length(), bounds);
-                    canvas.drawText(line, imageRect.centerX() - bounds.width() / 2, y, paint1);
-                    y += bounds.height() + bounds.height() / 2;
-                }
-                //  canvas.drawText(emptyText, imageArea.centerX() - bounds.width() / 2, imageArea.centerY() + bounds.height() * 2, paint1);
-                paint1.setTextSize(textSize + 60);
-                paint1.getTextBounds("+", 0, 1, bounds);
-                canvas.drawText("+", imageRect.centerX() - bounds.width() / 2, imageArea.centerY(), paint1);
-            }*/
         } else {
             canvas.drawColor(imagePaddingColor);
             drawImage(canvas, paint);
             if (hasFilter) {
                 Paint filterPaint = new Paint();
-                filterPaint.setColorFilter(matrixColorFilter);
-                drawImageWithFilter(canvas, filterPaint);
+                filterPaint.setColorFilter(new ColorMatrixColorFilter(colorMatrix));
+                drawImage(canvas, filterPaint);
             }
             drawTexts(canvas, new Paint());
             if (stickersList.size() > 0) {
@@ -242,9 +218,7 @@ public class EditorView extends View implements View.OnTouchListener {
                 //drawShadow(canvas);
             }
             if (brightnessValue != 0) {
-                drawImage(canvas, getPaintForBrightness(brightnessValue));
-                //drawImage(canvas, getPaintForContrast(brightnessValue));
-                //drawImage(canvas, getPaintForSaturation(brightnessValue));
+                drawImage(canvas, getBrightnessMatrix(brightnessValue));
             }
             if (topMemeText != null) {
                 drawTopMemeText(canvas);
@@ -255,6 +229,7 @@ public class EditorView extends View implements View.OnTouchListener {
             if (drawings.size() > 0) {
                 for (Drawing drawing : drawings) {
                     canvas.drawPath(drawing.getPath(), drawing.getPaint());
+
                 }
            /* try {
                 canvas.drawPath(drawingPath, drawingPaint);
@@ -264,6 +239,42 @@ public class EditorView extends View implements View.OnTouchListener {
             }*/
             }
         }
+    }
+
+    private void drawingStart(float x, float y) {
+        drawingPath.reset();
+        Log.i("Drawing", "Start");
+        drawingPath.moveTo(x, y);
+        drawingX = x;
+        drawingY = y;
+    }
+
+    private void drawingMove(float x, float y) {
+        float dX = Math.abs(x - drawingX);
+        float dY = Math.abs(y - drawingY);
+        Log.i("Drawing", "Move");
+        if (dX >= TOUCH_TOLERANCE || dY >= TOUCH_TOLERANCE) {
+            drawingPath.quadTo(drawingX, drawingY, (x + drawingX) / 2, (y + drawingY) / 2);
+            drawingX = x;
+            drawingY = y;
+
+            drawingCirclePath.reset();
+            drawingCirclePath.addCircle(drawingX, drawingY, 30, Path.Direction.CW);
+        }
+    }
+
+    // FIXME: Problem with drawing from List of Drawings.
+    private void drawingStop() {
+        drawingPath.lineTo(drawingX, drawingY);
+        drawingCirclePath.reset();
+        Paint paint = drawingPaint;
+        Path path = drawingPath;
+        drawings.add(new Drawing(paint, path));
+        //drawingPath.reset();
+        Log.i("Drawing", "Stop");
+        Log.i("Drawing", String.valueOf(drawings.size()) + " time(-s).");
+        //drawingCanvas.drawPath(drawingPath, drawingPaint);
+        //drawingPath.reset();
     }
 
     public Bitmap getBitamp() {
@@ -442,7 +453,7 @@ public class EditorView extends View implements View.OnTouchListener {
     /**
      *
      */
-    private Paint getPaintForBrightness(float value) {
+    private Paint getBrightnessMatrix(float value) {
         Log.i("Brightness", "Value: " + String.valueOf(value));
         ColorMatrix brightnessMatrix = new ColorMatrix();
         brightnessMatrix.set(new float[]{1, 0, 0, 0, value,
@@ -450,7 +461,14 @@ public class EditorView extends View implements View.OnTouchListener {
                 0, 0, 1, 0, value,
                 0, 0, 0, 1, 0});
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setColorFilter(new ColorMatrixColorFilter(brightnessMatrix));
+        if (hasFilter) {
+            ColorMatrix brightnessMatrixWithFilter = new ColorMatrix();
+            brightnessMatrixWithFilter.setConcat(brightnessMatrix, colorMatrix);
+            paint.setColorFilter(new ColorMatrixColorFilter(brightnessMatrixWithFilter));
+        } else {
+            paint.setColorFilter(new ColorMatrixColorFilter(brightnessMatrix));
+        }
+
         return paint;
     }
 
@@ -493,10 +511,10 @@ public class EditorView extends View implements View.OnTouchListener {
         invalidate();
     }
 
-    public void setFilter(ColorMatrixColorFilter matrixColorFilter) {
-        if (matrixColorFilter != null) {
+    public void setFilter(ColorMatrix colorMatrix) {
+        if (colorMatrix != null) {
             hasFilter = true;
-            this.matrixColorFilter = matrixColorFilter;
+            this.colorMatrix = colorMatrix;
             invalidate();
         }
     }
@@ -676,7 +694,7 @@ public class EditorView extends View implements View.OnTouchListener {
         canvas.drawBitmap(editorImage.getBitmap(), matrix, paint);
     }
 
-    private void drawImageWithFilter(Canvas canvas, Paint paint) {
+    /*private void drawImageWithFilter(Canvas canvas, Paint paint) {
         Matrix matrix = new Matrix();
         float scale = editorImage.getScale() / getImageScaleForUnionArea(imageRect, editorImage);
         if (isSaveInProccess) {
@@ -697,7 +715,7 @@ public class EditorView extends View implements View.OnTouchListener {
         }
         canvas.drawBitmap(editorImage.getBitmap(), matrix, paint);
         //canvas.drawBitmap(editorImage.getBitmap(), editorImage.getHeight(), editorImage.getWidth(), paint);
-    }
+    }*/
 
     public boolean isFreeTransform() {
         return freeTransform;
@@ -822,8 +840,6 @@ public class EditorView extends View implements View.OnTouchListener {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-
-        drawingCanvas = new Canvas();
     }
 
     public void calculateActiveSquare(int width, int height) {
@@ -914,40 +930,6 @@ public class EditorView extends View implements View.OnTouchListener {
     }
 
     private LongClickAsyncTask longClickAsyncTask;
-
-    private void drawingStart(float x, float y) {
-        drawingPath.reset();
-        Log.i("Drawing", "Start");
-        drawingPath.moveTo(x, y);
-        drawingX = x;
-        drawingY = y;
-    }
-
-    private void drawingMove(float x, float y) {
-        float dX = Math.abs(x - drawingX);
-        float dY = Math.abs(y - drawingY);
-        Log.i("Drawing", "Move");
-        if (dX >= TOUCH_TOLERANCE || dY >= TOUCH_TOLERANCE) {
-            drawingPath.quadTo(drawingX, drawingY, (x + drawingX) / 2, (y + drawingY) / 2);
-            drawingX = x;
-            drawingY = y;
-
-            drawingCirclePath.reset();
-            drawingCirclePath.addCircle(drawingX, drawingY, 30, Path.Direction.CW);
-        }
-    }
-
-    // FIXME: Problem with drawing from List of Drawings.
-    private void drawingStop() {
-        drawingPath.lineTo(drawingX, drawingY);
-        drawingCirclePath.reset();
-        drawings.add(new Drawing(drawingPaint, drawingPath));
-        Log.i("Drawing", "Stop");
-        Log.i("Drawing", String.valueOf(drawings.size()) + " time(-s).");
-        //drawingCanvas.drawPath(drawingPath, drawingPaint);
-        //drawingPath.reset();
-
-    }
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
@@ -1235,14 +1217,6 @@ public class EditorView extends View implements View.OnTouchListener {
 
     public void setOnSquareEditorPictureClickListener(OnSquareEditorPictureClickListener onSquareEditorPictureClickListener) {
         this.onSquareEditorPictureClickListener = onSquareEditorPictureClickListener;
-    }
-
-    public ColorMatrixColorFilter getMatrixColorFilter() {
-        return matrixColorFilter;
-    }
-
-    public void setMatrixColorFilter(ColorMatrixColorFilter matrixColorFilter) {
-        this.matrixColorFilter = matrixColorFilter;
     }
 
     public boolean isDeleteTextActivated() {

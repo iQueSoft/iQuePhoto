@@ -88,7 +88,6 @@ public class FiltersAdapter extends RecyclerView.Adapter<FiltersAdapter.ViewHold
         });
     }
 
-
     @Override
     public int getItemCount() {
         return filters.size();

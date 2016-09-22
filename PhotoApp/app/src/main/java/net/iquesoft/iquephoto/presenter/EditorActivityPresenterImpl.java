@@ -1,33 +1,28 @@
 package net.iquesoft.iquephoto.presenter;
 
 import android.graphics.Bitmap;
-import android.opengl.GLSurfaceView;
 import android.os.Environment;
-import android.util.Log;
-import android.widget.Toast;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapters.ToolsAdapter;
 import net.iquesoft.iquephoto.model.Tool;
-import net.iquesoft.iquephoto.view.IMainActivityView;
+import net.iquesoft.iquephoto.view.IEditorActivityView;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.nio.IntBuffer;
 import java.util.Random;
 
 import javax.inject.Inject;
-import javax.microedition.khronos.opengles.GL10;
 
-public class MainActivityPresenterImpl implements IMainActivityPresenter {
+public class EditorActivityPresenterImpl implements IEditorActivityPresenter {
 
     private final static String IMAGE_STORAGE_PATH = Environment.getExternalStorageDirectory().toString() + "/" +
             android.os.Environment.DIRECTORY_DCIM + "/iQuePhoto";
 
-    private IMainActivityView view;
+    private IEditorActivityView view;
 
     @Inject
-    public MainActivityPresenterImpl(IMainActivityView view) {
+    public EditorActivityPresenterImpl(IEditorActivityView view) {
         this.view = view;
     }
 

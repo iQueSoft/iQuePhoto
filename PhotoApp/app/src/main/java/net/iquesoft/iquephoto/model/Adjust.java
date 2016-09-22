@@ -5,10 +5,14 @@ import android.support.annotation.StringRes;
 
 import net.iquesoft.iquephoto.R;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
- * Created by Sergey on 9/22/2016.
+ * @see net.iquesoft.iquephoto.view.fragment.AdjustFragment
+ * @see net.iquesoft.iquephoto.adapters.AdjustAdapter
  */
-class Adjust {
+public class Adjust {
     @StringRes
     private int title;
 
@@ -16,14 +20,19 @@ class Adjust {
     private int icon;
 
     private int value;
+    private boolean selected;
 
-    public static Adjust[] adjusts = {
-            new Adjust(R.string.contrast, R.drawable.ic_contrast, 0),
-    };
-
-    private Adjust() {
-
+    public static List<Adjust> getAdjustList() {
+        return Arrays.asList(adjusts);
     }
+
+    private static Adjust[] adjusts = {
+            new Adjust(R.string.brightness, R.drawable.ic_brightness, 0),
+            new Adjust(R.string.contrast, R.drawable.ic_contrast, 0),
+            new Adjust(R.string.saturation, R.drawable.ic_saturation, 0),
+            new Adjust(R.string.warmth, R.drawable.ic_warmth, 0),
+
+    };
 
     private Adjust(@StringRes int title, @DrawableRes int icon, int value) {
         this.title = title;
@@ -45,5 +54,13 @@ class Adjust {
 
     public void setValue(int value) {
         this.value = value;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 }

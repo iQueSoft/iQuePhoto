@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapters.StickersPagerAdapter;
 import net.iquesoft.iquephoto.common.BaseFragment;
-import net.iquesoft.iquephoto.di.components.IMainActivityComponent;
+import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
 import net.iquesoft.iquephoto.presenter.StickersFragmentPresenterImpl;
 import net.iquesoft.iquephoto.view.IStickersFragmentView;
 
@@ -52,7 +52,7 @@ public class StickersFragment extends BaseFragment implements IStickersFragmentV
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        this.getComponent(IMainActivityComponent.class).inject(this);
+        this.getComponent(IEditorActivityComponent.class).inject(this);
     }
 
     @Override

@@ -12,7 +12,7 @@ import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.core.EditorView;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseFragment;
-import net.iquesoft.iquephoto.di.components.IMainActivityComponent;
+import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
 import net.iquesoft.iquephoto.presenter.MemeFragmentPresenterImpl;
 import net.iquesoft.iquephoto.view.IMemeFragmentView;
 
@@ -48,7 +48,7 @@ public class MemeFragment extends BaseFragment implements IMemeFragmentView {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        this.getComponent(IMainActivityComponent.class).inject(this);
+        this.getComponent(IEditorActivityComponent.class).inject(this);
     }
 
     @Override

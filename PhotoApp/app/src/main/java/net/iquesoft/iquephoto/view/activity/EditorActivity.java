@@ -20,13 +20,13 @@ import net.iquesoft.iquephoto.adapters.ToolsAdapter;
 import net.iquesoft.iquephoto.common.BaseActivity;
 import net.iquesoft.iquephoto.di.IHasComponent;
 import net.iquesoft.iquephoto.di.components.IApplicationComponent;
-import net.iquesoft.iquephoto.di.components.DaggerIMainActivityComponent;
-import net.iquesoft.iquephoto.di.components.IMainActivityComponent;
-import net.iquesoft.iquephoto.di.modules.MainActivityModule;
+import net.iquesoft.iquephoto.di.components.DaggerIEditorActivityComponent;
+import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
+import net.iquesoft.iquephoto.di.modules.EditorActivityModule;
 import net.iquesoft.iquephoto.model.Tool;
-import net.iquesoft.iquephoto.presenter.MainActivityPresenterImpl;
+import net.iquesoft.iquephoto.presenter.EditorActivityPresenterImpl;
 import net.iquesoft.iquephoto.utils.ImageHelper;
-import net.iquesoft.iquephoto.view.IMainActivityView;
+import net.iquesoft.iquephoto.view.IEditorActivityView;
 
 import javax.inject.Inject;
 
@@ -36,12 +36,12 @@ import butterknife.ButterKnife;
 /**
  * @author Sergey Belenkiy
  */
-public class EditorActivity extends BaseActivity implements IMainActivityView, IHasComponent<IMainActivityComponent> {
+public class EditorActivity extends BaseActivity implements IEditorActivityView, IHasComponent<IEditorActivityComponent> {
 
     @Inject
-    MainActivityPresenterImpl presenter;
+    EditorActivityPresenterImpl presenter;
 
-    private IMainActivityComponent mainActivityComponent;
+    private IEditorActivityComponent editorActivityComponent;
 
     @BindView(R.id.photoEditorView)
     EditorView editorView;
@@ -77,11 +77,11 @@ public class EditorActivity extends BaseActivity implements IMainActivityView, I
 
     @Override
     protected void setupComponent(IApplicationComponent component) {
-        mainActivityComponent = DaggerIMainActivityComponent.builder()
-                .mainActivityModule(new MainActivityModule(this))
+        editorActivityComponent = DaggerIEditorActivityComponent.builder()
+                .editorActivityModule(new EditorActivityModule(this))
                 .iApplicationComponent(component)
                 .build();
-        mainActivityComponent.inject(this);
+        editorActivityComponent.inject(this);
     }
 
     @Override
@@ -96,9 +96,6 @@ public class EditorActivity extends BaseActivity implements IMainActivityView, I
                 try {
                     presenter.changeTool(tool);
                     switch (tool.getTitle()) {
-                        case R.string.crop:
-                            editorView.setCropActivated(true);
-                            break;
                         case R.string.text:
                             editorView.setTextActivated(true);
                             break;
@@ -106,7 +103,6 @@ public class EditorActivity extends BaseActivity implements IMainActivityView, I
                             editorView.setDrawingActivated(true);
                             break;
                         default:
-                            editorView.setCropActivated(false);
                             editorView.setTextActivated(false);
                             editorView.setDrawingActivated(false);
                             break;
@@ -168,8 +164,8 @@ public class EditorActivity extends BaseActivity implements IMainActivityView, I
     }
 
     @Override
-    public IMainActivityComponent getComponent() {
-        return mainActivityComponent;
+    public IEditorActivityComponent getComponent() {
+        return editorActivityComponent;
     }
 
 }

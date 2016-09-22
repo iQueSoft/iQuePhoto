@@ -45,7 +45,7 @@ public class Tool {
             new Tool(R.string.adjust, R.drawable.ic_adjust, AdjustFragment.newInstance()),
             new Tool(R.string.stickers, R.drawable.ic_stiker, StickersFragment.newInstance()),
             new Tool(R.string.frame, R.drawable.ic_frame),
-            new Tool(R.string.crop, R.drawable.ic_crop, CropFragment.newInstance()),
+            //new Tool(R.string.crop, R.drawable.ic_crop, CropFragment.newInstance()),
             new Tool(R.string.orientation, R.drawable.ic_rotation, RotationFragment.newInstance()),
             new Tool(R.string.drawing, R.drawable.ic_brush, DrawingFragment.newInstance()),
             new Tool(R.string.text, R.drawable.ic_letters, TextFragment.newInstance()),

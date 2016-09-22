@@ -1,16 +1,21 @@
 package net.iquesoft.iquephoto.view.fragment;
 
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import net.iquesoft.iquephoto.DataHolder;
+import net.iquesoft.iquephoto.adapters.AdjustAdapter;
 import net.iquesoft.iquephoto.core.EditorView;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseFragment;
-import net.iquesoft.iquephoto.di.components.IMainActivityComponent;
+import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
+import net.iquesoft.iquephoto.model.Adjust;
 import net.iquesoft.iquephoto.presenter.AdjustFragmentPresenterImpl;
 import net.iquesoft.iquephoto.view.IBrightnessFragmentView;
 
@@ -20,13 +25,24 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 public class AdjustFragment extends BaseFragment implements IBrightnessFragmentView {
 
+    private boolean isHide;
+
     private Unbinder unbinder;
 
+    private AdjustAdapter adapter;
+
     private EditorView editorView;
+
+    @BindView(R.id.hideAdjust)
+    ImageView hideAdjust;
+
+    @BindView(R.id.adjustRecyclerView)
+    RecyclerView recyclerView;
 
     @BindView(R.id.adjustSeekBar)
     DiscreteSeekBar seekBar;
@@ -45,7 +61,7 @@ public class AdjustFragment extends BaseFragment implements IBrightnessFragmentV
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        this.getComponent(IMainActivityComponent.class).inject(this);
+        this.getComponent(IEditorActivityComponent.class).inject(this);
     }
 
     @Override
@@ -55,6 +71,12 @@ public class AdjustFragment extends BaseFragment implements IBrightnessFragmentV
         editorView = DataHolder.getInstance().getEditorView();
 
         unbinder = ButterKnife.bind(this, v);
+
+        adapter = new AdjustAdapter(Adjust.getAdjustList());
+        recyclerView.setLayoutManager(new LinearLayoutManager(null, LinearLayout.HORIZONTAL, false));
+        recyclerView.setAdapter(adapter);
+
+        v.setAlpha(0.8f);
 
         seekBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
             @Override
@@ -86,5 +108,18 @@ public class AdjustFragment extends BaseFragment implements IBrightnessFragmentV
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    @OnClick(R.id.hideAdjust)
+    void onClickHide(View view) {
+        if (!isHide) {
+            isHide = true;
+            hideAdjust.setImageDrawable(getResources().getDrawable(R.drawable.ic_expand_less));
+            recyclerView.setVisibility(View.GONE);
+        } else {
+            isHide = false;
+            hideAdjust.setImageDrawable(getResources().getDrawable(R.drawable.ic_expand));
+            recyclerView.setVisibility(View.VISIBLE);
+        }
     }
 }

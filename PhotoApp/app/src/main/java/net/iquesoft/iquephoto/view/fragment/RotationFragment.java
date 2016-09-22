@@ -11,7 +11,7 @@ import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.core.EditorView;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseFragment;
-import net.iquesoft.iquephoto.di.components.IMainActivityComponent;
+import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
 import net.iquesoft.iquephoto.presenter.RotationFragmentPresenterImpl;
 import net.iquesoft.iquephoto.view.IRotationFragmentView;
 
@@ -78,7 +78,7 @@ public class RotationFragment extends BaseFragment implements IRotationFragmentV
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        this.getComponent(IMainActivityComponent.class).inject(this);
+        this.getComponent(IEditorActivityComponent.class).inject(this);
     }
 
     @Override

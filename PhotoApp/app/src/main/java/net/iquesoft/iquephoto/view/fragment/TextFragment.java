@@ -17,7 +17,7 @@ import net.iquesoft.iquephoto.model.Text;
 import net.iquesoft.iquephoto.core.EditorView;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseFragment;
-import net.iquesoft.iquephoto.di.components.IMainActivityComponent;
+import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
 import net.iquesoft.iquephoto.view.dialog.FontPickerDialog;
 import net.iquesoft.iquephoto.view.dialog.RGBColorPickerDialog;
 import net.iquesoft.iquephoto.presenter.TextFragmentPresenterImpl;
@@ -82,7 +82,7 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        this.getComponent(IMainActivityComponent.class).inject(this);
+        this.getComponent(IEditorActivityComponent.class).inject(this);
     }
 
     @Override

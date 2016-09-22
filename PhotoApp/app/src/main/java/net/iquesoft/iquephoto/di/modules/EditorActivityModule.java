@@ -3,34 +3,34 @@ package net.iquesoft.iquephoto.di.modules;
 import net.iquesoft.iquephoto.presenter.AdjustFragmentPresenterImpl;
 import net.iquesoft.iquephoto.presenter.DrawingFragmentPresenterImpl;
 import net.iquesoft.iquephoto.presenter.CropFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presenter.EditorActivityPresenterImpl;
 import net.iquesoft.iquephoto.presenter.FiltersFragmentPresenterImpl;
-import net.iquesoft.iquephoto.presenter.MainActivityPresenterImpl;
 import net.iquesoft.iquephoto.presenter.MemeFragmentPresenterImpl;
 import net.iquesoft.iquephoto.presenter.RotationFragmentPresenterImpl;
 import net.iquesoft.iquephoto.presenter.ShowStickersFragmentPresenterImpl;
 import net.iquesoft.iquephoto.presenter.StickersFragmentPresenterImpl;
 import net.iquesoft.iquephoto.presenter.TextFragmentPresenterImpl;
-import net.iquesoft.iquephoto.view.IMainActivityView;
+import net.iquesoft.iquephoto.view.IEditorActivityView;
 
 import dagger.Module;
 import dagger.Provides;
 
 @Module
-public class MainActivityModule {
+public class EditorActivityModule {
 
-    private IMainActivityView view;
+    private IEditorActivityView view;
 
-    public MainActivityModule(IMainActivityView view) {
+    public EditorActivityModule(IEditorActivityView view) {
         this.view = view;
     }
 
     @Provides
-    public MainActivityPresenterImpl provideMainActivityPresenterImpl(IMainActivityView view) {
-        return new MainActivityPresenterImpl(view);
+    public EditorActivityPresenterImpl provideEditorActivityPresenterImpl(IEditorActivityView view) {
+        return new EditorActivityPresenterImpl(view);
     }
 
     @Provides
-    public IMainActivityView provideView() {
+    public IEditorActivityView provideView() {
         return view;
     }
 

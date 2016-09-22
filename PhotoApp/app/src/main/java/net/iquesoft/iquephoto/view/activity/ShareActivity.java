@@ -2,6 +2,8 @@ package net.iquesoft.iquephoto.view.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.View;
+import android.widget.LinearLayout;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseActivity;
@@ -15,7 +17,9 @@ import net.iquesoft.iquephoto.view.IShareActivityView;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class ShareActivity extends BaseActivity implements IShareActivityView, IHasComponent<IShareActivityComponent> {
 
@@ -31,7 +35,7 @@ public class ShareActivity extends BaseActivity implements IShareActivityView, I
 
         ButterKnife.bind(this);
     }
-    
+
     @Override
     protected void setupComponent(IApplicationComponent component) {
         shareActivityComponent = DaggerIShareActivityComponent.builder()
@@ -44,5 +48,25 @@ public class ShareActivity extends BaseActivity implements IShareActivityView, I
     @Override
     public IShareActivityComponent getComponent() {
         return shareActivityComponent;
+    }
+
+    @OnClick(R.id.save)
+    void onClickSave(View view) {
+        // Todo: Save image.
+    }
+
+    @OnClick(R.id.facebook)
+    void onClickFacebook(View view) {
+        // Todo: Publish to Facebook.
+    }
+
+    @OnClick(R.id.instagram)
+    void onClickInstagram(View view) {
+        // Todo: Publish to Instagram.
+    }
+
+    @OnClick(R.id.more)
+    void onClickMore(View view) {
+        // Todo: Share more social network.
     }
 }

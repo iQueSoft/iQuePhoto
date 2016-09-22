@@ -136,7 +136,7 @@
 
     <!-- START - Draw tool. -->
     <string name="drawing">Drawing</string>
-    <string name="saturation">Saturation</string>
+
     <string name="size">Size</string>
     <!-- Draw tool - END -->
 
@@ -170,6 +170,7 @@
     <!-- Font picker dialog - END. -->
 
     <string name="adjust">Adjust</string>
-
+    <string name="warmth">Warmth</string>
+    <string name="saturation">Saturation</string>
 
 </resources>

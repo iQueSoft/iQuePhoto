@@ -14,11 +14,13 @@
         android:text="0"
         android:textColor="@color/white"
         android:textSize="18sp"
-        android:textStyle="normal|bold" />
+        android:textStyle="normal|bold"
+        android:id="@+id/adjustValue" />
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:src="@drawable/ic_saturation" />
+        android:src="@drawable/ic_saturation"
+        android:id="@+id/adjustIcon" />
 </LinearLayout>

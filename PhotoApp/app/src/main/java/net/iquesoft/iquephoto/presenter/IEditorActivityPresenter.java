@@ -7,7 +7,7 @@ import net.iquesoft.iquephoto.model.Tool;
 
 import javax.microedition.khronos.opengles.GL10;
 
-public interface IMainActivityPresenter {
+public interface IEditorActivityPresenter {
 
     /**
      * Initialise the application tools box.

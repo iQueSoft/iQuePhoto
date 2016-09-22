@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseFragment;
-import net.iquesoft.iquephoto.di.components.IMainActivityComponent;
+import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
 import net.iquesoft.iquephoto.presenter.DrawingFragmentPresenterImpl;
 import net.iquesoft.iquephoto.view.IDrawingFragmentView;
 import net.iquesoft.iquephoto.view.dialog.ColorPickerDialog;
@@ -55,7 +55,7 @@ public class DrawingFragment extends BaseFragment implements IDrawingFragmentVie
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        this.getComponent(IMainActivityComponent.class).inject(this);
+        this.getComponent(IEditorActivityComponent.class).inject(this);
     }
 
     @Override
@@ -92,7 +92,7 @@ public class DrawingFragment extends BaseFragment implements IDrawingFragmentVie
     }
 
     @OnClick(R.id.hideDrawingButton)
-    public void onClickHideDrawing() {
+    public void onClickHide() {
         if (!isHide) {
             isHide = true;
             hideDrawingButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_expand_less));

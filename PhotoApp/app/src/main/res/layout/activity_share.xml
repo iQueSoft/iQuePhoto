@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="300dp"
         app:srcCompat="@drawable/buldog"
-        android:id="@+id/@+id/shareImage" />
+        android:id="@+id/shareImage" />
 
     <LinearLayout
 

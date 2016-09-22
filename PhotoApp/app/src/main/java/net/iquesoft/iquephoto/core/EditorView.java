@@ -1,8 +1,6 @@
 package net.iquesoft.iquephoto.core;
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -14,9 +12,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.AsyncTask;
-import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -26,7 +22,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.crop.OnCropBoxChangedListener;
 import net.iquesoft.iquephoto.model.CropBox;
 import net.iquesoft.iquephoto.model.Drawing;
 import net.iquesoft.iquephoto.model.EditorImage;
@@ -122,12 +117,6 @@ public class EditorView extends View implements View.OnTouchListener {
 
     private OnSquareEditorPictureClickListener onSquareEditorPictureClickListener;
 
-    // For crop
-    private Paint cropPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private CropBox cropBox;
-    private int cropX;
-    private int cropY;
-
     private float cropLineWidth = 10f;
     private float cropCornerWidth = 10f;
     private float cropCornerLength = 50f;
@@ -137,8 +126,6 @@ public class EditorView extends View implements View.OnTouchListener {
     private int cropLineColor = getContext().getResources().getColor(R.color.white);
     private int cropCornerColor = getContext().getResources().getColor(R.color.white);
     private int cropShadowColor = getContext().getResources().getColor(R.color.colorBackground);
-
-    private OnCropBoxChangedListener onCropBoxChangedListener;
 
     private boolean imageCentering;
 
@@ -199,11 +186,6 @@ public class EditorView extends View implements View.OnTouchListener {
         drawTexts(canvas, new Paint());
         if (stickersList.size() > 0) {
             drawSticker(canvas, new Paint());
-        }
-        if (cropActivated) {
-            drawCropLines(canvas);
-            drawCropCorner(canvas);
-            //drawShadow(canvas);
         }
         if (brightnessValue != 0) {
             drawImage(canvas, getBrightnessMatrix(brightnessValue));
@@ -292,27 +274,6 @@ public class EditorView extends View implements View.OnTouchListener {
         this.invalidate();
     }
 
-    private void drawShadow(Canvas canvas) {
-
-        cropPaint.setStrokeWidth(0.0f);
-        cropPaint.setColor(cropShadowColor);
-
-        canvas.drawRect(cropX, cropY, cropX + getBitamp().getWidth(), cropBox.getY1(), cropPaint);
-        canvas.drawRect(cropX, cropBox.getY1(), cropBox.getX1(), cropBox.getY2(), cropPaint);
-        canvas.drawRect(cropBox.getX2(), cropBox.getY1(), cropX + getBitamp().getWidth(), cropBox.getY2(), cropPaint);
-        canvas.drawRect(cropX, cropBox.getY2(), cropX + getBitamp().getWidth(), cropY + getBitamp().getHeight(), cropPaint);
-    }
-
-    private void drawCropLines(Canvas canvas) {
-        cropPaint.setStrokeWidth(cropLineWidth);
-        cropPaint.setColor(cropLineColor);
-
-        canvas.drawLine(cropBox.getX1(), cropBox.getY1(), cropBox.getX2(), cropBox.getY1(), cropPaint);
-        canvas.drawLine(cropBox.getX2(), cropBox.getY1(), cropBox.getX2(), cropBox.getY2(), cropPaint);
-        canvas.drawLine(cropBox.getX2(), cropBox.getY2(), cropBox.getX1(), cropBox.getY2(), cropPaint);
-        canvas.drawLine(cropBox.getX1(), cropBox.getY2(), cropBox.getX1(), cropBox.getY1(), cropPaint);
-    }
-
     public void drawTopMemeText(Canvas canvas) {
         final float x = (getBitamp().getWidth() / 2) - (getMemePaint().measureText(topMemeText) / 2);
         final float y = 85;
@@ -348,43 +309,6 @@ public class EditorView extends View implements View.OnTouchListener {
         paint.setStrokeWidth(2);
 
         return paint;
-    }
-
-    private void drawCropCorner(Canvas canvas) {
-        cropPaint.setStrokeWidth(cropCornerWidth);
-        cropPaint.setColor(cropCornerColor);
-
-        int x1 = cropBox.getX1();
-        int x2 = cropBox.getX2();
-        int y1 = cropBox.getY1();
-        int y2 = cropBox.getY2();
-
-        int minSize = (int) cropCornerLength;
-
-        canvas.drawLine(x1 - cropOffset2, y1 - cropOffset, x1 - cropOffset + minSize, y1 - cropOffset, cropPaint);
-        canvas.drawLine(x1 - cropOffset, y1 - cropOffset2, x1 - cropOffset, y1 - cropOffset + minSize, cropPaint);
-
-        canvas.drawLine(x2 + cropOffset2, y1 - cropOffset, x2 + cropOffset - minSize, y1 - cropOffset, cropPaint);
-        canvas.drawLine(x2 + cropOffset, y1 - cropOffset2, x2 + cropOffset, y1 - cropOffset + minSize, cropPaint);
-
-        canvas.drawLine(x1 - cropOffset2, y2 + cropOffset, x1 - cropOffset + minSize, y2 + cropOffset, cropPaint);
-        canvas.drawLine(x1 - cropOffset, y2 + cropOffset2, x1 - cropOffset, y2 + cropOffset - minSize, cropPaint);
-
-        canvas.drawLine(x2 + cropOffset2, y2 + cropOffset, x2 + cropOffset - minSize, y2 + cropOffset, cropPaint);
-        canvas.drawLine(x2 + cropOffset, y2 + cropOffset2, x2 + cropOffset, y2 + cropOffset - minSize, cropPaint);
-    }
-
-    public void setCropBox(CropBox cropBox) {
-        this.cropBox = cropBox;
-        invalidate();
-    }
-
-    public CropBox getCropBox() {
-        return cropBox;
-    }
-
-    public void setOnCropBoxChangedListener(OnCropBoxChangedListener onCropBoxChangedListener) {
-        this.onCropBoxChangedListener = onCropBoxChangedListener;
     }
 
     /**
@@ -1033,14 +957,6 @@ public class EditorView extends View implements View.OnTouchListener {
                                 sticker.setX(sticker.getX() - Math.round(distanceX));
                                 sticker.setY(sticker.getY() - Math.round(distanceY));
                             }
-                            if (cropActivated) {
-                                int[] loc = new int[2];
-                                getLocationOnScreen(loc);
-                                int diffX = currentX - cropX;
-                                int diffY = currentY - cropY;
-                                //Todo: cropBox.resizeBox();
-                                invalidate();
-                            }
                         }
                     }
                     break;
@@ -1201,15 +1117,6 @@ public class EditorView extends View implements View.OnTouchListener {
 
     public void setDeleteTextActivated(boolean deleteTextActivated) {
         this.deleteTextActivated = deleteTextActivated;
-    }
-
-    public boolean isCropActivated() {
-        return cropActivated;
-    }
-
-    public void setCropActivated(boolean cropActivated) {
-        this.cropActivated = cropActivated;
-        invalidate();
     }
 
     public boolean isTextActivated() {

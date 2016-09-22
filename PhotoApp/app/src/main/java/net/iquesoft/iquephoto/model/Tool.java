@@ -1,11 +1,13 @@
 package net.iquesoft.iquephoto.model;
 
+import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.view.fragment.DrawFragment;
-import net.iquesoft.iquephoto.view.fragment.BrightnessFragment;
+import net.iquesoft.iquephoto.view.fragment.DrawingFragment;
+import net.iquesoft.iquephoto.view.fragment.AdjustFragment;
 import net.iquesoft.iquephoto.view.fragment.CropFragment;
 import net.iquesoft.iquephoto.view.fragment.FiltersFragment;
 import net.iquesoft.iquephoto.view.fragment.RotationFragment;
@@ -20,8 +22,12 @@ import java.util.List;
  *         Tool.java - Singleton class is model of editing tools in app.
  */
 public class Tool {
+    @StringRes
     private int title;
+
+    @DrawableRes
     private int image;
+
     private Fragment fragment;
 
     /**
@@ -34,14 +40,14 @@ public class Tool {
     /**
      * Array with all app editors tools;
      */
-    public static Tool tools[] = {
+    private static Tool tools[] = {
             new Tool(R.string.filters, R.drawable.ic_filter, new FiltersFragment()),
+            new Tool(R.string.adjust, R.drawable.ic_adjust, AdjustFragment.newInstance()),
             new Tool(R.string.stickers, R.drawable.ic_stiker, StickersFragment.newInstance()),
             new Tool(R.string.frame, R.drawable.ic_frame),
             new Tool(R.string.crop, R.drawable.ic_crop, CropFragment.newInstance()),
             new Tool(R.string.orientation, R.drawable.ic_rotation, RotationFragment.newInstance()),
-            new Tool(R.string.brightness, R.drawable.ic_brightness, BrightnessFragment.newInstance()),
-            new Tool(R.string.drawing, R.drawable.ic_brush, DrawFragment.newInstance()),
+            new Tool(R.string.drawing, R.drawable.ic_brush, DrawingFragment.newInstance()),
             new Tool(R.string.text, R.drawable.ic_letters, TextFragment.newInstance()),
             //new Tool(R.string.meme, R.drawable.ic_meme, MemeFragment.newInstance())
     };
@@ -52,7 +58,7 @@ public class Tool {
         return tool;
     }
 
-    public Tool() {
+    private Tool() {
 
     }
 
@@ -60,7 +66,7 @@ public class Tool {
      * @param title is string Id from strings.xml;
      * @param image is drawable Id form res/drawable.
      */
-    public Tool(int title, int image) {
+    private Tool(@StringRes int title, @DrawableRes int image) {
         this.title = title;
         this.image = image;
     }
@@ -70,7 +76,7 @@ public class Tool {
      * @param image    is drawable Id form res/drawable;
      * @param fragment it is Fragment used for control this tools;
      */
-    public Tool(int title, int image, @Nullable Fragment fragment) {
+    private Tool(@StringRes int title, @DrawableRes int image, @Nullable Fragment fragment) {
         this.title = title;
         this.image = image;
         this.fragment = fragment;

@@ -48,7 +48,6 @@
     <declare-styleable name="GiantSquareEditorView">
         <attr name="defaultTextColor" format="color" />
         <attr name="emptyColor" format="color" />
-        <attr name="defaultTextSize" format="dimension" />
         <attr name="emptyBackground" format="reference" />
         <attr name="emptyText" format="string" />
     </declare-styleable>

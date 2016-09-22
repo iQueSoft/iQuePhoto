@@ -11,8 +11,8 @@ import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseFragment;
 import net.iquesoft.iquephoto.di.components.IMainActivityComponent;
-import net.iquesoft.iquephoto.presenter.DrawFragmentPresenterImpl;
-import net.iquesoft.iquephoto.view.IDrawFragmentView;
+import net.iquesoft.iquephoto.presenter.DrawingFragmentPresenterImpl;
+import net.iquesoft.iquephoto.view.IDrawingFragmentView;
 import net.iquesoft.iquephoto.view.dialog.ColorPickerDialog;
 import net.iquesoft.iquephoto.view.dialog.RGBColorPickerDialog;
 
@@ -26,12 +26,12 @@ import butterknife.Unbinder;
 /**
  * @author Sergey
  */
-public class DrawFragment extends BaseFragment implements IDrawFragmentView {
+public class DrawingFragment extends BaseFragment implements IDrawingFragmentView {
 
     private ColorPickerDialog colorPickerDialog;
 
     @Inject
-    DrawFragmentPresenterImpl presenter;
+    DrawingFragmentPresenterImpl presenter;
 
     @BindView(R.id.drawingSettings)
     LinearLayout drawingSettings;
@@ -44,12 +44,12 @@ public class DrawFragment extends BaseFragment implements IDrawFragmentView {
     private Unbinder unbinder;
     private RGBColorPickerDialog RGBColorPickerDialog;
 
-    public static DrawFragment newInstance() {
+    public static DrawingFragment newInstance() {
         /*Bundle b = new Bundle();
         b.putString("msg", text);
         b.putString("color", color);
         f.setArguments(b);*/
-        return new DrawFragment();
+        return new DrawingFragment();
     }
 
     @Override

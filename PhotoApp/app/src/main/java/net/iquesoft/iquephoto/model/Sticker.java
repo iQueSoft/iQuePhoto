@@ -3,6 +3,8 @@ package net.iquesoft.iquephoto.model;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.StringRes;
 
 import net.iquesoft.iquephoto.R;
 
@@ -29,7 +31,7 @@ public class Sticker {
     /**
      * Array with "Flag" stickers;
      */
-    public static Sticker flagStickers[] = {
+    private static Sticker flagStickers[] = {
             new Sticker(R.string.flag_ukraine, R.drawable.flag_ukraine),
             new Sticker(R.string.flag_russia, R.drawable.flag_russia),
             new Sticker(R.string.flag_germany, R.drawable.flag_germany),
@@ -39,7 +41,7 @@ public class Sticker {
     /**
      * Array with "Emoticons" stickers;
      */
-    public static Sticker emoticonsStickers[] = {
+    private static Sticker emoticonsStickers[] = {
             new Sticker(R.string.emoticon_happy, R.drawable.emoticon_happy),
             new Sticker(R.string.emoticon_in_love, R.drawable.emoticon_in_love),
             new Sticker(R.string.emoticon_smile, R.drawable.emoticon_smile),
@@ -59,7 +61,7 @@ public class Sticker {
 
     };
 
-    public Sticker(int title, int image) {
+    public Sticker(@StringRes int title, @DrawableRes int image) {
         this.title = title;
         this.image = image;
     }

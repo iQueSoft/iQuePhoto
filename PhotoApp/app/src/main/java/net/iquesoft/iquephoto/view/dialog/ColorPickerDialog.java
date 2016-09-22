@@ -13,6 +13,7 @@ import net.iquesoft.iquephoto.model.EditorColor;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by Sergey on 9/16/2016.
@@ -20,13 +21,14 @@ import butterknife.ButterKnife;
 public class ColorPickerDialog extends Dialog {
     private final static String TAG = ColorPickerDialog.class.getSimpleName();
 
+    private int color;
     private Context context;
     private ColorListener listener;
 
     public interface ColorListener {
         void onClick(int color);
     }
-    
+
     private ColorAdapter adapter;
 
     @BindView(R.id.colorRecyclerView)
@@ -48,11 +50,22 @@ public class ColorPickerDialog extends Dialog {
         adapter = new ColorAdapter(EditorColor.getColorsList());
 
         adapter.setColorListener(editorColor -> {
-            listener.onClick(editorColor.getColor());
+            this.color = editorColor.getColor();
         });
 
         recyclerView.setLayoutManager(new GridLayoutManager(context, 4));
         recyclerView.setAdapter(adapter);
+    }
+
+    @OnClick(R.id.applyColor)
+    void onClickApply() {
+        listener.onClick(color);
+        dismiss();
+    }
+
+    @OnClick(R.id.cancelColor)
+    void onClickCancel() {
+        dismiss();
     }
 
     public void setListener(ColorListener listener) {

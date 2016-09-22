@@ -4,12 +4,12 @@ import net.iquesoft.iquephoto.view.IBrightnessFragmentView;
 
 import javax.inject.Inject;
 
-public class BrightnessFragmentPresenterImpl implements IBrightnessFragmentPresenter {
+public class AdjustFragmentPresenterImpl implements IAdjustFragmentPresenter {
 
     private IBrightnessFragmentView view;
 
     @Inject
-    public BrightnessFragmentPresenterImpl() {
+    public AdjustFragmentPresenterImpl() {
 
     }
 

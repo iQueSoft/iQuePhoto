@@ -2,8 +2,8 @@ package net.iquesoft.iquephoto.di.components;
 
 import net.iquesoft.iquephoto.di.ActivityScope;
 import net.iquesoft.iquephoto.di.modules.MainActivityModule;
-import net.iquesoft.iquephoto.view.fragment.BrightnessFragment;
-import net.iquesoft.iquephoto.view.fragment.DrawFragment;
+import net.iquesoft.iquephoto.view.fragment.AdjustFragment;
+import net.iquesoft.iquephoto.view.fragment.DrawingFragment;
 import net.iquesoft.iquephoto.view.fragment.CropFragment;
 import net.iquesoft.iquephoto.view.fragment.FiltersFragment;
 import net.iquesoft.iquephoto.view.activity.EditorActivity;
@@ -27,11 +27,11 @@ public interface IMainActivityComponent {
 
     void inject(RotationFragment rotationFragment);
 
-    void inject(BrightnessFragment brightnessFragment);
+    void inject(AdjustFragment adjustFragment);
 
     void inject(TextFragment textFragment);
 
-    void inject(DrawFragment drawFragment);
+    void inject(DrawingFragment drawingFragment);
 
     void inject(StickersFragment stickersFragment);
 

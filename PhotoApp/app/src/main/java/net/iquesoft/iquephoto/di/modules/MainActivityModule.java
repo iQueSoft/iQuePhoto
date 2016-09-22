@@ -1,7 +1,7 @@
 package net.iquesoft.iquephoto.di.modules;
 
-import net.iquesoft.iquephoto.presenter.BrightnessFragmentPresenterImpl;
-import net.iquesoft.iquephoto.presenter.DrawFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presenter.AdjustFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presenter.DrawingFragmentPresenterImpl;
 import net.iquesoft.iquephoto.presenter.CropFragmentPresenterImpl;
 import net.iquesoft.iquephoto.presenter.FiltersFragmentPresenterImpl;
 import net.iquesoft.iquephoto.presenter.MainActivityPresenterImpl;
@@ -45,8 +45,8 @@ public class MainActivityModule {
     }
 
     @Provides
-    public BrightnessFragmentPresenterImpl provideBrightnessFragmentPresenterImpl() {
-        return new BrightnessFragmentPresenterImpl();
+    public AdjustFragmentPresenterImpl provideAdjustFragmentPresenterImpl() {
+        return new AdjustFragmentPresenterImpl();
     }
 
     @Provides
@@ -55,8 +55,8 @@ public class MainActivityModule {
     }
 
     @Provides
-    public DrawFragmentPresenterImpl provideBrushFragmentPresenterImpl() {
-        return new DrawFragmentPresenterImpl();
+    public DrawingFragmentPresenterImpl provideBrushFragmentPresenterImpl() {
+        return new DrawingFragmentPresenterImpl();
     }
 
     @Provides

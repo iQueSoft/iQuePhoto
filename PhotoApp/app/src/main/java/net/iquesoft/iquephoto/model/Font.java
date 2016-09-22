@@ -7,7 +7,6 @@ import java.util.List;
  * @author Sergey
  */
 public class Font {
-
     private String title;
     private String typeface;
     private boolean selected;
@@ -22,7 +21,7 @@ public class Font {
     /**
      * Array with all fonts;
      */
-    public static Font fonts[] = {
+    private static Font fonts[] = {
             new Font("Black sword", "Blacksword.otf"),
             new Font("Summer Hearts", "SummerHearts-Regular.otf"),
             new Font("Cigarettes &amp Coffee", "CigarettesAndCoffee.ttf"),

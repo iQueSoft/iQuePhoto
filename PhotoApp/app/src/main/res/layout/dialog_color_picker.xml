@@ -15,21 +15,21 @@
         android:textStyle="bold" />
 
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/colorRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="250dp"
-        android:id="@+id/colorRecyclerView"
         android:layout_marginTop="10dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="end"
         android:orientation="horizontal"
-        android:paddingTop="10dp"
-        android:gravity="end">
+        android:paddingTop="10dp">
 
         <Button
+            android:id="@+id/cancelColor"
             style="@style/Widget.AppCompat.Button.Borderless"
-            android:id="@+id/button2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/colorApplyButton"
@@ -39,7 +39,7 @@
             android:theme="@style/FlatButtonControlWhite" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/applyColor"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

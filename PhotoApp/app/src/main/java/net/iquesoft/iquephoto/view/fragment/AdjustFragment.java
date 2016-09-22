@@ -11,7 +11,7 @@ import net.iquesoft.iquephoto.core.EditorView;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseFragment;
 import net.iquesoft.iquephoto.di.components.IMainActivityComponent;
-import net.iquesoft.iquephoto.presenter.BrightnessFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presenter.AdjustFragmentPresenterImpl;
 import net.iquesoft.iquephoto.view.IBrightnessFragmentView;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
@@ -22,27 +22,24 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class BrightnessFragment extends BaseFragment implements IBrightnessFragmentView {
+public class AdjustFragment extends BaseFragment implements IBrightnessFragmentView {
 
     private Unbinder unbinder;
 
     private EditorView editorView;
 
-    @BindView(R.id.brightnessValueTextView)
-    TextView brightnessValueTextView;
-
-    @BindView(R.id.brightnessSeekBar)
+    @BindView(R.id.adjustSeekBar)
     DiscreteSeekBar seekBar;
 
     @Inject
-    BrightnessFragmentPresenterImpl presenter;
+    AdjustFragmentPresenterImpl presenter;
 
-    public static BrightnessFragment newInstance() {
+    public static AdjustFragment newInstance() {
         /*Bundle b = new Bundle();
         b.putString("msg", text);
         b.putString("color", color);
         f.setArguments(b);*/
-        return new BrightnessFragment();
+        return new AdjustFragment();
     }
 
     @Override
@@ -53,7 +50,7 @@ public class BrightnessFragment extends BaseFragment implements IBrightnessFragm
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_brightness, container, false);
+        View v = inflater.inflate(R.layout.fragment_adjust, container, false);
 
         editorView = DataHolder.getInstance().getEditorView();
 
@@ -62,7 +59,6 @@ public class BrightnessFragment extends BaseFragment implements IBrightnessFragm
         seekBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
             @Override
             public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
-                brightnessValueTextView.setText(String.valueOf(value));
                 editorView.setBrightnessValue(value);
             }
 

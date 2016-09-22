@@ -1,20 +1,23 @@
 package net.iquesoft.iquephoto.model;
 
+import android.support.annotation.DrawableRes;
+import android.support.annotation.StringRes;
+
 import net.iquesoft.iquephoto.R;
 
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Created by Sergey on 9/1/2016.
- */
 public class StickersSet {
-
+    @StringRes
     private int title;
+
+    @DrawableRes
     private int icon;
+
     private List<Sticker> stickers;
 
-    public StickersSet(int title, int icon, List<Sticker> stickers) {
+    private StickersSet(@StringRes int title, @DrawableRes int icon, List<Sticker> stickers) {
         this.title = title;
         this.icon = icon;
         this.stickers = stickers;
@@ -23,7 +26,7 @@ public class StickersSet {
     /**
      * Array with stickers sets;
      */
-    public static StickersSet stickersSets[] = {
+    private static StickersSet stickersSets[] = {
             new StickersSet(R.string.emoticons, R.drawable.emoticon_happy, Sticker.getEmoticonsStickersList()),
             new StickersSet(R.string.flags, R.drawable.ic_flags, Sticker.getFlagStickersList())
     };

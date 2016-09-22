@@ -33,6 +33,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 public class TextFragment extends BaseFragment implements ITextFragmentView {
+
     private Context context;
 
     private int color = 0x7f0b004f; // Default color white

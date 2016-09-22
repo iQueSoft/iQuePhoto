@@ -1,6 +1,7 @@
 package net.iquesoft.iquephoto.core;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,7 +14,10 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.provider.Settings;
+import android.support.v7.app.AlertDialog;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -70,7 +74,7 @@ public class EditorView extends View implements View.OnTouchListener {
     private int checkedTextId = -1;
     private boolean deleteTextActivated = false;
     private float defaultTextSize = 22f;
-    private int defaultTextColor;
+    private int defaultTextColor = 0xFF000000;
     private Typeface textTypeface;
     private List<Text> textsList = new LinkedList<Text>();
 
@@ -149,15 +153,6 @@ public class EditorView extends View implements View.OnTouchListener {
 
     public EditorView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.GiantSquareEditorView, 0, 0);
-        defaultTextColor = a.getColor(R.styleable.GiantSquareEditorView_defaultTextColor, Color.DKGRAY);
-        emptyColor = a.getColor(R.styleable.GiantSquareEditorView_emptyColor, Color.DKGRAY);
-        defaultTextSize = a.getDimension(R.styleable.GiantSquareEditorView_defaultTextSize, defaultTextSize);
-        int backgroungId = a.getResourceId(R.styleable.GiantSquareView_selectCheckedDrawable, -1);
-        if (backgroungId != -1) {
-            emptryBackgroung = BitmapFactory.decodeResource(context.getResources(), backgroungId);
-        }
-        emptyText = a.getString(R.styleable.GiantSquareEditorView_emptyText);
 
         drawingPaint = new Paint();
         drawingPath = new Path();
@@ -193,52 +188,45 @@ public class EditorView extends View implements View.OnTouchListener {
     @Override
     protected void onDraw(Canvas canvas) {
         Paint paint = new Paint();
-        if (isEmpty()) {
-            if (emptryBackgroung == null) {
-                paint.setColor(emptyColor);
-                canvas.drawRect(imageRect, paint);
-            } else {
-                canvas.drawBitmap(emptryBackgroung, null, imageRect, paint);
-            }
-        } else {
-            canvas.drawColor(imagePaddingColor);
-            drawImage(canvas, paint);
-            if (hasFilter) {
-                Paint filterPaint = new Paint();
-                filterPaint.setColorFilter(new ColorMatrixColorFilter(colorMatrix));
-                drawImage(canvas, filterPaint);
-            }
-            drawTexts(canvas, new Paint());
-            if (stickersList.size() > 0) {
-                drawSticker(canvas, new Paint());
-            }
-            if (cropActivated) {
-                drawCropLines(canvas);
-                drawCropCorner(canvas);
-                //drawShadow(canvas);
-            }
-            if (brightnessValue != 0) {
-                drawImage(canvas, getBrightnessMatrix(brightnessValue));
-            }
-            if (topMemeText != null) {
-                drawTopMemeText(canvas);
-            }
-            if (bottomMemeText != null) {
-                drawBottomMemeText(canvas);
-            }
-            if (drawings.size() > 0) {
-                for (Drawing drawing : drawings) {
-                    canvas.drawPath(drawing.getPath(), drawing.getPaint());
 
-                }
+        canvas.drawColor(imagePaddingColor);
+        drawImage(canvas, paint);
+        if (hasFilter) {
+            Paint filterPaint = new Paint();
+            filterPaint.setColorFilter(new ColorMatrixColorFilter(colorMatrix));
+            drawImage(canvas, filterPaint);
+        }
+        drawTexts(canvas, new Paint());
+        if (stickersList.size() > 0) {
+            drawSticker(canvas, new Paint());
+        }
+        if (cropActivated) {
+            drawCropLines(canvas);
+            drawCropCorner(canvas);
+            //drawShadow(canvas);
+        }
+        if (brightnessValue != 0) {
+            drawImage(canvas, getBrightnessMatrix(brightnessValue));
+        }
+        if (topMemeText != null) {
+            drawTopMemeText(canvas);
+        }
+        if (bottomMemeText != null) {
+            drawBottomMemeText(canvas);
+        }
+        if (drawings.size() > 0) {
+            for (Drawing drawing : drawings) {
+                canvas.drawPath(drawing.getPath(), drawing.getPaint());
+
+            }
            /* try {
                 canvas.drawPath(drawingPath, drawingPaint);
                 canvas.drawPath(drawingCirclePath, drawingCirclePaint);
             } catch (NullPointerException e) {
                 Log.i("Drawing", "is null!");
             }*/
-            }
         }
+
     }
 
     private void drawingStart(float x, float y) {
@@ -620,8 +608,19 @@ public class EditorView extends View implements View.OnTouchListener {
             if (textsList.get(i).getTextArea().contains(x, y)) {
                 checkedTextId = i;
                 Log.d("Text", textsList.get(i).getText());
+
                 if (deleteTextActivated) {
-                    deleteText(textsList.get(i));
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.MyAlertDialogStyle)
+                            /*.setTitle(context.getString(R.string.permission_denied))*/
+                            .setMessage(context.getString(R.string.text_delete_alert))
+                            .setPositiveButton(context.getString(R.string.yes), (dialogInterface, i2) -> {
+                                deleteText(textsList.get(checkedTextId));
+                            })
+                            .setNegativeButton(context.getString(R.string.no), (dialogInterface, i1) -> {
+                                dialogInterface.dismiss();
+                            });
+                    builder.show();
+
                 } else {
                     return;
                 }
@@ -693,29 +692,6 @@ public class EditorView extends View implements View.OnTouchListener {
         }
         canvas.drawBitmap(editorImage.getBitmap(), matrix, paint);
     }
-
-    /*private void drawImageWithFilter(Canvas canvas, Paint paint) {
-        Matrix matrix = new Matrix();
-        float scale = editorImage.getScale() / getImageScaleForUnionArea(imageRect, editorImage);
-        if (isSaveInProccess) {
-            matrix.setScale(scale * scalingForSave, scale * scalingForSave);
-        } else {
-            matrix.setScale(scale, scale);
-        }
-        matrix.postRotate(-editorImage.getRoationDegrees());
-        float ab = (float) (mRotateCenterDistance * Math.cos(Math.toRadians(mRotateCenterAngle)));
-        float aB = (float) (mRotateCenterDistance * Math.cos(Math.toRadians(mRotateCenterAngle - mIndependentAngle))) * mIndependentScale;
-        float ac = (float) (mRotateCenterDistance * Math.sin(Math.toRadians(mRotateCenterAngle)));
-        float aC = (float) (mRotateCenterDistance * Math.sin(Math.toRadians(mRotateCenterAngle - mIndependentAngle))) * mIndependentScale;
-
-        if (isSaveInProccess) {
-            matrix.postTranslate(scalingForSave * (ab - aB - editorImage.getLeft()), scalingForSave * (ac - aC - editorImage.getTop()));
-        } else {
-            matrix.postTranslate((ab - aB) - editorImage.getLeft(), (ac - aC) - editorImage.getTop());
-        }
-        canvas.drawBitmap(editorImage.getBitmap(), matrix, paint);
-        //canvas.drawBitmap(editorImage.getBitmap(), editorImage.getHeight(), editorImage.getWidth(), paint);
-    }*/
 
     public boolean isFreeTransform() {
         return freeTransform;

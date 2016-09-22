@@ -7,6 +7,13 @@
     <string name="error">Image wasn\'t selected!</string>
     <!-- Start screen - END. -->
 
+    <!-- START - Share screen. -->
+    <string name="save">Save</string>
+    <string name="instagram">Instagram</string>
+    <string name="facebook">Facebook</string>
+    <string name="more">More</string>
+    <!-- Share screen - END. -->
+
     <string name="none">None</string>
     <string name="autofix">Autofix</string>
     <string name="bw">Min/Max Color Intensity</string>
@@ -150,8 +157,10 @@
         use your images. If you selected \"never ask again\" permission you can go to application settings and turn on \"Storage\" permission.</string>
     <string name="on_back_alert">All your current edits will be lost and you will return to start screen!</string>
     <string name="ok">OK</string>
-    <string name="save">Save</string>
     <string name="add_text">ADD</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="text_delete_alert">Do you want to delete it?</string>
     <!-- For alerts. - END -->
 
     <!-- START - Font picker dialog. -->
@@ -159,4 +168,8 @@
     <string name="start_typing">Start typing…</string>
     <string name="select_font">Select a font</string>
     <!-- Font picker dialog - END. -->
+
+    <string name="adjust">Adjust</string>
+
+
 </resources>

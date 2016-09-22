@@ -2,6 +2,8 @@ package net.iquesoft.iquephoto.model;
 
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.StringRes;
 
 import net.iquesoft.iquephoto.R;
 
@@ -13,9 +15,12 @@ import java.util.List;
  *         Filter model class how works with {@link ColorMatrixColorFilter}.
  */
 public class Filter {
-
+    @StringRes
     private int title;
+
+    @DrawableRes
     private int image;
+
     private boolean selected;
     private ColorMatrix colorMatrix;
 
@@ -29,7 +34,7 @@ public class Filter {
     /**
      * Array with all filters;
      */
-    public static Filter[] filters = {
+    private static Filter[] filters = {
 
             new Filter(R.string.filter_original, R.drawable.original),
 
@@ -133,16 +138,16 @@ public class Filter {
                     0, 0, 0, 1, 0})),
     };
 
-    public Filter() {
+    private Filter() {
 
     }
 
-    public Filter(int title, int image) {
+    private Filter(@StringRes int title, @DrawableRes int image) {
         this.title = title;
         this.image = image;
     }
 
-    public Filter(int title, int image, ColorMatrix colorMatrix) {
+    private Filter(@StringRes int title, @DrawableRes int image, ColorMatrix colorMatrix) {
         this.title = title;
         this.image = image;
         this.colorMatrix = colorMatrix;

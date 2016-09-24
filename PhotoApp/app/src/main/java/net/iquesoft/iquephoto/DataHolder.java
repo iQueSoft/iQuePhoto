@@ -1,13 +1,10 @@
 package net.iquesoft.iquephoto;
 
-import net.iquesoft.iquephoto.core.EditorView;
+import net.iquesoft.iquephoto.core.EditorImageView;
 
-/**
- * Created by Sergey on 8/30/2016.
- */
 public class DataHolder {
 
-    private EditorView editorView;
+    private EditorImageView editorView;
 
     private static DataHolder ourInstance = new DataHolder();
 
@@ -18,11 +15,11 @@ public class DataHolder {
     private DataHolder() {
     }
 
-    public EditorView getEditorView() {
+    public EditorImageView getEditorView() {
         return editorView;
     }
 
-    public void setEditorView(EditorView editorView) {
+    public void setEditorView(EditorImageView editorView) {
         this.editorView = editorView;
     }
 }

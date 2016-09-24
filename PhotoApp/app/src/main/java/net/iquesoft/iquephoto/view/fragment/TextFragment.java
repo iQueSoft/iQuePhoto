@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import net.iquesoft.iquephoto.DataHolder;
+import net.iquesoft.iquephoto.core.EditorImageView;
 import net.iquesoft.iquephoto.model.Text;
 import net.iquesoft.iquephoto.core.EditorView;
 import net.iquesoft.iquephoto.R;
@@ -47,7 +48,7 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
 
     private Unbinder unbinder;
 
-    private EditorView editorView;
+    private EditorImageView editorView;
 
     private Text text;
 
@@ -181,11 +182,11 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
             isDeleteActive = true;
             deleteTextButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_delete_on));
 
-            editorView.setDeleteTextActivated(true);
+            //editorView.setDeleteTextActivated(true);
             Toast.makeText(context, getResources().getString(R.string.text_delete_enabled), Toast.LENGTH_SHORT).show();
         } else {
             isDeleteActive = false;
-            editorView.setDeleteTextActivated(false);
+            //editorView.setDeleteTextActivated(false);
             deleteTextButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_delete_off));
             Toast.makeText(context, getResources().getString(R.string.text_delete_disabled), Toast.LENGTH_SHORT).show();
         }
@@ -206,14 +207,14 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
 
     @Override
     public void onAddTextComplete(Text text) {
-        editorView.addText(text);
+        //editorView.addText(text);
         Toast.makeText(context, getResources().getString(R.string.text_added), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onDeleteTextComplete(Text text) {
         if (isDeleteActive) {
-            editorView.deleteText(text);
+            //editorView.deleteText(text);
         }
     }
 }

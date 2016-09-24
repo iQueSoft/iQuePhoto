@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import net.iquesoft.iquephoto.DataHolder;
+import net.iquesoft.iquephoto.core.EditorImageView;
 import net.iquesoft.iquephoto.core.EditorView;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapters.StickersAdapter;
@@ -38,7 +39,7 @@ public class ShowStickersFragment extends BaseFragment implements IShowStickersF
     @BindView(R.id.stickersRecyclerView)
     RecyclerView recyclerView;
 
-    private EditorView editorView;
+    private EditorImageView editorView;
 
     @Inject
     ShowStickersFragmentPresenterImpl presenter;
@@ -78,7 +79,7 @@ public class ShowStickersFragment extends BaseFragment implements IShowStickersF
 
         StickersAdapter adapter = new StickersAdapter(getStickers(position));
         adapter.setStickersListener(sticker -> {
-            editorView.addSticker(sticker);
+            //editorView.addSticker(sticker);
         });
 
         recyclerView.setLayoutManager(new GridLayoutManager(v.getContext(), 4));

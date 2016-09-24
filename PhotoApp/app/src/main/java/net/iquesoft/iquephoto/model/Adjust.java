@@ -31,7 +31,6 @@ public class Adjust {
             new Adjust(R.string.contrast, R.drawable.ic_contrast, 0),
             new Adjust(R.string.saturation, R.drawable.ic_saturation, 0),
             new Adjust(R.string.warmth, R.drawable.ic_warmth, 0),
-
     };
 
     private Adjust(@StringRes int title, @DrawableRes int icon, int value) {

@@ -78,7 +78,7 @@ public class StartActivity extends BaseActivity implements IStartActivityView, I
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Intent intent = new Intent(StartActivity.this, EditorActivity.class);
+        Intent intent = new Intent(StartActivity.this, CropActivity.class);
 
         switch (requestCode) {
             case REQ_CAMERA:

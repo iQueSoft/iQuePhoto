@@ -24,6 +24,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".view.activity.CameraActivity" />
+        <activity android:name=".view.activity.CropActivity" />
         <activity android:name=".view.activity.CameraResultActivity" />
     </application>
 

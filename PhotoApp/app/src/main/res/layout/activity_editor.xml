@@ -7,11 +7,12 @@
     android:paddingTop="25dp"
     tools:context=".view.activity.EditorActivity">
 
-
-    <net.iquesoft.iquephoto.core.EditorView
-        android:id="@+id/photoEditorView"
+    <view
+        android:id="@+id/editorImageView"
+        class="net.iquesoft.iquephoto.core.EditorImageView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_above="@+id/toolsView" />
 
     <FrameLayout
         android:id="@+id/toolSettingsLayout"
@@ -31,5 +32,6 @@
         android:background="@color/colorPrimary"
         android:paddingBottom="5dp"
         android:paddingTop="5dp" />
+
 
 </RelativeLayout>

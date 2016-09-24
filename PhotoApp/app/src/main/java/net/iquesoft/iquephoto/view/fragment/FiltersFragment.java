@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import net.iquesoft.iquephoto.DataHolder;
+import net.iquesoft.iquephoto.core.EditorImageView;
 import net.iquesoft.iquephoto.core.EditorView;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapters.FiltersAdapter;
@@ -32,7 +33,7 @@ public class FiltersFragment extends BaseFragment implements IFiltersFragmentVie
 
     private Unbinder unbinder;
 
-    private EditorView editorView;
+    private EditorImageView editorView;
 
     @Inject
     FiltersFragmentPresenterImpl presenter;
@@ -92,9 +93,9 @@ public class FiltersFragment extends BaseFragment implements IFiltersFragmentVie
 
         filtersAdapter.setFiltersListener(filter -> {
             if (filter.getColorMatrix() != null) {
-                editorView.setFilter(filter.getColorMatrix());
+                editorView.setFilterMatrix(filter.getColorMatrix());
             } else {
-                editorView.setHasNotFiler();
+                editorView.setHasNotFilter();
             }
             //filtersAdapter.notifyDataSetChanged();
         });

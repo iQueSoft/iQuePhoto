@@ -1,19 +1,30 @@
 package net.iquesoft.iquephoto.view.activity;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.provider.MediaStore;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.View;
 import android.view.Window;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.isseiaoki.simplecropview.util.Utils;
+
 import net.iquesoft.iquephoto.DataHolder;
+import net.iquesoft.iquephoto.core.EditorImageView;
 import net.iquesoft.iquephoto.core.EditorView;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapters.ToolsAdapter;
@@ -28,6 +39,10 @@ import net.iquesoft.iquephoto.presenter.EditorActivityPresenterImpl;
 import net.iquesoft.iquephoto.utils.ImageHelper;
 import net.iquesoft.iquephoto.view.IEditorActivityView;
 
+import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import javax.inject.Inject;
 
 import butterknife.BindView;
@@ -38,13 +53,18 @@ import butterknife.ButterKnife;
  */
 public class EditorActivity extends BaseActivity implements IEditorActivityView, IHasComponent<IEditorActivityComponent> {
 
+    private ExecutorService mExecutor;
+
     @Inject
     EditorActivityPresenterImpl presenter;
 
     private IEditorActivityComponent editorActivityComponent;
 
-    @BindView(R.id.photoEditorView)
-    EditorView editorView;
+    /*@BindView(R.id.photoEditorView)
+    EditorView editorView;*/
+
+    @BindView(R.id.editorImageView)
+    EditorImageView editorView;
 
     @BindView(R.id.toolsView)
     RecyclerView tools;
@@ -66,9 +86,18 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
 
         presenter.createToolsBox();
 
-        bitmap = BitmapFactory.decodeFile(getIntent().getStringExtra("bitmap_path"));
+        /*try {
+            bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), getIntent().getData());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
+        mExecutor = Executors.newSingleThreadExecutor();
 
-        editorView.setImageBitmap(bitmap);
+        final Uri uri = getIntent().getData();
+
+        mExecutor.submit(new LoadScaledImageTask(this, uri, editorView, calcImageSize()));
+
+        //editorView.setImageBitmap(bitmap);
         //photoEditorView.setFreeTransform(true);
         //photoEditorView.setSquareEditorListener(this);
 
@@ -85,6 +114,12 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
     }
 
     @Override
+    protected void onDestroy() {
+        mExecutor.shutdown();
+        super.onDestroy();
+    }
+
+    @Override
     public void onBackPressed() {
         presenter.onBackPressed();
     }
@@ -97,14 +132,14 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
                     presenter.changeTool(tool);
                     switch (tool.getTitle()) {
                         case R.string.text:
-                            editorView.setTextActivated(true);
+                            //editorView.setTextActivated(true);
                             break;
                         case R.string.drawing:
-                            editorView.setDrawingActivated(true);
+                            //editorView.setDrawingActivated(true);
                             break;
                         default:
-                            editorView.setTextActivated(false);
-                            editorView.setDrawingActivated(false);
+                            //editorView.setTextActivated(false);
+                            //editorView.setDrawingActivated(false);
                             break;
                     }
                 } catch (NullPointerException e) {
@@ -168,4 +203,37 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
         return editorActivityComponent;
     }
 
+    public int calcImageSize() {
+        DisplayMetrics metrics = new DisplayMetrics();
+        Display display = getWindowManager().getDefaultDisplay();
+        display.getMetrics(metrics);
+        return Math.min(Math.max(metrics.widthPixels, metrics.heightPixels), 2048);
+    }
+
+    public static class LoadScaledImageTask implements Runnable {
+        private Handler mHandler = new Handler(Looper.getMainLooper());
+        Context context;
+        Uri uri;
+        EditorImageView editorView;
+        int width;
+
+        public LoadScaledImageTask(Context context, Uri uri, EditorImageView editorView, int width) {
+            this.context = context;
+            this.uri = uri;
+            this.editorView = editorView;
+            this.width = width;
+        }
+
+        @Override
+        public void run() {
+            int maxSize = Utils.getMaxSize();
+            int requestSize = Math.min(width, maxSize);
+            try {
+                final Bitmap bitmapFromUri = Utils.decodeSampledBitmapFromUri(context, uri, requestSize);
+                mHandler.post(() -> editorView.setImageBitmap(bitmapFromUri));
+            } catch (OutOfMemoryError | Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

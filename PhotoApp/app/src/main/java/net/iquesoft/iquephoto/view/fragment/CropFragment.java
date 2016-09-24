@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import net.iquesoft.iquephoto.DataHolder;
+import net.iquesoft.iquephoto.core.EditorImageView;
 import net.iquesoft.iquephoto.core.EditorView;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseFragment;
@@ -23,7 +24,7 @@ public class CropFragment extends BaseFragment implements ICropFragmentView {
 
     private Unbinder unbinder;
 
-    private EditorView editorView;
+    private EditorImageView editorView;
 
     @Inject
     CropFragmentPresenterImpl presenter;

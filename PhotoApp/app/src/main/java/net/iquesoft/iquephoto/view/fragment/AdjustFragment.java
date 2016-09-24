@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 
 import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.adapters.AdjustAdapter;
+import net.iquesoft.iquephoto.core.EditorImageView;
 import net.iquesoft.iquephoto.core.EditorView;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseFragment;
@@ -36,7 +37,7 @@ public class AdjustFragment extends BaseFragment implements IBrightnessFragmentV
 
     private AdjustAdapter adapter;
 
-    private EditorView editorView;
+    private EditorImageView editorView;
 
     @BindView(R.id.hideAdjust)
     ImageView hideAdjust;

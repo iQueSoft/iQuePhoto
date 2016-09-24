@@ -22,7 +22,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.model.CropBox;
 import net.iquesoft.iquephoto.model.Drawing;
 import net.iquesoft.iquephoto.model.EditorImage;
 import net.iquesoft.iquephoto.model.Text;

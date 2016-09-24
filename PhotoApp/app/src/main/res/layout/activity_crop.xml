@@ -1,7 +1,213 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackground">
+    android:background="@color/colorBackground"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/buttonCropBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginRight="16dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="16dp"
+            android:src="@drawable/ic_arrow_back" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/buttonRotateLeft"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="16dp"
+                android:src="@drawable/ic_rotate_left" />
+
+            <ImageButton
+                android:id="@+id/buttonRotateRight"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="16dp"
+                android:src="@drawable/ic_rotate_right" />
+
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/buttonCrop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="16dp"
+            android:src="@drawable/ic_crop" />
+    </RelativeLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <com.isseiaoki.simplecropview.CropImageView
+            android:id="@+id/cropImageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="16dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="16dp"
+            custom:scv_background_color="@color/colorBackground"
+            custom:scv_crop_mode="fit_image"
+            custom:scv_frame_color="@color/white"
+            custom:scv_frame_stroke_weight="1dp"
+            custom:scv_guide_color="@color/white"
+            custom:scv_guide_show_mode="show_always"
+            custom:scv_guide_stroke_weight="1dp"
+            custom:scv_handle_color="@color/white"
+            custom:scv_handle_show_mode="show_always"
+            custom:scv_handle_size="14dp"
+            custom:scv_min_frame_size="50dp"
+            custom:scv_overlay_color="#aa1c1c1c"
+            custom:scv_touch_padding="8dp" />
+
+        <ProgressBar
+            android:id="@+id/cropProgress"
+            style="@style/Widget.AppCompat.ProgressBar"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+    </FrameLayout>
+
+    <HorizontalScrollView
+        android:id="@+id/tab_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:id="@+id/tab_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:orientation="horizontal"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp">
+
+            <Button
+                android:id="@+id/cropFree"
+                style="@style/AppTheme.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="4dp"
+                android:padding="4dp"
+                android:text="@string/crop_free" />
+
+            <Button
+                android:id="@+id/cropOriginal"
+                style="@style/AppTheme.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="4dp"
+                android:padding="4dp"
+                android:text="@string/crop_original" />
+
+            <Button
+                android:id="@+id/cropSquare"
+                style="@style/AppTheme.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="4dp"
+                android:padding="4dp"
+                android:text="@string/crop_square" />
+
+            <Button
+                android:id="@+id/crop3x4"
+                style="@style/AppTheme.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="4dp"
+                android:padding="4dp"
+                android:text="@string/crop_3_4" />
+
+            <Button
+                android:id="@+id/crop4x3"
+                style="@style/AppTheme.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="4dp"
+                android:padding="4dp"
+                android:text="@string/crop_4_3" />
+
+            <Button
+                android:id="@+id/crop9x16"
+                style="@style/AppTheme.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="4dp"
+                android:padding="4dp"
+                android:text="@string/crop_9_16" />
+
+            <Button
+                android:id="@+id/crop16x9"
+                style="@style/AppTheme.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="4dp"
+                android:padding="4dp"
+                android:text="@string/crop_16_9" />
+
+            <Button
+                android:id="@+id/crop7x5"
+                style="@style/AppTheme.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="8dp"
+                android:padding="4dp"
+                android:text="@string/crop_7_5" />
+
+            <Button
+                android:id="@+id/buttonCircle"
+                style="@style/AppTheme.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="4dp"
+                android:padding="4dp"
+                android:text="CIRCLE" />
+
+            <Button
+                android:id="@+id/buttonShowCircleButCropAsSquare"
+                style="@style/AppTheme.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="4dp"
+                android:padding="4dp"
+                android:text="CIRCLE_SQUARE" />
+
+        </LinearLayout>
+    </HorizontalScrollView>
 
 </LinearLayout>

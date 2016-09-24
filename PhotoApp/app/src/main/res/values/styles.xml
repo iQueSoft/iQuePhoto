@@ -47,4 +47,12 @@
         <item name="colorControlActivated">@color/white</item>
     </style>
 
+    <style name="AppTheme.Button.Borderless" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:minHeight">@dimen/button_height</item>
+        <item name="android:textSize">@dimen/text_size_s</item>
+        <item name="android:gravity">center_vertical|center_horizontal</item>
+    </style>
+
 </resources>

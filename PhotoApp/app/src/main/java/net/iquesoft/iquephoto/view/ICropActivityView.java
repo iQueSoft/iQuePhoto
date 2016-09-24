@@ -1,8 +1,12 @@
 package net.iquesoft.iquephoto.view;
 
-/**
- * Created by Sergey on 9/22/2016.
- */
+import android.net.Uri;
 
 public interface ICropActivityView {
+
+    void startEditingImage(Uri uri);
+
+    void showProgress();
+
+    void dismissProgress();
 }

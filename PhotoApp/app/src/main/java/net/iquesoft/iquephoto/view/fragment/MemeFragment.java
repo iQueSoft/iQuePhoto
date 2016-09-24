@@ -9,6 +9,7 @@ import android.widget.EditText;
 import com.jakewharton.rxbinding.widget.RxTextView;
 
 import net.iquesoft.iquephoto.DataHolder;
+import net.iquesoft.iquephoto.core.EditorImageView;
 import net.iquesoft.iquephoto.core.EditorView;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseFragment;
@@ -24,7 +25,7 @@ import butterknife.Unbinder;
 
 public class MemeFragment extends BaseFragment implements IMemeFragmentView {
 
-    private EditorView editorView;
+    private EditorImageView editorView;
 
     @BindView(R.id.topMemeText)
     EditText topMemeText;
@@ -69,13 +70,13 @@ public class MemeFragment extends BaseFragment implements IMemeFragmentView {
         //Subscription topMemeTextSubscription =
         RxTextView.textChanges(topMemeText)
                 .subscribe(value -> {
-                    editorView.setTopMemeText(value.toString());
+                    //editorView.setTopMemeText(value.toString());
                 });
 
         //Subscription bottomMemeTextSubscription =
         RxTextView.textChanges(bottomMemeText)
                 .subscribe(value -> {
-                    editorView.setBottomMemeText(value.toString());
+                    //editorView.setBottomMemeText(value.toString());
                 });
 
         return v;

@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import net.iquesoft.iquephoto.DataHolder;
+import net.iquesoft.iquephoto.core.EditorImageView;
 import net.iquesoft.iquephoto.core.EditorView;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseFragment;
@@ -33,7 +34,7 @@ public class RotationFragment extends BaseFragment implements IRotationFragmentV
 
     private Unbinder unbinder;
 
-    private EditorView editorView;
+    private EditorImageView editorView;
 
     @Inject
     RotationFragmentPresenterImpl presenter;
@@ -49,22 +50,22 @@ public class RotationFragment extends BaseFragment implements IRotationFragmentV
 
     @OnClick(R.id.rotateRightButton)
     public void onClickRotateRight(View view) {
-        editorView.rotateImage(90);
+        //editorView.rotateImage(90);
     }
 
     @OnClick(R.id.rotateLeftButton)
     public void onClickRotateLeft(View view) {
-        editorView.rotateImage(-90);
+        //editorView.rotateImage(-90);
     }
 
     @OnClick(R.id.hFlipButton)
     public void onClickHorizontalFlip(View view) {
-        editorView.horizontalFlip();
+        //editorView.horizontalFlip();
     }
 
     @OnClick(R.id.vFlipButton)
     public void onClickVerticalFlip(View view) {
-        editorView.verticalFlip();
+        //editorView.verticalFlip();
     }
 
     public static RotationFragment newInstance() {
@@ -100,7 +101,7 @@ public class RotationFragment extends BaseFragment implements IRotationFragmentV
             @Override
             public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
                 // Todo: Fix this bad rotation
-                editorView.rotateImage(value);
+                //editorView.rotateImage(value);
             }
 
             @Override

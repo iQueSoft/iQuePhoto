@@ -22,6 +22,6 @@ public class CropActivityModule {
 
     @Provides
     CropActivityPresenterImpl provideCropActivityPresenterImpl() {
-        return new CropActivityPresenterImpl();
+        return new CropActivityPresenterImpl(view);
     }
 }

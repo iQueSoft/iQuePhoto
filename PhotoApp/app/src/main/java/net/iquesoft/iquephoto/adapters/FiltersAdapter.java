@@ -20,10 +20,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-/**
- * @author Sergey.
- *         Adapter for {@link FiltersFragment}.
- */
 public class FiltersAdapter extends RecyclerView.Adapter<FiltersAdapter.ViewHolder> {
 
     private int checkedItem = 0;

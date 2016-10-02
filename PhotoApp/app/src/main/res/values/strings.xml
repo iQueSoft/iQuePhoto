@@ -8,6 +8,7 @@
     <!-- Start screen - END. -->
 
     <!-- START - Share screen. -->
+    <string name="send_and_share">Send&amp;Share</string>
     <string name="save">Save</string>
     <string name="instagram">Instagram</string>
     <string name="facebook">Facebook</string>

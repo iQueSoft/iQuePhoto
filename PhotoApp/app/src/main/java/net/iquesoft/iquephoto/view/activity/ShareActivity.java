@@ -1,10 +1,13 @@
 package net.iquesoft.iquephoto.view.activity;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
 
+import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseActivity;
 import net.iquesoft.iquephoto.di.IHasComponent;
@@ -23,6 +26,9 @@ import butterknife.OnClick;
 
 public class ShareActivity extends BaseActivity implements IShareActivityView, IHasComponent<IShareActivityComponent> {
 
+    @BindView(R.id.shareImage)
+    ImageView imageView;
+
     @Inject
     ShareActivityPresenterImpl presenter;
 
@@ -34,6 +40,8 @@ public class ShareActivity extends BaseActivity implements IShareActivityView, I
         setContentView(R.layout.activity_share);
 
         ButterKnife.bind(this);
+
+        imageView.setImageBitmap(DataHolder.getInstance().getShareBitmap());
     }
 
     @Override
@@ -43,6 +51,11 @@ public class ShareActivity extends BaseActivity implements IShareActivityView, I
                 .shareActivityModule(new ShareActivityModule(this))
                 .build();
         shareActivityComponent.inject(this);
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 
     @Override
@@ -63,6 +76,14 @@ public class ShareActivity extends BaseActivity implements IShareActivityView, I
     @OnClick(R.id.instagram)
     void onClickInstagram(View view) {
         // Todo: Publish to Instagram.
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("image/*");
+
+        //File media = new File(mediaPath);
+        Uri uri;// = Uri.fromFile(media);
+
+        //intent.putExtra(Intent.EXTRA_STREAM, uri);
+        startActivity(Intent.createChooser(intent, "Share to"));
     }
 
     @OnClick(R.id.more)

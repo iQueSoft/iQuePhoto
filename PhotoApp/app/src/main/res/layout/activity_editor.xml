@@ -1,37 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/black"
-    android:paddingTop="25dp"
+    android:orientation="vertical"
     tools:context=".view.activity.EditorActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/colorBackground">
+
+        <ImageButton
+            android:id="@+id/buttonEditorBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginRight="16dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="16dp"
+            android:src="@drawable/ic_arrow_back" />
+
+        <ImageButton
+            android:id="@+id/buttonShare"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="16dp"
+            android:src="@drawable/ic_share" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="#ffffff" />
 
     <view
         android:id="@+id/editorImageView"
         class="net.iquesoft.iquephoto.core.EditorImageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/toolsView" />
+        android:layout_weight="1" />
 
     <FrameLayout
-        android:id="@+id/toolSettingsLayout"
+        android:id="@+id/toolSettingsContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/toolsView"
         android:layout_gravity="bottom"
-        android:visibility="visible">
-
-    </FrameLayout>
+        android:visibility="visible" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/toolsView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@color/colorPrimary"
+        android:background="@color/colorBackground"
         android:paddingBottom="5dp"
         android:paddingTop="5dp" />
-
-
-</RelativeLayout>
+</LinearLayout>

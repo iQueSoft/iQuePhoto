@@ -116,16 +116,6 @@ public class EditorView extends View implements View.OnTouchListener {
 
     private OnSquareEditorPictureClickListener onSquareEditorPictureClickListener;
 
-    private float cropLineWidth = 10f;
-    private float cropCornerWidth = 10f;
-    private float cropCornerLength = 50f;
-    private float cropOffset = cropLineWidth / 4;
-    private float cropOffset2 = cropLineWidth;
-
-    private int cropLineColor = getContext().getResources().getColor(R.color.white);
-    private int cropCornerColor = getContext().getResources().getColor(R.color.white);
-    private int cropShadowColor = getContext().getResources().getColor(R.color.colorBackground);
-
     private boolean imageCentering;
 
     private boolean drawTextBorder;
@@ -978,7 +968,7 @@ public class EditorView extends View implements View.OnTouchListener {
                             if (30 > Math.abs(mDoubleTapX - event.getX()) + Math.abs(mDoubleTapY - event.getY())) {
                                 // angle = 90;
                                 if (checkedTextId == -1) {
-                                    //  editorImage.setBitmap(rotateImage(editorImage.getBitmap(), angle));
+                                    //  editorImage.setmBitmap(rotateImage(editorImage.getBitmap(), angle));
                                 } else {
                                     if (squareEditorListener != null) {
                                         squareEditorListener.editText(textsList.get(checkedTextId));

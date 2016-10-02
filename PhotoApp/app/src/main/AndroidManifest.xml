@@ -15,17 +15,29 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-        <activity android:name=".view.activity.EditorActivity" />
-        <activity android:name=".view.activity.StartActivity">
+        <activity
+            android:name=".view.activity.EditorActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.activity.StartActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.activity.CameraActivity" />
-        <activity android:name=".view.activity.CropActivity" />
-        <activity android:name=".view.activity.CameraResultActivity" />
+        <activity
+            android:name=".view.activity.CameraActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.activity.CropActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.activity.CameraResultActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".view.activity.ShareActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

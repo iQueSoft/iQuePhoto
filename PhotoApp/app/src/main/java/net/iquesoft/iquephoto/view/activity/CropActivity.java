@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.isseiaoki.simplecropview.CropImageView;
-import com.isseiaoki.simplecropview.callback.CropCallback;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseActivity;
@@ -22,7 +21,6 @@ import net.iquesoft.iquephoto.di.modules.CropActivityModule;
 import net.iquesoft.iquephoto.presenter.CropActivityPresenterImpl;
 import net.iquesoft.iquephoto.view.ICropActivityView;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 
 import javax.inject.Inject;
@@ -120,15 +118,7 @@ public class CropActivity extends BaseActivity implements ICropActivityView, IHa
 
     @OnClick(R.id.buttonCrop)
     void onClickCrop() {
-        /*Intent intent = new Intent(CropActivity.this, EditorActivity.class);
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        Bitmap bitmap = cropImageView.getCroppedBitmap();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        byte[] bytes = stream.toByteArray();
-        intent.putExtra("CroppedImage", bytes);
-        startActivity(intent);*/
         presenter.cropImage(createSaveUri(), cropImageView);
-
     }
 
     public Uri createSaveUri() {
@@ -140,12 +130,12 @@ public class CropActivity extends BaseActivity implements ICropActivityView, IHa
         return cropActivityComponent;
     }
 
-
     @Override
     public void startEditingImage(Uri uri) {
         Intent intent = new Intent(CropActivity.this, EditorActivity.class);
         intent.setData(uri);
         startActivity(intent);
+        finish();
     }
 
     @Override

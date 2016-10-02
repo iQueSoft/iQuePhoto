@@ -1,23 +1,22 @@
 package net.iquesoft.iquephoto.view.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.provider.MediaStore;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
+import android.util.LruCache;
 import android.view.Display;
 import android.view.View;
 import android.view.Window;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -25,7 +24,6 @@ import com.isseiaoki.simplecropview.util.Utils;
 
 import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.core.EditorImageView;
-import net.iquesoft.iquephoto.core.EditorView;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapters.ToolsAdapter;
 import net.iquesoft.iquephoto.common.BaseActivity;
@@ -39,7 +37,8 @@ import net.iquesoft.iquephoto.presenter.EditorActivityPresenterImpl;
 import net.iquesoft.iquephoto.utils.ImageHelper;
 import net.iquesoft.iquephoto.view.IEditorActivityView;
 
-import java.io.IOException;
+import java.lang.ref.SoftReference;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -47,13 +46,9 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-/**
- * @author Sergey Belenkiy
- */
 public class EditorActivity extends BaseActivity implements IEditorActivityView, IHasComponent<IEditorActivityComponent> {
-
-    private ExecutorService mExecutor;
 
     @Inject
     EditorActivityPresenterImpl presenter;
@@ -69,7 +64,7 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
     @BindView(R.id.toolsView)
     RecyclerView tools;
 
-    @BindView(R.id.toolSettingsLayout)
+    @BindView(R.id.toolSettingsContainer)
     FrameLayout toolSettingsContainer;
 
     private Bitmap bitmap;
@@ -91,11 +86,12 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
         } catch (IOException e) {
             e.printStackTrace();
         }*/
-        mExecutor = Executors.newSingleThreadExecutor();
+        //mExecutor = Executors.newSingleThreadExecutor();
 
-        final Uri uri = getIntent().getData();
+        Uri uri = getIntent().getData();
 
-        mExecutor.submit(new LoadScaledImageTask(this, uri, editorView, calcImageSize()));
+        editorView.setImageUri(uri);
+        //mExecutor.submit(new LoadScaledImageTask(this, uri, editorView, calcImageSize()));
 
         //editorView.setImageBitmap(bitmap);
         //photoEditorView.setFreeTransform(true);
@@ -115,7 +111,7 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
 
     @Override
     protected void onDestroy() {
-        mExecutor.shutdown();
+//        mExecutor.shutdown();
         super.onDestroy();
     }
 
@@ -197,6 +193,19 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
     public void showToastMessage(int stringResource) {
         Toast.makeText(getApplicationContext(), getString(stringResource), Toast.LENGTH_SHORT).show();
     }
+
+    @OnClick(R.id.buttonShare)
+    void onClickShare() {
+
+        editorView.buildDrawingCache();
+
+        DataHolder.getInstance().setShareBitmap(editorView.getDrawingCache());
+
+        Intent intent = new Intent(EditorActivity.this, ShareActivity.class);
+        //intent.putExtra("ImageForShare", bitmap);
+        startActivity(intent);
+    }
+
 
     @Override
     public IEditorActivityComponent getComponent() {

@@ -11,10 +11,9 @@ import android.widget.LinearLayout;
 
 import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.adapters.AdjustAdapter;
-import net.iquesoft.iquephoto.core.EditorImageView;
-import net.iquesoft.iquephoto.core.EditorView;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseFragment;
+import net.iquesoft.iquephoto.core.EditorImageView;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
 import net.iquesoft.iquephoto.model.Adjust;
 import net.iquesoft.iquephoto.presenter.AdjustFragmentPresenterImpl;
@@ -69,7 +68,7 @@ public class AdjustFragment extends BaseFragment implements IBrightnessFragmentV
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_adjust, container, false);
 
-        editorView = DataHolder.getInstance().getEditorView();
+       // editorView = DataHolder.getInstance().getEditorView();
 
         unbinder = ButterKnife.bind(this, v);
 
@@ -82,7 +81,7 @@ public class AdjustFragment extends BaseFragment implements IBrightnessFragmentV
         seekBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
             @Override
             public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
-                editorView.setBrightnessValue(value);
+                //editorView.setBrightnessValue(value);
             }
 
             @Override

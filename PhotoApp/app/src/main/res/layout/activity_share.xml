@@ -13,9 +13,9 @@
         android:orientation="horizontal">
 
         <ImageButton
+            android:id="@+id/shareBack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_arrow_back" />
 
@@ -30,7 +30,16 @@
             android:textStyle="bold" />
     </LinearLayout>
 
+    <android.support.design.widget.TabLayout
+        android:id="@+id/imageSizeTabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tabIndicatorColor="@color/white"
+        app:tabSelectedTextColor="@color/white"
+        app:tabTextColor="@android:color/darker_gray" />
+
     <View
+        android:alpha="0.2f"
         android:layout_width="fill_parent"
         android:layout_height="1dp"
         android:background="#ffffff" />
@@ -40,7 +49,9 @@
         android:layout_width="match_parent"
         android:layout_height="300dp"
         android:layout_marginTop="10dp"
+        android:scaleType="fitCenter"
         app:srcCompat="@drawable/buldog" />
+
 
     <LinearLayout
         android:layout_width="match_parent"

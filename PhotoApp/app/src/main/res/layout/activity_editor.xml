@@ -38,19 +38,33 @@
         android:layout_height="1dp"
         android:background="#ffffff" />
 
-    <view
-        android:id="@+id/editorImageView"
-        class="net.iquesoft.iquephoto.core.EditorImageView"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1" />
+        android:layout_weight="1">
 
-    <FrameLayout
-        android:id="@+id/toolSettingsContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:visibility="visible" />
+        <net.iquesoft.iquephoto.core.EditorImageView
+            android:id="@+id/editorImageView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:adjustViewBounds="true" />
+
+        <ProgressBar
+            android:id="@+id/cropProgress"
+            style="@style/Widget.AppCompat.ProgressBar"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+
+        <FrameLayout
+            android:id="@+id/toolSettingsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:visibility="visible" />
+    </FrameLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/toolsView"

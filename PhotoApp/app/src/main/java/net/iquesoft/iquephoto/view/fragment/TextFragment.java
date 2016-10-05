@@ -13,9 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import net.iquesoft.iquephoto.DataHolder;
-import net.iquesoft.iquephoto.core.EditorImageView;
 import net.iquesoft.iquephoto.model.Text;
-import net.iquesoft.iquephoto.core.EditorView;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseFragment;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
@@ -48,7 +46,7 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
 
     private Unbinder unbinder;
 
-    private EditorImageView editorView;
+   // private EditorImageView editorView;
 
     private Text text;
 
@@ -95,7 +93,7 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
 
         context = v.getContext();
 
-        editorView = DataHolder.getInstance().getEditorView();
+        //editorView = DataHolder.getInstance().getEditorView();
 
         fontPickerDialog = new FontPickerDialog(v.getContext());
         RGBColorPickerDialog = new RGBColorPickerDialog(v.getContext());

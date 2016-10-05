@@ -36,7 +36,8 @@
         <activity
             android:name=".view.activity.CameraResultActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".view.activity.ShareActivity"
+        <activity
+            android:name=".view.activity.ShareActivity"
             android:screenOrientation="portrait" />
     </application>
 

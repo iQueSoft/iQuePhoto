@@ -8,9 +8,7 @@ import android.support.v4.app.Fragment;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.view.fragment.DrawingFragment;
 import net.iquesoft.iquephoto.view.fragment.AdjustFragment;
-import net.iquesoft.iquephoto.view.fragment.CropFragment;
 import net.iquesoft.iquephoto.view.fragment.FiltersFragment;
-import net.iquesoft.iquephoto.view.fragment.RotationFragment;
 import net.iquesoft.iquephoto.view.fragment.StickersFragment;
 import net.iquesoft.iquephoto.view.fragment.TextFragment;
 
@@ -45,11 +43,8 @@ public class Tool {
             new Tool(R.string.adjust, R.drawable.ic_adjust, AdjustFragment.newInstance()),
             new Tool(R.string.stickers, R.drawable.ic_stiker, StickersFragment.newInstance()),
             new Tool(R.string.frame, R.drawable.ic_frame),
-            //new Tool(R.string.crop, R.drawable.ic_crop, CropFragment.newInstance()),
-            new Tool(R.string.orientation, R.drawable.ic_rotation, RotationFragment.newInstance()),
             new Tool(R.string.drawing, R.drawable.ic_brush, DrawingFragment.newInstance()),
-            new Tool(R.string.text, R.drawable.ic_letters, TextFragment.newInstance()),
-            //new Tool(R.string.meme, R.drawable.ic_meme, MemeFragment.newInstance())
+            new Tool(R.string.text, R.drawable.ic_letters, TextFragment.newInstance())
     };
 
     private static Tool tool = new Tool();

@@ -10,10 +10,6 @@ import net.iquesoft.iquephoto.R;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * @author Sergey Belenkiy
- *         Filter model class how works with {@link ColorMatrixColorFilter}.
- */
 public class Filter {
     @StringRes
     private int title;
@@ -24,16 +20,10 @@ public class Filter {
     private boolean selected;
     private ColorMatrix colorMatrix;
 
-    /**
-     * @return list with all editor tools for adapter usage;
-     */
     public static List<Filter> getFiltersList() {
         return Arrays.asList(filters);
     }
 
-    /**
-     * Array with all filters;
-     */
     private static Filter[] filters = {
 
             new Filter(R.string.filter_original, R.drawable.original),
@@ -50,7 +40,6 @@ public class Filter {
                     0, 0, 0.5f, 0, 0,
                     0, 0, 0, 1, 0})),
 
-            // Todo: Change filters name
             new Filter(R.string.filter_darken, R.drawable.darknen, new ColorMatrix(new float[]{
                     2, -1, 0, 0, 0,
                     -1, 2, 0, 0, 0,

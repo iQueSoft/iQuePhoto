@@ -7,15 +7,17 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.MediaStore;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
-import android.util.LruCache;
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -23,10 +25,10 @@ import android.widget.Toast;
 import com.isseiaoki.simplecropview.util.Utils;
 
 import net.iquesoft.iquephoto.DataHolder;
-import net.iquesoft.iquephoto.core.EditorImageView;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapters.ToolsAdapter;
 import net.iquesoft.iquephoto.common.BaseActivity;
+import net.iquesoft.iquephoto.core.EditorImageView;
 import net.iquesoft.iquephoto.di.IHasComponent;
 import net.iquesoft.iquephoto.di.components.IApplicationComponent;
 import net.iquesoft.iquephoto.di.components.DaggerIEditorActivityComponent;
@@ -37,10 +39,8 @@ import net.iquesoft.iquephoto.presenter.EditorActivityPresenterImpl;
 import net.iquesoft.iquephoto.utils.ImageHelper;
 import net.iquesoft.iquephoto.view.IEditorActivityView;
 
-import java.lang.ref.SoftReference;
-import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+
+import java.io.IOException;
 
 import javax.inject.Inject;
 
@@ -55,11 +55,8 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
 
     private IEditorActivityComponent editorActivityComponent;
 
-    /*@BindView(R.id.photoEditorView)
-    EditorView editorView;*/
-
     @BindView(R.id.editorImageView)
-    EditorImageView editorView;
+    EditorImageView mEditorImageView;
 
     @BindView(R.id.toolsView)
     RecyclerView tools;
@@ -67,37 +64,36 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
     @BindView(R.id.toolSettingsContainer)
     FrameLayout toolSettingsContainer;
 
-    private Bitmap bitmap;
+    private Bitmap mBitmap;
 
     private Tool currentTool;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         setContentView(R.layout.activity_editor);
 
         ButterKnife.bind(this);
 
         presenter.createToolsBox();
 
-        /*try {
-            bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), getIntent().getData());
+        try {
+            mBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), getIntent().getData());
         } catch (IOException e) {
             e.printStackTrace();
-        }*/
+        }
         //mExecutor = Executors.newSingleThreadExecutor();
 
-        Uri uri = getIntent().getData();
+        Log.i(EditorActivity.class.getSimpleName(), "Height " + mBitmap.getHeight() + "\nWidth " + mBitmap.getWidth());
 
-        editorView.setImageUri(uri);
-        //mExecutor.submit(new LoadScaledImageTask(this, uri, editorView, calcImageSize()));
+        //Uri uri = getIntent().getData();
 
-        //editorView.setImageBitmap(bitmap);
-        //photoEditorView.setFreeTransform(true);
-        //photoEditorView.setSquareEditorListener(this);
+        mEditorImageView.setImageBitmap(mBitmap);
 
-        DataHolder.getInstance().setEditorView(editorView);
+        DataHolder.getInstance().setEditorView(mEditorImageView);
     }
 
     @Override
@@ -117,7 +113,7 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
 
     @Override
     public void onBackPressed() {
-        presenter.onBackPressed();
+        presenter.onBackPressed(mBitmap, mEditorImageView.getAlteredBitmap());
     }
 
     @Override
@@ -194,15 +190,19 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
         Toast.makeText(getApplicationContext(), getString(stringResource), Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    public void goBack() {
+        super.onBackPressed();
+    }
+
     @OnClick(R.id.buttonShare)
     void onClickShare() {
 
-        editorView.buildDrawingCache();
-
-        DataHolder.getInstance().setShareBitmap(editorView.getDrawingCache());
+        Log.i(EditorActivity.class.getSimpleName(), "Height " + mBitmap.getHeight() + "\nWidth " + mBitmap.getWidth());
+        DataHolder.getInstance().setShareBitmap(mEditorImageView.getAlteredBitmap());
 
         Intent intent = new Intent(EditorActivity.this, ShareActivity.class);
-        //intent.putExtra("ImageForShare", bitmap);
+
         startActivity(intent);
     }
 

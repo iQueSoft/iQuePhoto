@@ -1,10 +1,14 @@
 package net.iquesoft.iquephoto.view.activity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
+import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 
 import net.iquesoft.iquephoto.DataHolder;
@@ -26,8 +30,22 @@ import butterknife.OnClick;
 
 public class ShareActivity extends BaseActivity implements IShareActivityView, IHasComponent<IShareActivityComponent> {
 
+    private Bitmap mBitmap;
+
+    private int mSmallImageHeight;
+    private int mSmallImageWidth;
+
+    private int mMediumImageHeight;
+    private int mMediumImageWidth;
+
+    private int mOriginalImageHeight;
+    private int mOriginalImageWidth;
+
     @BindView(R.id.shareImage)
     ImageView imageView;
+
+    @BindView(R.id.imageSizeTabLayout)
+    TabLayout tabLayout;
 
     @Inject
     ShareActivityPresenterImpl presenter;
@@ -37,11 +55,39 @@ public class ShareActivity extends BaseActivity implements IShareActivityView, I
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         setContentView(R.layout.activity_share);
 
         ButterKnife.bind(this);
 
-        imageView.setImageBitmap(DataHolder.getInstance().getShareBitmap());
+        mBitmap = DataHolder.getInstance().getShareBitmap();
+
+        mOriginalImageHeight = mBitmap.getHeight();
+        mOriginalImageWidth = mBitmap.getWidth();
+
+        mMediumImageHeight = mOriginalImageHeight / 2;
+        mMediumImageWidth = mOriginalImageWidth / 2;
+
+        mSmallImageHeight = mOriginalImageHeight / 3;
+        mSmallImageWidth = mOriginalImageWidth / 3;
+
+
+        imageView.setImageBitmap(mBitmap);
+
+        tabLayout.addTab(tabLayout.newTab().setText(String.valueOf(mSmallImageWidth) + "x"
+                + String.valueOf(mSmallImageHeight)));
+
+        tabLayout.addTab(tabLayout.newTab().setText(String.valueOf(mMediumImageWidth) + "x"
+                + String.valueOf(mMediumImageHeight)));
+
+        tabLayout.addTab(tabLayout.newTab().setText(String.valueOf(mOriginalImageWidth) + "x"
+                + String.valueOf(mOriginalImageHeight)));
+
+        //(String.valueOf(mBitmap.getWidth()) + "X" + String.valueOf(mBitmap.getHeight()));
+
+        Log.i(ShareActivity.class.getSimpleName(), "Height " + mBitmap.getHeight() + "\nWidth " + mBitmap.getWidth());
     }
 
     @Override
@@ -61,6 +107,11 @@ public class ShareActivity extends BaseActivity implements IShareActivityView, I
     @Override
     public IShareActivityComponent getComponent() {
         return shareActivityComponent;
+    }
+
+    @OnClick(R.id.shareBack)
+    void onClickBack() {
+        super.onBackPressed();
     }
 
     @OnClick(R.id.save)

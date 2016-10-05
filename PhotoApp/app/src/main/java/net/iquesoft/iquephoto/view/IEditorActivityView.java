@@ -21,4 +21,6 @@ public interface IEditorActivityView {
      * @param stringResource - string resource from res/value/string.xml.
      */
     void showToastMessage(int stringResource);
+
+    void goBack();
 }

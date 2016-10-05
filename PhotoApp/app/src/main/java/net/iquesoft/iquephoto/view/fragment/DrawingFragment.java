@@ -73,7 +73,7 @@ public class DrawingFragment extends BaseFragment implements IDrawingFragmentVie
 
         colorPickerDialog = new ColorPickerDialog(v.getContext());
         colorPickerDialog.setListener(color -> {
-            DataHolder.getInstance().getEditorView();//.setDrawingColor(color);
+            //DataHolder.getInstance().getEditorView();//.setDrawingColor(color);
         });
         RGBColorPickerDialog = new RGBColorPickerDialog(v.getContext());
 

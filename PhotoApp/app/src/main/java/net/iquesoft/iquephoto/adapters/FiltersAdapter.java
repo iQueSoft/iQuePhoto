@@ -1,7 +1,6 @@
 package net.iquesoft.iquephoto.adapters;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +12,6 @@ import com.mikhaellopez.circularimageview.CircularImageView;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.model.Filter;
-import net.iquesoft.iquephoto.view.fragment.FiltersFragment;
 
 import java.util.List;
 

@@ -1,6 +1,7 @@
 package net.iquesoft.iquephoto.view.fragment;
 
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,13 +25,16 @@ import butterknife.Unbinder;
 
 public class StickersFragment extends BaseFragment implements IStickersFragmentView {
 
-    private boolean isHide = false;
+    private boolean mIsHide = false;
 
-    private Unbinder unbinder;
-    private StickersPagerAdapter pagerAdapter;
+    private Unbinder mUnbinder;
+    private StickersPagerAdapter mPagerAdapter;
 
     @Inject
     StickersFragmentPresenterImpl presenter;
+
+    @BindView(R.id.stickerTabLayout)
+    TabLayout tabLayout;
 
     @BindView(R.id.hideStickersButton)
     ImageView hideStickersButton;
@@ -64,12 +68,14 @@ public class StickersFragment extends BaseFragment implements IStickersFragmentV
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_stickers, container, false);
-        v.setAlpha(0.85f);
+        //v.setAlpha(0.85f);
 
-        unbinder = ButterKnife.bind(this, v);
+        mUnbinder = ButterKnife.bind(this, v);
 
-        pagerAdapter = new StickersPagerAdapter(getChildFragmentManager());
-        viewPager.setAdapter(pagerAdapter);
+        mPagerAdapter = new StickersPagerAdapter(getChildFragmentManager());
+        viewPager.setAdapter(mPagerAdapter);
+
+        tabLayout.setupWithViewPager(viewPager);
 
         return v;
     }
@@ -77,19 +83,19 @@ public class StickersFragment extends BaseFragment implements IStickersFragmentV
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        unbinder.unbind();
+        mUnbinder.unbind();
     }
 
     @OnClick(R.id.hideStickersButton)
     public void onClickHideStickers() {
-        if (!isHide) {
+        if (!mIsHide) {
             hideStickersButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_expand_less));
             stickersLayout.setVisibility(View.GONE);
-            isHide = true;
+            mIsHide = true;
         } else {
             hideStickersButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_expand));
             stickersLayout.setVisibility(View.VISIBLE);
-            isHide = false;
+            mIsHide = false;
         }
     }
 }

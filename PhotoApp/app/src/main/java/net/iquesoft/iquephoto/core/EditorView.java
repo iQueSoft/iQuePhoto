@@ -27,6 +27,9 @@ import net.iquesoft.iquephoto.model.EditorImage;
 import net.iquesoft.iquephoto.model.Text;
 import net.iquesoft.iquephoto.model.Sticker;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -179,12 +182,6 @@ public class EditorView extends View implements View.OnTouchListener {
         if (brightnessValue != 0) {
             drawImage(canvas, getBrightnessMatrix(brightnessValue));
         }
-        if (topMemeText != null) {
-            drawTopMemeText(canvas);
-        }
-        if (bottomMemeText != null) {
-            drawBottomMemeText(canvas);
-        }
         if (drawings.size() > 0) {
             for (Drawing drawing : drawings) {
                 canvas.drawPath(drawing.getPath(), drawing.getPaint());
@@ -261,43 +258,6 @@ public class EditorView extends View implements View.OnTouchListener {
     public void setHasNotFiler() {
         this.hasFilter = false;
         this.invalidate();
-    }
-
-    public void drawTopMemeText(Canvas canvas) {
-        final float x = (getBitamp().getWidth() / 2) - (getMemePaint().measureText(topMemeText) / 2);
-        final float y = 85;
-
-        canvas.drawText(topMemeText, x, y, getMemePaint());
-        canvas.drawText(topMemeText, x, y, getMemeStrokePaint());
-    }
-
-    public void drawBottomMemeText(Canvas canvas) {
-        final float x = (getBitamp().getWidth() / 2) - (getMemePaint().measureText(topMemeText) / 2);
-        final float y = (getBitamp().getHeight() - 42.5f);
-
-        canvas.drawText(bottomMemeText, x, y, getMemePaint());
-        canvas.drawText(bottomMemeText, x, y, getMemeStrokePaint());
-    }
-
-    private Paint getMemeStrokePaint() {
-        Paint paint = new Paint();
-        paint.setColor(Color.BLACK);
-        paint.setTextSize(75);
-        paint.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "fonts/Impact.ttf"));
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(2);
-
-        return paint;
-    }
-
-    private Paint getMemePaint() {
-        Paint paint = new Paint();
-        paint.setColor(Color.WHITE);
-        paint.setTextSize(75);
-        paint.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "fonts/Impact.ttf"));
-        paint.setStrokeWidth(2);
-
-        return paint;
     }
 
     /**
@@ -804,6 +764,53 @@ public class EditorView extends View implements View.OnTouchListener {
     private void initialize() {
 
         setOnTouchListener(this);
+    }
+
+    /**
+     * @param path - directory path to saving image with padding and with text/
+     * @return path to saved image
+     */
+    public String[] saveImages(String path) throws IOException, OutOfMemoryError {
+        if (!isEmpty()) {
+            List<String> files = new LinkedList<String>();
+            EditorImage image = editorImage;
+            long saveImagesTime = System.currentTimeMillis();
+            String fileName = String.format("%d_editor.jpg", saveImagesTime);
+            File file = new File(path, fileName);
+            FileOutputStream fos = null;
+            try {
+                fos = new FileOutputStream(file, false);
+                float pixelDensity = (float) (imagePart.width()) / (imageRect.width());
+                Bitmap processedBitmap = createBitmap(imagePart.width(), imagePart.height(), (int) ((getImagePadding() * pixelDensity)));
+                scalingForSave = (float) processedBitmap.getWidth() / allSquare.width();
+                if (processedBitmap != null && processedBitmap.getWidth() != 0) {
+                    isSaveInProccess = true;
+                    Canvas canvas = new Canvas(processedBitmap);
+                    draw(canvas);
+                    if (processedBitmap.compress(
+                            Bitmap.CompressFormat.JPEG, 100, fos)) {
+                        files.add(file.getAbsolutePath());
+                    }
+                    isSaveInProccess = false;
+                    processedBitmap.recycle();
+                }
+            } catch (IOException e) {
+                throw new IOException("Error to save file! File = " + file);
+            } catch (OutOfMemoryError e) {
+                Toast.makeText(getContext(), "Out of memory!", Toast.LENGTH_SHORT).show();
+            } finally {
+                try {
+                    if (fos != null) {
+                        fos.close();
+                    }
+                } catch (IOException e) {
+                    Log.e(TAG, "Error to close FOS!", e);
+                }
+            }
+            return files.toArray(new String[0]);
+        }
+
+        return null;
     }
 
     private float distance(float x0, float x1, float y0, float y1) {

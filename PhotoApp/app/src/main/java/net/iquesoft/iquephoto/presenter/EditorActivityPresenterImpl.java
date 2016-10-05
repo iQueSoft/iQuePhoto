@@ -38,11 +38,6 @@ public class EditorActivityPresenterImpl implements IEditorActivityPresenter {
     }
 
     @Override
-    public void onBackPressed() {
-        view.showAlertDialog();
-    }
-
-    @Override
     public void saveImage(Bitmap bitmap) {
         File myDir = new File(IMAGE_STORAGE_PATH);
         myDir.mkdirs();
@@ -66,7 +61,9 @@ public class EditorActivityPresenterImpl implements IEditorActivityPresenter {
     }
 
     @Override
-    public void shareToInstagram(Bitmap bitmap) {
-
+    public void onBackPressed(Bitmap bitmap, Bitmap alteredBitmap) {
+        if (!bitmap.sameAs(alteredBitmap))
+            view.showAlertDialog();
+        else view.goBack();
     }
 }

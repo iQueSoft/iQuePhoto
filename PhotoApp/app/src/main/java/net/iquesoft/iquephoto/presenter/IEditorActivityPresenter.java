@@ -1,11 +1,8 @@
 package net.iquesoft.iquephoto.presenter;
 
 import android.graphics.Bitmap;
-import android.opengl.GLSurfaceView;
 
 import net.iquesoft.iquephoto.model.Tool;
-
-import javax.microedition.khronos.opengles.GL10;
 
 public interface IEditorActivityPresenter {
 
@@ -16,9 +13,7 @@ public interface IEditorActivityPresenter {
 
     void changeTool(Tool tool);
 
-    void onBackPressed();
-
     void saveImage(Bitmap bitmap);
 
-    void shareToInstagram(Bitmap bitmap);
+    void onBackPressed(Bitmap bitmap, Bitmap alteredBitmap);
 }

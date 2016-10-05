@@ -6,8 +6,11 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.isseiaoki.simplecropview.CropImageView;
 
@@ -31,7 +34,10 @@ import butterknife.OnClick;
 
 public class CropActivity extends BaseActivity implements ICropActivityView, IHasComponent<ICropActivityComponent> {
 
-    private Bitmap bitmap;
+    private Bitmap mBitmap;
+
+    @BindView(R.id.imageSize)
+    TextView imageSize;
 
     @BindView(R.id.cropImageView)
     CropImageView cropImageView;
@@ -47,14 +53,19 @@ public class CropActivity extends BaseActivity implements ICropActivityView, IHa
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         setContentView(R.layout.activity_crop);
 
-        bitmap = BitmapFactory.decodeFile(getIntent().getStringExtra("bitmap_path"));
+        mBitmap = BitmapFactory.decodeFile(getIntent().getStringExtra("bitmap_path"));
+
+        Log.i(CropActivity.class.getSimpleName(), "Height " + mBitmap.getHeight() + "\nWidth " + mBitmap.getWidth());
 
         ButterKnife.bind(this);
 
-        cropImageView.setImageBitmap(bitmap);
-        cropImageView.setCropMode(CropImageView.CropMode.FREE);
+        cropImageView.setImageBitmap(mBitmap);
+
     }
 
     @Override

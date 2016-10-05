@@ -8,8 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import net.iquesoft.iquephoto.DataHolder;
-import net.iquesoft.iquephoto.core.EditorImageView;
-import net.iquesoft.iquephoto.core.EditorView;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapters.StickersAdapter;
 import net.iquesoft.iquephoto.common.BaseFragment;
@@ -39,7 +37,7 @@ public class ShowStickersFragment extends BaseFragment implements IShowStickersF
     @BindView(R.id.stickersRecyclerView)
     RecyclerView recyclerView;
 
-    private EditorImageView editorView;
+    //private EditorImageView editorView;
 
     @Inject
     ShowStickersFragmentPresenterImpl presenter;
@@ -75,7 +73,7 @@ public class ShowStickersFragment extends BaseFragment implements IShowStickersF
 
         unbinder = ButterKnife.bind(this, v);
 
-        editorView = DataHolder.getInstance().getEditorView();
+        //editorView = DataHolder.getInstance().getEditorView();
 
         StickersAdapter adapter = new StickersAdapter(getStickers(position));
         adapter.setStickersListener(sticker -> {

@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseFragment;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
@@ -23,13 +22,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-/**
- * @author Sergey
- */
 public class DrawingFragment extends BaseFragment implements IDrawingFragmentView {
 
     private ColorPickerDialog colorPickerDialog;
-
+    
     @Inject
     DrawingFragmentPresenterImpl presenter;
 
@@ -39,9 +35,10 @@ public class DrawingFragment extends BaseFragment implements IDrawingFragmentVie
     @BindView(R.id.hideDrawingButton)
     ImageView hideDrawingButton;
 
-    private boolean isHide;
+    private boolean mIsHide;
 
-    private Unbinder unbinder;
+    private Unbinder mUnbinder;
+
     private RGBColorPickerDialog RGBColorPickerDialog;
 
     public static DrawingFragment newInstance() {
@@ -69,7 +66,7 @@ public class DrawingFragment extends BaseFragment implements IDrawingFragmentVie
         View v = inflater.inflate(R.layout.fragment_drawing, container, false);
         v.setAlpha(0.8f);
 
-        unbinder = ButterKnife.bind(this, v);
+        mUnbinder = ButterKnife.bind(this, v);
 
         colorPickerDialog = new ColorPickerDialog(v.getContext());
         colorPickerDialog.setListener(color -> {
@@ -83,7 +80,7 @@ public class DrawingFragment extends BaseFragment implements IDrawingFragmentVie
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        unbinder.unbind();
+        mUnbinder.unbind();
     }
 
     @OnClick(R.id.brushColorButton)
@@ -93,12 +90,12 @@ public class DrawingFragment extends BaseFragment implements IDrawingFragmentVie
 
     @OnClick(R.id.hideDrawingButton)
     public void onClickHide() {
-        if (!isHide) {
-            isHide = true;
+        if (!mIsHide) {
+            mIsHide = true;
             hideDrawingButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_expand_less));
             drawingSettings.setVisibility(View.GONE);
         } else {
-            isHide = false;
+            mIsHide = false;
             hideDrawingButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_expand));
             drawingSettings.setVisibility(View.VISIBLE);
         }

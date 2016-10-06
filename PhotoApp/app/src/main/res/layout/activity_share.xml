@@ -39,7 +39,6 @@
         app:tabTextColor="@android:color/darker_gray" />
 
     <View
-        android:alpha="0.2f"
         android:layout_width="fill_parent"
         android:layout_height="1dp"
         android:background="#ffffff" />

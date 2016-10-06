@@ -25,7 +25,7 @@ public class GalleryImagesFragment extends BaseFragment implements IGalleryImage
     @BindView(R.id.gallryImagesList)
     RecyclerView recyclerView;
 
-    private Unbinder unbinder;
+    private Unbinder mUnbinder;
 
     @Inject
     GalleryImagesPresenterImpl presenter;
@@ -34,7 +34,7 @@ public class GalleryImagesFragment extends BaseFragment implements IGalleryImage
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_gallery_image, container, false);
 
-        unbinder = ButterKnife.bind(this, v);
+        mUnbinder = ButterKnife.bind(this, v);
 
         return v;
     }
@@ -48,7 +48,7 @@ public class GalleryImagesFragment extends BaseFragment implements IGalleryImage
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        unbinder.unbind();
+        mUnbinder.unbind();
     }
 
     @Override

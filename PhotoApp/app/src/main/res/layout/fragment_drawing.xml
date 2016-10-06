@@ -38,7 +38,7 @@
         android:id="@+id/drawingSettings">
 
         <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
-            android:id="@+id/view"
+            android:id="@+id/mView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:dsb_indicatorColor="@android:color/white"

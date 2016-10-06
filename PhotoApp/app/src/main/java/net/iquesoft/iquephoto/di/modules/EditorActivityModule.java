@@ -15,49 +15,49 @@ import dagger.Provides;
 @Module
 public class EditorActivityModule {
 
-    private IEditorActivityView view;
+    private IEditorActivityView mView;
 
     public EditorActivityModule(IEditorActivityView view) {
-        this.view = view;
+        mView = view;
     }
 
     @Provides
-    public EditorActivityPresenterImpl provideEditorActivityPresenterImpl(IEditorActivityView view) {
+    EditorActivityPresenterImpl provideEditorActivityPresenterImpl(IEditorActivityView view) {
         return new EditorActivityPresenterImpl(view);
     }
 
     @Provides
-    public IEditorActivityView provideView() {
-        return view;
+    IEditorActivityView provideView() {
+        return mView;
     }
 
     @Provides
-    public FiltersFragmentPresenterImpl provideFiltersFragmentPresenterImpl() {
+    FiltersFragmentPresenterImpl provideFiltersFragmentPresenterImpl() {
         return new FiltersFragmentPresenterImpl();
     }
 
     @Provides
-    public AdjustFragmentPresenterImpl provideAdjustFragmentPresenterImpl() {
+    AdjustFragmentPresenterImpl provideAdjustFragmentPresenterImpl() {
         return new AdjustFragmentPresenterImpl();
     }
 
     @Provides
-    public TextFragmentPresenterImpl provideTextFragmentPresenterImpl() {
+    TextFragmentPresenterImpl provideTextFragmentPresenterImpl() {
         return new TextFragmentPresenterImpl();
     }
 
     @Provides
-    public DrawingFragmentPresenterImpl provideBrushFragmentPresenterImpl() {
+    DrawingFragmentPresenterImpl provideBrushFragmentPresenterImpl() {
         return new DrawingFragmentPresenterImpl();
     }
 
     @Provides
-    public StickersFragmentPresenterImpl provideStickersFragmentPresenterImpl() {
+    StickersFragmentPresenterImpl provideStickersFragmentPresenterImpl() {
         return new StickersFragmentPresenterImpl();
     }
 
     @Provides
-    public ShowStickersFragmentPresenterImpl provideShowStickersFragmentPresenterImpl() {
+    ShowStickersFragmentPresenterImpl provideShowStickersFragmentPresenterImpl() {
         return new ShowStickersFragmentPresenterImpl();
     }
 

@@ -11,24 +11,24 @@ import dagger.Provides;
 @Module
 public class StartActivityModule {
 
-    private IStartActivityView view;
+    private IStartActivityView mView;
 
     public StartActivityModule(IStartActivityView view) {
-        this.view = view;
+        mView = view;
     }
 
     @Provides
-    public StartActivityPresenterImpl provideMainActivityPresenterImpl(IStartActivityView view) {
+    StartActivityPresenterImpl provideMainActivityPresenterImpl(IStartActivityView view) {
         return new StartActivityPresenterImpl(view);
     }
 
     @Provides
-    public IStartActivityView provideStartActivityContractView() {
-        return view;
+    IStartActivityView provideStartActivityContractView() {
+        return mView;
     }
 
     @Provides
-    public GalleryImagesPresenterImpl provideGalleryImagesPresenterImpl() {
+    GalleryImagesPresenterImpl provideGalleryImagesPresenterImpl() {
         return new GalleryImagesPresenterImpl();
     }
 }

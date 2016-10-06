@@ -8,14 +8,14 @@ import dagger.Provides;
 @Module
 public class CameraActivityModule {
 
-    private final ICameraActivityView view;
+    private ICameraActivityView mView;
 
     public CameraActivityModule(ICameraActivityView view) {
-        this.view = view;
+        mView = view;
     }
 
     @Provides
     ICameraActivityView provideCameraActivityView() {
-        return view;
+        return mView;
     }
 }

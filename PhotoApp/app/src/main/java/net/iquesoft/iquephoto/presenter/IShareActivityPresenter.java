@@ -1,4 +1,7 @@
 package net.iquesoft.iquephoto.presenter;
 
-public interface IShareActivityPresenter {
+import android.graphics.Bitmap;
+
+interface IShareActivityPresenter {
+    void calculateSizesForCompressing(Bitmap bitmap);
 }

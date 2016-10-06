@@ -10,9 +10,6 @@ import net.iquesoft.iquephoto.model.GalleryImage;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Sergey on 9/7/2016.
- */
 public class GalleryImageLoader implements Runnable {
 
     private Context context;

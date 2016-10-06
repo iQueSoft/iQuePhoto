@@ -8,19 +8,20 @@ import dagger.Provides;
 
 @Module
 public class ShareActivityModule {
-    private IShareActivityView view;
+
+    private IShareActivityView mView;
 
     public ShareActivityModule(IShareActivityView view) {
-        this.view = view;
+        mView = view;
     }
 
     @Provides
-    public IShareActivityView provideView() {
-        return view;
+    IShareActivityView provideView() {
+        return mView;
     }
 
     @Provides
-    public ShareActivityPresenterImpl provideShareActivityPresenterImpl() {
-        return new ShareActivityPresenterImpl();
+    ShareActivityPresenterImpl provideShareActivityPresenterImpl() {
+        return new ShareActivityPresenterImpl(mView);
     }
 }

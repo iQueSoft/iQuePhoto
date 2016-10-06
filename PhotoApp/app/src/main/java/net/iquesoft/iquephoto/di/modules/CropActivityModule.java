@@ -9,19 +9,19 @@ import dagger.Provides;
 @Module
 public class CropActivityModule {
 
-    private ICropActivityView view;
+    private ICropActivityView mView;
 
     public CropActivityModule(ICropActivityView view) {
-        this.view = view;
+        mView = view;
     }
 
     @Provides
     ICropActivityView provideView() {
-        return view;
+        return mView;
     }
 
     @Provides
     CropActivityPresenterImpl provideCropActivityPresenterImpl() {
-        return new CropActivityPresenterImpl(view);
+        return new CropActivityPresenterImpl(mView);
     }
 }

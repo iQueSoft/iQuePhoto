@@ -32,15 +32,6 @@ public class ShareActivity extends BaseActivity implements IShareActivityView, I
 
     private Bitmap mBitmap;
 
-    private int mSmallImageHeight;
-    private int mSmallImageWidth;
-
-    private int mMediumImageHeight;
-    private int mMediumImageWidth;
-
-    private int mOriginalImageHeight;
-    private int mOriginalImageWidth;
-
     @BindView(R.id.shareImage)
     ImageView imageView;
 
@@ -62,32 +53,28 @@ public class ShareActivity extends BaseActivity implements IShareActivityView, I
 
         ButterKnife.bind(this);
 
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                Log.i(ShareActivity.class.getSimpleName(), String.valueOf(tab.getPosition()));
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
         mBitmap = DataHolder.getInstance().getShareBitmap();
 
-        mOriginalImageHeight = mBitmap.getHeight();
-        mOriginalImageWidth = mBitmap.getWidth();
-
-        mMediumImageHeight = mOriginalImageHeight / 2;
-        mMediumImageWidth = mOriginalImageWidth / 2;
-
-        mSmallImageHeight = mOriginalImageHeight / 3;
-        mSmallImageWidth = mOriginalImageWidth / 3;
-
+        presenter.calculateSizesForCompressing(mBitmap);
 
         imageView.setImageBitmap(mBitmap);
-
-        tabLayout.addTab(tabLayout.newTab().setText(String.valueOf(mSmallImageWidth) + "x"
-                + String.valueOf(mSmallImageHeight)));
-
-        tabLayout.addTab(tabLayout.newTab().setText(String.valueOf(mMediumImageWidth) + "x"
-                + String.valueOf(mMediumImageHeight)));
-
-        tabLayout.addTab(tabLayout.newTab().setText(String.valueOf(mOriginalImageWidth) + "x"
-                + String.valueOf(mOriginalImageHeight)));
-
-        //(String.valueOf(mBitmap.getWidth()) + "X" + String.valueOf(mBitmap.getHeight()));
-
-        Log.i(ShareActivity.class.getSimpleName(), "Height " + mBitmap.getHeight() + "\nWidth " + mBitmap.getWidth());
     }
 
     @Override
@@ -140,5 +127,12 @@ public class ShareActivity extends BaseActivity implements IShareActivityView, I
     @OnClick(R.id.more)
     void onClickMore(View view) {
         // Todo: Share more social network.
+    }
+
+    @Override
+    public void initImageSizes(String small, String medium, String original) {
+        tabLayout.addTab(tabLayout.newTab().setText(small));
+        tabLayout.addTab(tabLayout.newTab().setText(medium));
+        tabLayout.addTab(tabLayout.newTab().setText(original));
     }
 }

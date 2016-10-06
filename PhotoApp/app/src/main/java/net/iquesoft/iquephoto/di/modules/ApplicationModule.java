@@ -1,7 +1,6 @@
 package net.iquesoft.iquephoto.di.modules;
 
 import android.app.Application;
-import android.content.Context;
 
 import net.iquesoft.iquephoto.PhotoApplication;
 
@@ -13,15 +12,15 @@ import dagger.Provides;
 @Module
 public class ApplicationModule {
 
-    private final PhotoApplication application;
+    private PhotoApplication mApplication;
 
     public ApplicationModule(PhotoApplication application) {
-        this.application = application;
+        mApplication = application;
     }
 
     @Provides
     @Singleton
-    public Application provideApplication() {
-        return application;
+    Application provideApplication() {
+        return mApplication;
     }
 }

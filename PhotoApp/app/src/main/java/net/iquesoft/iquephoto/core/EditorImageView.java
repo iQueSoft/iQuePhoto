@@ -7,7 +7,7 @@ import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.drawable.Drawable;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
@@ -64,7 +64,6 @@ public class EditorImageView extends ImageView {
     public Bitmap getAlteredBitmap() {
         return mBitmap;
     }
-
 
     private void alterBitmap() {
         if (mHasFilter) {

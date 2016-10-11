@@ -15,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -29,6 +30,7 @@ import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapters.ToolsAdapter;
 import net.iquesoft.iquephoto.common.BaseActivity;
 import net.iquesoft.iquephoto.core.EditorImageView;
+import net.iquesoft.iquephoto.core.ImageEditorView;
 import net.iquesoft.iquephoto.di.IHasComponent;
 import net.iquesoft.iquephoto.di.components.IApplicationComponent;
 import net.iquesoft.iquephoto.di.components.DaggerIEditorActivityComponent;
@@ -56,7 +58,7 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
     private IEditorActivityComponent editorActivityComponent;
 
     @BindView(R.id.editorImageView)
-    EditorImageView mEditorImageView;
+    ImageEditorView imageEditorView;
 
     @BindView(R.id.toolsView)
     RecyclerView tools;
@@ -90,10 +92,10 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
         Log.i(EditorActivity.class.getSimpleName(), "Height " + mBitmap.getHeight() + "\nWidth " + mBitmap.getWidth());
 
         //Uri uri = getIntent().getData();
+        imageEditorView.setImageBitmap(mBitmap);
+        //mEditorImageView.setImageBitmap(mBitmap);
 
-        mEditorImageView.setImageBitmap(mBitmap);
-
-        DataHolder.getInstance().setEditorView(mEditorImageView);
+        DataHolder.getInstance().setEditorView(imageEditorView);
     }
 
     @Override
@@ -113,7 +115,7 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
 
     @Override
     public void onBackPressed() {
-        presenter.onBackPressed(mBitmap, mEditorImageView.getAlteredBitmap());
+        presenter.onBackPressed(mBitmap, mBitmap);
     }
 
     @Override
@@ -199,7 +201,7 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
     void onClickShare() {
 
         Log.i(EditorActivity.class.getSimpleName(), "Height " + mBitmap.getHeight() + "\nWidth " + mBitmap.getWidth());
-        DataHolder.getInstance().setShareBitmap(mEditorImageView.getAlteredBitmap());
+        //DataHolder.getInstance().setShareBitmap(mEditorImageView.getAlteredBitmap());
 
         Intent intent = new Intent(EditorActivity.this, ShareActivity.class);
 

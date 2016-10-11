@@ -14,6 +14,7 @@ import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapters.FiltersAdapter;
 import net.iquesoft.iquephoto.common.BaseFragment;
 import net.iquesoft.iquephoto.core.EditorImageView;
+import net.iquesoft.iquephoto.core.ImageEditorView;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
 import net.iquesoft.iquephoto.model.Filter;
 import net.iquesoft.iquephoto.presenter.FiltersFragmentPresenterImpl;
@@ -33,9 +34,11 @@ public class FiltersFragment extends BaseFragment implements IFiltersFragmentVie
     private boolean mIsHide;
     private boolean mIsSeekBarHide;
 
+    private int intensity;
+
     private Unbinder mUnbinder;
 
-    private EditorImageView mEditorView;
+    private ImageEditorView mImageEditorView;
 
     private int mCurrentFilter;
 
@@ -77,7 +80,24 @@ public class FiltersFragment extends BaseFragment implements IFiltersFragmentVie
 
         mUnbinder = ButterKnife.bind(this, v);
 
-        mEditorView = DataHolder.getInstance().getEditorView();
+        mImageEditorView = DataHolder.getInstance().getEditorView();
+
+        seekBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
+            @Override
+            public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
+                mImageEditorView.setFilterIntensity(value);
+            }
+
+            @Override
+            public void onStartTrackingTouch(DiscreteSeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(DiscreteSeekBar seekBar) {
+
+            }
+        });
 
         return v;
     }
@@ -102,15 +122,17 @@ public class FiltersFragment extends BaseFragment implements IFiltersFragmentVie
             if (mCurrentFilter == filter.getTitle()) {
                 if (!mIsSeekBarHide)
                     seekBar.setVisibility(View.VISIBLE);
-                else seekBar.setVisibility(View.GONE);
-            }
-            if (filter.getColorMatrix() != null) {
-                mEditorView.setFilter(filter.getColorMatrix());
-                mCurrentFilter = filter.getTitle();
+                else {
+                    seekBar.setVisibility(View.GONE);
+                }
             } else {
-                mEditorView.mHasFilter = false;
+                seekBar.setVisibility(View.GONE);
+                seekBar.setProgress(100);
+                mImageEditorView.setFilterIntensity(100);
             }
-            //filtersAdapter.notifyDataSetChanged();
+
+            mImageEditorView.setFilter(filter.getColorMatrix());
+            mCurrentFilter = filter.getTitle();
         });
 
 

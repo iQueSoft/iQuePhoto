@@ -62,10 +62,6 @@ public class EditorView extends View implements View.OnTouchListener {
     private static final float TOUCH_TOLERANCE = 4;
     private ArrayList<Drawing> drawings = new ArrayList<>();
 
-    // For meme
-    private String topMemeText;
-    private String bottomMemeText;
-
     // For text
     private boolean textActivated = false;
     private int checkedTextId = -1;
@@ -258,57 +254,6 @@ public class EditorView extends View implements View.OnTouchListener {
     public void setHasNotFiler() {
         this.hasFilter = false;
         this.invalidate();
-    }
-
-    /**
-     * Rotate editorImage.
-     */
-    // Todo: Make it in new thread.
-    public void rotateImage(float angle) {
-        Bitmap photoEditorImageBitmap = editorImage.getBitmap();
-        Matrix matrix = new Matrix();
-        matrix.postRotate(angle);
-        try {
-            Bitmap bitmap = Bitmap.createBitmap(photoEditorImageBitmap, 0, 0, photoEditorImageBitmap.getWidth(), photoEditorImageBitmap.getHeight(), matrix, true);
-            if (bitmap != null) {
-                setImageBitmap(bitmap);
-            }
-        } catch (OutOfMemoryError error) {
-            Log.e(TAG, "Too low mamory for rotate editorImage", error);
-            //Toast.makeText(getContext(), R.string.error_low_memory, Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    /**
-     *
-     */
-    // Todo: Make it in new thread.
-    public void horizontalFlip() {
-        Bitmap photoEditorImageBitmap = editorImage.getBitmap();
-        Matrix matrix = new Matrix();
-        matrix.preScale(-1, 1);
-
-        Bitmap bitmap = Bitmap.createBitmap(photoEditorImageBitmap, 0, 0, photoEditorImageBitmap.getWidth(), photoEditorImageBitmap.getHeight(), matrix, false);
-        if (bitmap != null) {
-            bitmap.setDensity(DisplayMetrics.DENSITY_DEFAULT);
-            setImageBitmap(bitmap);
-        }
-    }
-
-    /**
-     *
-     */
-    // Todo: Make it in new thread.
-    public void verticalFlip() {
-        Bitmap photoEditorImageBitmap = editorImage.getBitmap();
-        Matrix matrix = new Matrix();
-        matrix.preScale(1, -1);
-
-        Bitmap bitmap = Bitmap.createBitmap(photoEditorImageBitmap, 0, 0, photoEditorImageBitmap.getWidth(), photoEditorImageBitmap.getHeight(), matrix, false);
-        if (bitmap != null) {
-            bitmap.setDensity(DisplayMetrics.DENSITY_DEFAULT);
-            setImageBitmap(bitmap);
-        }
     }
 
     /**
@@ -1121,20 +1066,6 @@ public class EditorView extends View implements View.OnTouchListener {
 
     public void setTextActivated(boolean textActivated) {
         this.textActivated = textActivated;
-    }
-
-    // FIXME: Top meme text
-    public void setTopMemeText(String topMemeText) {
-        this.topMemeText = topMemeText.toUpperCase();
-        invalidate();
-        Log.i("Bottom meme text", topMemeText);
-    }
-
-    // FIXME: Bottom meme text
-    public void setBottomMemeText(String bottomMemeText) {
-        this.bottomMemeText = bottomMemeText.toUpperCase();
-        invalidate();
-        Log.i("Top meme text", bottomMemeText);
     }
 
     public interface OnSquareEditorListener {

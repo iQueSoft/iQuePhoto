@@ -1,7 +1,11 @@
 package net.iquesoft.iquephoto.presenter;
 
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.util.DisplayMetrics;
 
 import com.isseiaoki.simplecropview.CropImageView;
 import com.isseiaoki.simplecropview.callback.CropCallback;
@@ -52,5 +56,31 @@ public class CropActivityPresenterImpl implements ICropActivityPresenter {
     public void cropImage(Uri uri, CropImageView cropImageView) {
         view.showProgress();
         cropImageView.startCrop(uri, cropCallback, saveCallback);
+    }
+
+    @Override
+    public void flipImageHorizontal(Bitmap bitmap) {
+        Matrix matrix = new Matrix();
+        matrix.preScale(-1, 1);
+
+        Bitmap flippedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, false);
+        if (flippedBitmap != null) {
+            flippedBitmap.setDensity(DisplayMetrics.DENSITY_DEFAULT);
+            Drawable drawable = new BitmapDrawable(flippedBitmap);
+            view.flipImage(drawable);
+        }
+    }
+
+    @Override
+    public void flipImageVertical(Bitmap bitmap) {
+        Matrix matrix = new Matrix();
+        matrix.preScale(1, -1);
+
+        Bitmap flippedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, false);
+        if (flippedBitmap != null) {
+            flippedBitmap.setDensity(DisplayMetrics.DENSITY_DEFAULT);
+            Drawable drawable = new BitmapDrawable(flippedBitmap);
+            view.flipImage(drawable);
+        }
     }
 }

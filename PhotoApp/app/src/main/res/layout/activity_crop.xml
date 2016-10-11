@@ -30,12 +30,11 @@
             android:src="@drawable/ic_check" />
 
         <TextView
-            android:id="@+id/imageSize"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="500x500"
+            android:text="@string/preview"
             android:textColor="@color/white"
             android:textSize="22sp"
             android:textStyle="bold" />
@@ -82,11 +81,24 @@
             android:visibility="gone" />
     </FrameLayout>
 
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="#ffffff" />
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/buttonFlipVertical"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="16dp"
+            android:src="@drawable/ic_v_flip" />
 
         <ImageButton
             android:id="@+id/buttonRotateLeft"
@@ -104,7 +116,22 @@
             android:padding="16dp"
             android:src="@drawable/ic_rotate_right" />
 
+        <ImageButton
+            android:id="@+id/buttonFlipHorizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="16dp"
+            android:src="@drawable/ic_h_flip" />
+
     </LinearLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="#ffffff" />
 
     <HorizontalScrollView
         android:id="@+id/tab_bar"
@@ -199,26 +226,6 @@
                 android:layout_margin="8dp"
                 android:padding="4dp"
                 android:text="@string/crop_7_5" />
-
-            <Button
-                android:id="@+id/buttonCircle"
-                style="@style/AppTheme.Button.Borderless"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_margin="4dp"
-                android:padding="4dp"
-                android:text="CIRCLE" />
-
-            <Button
-                android:id="@+id/buttonShowCircleButCropAsSquare"
-                style="@style/AppTheme.Button.Borderless"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_margin="4dp"
-                android:padding="4dp"
-                android:text="CIRCLE_SQUARE" />
 
         </LinearLayout>
     </HorizontalScrollView>

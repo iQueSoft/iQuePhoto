@@ -3,11 +3,12 @@ package net.iquesoft.iquephoto;
 import android.graphics.Bitmap;
 
 import net.iquesoft.iquephoto.core.EditorImageView;
+import net.iquesoft.iquephoto.core.ImageEditorView;
 
 public class DataHolder {
     private Bitmap mShareBitmap;
 
-    private EditorImageView editorView;
+    private ImageEditorView editorView;
 
     private static DataHolder ourInstance = new DataHolder();
 
@@ -18,11 +19,11 @@ public class DataHolder {
     private DataHolder() {
     }
 
-    public EditorImageView getEditorView() {
+    public ImageEditorView getEditorView() {
         return editorView;
     }
 
-    public void setEditorView(EditorImageView editorView) {
+    public void setEditorView(ImageEditorView editorView) {
         this.editorView = editorView;
     }
 

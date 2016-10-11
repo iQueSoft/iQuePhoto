@@ -3,12 +3,15 @@ package net.iquesoft.iquephoto.view.activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -36,9 +39,6 @@ public class CropActivity extends BaseActivity implements ICropActivityView, IHa
 
     private Bitmap mBitmap;
 
-    @BindView(R.id.imageSize)
-    TextView imageSize;
-
     @BindView(R.id.cropImageView)
     CropImageView cropImageView;
 
@@ -65,7 +65,6 @@ public class CropActivity extends BaseActivity implements ICropActivityView, IHa
         ButterKnife.bind(this);
 
         cropImageView.setImageBitmap(mBitmap);
-
     }
 
     @Override
@@ -75,6 +74,16 @@ public class CropActivity extends BaseActivity implements ICropActivityView, IHa
                 .cropActivityModule(new CropActivityModule(this))
                 .build();
         cropActivityComponent.inject(this);
+    }
+
+    @OnClick(R.id.buttonFlipHorizontal)
+    void onClickFlipHorizontal() {
+        presenter.flipImageHorizontal(cropImageView.getImageBitmap());
+    }
+
+    @OnClick(R.id.buttonFlipVertical)
+    void onClickFlipVertical() {
+        presenter.flipImageVertical(cropImageView.getImageBitmap());
     }
 
     @OnClick(R.id.cropFree)
@@ -152,6 +161,11 @@ public class CropActivity extends BaseActivity implements ICropActivityView, IHa
     @Override
     public void showProgress() {
         progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void flipImage(Drawable drawable) {
+        cropImageView.setImageDrawable(drawable);
     }
 
     @Override

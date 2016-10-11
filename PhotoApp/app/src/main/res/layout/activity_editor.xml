@@ -43,12 +43,11 @@
         android:layout_height="match_parent"
         android:layout_weight="1">
 
-        <net.iquesoft.iquephoto.core.EditorImageView
+        <net.iquesoft.iquephoto.core.ImageEditorView
             android:id="@+id/editorImageView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:adjustViewBounds="true" />
+            android:layout_gravity="center" />
 
         <ProgressBar
             android:id="@+id/cropProgress"

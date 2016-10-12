@@ -3,9 +3,6 @@ package net.iquesoft.iquephoto.model;
 import android.graphics.Paint;
 import android.graphics.Path;
 
-/**
- * Created by Sergey on 9/17/2016.
- */
 public class Drawing {
     private Paint paint;
     private Path path;

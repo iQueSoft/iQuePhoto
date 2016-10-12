@@ -1,36 +1,21 @@
 package net.iquesoft.iquephoto.core;
 
-import com.isseiaoki.simplecropview.animation.SimpleValueAnimator;
-import com.isseiaoki.simplecropview.animation.SimpleValueAnimatorListener;
-import com.isseiaoki.simplecropview.animation.ValueAnimatorV14;
-import com.isseiaoki.simplecropview.animation.ValueAnimatorV8;
-import com.isseiaoki.simplecropview.callback.Callback;
 import com.isseiaoki.simplecropview.callback.CropCallback;
 import com.isseiaoki.simplecropview.callback.LoadCallback;
 import com.isseiaoki.simplecropview.callback.SaveCallback;
-import com.isseiaoki.simplecropview.util.Logger;
-import com.isseiaoki.simplecropview.util.Utils;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.BitmapRegionDecoder;
 import android.graphics.Canvas;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.PointF;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Parcel;
@@ -38,26 +23,21 @@ import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.WindowManager;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.Interpolator;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import net.iquesoft.iquephoto.R;
+import net.iquesoft.iquephoto.model.Text;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.LinkedList;
+import java.util.List;
 
 public class ImageEditorView extends ImageView {
 
-    private static final int TRANSPARENT = 0x00000000;
-    private static final int TRANSLUCENT_BLACK = 0xBB000000;
-
-    // Member variables ////////////////////////////////////////////////////////////////////////////
+    private Context mContext;
 
     private int mViewWidth = 0;
     private int mViewHeight = 0;
@@ -70,6 +50,9 @@ public class ImageEditorView extends ImageView {
     private boolean mHasFilter;
     private int mFilterIntensity;
 
+    private int mCheckedTextId = -1;
+    private List<Text> mTextsList = new LinkedList<Text>();
+
     private boolean mIsInitialized = false;
     private Matrix mMatrix = null;
     private Paint mPaintTranslucent;
@@ -77,8 +60,6 @@ public class ImageEditorView extends ImageView {
     private RectF mImageRect;
     private PointF mCenter = new PointF();
     private float mLastX, mLastY;
-    private boolean mIsRotating = false;
-    private boolean mIsAnimating = false;
     private LoadCallback mLoadCallback = null;
     private CropCallback mCropCallback = null;
     private SaveCallback mSaveCallback = null;
@@ -105,8 +86,6 @@ public class ImageEditorView extends ImageView {
     private int mBackgroundColor;
     private int mOverlayColor;
 
-    // Constructor /////////////////////////////////////////////////////////////////////////////////
-
     public ImageEditorView(Context context) {
         this(context, null);
     }
@@ -119,6 +98,8 @@ public class ImageEditorView extends ImageView {
         super(context, attrs, defStyle);
         float density = getDensity();
 
+        mContext = context;
+
         mPaintTranslucent = new Paint();
         mPaintBitmap = new Paint();
         mPaintBitmap.setFilterBitmap(true);
@@ -127,8 +108,6 @@ public class ImageEditorView extends ImageView {
 
         mMatrix = new Matrix();
         mScale = 1.0f;
-        mBackgroundColor = TRANSPARENT;
-        mOverlayColor = TRANSLUCENT_BLACK;
     }
 
     public void setFilter(@Nullable ColorMatrix colorMatrix) {
@@ -147,7 +126,56 @@ public class ImageEditorView extends ImageView {
         invalidate();
     }
 
-    // Lifecycle methods ///////////////////////////////////////////////////////////////////////////
+    private void findCheckedText(int x, int y) {
+        for (int i = mTextsList.size() - 1; i >= 0; i--) {
+            if (mTextsList.get(i).getTextArea().contains(x, y)) {
+                mCheckedTextId = i;
+                Log.d("Text", mTextsList.get(i).getText());
+
+                /*if (deleteTextActivated) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.MyAlertDialogStyle)
+                            *//*.setTitle(context.getString(R.string.permission_denied))*//*
+                            .setMessage(mContext.getString(R.string.text_delete_alert))
+                            .setPositiveButton(mContext.getString(R.string.yes), (dialogInterface, i2) -> {
+                                deleteText(mTextsList.get(mCheckedTextId));
+                            })
+                            .setNegativeButton(mContext.getString(R.string.no), (dialogInterface, i1) -> {
+                                dialogInterface.dismiss();
+                            });
+                    builder.show();
+
+                } else {
+                    return;
+                }*/
+            }
+        }
+        mCheckedTextId = -1;
+    }
+
+    /*public void addText(Text text) {
+        if (text.getSize() == 0) {
+            text.setSize(defaultTextSize);
+        }
+        if (text.getColor() == 0) {
+            text.setColor(defaultTextColor);
+        }
+        if (text.getTypeface() == null) {
+            text.setTypeface(textTypeface);
+        }
+        this.textsList.add(text);
+        invalidate();
+    }*/
+
+    private void deleteText(Text text) {
+        if (mTextsList != null && mTextsList.contains(text)) {
+            mTextsList.remove(text);
+            invalidate();
+            requestLayout();
+            String string = String.format(getResources().getString(R.string.text_deleted), text.getText());
+            Toast.makeText(getContext(), string, Toast.LENGTH_SHORT).show();
+        }
+    }
+
     @Override
     public Parcelable onSaveInstanceState() {
         Parcelable superState = super.onSaveInstanceState();
@@ -212,8 +240,6 @@ public class ImageEditorView extends ImageView {
 
     @Override
     public void onDraw(Canvas canvas) {
-        canvas.drawColor(mBackgroundColor);
-
         if (mIsInitialized) {
             setMatrix();
             Bitmap bm = getBitmap();
@@ -277,8 +303,6 @@ public class ImageEditorView extends ImageView {
     public boolean onTouchEvent(MotionEvent event) {
         if (!mIsInitialized) return false;
         if (!mIsEnabled) return false;
-        if (mIsRotating) return false;
-        if (mIsAnimating) return false;
         if (mIsLoading) return false;
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
@@ -301,7 +325,6 @@ public class ImageEditorView extends ImageView {
         }
         return false;
     }
-
 
     private void onDown(MotionEvent e) {
         invalidate();
@@ -352,29 +375,6 @@ public class ImageEditorView extends ImageView {
         ((WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay()
                 .getMetrics(displayMetrics);
         return displayMetrics.density;
-    }
-
-    private float sq(float value) {
-        return value * value;
-    }
-
-    private float constrain(float val, float min, float max, float defaultVal) {
-        if (val < min || val > max) return defaultVal;
-        return val;
-    }
-
-    private void postErrorOnMainThread(final Callback callback) {
-        if (callback == null) return;
-        if (Looper.myLooper() == Looper.getMainLooper()) {
-            callback.onError();
-        } else {
-            mHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    callback.onError();
-                }
-            });
-        }
     }
 
     private Bitmap getBitmap() {

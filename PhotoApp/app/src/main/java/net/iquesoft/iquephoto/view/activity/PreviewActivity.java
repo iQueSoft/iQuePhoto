@@ -3,7 +3,6 @@ package net.iquesoft.iquephoto.view.activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,9 +10,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.isseiaoki.simplecropview.CropImageView;
 
@@ -24,8 +21,8 @@ import net.iquesoft.iquephoto.di.components.DaggerICropActivityComponent;
 import net.iquesoft.iquephoto.di.components.IApplicationComponent;
 import net.iquesoft.iquephoto.di.components.ICropActivityComponent;
 import net.iquesoft.iquephoto.di.modules.CropActivityModule;
-import net.iquesoft.iquephoto.presenter.CropActivityPresenterImpl;
-import net.iquesoft.iquephoto.view.ICropActivityView;
+import net.iquesoft.iquephoto.presenter.PreviewActivityPresenterImpl;
+import net.iquesoft.iquephoto.view.IPreviewActivityView;
 
 import java.io.File;
 
@@ -35,7 +32,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class CropActivity extends BaseActivity implements ICropActivityView, IHasComponent<ICropActivityComponent> {
+public class PreviewActivity extends BaseActivity implements IPreviewActivityView, IHasComponent<ICropActivityComponent> {
 
     private Bitmap mBitmap;
 
@@ -48,7 +45,7 @@ public class CropActivity extends BaseActivity implements ICropActivityView, IHa
     private ICropActivityComponent cropActivityComponent;
 
     @Inject
-    CropActivityPresenterImpl presenter;
+    PreviewActivityPresenterImpl presenter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,7 +57,7 @@ public class CropActivity extends BaseActivity implements ICropActivityView, IHa
 
         mBitmap = BitmapFactory.decodeFile(getIntent().getStringExtra("bitmap_path"));
 
-        Log.i(CropActivity.class.getSimpleName(), "Height " + mBitmap.getHeight() + "\nWidth " + mBitmap.getWidth());
+        Log.i(PreviewActivity.class.getSimpleName(), "Height " + mBitmap.getHeight() + "\nWidth " + mBitmap.getWidth());
 
         ButterKnife.bind(this);
 
@@ -152,7 +149,7 @@ public class CropActivity extends BaseActivity implements ICropActivityView, IHa
 
     @Override
     public void startEditingImage(Uri uri) {
-        Intent intent = new Intent(CropActivity.this, EditorActivity.class);
+        Intent intent = new Intent(PreviewActivity.this, EditorActivity.class);
         intent.setData(uri);
         startActivity(intent);
         finish();

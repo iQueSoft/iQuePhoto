@@ -9,6 +9,7 @@ public class Text {
 
     public static final int TEXT_AREA_MARGIN = 7;
     public static final int TEXT_BACKGROUND_COLOR = Color.parseColor("#80404040");
+
     private String text;
     private Typeface typeface;
     private String typefacePath;

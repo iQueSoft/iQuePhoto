@@ -13,6 +13,7 @@ import java.util.List;
 public class StickersPagerAdapter extends FragmentPagerAdapter {
 
     private Context mContext;
+
     private List<StickersSet> mStickersSets = StickersSet.getStickersSetsList();
 
     public StickersPagerAdapter(FragmentManager fm) {

@@ -12,7 +12,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.model.Text;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseFragment;
@@ -33,7 +32,7 @@ import butterknife.Unbinder;
 
 public class TextFragment extends BaseFragment implements ITextFragmentView {
 
-    private Context context;
+    private Context mContext;
 
     private int color = 0x7f0b004f; // Default color white
 
@@ -44,9 +43,9 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
     private boolean isHide = false;
     private boolean isDeleteActive = false;
 
-    private Unbinder unbinder;
+    private Unbinder mUnbinder;
 
-   // private EditorImageView editorView;
+    // private EditorImageView editorView;
 
     private Text text;
 
@@ -89,9 +88,9 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
         View v = inflater.inflate(R.layout.fragment_text, container, false);
         v.setAlpha(0.8f);
 
-        unbinder = ButterKnife.bind(this, v);
+        mUnbinder = ButterKnife.bind(this, v);
 
-        context = v.getContext();
+        mContext = v.getContext();
 
         //editorView = DataHolder.getInstance().getEditorView();
 
@@ -130,7 +129,7 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        unbinder.unbind();
+        mUnbinder.unbind();
     }
 
     @OnClick(R.id.addTextButton)
@@ -142,7 +141,7 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
 
             presenter.addText(textString, color, typeface, seekBar.getProgress());
         } else {
-            Toast.makeText(context, getResources().getString(R.string.text_is_empty), Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, getResources().getString(R.string.text_is_empty), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -181,12 +180,12 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
             deleteTextButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_delete_on));
 
             //editorView.setDeleteTextActivated(true);
-            Toast.makeText(context, getResources().getString(R.string.text_delete_enabled), Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, getResources().getString(R.string.text_delete_enabled), Toast.LENGTH_SHORT).show();
         } else {
             isDeleteActive = false;
             //editorView.setDeleteTextActivated(false);
             deleteTextButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_delete_off));
-            Toast.makeText(context, getResources().getString(R.string.text_delete_disabled), Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, getResources().getString(R.string.text_delete_disabled), Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -206,7 +205,7 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
     @Override
     public void onAddTextComplete(Text text) {
         //editorView.addText(text);
-        Toast.makeText(context, getResources().getString(R.string.text_added), Toast.LENGTH_SHORT).show();
+        Toast.makeText(mContext, getResources().getString(R.string.text_added), Toast.LENGTH_SHORT).show();
     }
 
     @Override

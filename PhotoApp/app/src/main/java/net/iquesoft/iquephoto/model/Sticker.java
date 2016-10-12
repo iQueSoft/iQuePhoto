@@ -1,7 +1,6 @@
 package net.iquesoft.iquephoto.model;
 
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Rect;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
@@ -11,16 +10,14 @@ import net.iquesoft.iquephoto.R;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * @author Sergey Belenkiy
- *         Stiker - model class how used in {@link net.iquesoft.iquephoto.view.fragment.StickersFragment} class.
- */
 public class Sticker {
     public static final int STICKER_AREA_MARGIN = 7;
     public static final int STICKER_BACKGROUND_COLOR = Color.parseColor("#80404040");
 
-    private int title;
-    private int image;
+    @StringRes
+    private int mTitle;
+
+    private int mImage;
 
     private float size = 100;
 
@@ -62,24 +59,24 @@ public class Sticker {
     };
 
     public Sticker(@StringRes int title, @DrawableRes int image) {
-        this.title = title;
-        this.image = image;
+        mTitle = title;
+        this.mImage = image;
     }
 
     public int getTitle() {
-        return title;
+        return mTitle;
     }
 
     public void setTitle(int title) {
-        this.title = title;
+        mTitle = title;
     }
 
     public int getImage() {
-        return image;
+        return mImage;
     }
 
     public void setImage(int image) {
-        this.image = image;
+        this.mImage = image;
     }
 
     /**

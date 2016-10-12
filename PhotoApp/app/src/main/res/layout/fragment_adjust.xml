@@ -43,9 +43,9 @@
         app:dsb_value="0" />
 
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/adjustRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:id="@+id/adjustRecyclerView" />
+        android:layout_height="wrap_content" />
 
 </LinearLayout>
 

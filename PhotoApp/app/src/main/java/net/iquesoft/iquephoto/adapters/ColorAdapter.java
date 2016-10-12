@@ -16,47 +16,44 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-/**
- * Created by Sergey on 9/16/2016.
- */
 public class ColorAdapter extends RecyclerView.Adapter<ColorAdapter.ViewHolder> {
 
     private int checkedItem;
 
-    private Context context;
+    private Context mContext;
 
-    private List<EditorColor> editorColors;
+    private List<EditorColor> mEditorColorsList;
 
-    private ColorListener colorListener;
+    private ColorListener mColorListener;
 
     public interface ColorListener {
         void onClick(EditorColor editorColor);
     }
 
     public void setColorListener(ColorListener colorListener) {
-        this.colorListener = colorListener;
+        mColorListener = colorListener;
     }
 
     public ColorAdapter(List<EditorColor> editorColors) {
-        this.editorColors = editorColors;
+        mEditorColorsList = editorColors;
     }
 
     @Override
     public ColorAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        context = parent.getContext();
+        mContext = parent.getContext();
 
-        LayoutInflater inflater = LayoutInflater.from(context);
+        LayoutInflater inflater = LayoutInflater.from(mContext);
 
-        View toolItem = inflater.inflate(R.layout.item_color, parent, false);
+        View view = inflater.inflate(R.layout.item_color, parent, false);
 
-        return new ViewHolder(toolItem);
+        return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(ColorAdapter.ViewHolder holder, int position) {
-        final EditorColor color = editorColors.get(position);
+        final EditorColor color = mEditorColorsList.get(position);
 
-        holder.colorView.setImageDrawable(new ColorCircleDrawable(context.getResources().getColor(color.getColor())));
+        holder.colorView.setImageDrawable(new ColorCircleDrawable(mContext.getResources().getColor(color.getColor())));
 
         if (color.isSelected()) {
             holder.colorSelected.setVisibility(View.VISIBLE);
@@ -66,15 +63,15 @@ public class ColorAdapter extends RecyclerView.Adapter<ColorAdapter.ViewHolder> 
 
         holder.colorView.setOnClickListener(view -> {
 
-            editorColors.get(checkedItem).setSelected(false);
+            mEditorColorsList.get(checkedItem).setSelected(false);
             notifyItemChanged(checkedItem);
 
             checkedItem = position;
-            editorColors.get(position).setSelected(true);
+            mEditorColorsList.get(position).setSelected(true);
 
             notifyItemChanged(position);
 
-            colorListener.onClick(color);
+            mColorListener.onClick(color);
 
         });
     }
@@ -82,15 +79,15 @@ public class ColorAdapter extends RecyclerView.Adapter<ColorAdapter.ViewHolder> 
 
     @Override
     public int getItemCount() {
-        return editorColors.size();
+        return mEditorColorsList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.colorView)
-        public ImageView colorView;
+        ImageView colorView;
 
         @BindView(R.id.colorSelected)
-        public ImageView colorSelected;
+        ImageView colorSelected;
 
         public ViewHolder(View itemView) {
             super(itemView);

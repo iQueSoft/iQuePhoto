@@ -5,9 +5,6 @@ import net.iquesoft.iquephoto.R;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Created by Sergey on 9/16/2016.
- */
 public class EditorColor {
     private int color;
     private boolean selected;

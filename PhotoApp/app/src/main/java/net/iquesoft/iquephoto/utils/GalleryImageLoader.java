@@ -10,32 +10,36 @@ import net.iquesoft.iquephoto.model.GalleryImage;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GalleryImageLoader implements Runnable {
+public class GalleryImageLoader {
 
-    private Context context;
+    private Context mContext;
     private List<GalleryImage> imagesList;
 
     public GalleryImageLoader(Context context) {
-        this.context = context;
+        mContext = context;
+        loadImage();
     }
 
-    @Override
-    public void run() {
-        Cursor cursor = context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null, null, null,
-                null);
+    public void loadImage() {
+        Thread loadThread = new Thread(() -> {
+            Cursor cursor = mContext.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null, null, null,
+                    null);
 
-        if (cursor != null) {
-            cursor.moveToFirst();
-            imagesList = new ArrayList<GalleryImage>();
-            for (int i = 0; i < cursor.getCount(); i++) {
-                cursor.moveToPosition(i);
+            if (cursor != null) {
+                cursor.moveToFirst();
+                imagesList = new ArrayList<GalleryImage>();
+                for (int i = 0; i < cursor.getCount(); i++) {
+                    cursor.moveToPosition(i);
 
-                imagesList.add(new GalleryImage(i, cursor.getString(1)));
+                    imagesList.add(new GalleryImage(i, cursor.getString(1)));
 
-                Log.d("GalleryImageLoader", cursor.getString(1));
+                    Log.d("GalleryImageLoader", cursor.getString(1));
+                    Log.d("T", Thread.currentThread().getName());
+                }
+                cursor.close();
             }
-            cursor.close();
-        }
+        });
+        loadThread.start();
     }
 
     public List<GalleryImage> getImagesList() {

@@ -1,7 +1,6 @@
 package net.iquesoft.iquephoto.model;
 
 import android.graphics.ColorMatrix;
-import android.graphics.ColorMatrixColorFilter;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
 
@@ -12,13 +11,14 @@ import java.util.List;
 
 public class Filter {
     @StringRes
-    private int title;
+    private int mTitle;
 
     @DrawableRes
-    private int image;
+    private int mImage;
 
-    private boolean selected;
-    private ColorMatrix colorMatrix;
+    private boolean mIsSelected;
+
+    private ColorMatrix mColorMatrix;
 
     public static List<Filter> getFiltersList() {
         return Arrays.asList(filters);
@@ -132,46 +132,45 @@ public class Filter {
     }
 
     private Filter(@StringRes int title, @DrawableRes int image) {
-        this.title = title;
-        this.image = image;
+        mTitle = title;
+        mImage = image;
     }
 
     private Filter(@StringRes int title, @DrawableRes int image, ColorMatrix colorMatrix) {
-        this.title = title;
-        this.image = image;
-        this.colorMatrix = colorMatrix;
+        mTitle = title;
+        mImage = image;
+        mColorMatrix = colorMatrix;
     }
 
     public int getTitle() {
-        return title;
+        return mTitle;
     }
 
     public void setTitle(int title) {
-        this.title = title;
+        mTitle = title;
     }
 
     public int getImage() {
-        return image;
+        return mImage;
     }
 
     public void setImage(int image) {
-        this.image = image;
+        mImage = image;
     }
 
-
     public boolean isSelected() {
-        return selected;
+        return mIsSelected;
     }
 
     public void setSelected(boolean selected) {
-        this.selected = selected;
+        mIsSelected = selected;
     }
 
     public ColorMatrix getColorMatrix() {
-        return colorMatrix;
+        return mColorMatrix;
     }
 
     public void setColorMatrix(ColorMatrix colorMatrix) {
-        this.colorMatrix = colorMatrix;
+        this.mColorMatrix = colorMatrix;
     }
 }

@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import net.iquesoft.iquephoto.R;
@@ -27,11 +28,11 @@ public class AdjustAdapter extends RecyclerView.Adapter<AdjustAdapter.ViewHolder
 
     private AdjustListener adjustListener;
 
-    interface AdjustListener {
+    public interface AdjustListener {
         void onClick(Adjust adjust);
     }
 
-    public void setColorListener(AdjustListener adjustListener) {
+    public void setAdjustListener(AdjustListener adjustListener) {
         this.adjustListener = adjustListener;
     }
 
@@ -54,7 +55,11 @@ public class AdjustAdapter extends RecyclerView.Adapter<AdjustAdapter.ViewHolder
     public void onBindViewHolder(AdjustAdapter.ViewHolder holder, int position) {
         final Adjust adjust = adjustList.get(position);
 
+        holder.adjustTitle.setText(context.getText(adjust.getTitle()));
+
         holder.adjustIcon.setImageDrawable(context.getResources().getDrawable(adjust.getIcon()));
+
+        holder.adjustValue.setText(adjust.getValue());
 
         if (adjust.isSelected()) {
             //holder.colorSelected.setVisibility(View.VISIBLE);
@@ -62,7 +67,7 @@ public class AdjustAdapter extends RecyclerView.Adapter<AdjustAdapter.ViewHolder
             //holder.colorSelected.setVisibility(View.GONE);
         }
 
-        holder.adjustValue.setOnClickListener(view -> {
+        holder.adjustItem.setOnClickListener(view -> {
 
             adjustList.get(checkedItem).setSelected(false);
             notifyItemChanged(checkedItem);
@@ -83,6 +88,12 @@ public class AdjustAdapter extends RecyclerView.Adapter<AdjustAdapter.ViewHolder
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.adjustItem)
+        LinearLayout adjustItem;
+
+        @BindView(R.id.adjustTitle)
+        TextView adjustTitle;
+
         @BindView(R.id.adjustValue)
         TextView adjustValue;
 

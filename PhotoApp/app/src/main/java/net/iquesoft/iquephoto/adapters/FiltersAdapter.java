@@ -22,29 +22,29 @@ public class FiltersAdapter extends RecyclerView.Adapter<FiltersAdapter.ViewHold
 
     private int checkedItem = 0;
 
-    private Context context;
+    private Context mContext;
 
-    private List<Filter> filters;
+    private List<Filter> mFiltersList;
 
-    private FiltersListener filtersListener;
+    private FiltersListener mFiltersListener;
 
     public interface FiltersListener {
         void onClick(Filter filter);
     }
 
     public void setFiltersListener(FiltersListener filtersListener) {
-        this.filtersListener = filtersListener;
+        mFiltersListener = filtersListener;
     }
 
     public FiltersAdapter(List<Filter> filters) {
-        this.filters = filters;
+        mFiltersList = filters;
     }
 
     @Override
     public FiltersAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        context = parent.getContext();
+        mContext = parent.getContext();
 
-        LayoutInflater inflater = LayoutInflater.from(context);
+        LayoutInflater inflater = LayoutInflater.from(mContext);
 
         View toolItem = inflater.inflate(R.layout.item_filter, parent, false);
 
@@ -53,13 +53,12 @@ public class FiltersAdapter extends RecyclerView.Adapter<FiltersAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(FiltersAdapter.ViewHolder holder, int position) {
-        final Filter filter = filters.get(position);
-        holder.filterTitle.setText(context.getResources().getString(filter.getTitle()));
-        holder.filterIcon.setImageDrawable(context.getResources().getDrawable(filter.getImage()));
+        final Filter filter = mFiltersList.get(position);
+        holder.filterTitle.setText(mContext.getResources().getString(filter.getTitle()));
+        holder.filterIcon.setImageDrawable(mContext.getResources().getDrawable(filter.getImage()));
 
-        // FIXME: Problem with changing position (filterChecked)
         if (checkedItem == 0)
-            filters.get(checkedItem).setSelected(true);
+            mFiltersList.get(checkedItem).setSelected(true);
 
         if (filter.isSelected()) {
             checkedItem = position;
@@ -70,21 +69,21 @@ public class FiltersAdapter extends RecyclerView.Adapter<FiltersAdapter.ViewHold
 
         holder.filterIcon.setOnClickListener(view -> {
 
-            filters.get(checkedItem).setSelected(false);
+            mFiltersList.get(checkedItem).setSelected(false);
 
-            filters.get(position).setSelected(true);
+            mFiltersList.get(position).setSelected(true);
 
             notifyItemChanged(checkedItem);
             notifyItemChanged(position);
 
-            filtersListener.onClick(filter);
+            mFiltersListener.onClick(filter);
 
         });
     }
 
     @Override
     public int getItemCount() {
-        return filters.size();
+        return mFiltersList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

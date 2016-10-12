@@ -3,7 +3,7 @@ package net.iquesoft.iquephoto.view;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 
-public interface ICropActivityView {
+public interface IPreviewActivityView {
 
     void startEditingImage(Uri uri);
 

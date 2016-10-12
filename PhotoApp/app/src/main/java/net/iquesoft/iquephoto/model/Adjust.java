@@ -8,18 +8,14 @@ import net.iquesoft.iquephoto.R;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * @see net.iquesoft.iquephoto.view.fragment.AdjustFragment
- * @see net.iquesoft.iquephoto.adapters.AdjustAdapter
- */
 public class Adjust {
     @StringRes
-    private int title;
+    private int mTitle;
 
     @DrawableRes
-    private int icon;
+    private int mIcon;
 
-    private int value;
+    private int mValue;
     private boolean selected;
 
     public static List<Adjust> getAdjustList() {
@@ -34,25 +30,25 @@ public class Adjust {
     };
 
     private Adjust(@StringRes int title, @DrawableRes int icon, int value) {
-        this.title = title;
-        this.icon = icon;
-        this.value = value;
+        mTitle = title;
+        mIcon = icon;
+        mValue = value;
     }
 
     public int getTitle() {
-        return title;
+        return mTitle;
     }
 
     public int getIcon() {
-        return icon;
+        return mIcon;
     }
 
     public int getValue() {
-        return value;
+        return mValue;
     }
 
     public void setValue(int value) {
-        this.value = value;
+        mValue = value;
     }
 
     public boolean isSelected() {

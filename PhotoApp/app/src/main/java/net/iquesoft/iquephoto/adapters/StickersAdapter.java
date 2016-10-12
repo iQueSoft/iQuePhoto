@@ -16,34 +16,30 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-/**
- * @author Sergey Belenkiy
- *         Adapter for {@link net.iquesoft.iquephoto.model.Sticker} models.
- */
 public class StickersAdapter extends RecyclerView.Adapter<StickersAdapter.ViewHolder> {
 
-    private Context context;
+    private Context mContext;
 
-    private List<Sticker> stickers;
+    private List<Sticker> mStickersList;
 
-    private StickersListener stickersListener;
+    private StickersListener mStickersListener;
 
     public interface StickersListener {
         void onClick(Sticker sticker);
     }
 
     public void setStickersListener(StickersListener stickersListener) {
-        this.stickersListener = stickersListener;
+        this.mStickersListener = stickersListener;
     }
 
     public StickersAdapter(List<Sticker> stickers) {
-        this.stickers = stickers;
+        mStickersList = stickers;
     }
 
     @Override
     public StickersAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        context = parent.getContext();
-        LayoutInflater inflater = LayoutInflater.from(context);
+        mContext = parent.getContext();
+        LayoutInflater inflater = LayoutInflater.from(mContext);
 
         View toolItem = inflater.inflate(R.layout.item_sticker, parent, false);
 
@@ -52,25 +48,25 @@ public class StickersAdapter extends RecyclerView.Adapter<StickersAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(StickersAdapter.ViewHolder holder, int position) {
-        final Sticker sticker = stickers.get(position);
-        holder.stickerTitle.setText(context.getResources().getString(sticker.getTitle()));
-        holder.stickerImage.setImageDrawable(context.getResources().getDrawable(sticker.getImage()));
+        final Sticker sticker = mStickersList.get(position);
+        holder.stickerTitle.setText(mContext.getResources().getString(sticker.getTitle()));
+        holder.stickerImage.setImageDrawable(mContext.getResources().getDrawable(sticker.getImage()));
 
-        holder.stickerImage.setOnClickListener(view -> stickersListener.onClick(sticker));
+        holder.stickerImage.setOnClickListener(view -> mStickersListener.onClick(sticker));
     }
 
 
     @Override
     public int getItemCount() {
-        return stickers.size();
+        return mStickersList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.stickerTitleTextView)
-        public TextView stickerTitle;
+        TextView stickerTitle;
 
         @BindView(R.id.stickerImageView)
-        public ImageView stickerImage;
+        ImageView stickerImage;
 
         public ViewHolder(View itemView) {
             super(itemView);

@@ -1,26 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/adjustItem"
     android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:gravity="center"
     android:orientation="vertical"
-    android:padding="10dp"
-    android:layout_height="100dp">
+    android:padding="10dp">
+
+    <ImageView
+        android:id="@+id/adjustIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:src="@drawable/ic_saturation" />
 
     <TextView
+        android:id="@+id/adjustValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_weight="1"
+        android:text="0"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        android:textStyle="normal|bold" />
+
+    <TextView
+        android:id="@+id/adjustTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
         android:layout_weight="1"
-        android:text="0"
+        android:text="Warmth"
         android:textColor="@color/white"
-        android:textSize="18sp"
-        android:textStyle="normal|bold"
-        android:id="@+id/adjustValue" />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:src="@drawable/ic_saturation"
-        android:id="@+id/adjustIcon" />
+        android:textSize="14sp"
+        android:textStyle="normal|bold" />
 </LinearLayout>

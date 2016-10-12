@@ -31,7 +31,7 @@
             android:name=".view.activity.CameraActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.activity.CropActivity"
+            android:name=".view.activity.PreviewActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".view.activity.CameraResultActivity"

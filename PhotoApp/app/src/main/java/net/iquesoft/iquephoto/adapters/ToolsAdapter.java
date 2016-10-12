@@ -16,66 +16,57 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-/**
- * @author Sergey Belenkiy
- *         Adapter for Tools Box.
- */
 public class ToolsAdapter extends RecyclerView.Adapter<ToolsAdapter.ViewHolder> {
 
-    private Context context;
+    private Context mContext;
 
-    private List<Tool> tools;
+    private List<Tool> mToolsList;
 
-    private ToolsListener toolsListener;
+    private ToolsListener mToolsListener;
 
     public interface ToolsListener {
         void onClick(Tool tool);
     }
 
     public void setToolsListener(ToolsListener toolsListener) {
-        this.toolsListener = toolsListener;
+        this.mToolsListener = toolsListener;
     }
 
     public ToolsAdapter(List<Tool> tools) {
-        this.tools = tools;
+        mToolsList = tools;
     }
 
     @Override
     public ToolsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        context = parent.getContext();
-        LayoutInflater inflater = LayoutInflater.from(context);
+        mContext = parent.getContext();
 
-        View toolItem = inflater.inflate(R.layout.item_tool, parent, false);
+        LayoutInflater inflater = LayoutInflater.from(mContext);
 
-        return new ViewHolder(toolItem);
+        View view = inflater.inflate(R.layout.item_tool, parent, false);
+
+        return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(ToolsAdapter.ViewHolder holder, int position) {
-        final Tool tool = tools.get(position);
-        holder.toolTitle.setText(context.getResources().getString(tool.getTitle()));
-        holder.toolIcon.setImageDrawable(context.getResources().getDrawable(tool.getImage()));
+        final Tool tool = mToolsList.get(position);
+        holder.toolTitle.setText(mContext.getResources().getString(tool.getTitle()));
+        holder.toolIcon.setImageDrawable(mContext.getResources().getDrawable(tool.getIcon()));
 
-        holder.toolIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                toolsListener.onClick(tool);
-            }
-        });
+        holder.toolIcon.setOnClickListener(view -> mToolsListener.onClick(tool));
     }
-
 
     @Override
     public int getItemCount() {
-        return tools.size();
+        return mToolsList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.toolTitle)
-        public TextView toolTitle;
+        TextView toolTitle;
 
         @BindView(R.id.toolIcon)
-        public ImageView toolIcon;
+        ImageView toolIcon;
 
         public ViewHolder(View itemView) {
             super(itemView);

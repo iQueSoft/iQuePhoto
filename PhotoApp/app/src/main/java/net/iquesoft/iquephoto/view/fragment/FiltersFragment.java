@@ -13,7 +13,6 @@ import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapters.FiltersAdapter;
 import net.iquesoft.iquephoto.common.BaseFragment;
-import net.iquesoft.iquephoto.core.EditorImageView;
 import net.iquesoft.iquephoto.core.ImageEditorView;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
 import net.iquesoft.iquephoto.model.Filter;

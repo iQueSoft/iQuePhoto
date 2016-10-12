@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.adapters.AdjustAdapter;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseFragment;
@@ -30,13 +29,11 @@ import butterknife.Unbinder;
 
 public class AdjustFragment extends BaseFragment implements IBrightnessFragmentView {
 
-    private boolean isHide;
+    private boolean mIsHide;
 
-    private Unbinder unbinder;
+    private Unbinder mUnbinder;
 
-    private AdjustAdapter adapter;
-
-    private EditorImageView editorView;
+    private AdjustAdapter mAdapter;
 
     @BindView(R.id.hideAdjust)
     ImageView hideAdjust;
@@ -68,13 +65,28 @@ public class AdjustFragment extends BaseFragment implements IBrightnessFragmentV
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_adjust, container, false);
 
-       // editorView = DataHolder.getInstance().getEditorView();
+        // editorView = DataHolder.getInstance().getEditorView();
 
-        unbinder = ButterKnife.bind(this, v);
+        mUnbinder = ButterKnife.bind(this, v);
 
-        adapter = new AdjustAdapter(Adjust.getAdjustList());
+        mAdapter = new AdjustAdapter(Adjust.getAdjustList());
+
+        mAdapter.setAdjustListener(adjust -> {
+            switch (adjust.getTitle()) {
+                case R.string.contrast:
+                    break;
+                case R.string.brightness:
+                    break;
+                case R.string.saturation:
+                    break;
+                case R.string.warmth:
+                    break;
+            }
+        });
+
         recyclerView.setLayoutManager(new LinearLayoutManager(null, LinearLayout.HORIZONTAL, false));
-        recyclerView.setAdapter(adapter);
+
+        recyclerView.setAdapter(mAdapter);
 
         v.setAlpha(0.8f);
 
@@ -107,17 +119,17 @@ public class AdjustFragment extends BaseFragment implements IBrightnessFragmentV
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        unbinder.unbind();
+        mUnbinder.unbind();
     }
 
     @OnClick(R.id.hideAdjust)
     void onClickHide(View view) {
-        if (!isHide) {
-            isHide = true;
+        if (!mIsHide) {
+            mIsHide = true;
             hideAdjust.setImageDrawable(getResources().getDrawable(R.drawable.ic_expand_less));
             recyclerView.setVisibility(View.GONE);
         } else {
-            isHide = false;
+            mIsHide = false;
             hideAdjust.setImageDrawable(getResources().getDrawable(R.drawable.ic_expand));
             recyclerView.setVisibility(View.VISIBLE);
         }

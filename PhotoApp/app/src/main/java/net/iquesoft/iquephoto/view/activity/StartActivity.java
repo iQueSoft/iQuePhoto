@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Typeface;
 import android.net.Uri;
-import android.os.Build;
 import android.provider.MediaStore;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -25,6 +24,7 @@ import net.iquesoft.iquephoto.di.components.DaggerIStartActivityComponent;
 import net.iquesoft.iquephoto.di.components.IStartActivityComponent;
 import net.iquesoft.iquephoto.di.modules.StartActivityModule;
 import net.iquesoft.iquephoto.presenter.StartActivityPresenterImpl;
+import net.iquesoft.iquephoto.utils.GalleryImageLoader;
 import net.iquesoft.iquephoto.view.IStartActivityView;
 
 import javax.inject.Inject;
@@ -57,8 +57,7 @@ public class StartActivity extends BaseActivity implements IStartActivityView, I
 
         applicationTextView.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/Blacksword.otf"));
 
-        // Todo: Gallery image picker
-        //new GalleryImageLoader(this).run();
+        new GalleryImageLoader(this);
     }
 
     @Override
@@ -83,7 +82,7 @@ public class StartActivity extends BaseActivity implements IStartActivityView, I
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Intent intent = new Intent(StartActivity.this, CropActivity.class);
+        Intent intent = new Intent(StartActivity.this, PreviewActivity.class);
 
         switch (requestCode) {
             case REQ_CAMERA:

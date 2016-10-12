@@ -5,7 +5,7 @@ import android.net.Uri;
 
 import com.isseiaoki.simplecropview.CropImageView;
 
-interface ICropActivityPresenter {
+interface IPreviewActivityPresenter {
     void cropImage(Uri uri, CropImageView cropImageView);
 
     void flipImageHorizontal(Bitmap bitmap);

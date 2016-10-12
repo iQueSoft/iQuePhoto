@@ -1,5 +1,6 @@
 package net.iquesoft.iquephoto.view.fragment;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -7,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapters.StickersAdapter;
 import net.iquesoft.iquephoto.common.BaseFragment;
@@ -25,14 +25,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-/**
- * Created by Sergey on 9/1/2016.
- */
+@SuppressLint("ValidFragment")
 public class ShowStickersFragment extends BaseFragment implements IShowStickersFragmentView {
 
-    private int position;
+    private int mPosition;
 
-    private Unbinder unbinder;
+    private Unbinder mUnbinder;
 
     @BindView(R.id.stickersRecyclerView)
     RecyclerView recyclerView;
@@ -51,7 +49,7 @@ public class ShowStickersFragment extends BaseFragment implements IShowStickersF
     }
 
     public ShowStickersFragment(int position) {
-        this.position = position;
+        mPosition = position;
     }
 
     @Override
@@ -71,11 +69,11 @@ public class ShowStickersFragment extends BaseFragment implements IShowStickersF
         View v = inflater.inflate(R.layout.fragment_show_stickers, container, false);
         v.setAlpha(0.85f);
 
-        unbinder = ButterKnife.bind(this, v);
+        mUnbinder = ButterKnife.bind(this, v);
 
         //editorView = DataHolder.getInstance().getEditorView();
 
-        StickersAdapter adapter = new StickersAdapter(getStickers(position));
+        StickersAdapter adapter = new StickersAdapter(getStickers(mPosition));
         adapter.setStickersListener(sticker -> {
             //editorView.addSticker(sticker);
         });
@@ -89,7 +87,7 @@ public class ShowStickersFragment extends BaseFragment implements IShowStickersF
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        unbinder.unbind();
+        mUnbinder.unbind();
     }
 
     private List<Sticker> getStickers(int position) {
@@ -97,6 +95,6 @@ public class ShowStickersFragment extends BaseFragment implements IShowStickersF
     }
 
     public void setPosition(int position) {
-        this.position = position;
+        this.mPosition = position;
     }
 }

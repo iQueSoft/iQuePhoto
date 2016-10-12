@@ -2,7 +2,7 @@ package net.iquesoft.iquephoto.di.components;
 
 import net.iquesoft.iquephoto.di.ActivityScope;
 import net.iquesoft.iquephoto.di.modules.CropActivityModule;
-import net.iquesoft.iquephoto.view.activity.CropActivity;
+import net.iquesoft.iquephoto.view.activity.PreviewActivity;
 
 import dagger.Component;
 
@@ -11,5 +11,5 @@ import dagger.Component;
         modules = CropActivityModule.class)
 public interface ICropActivityComponent {
 
-    void inject(CropActivity cropActivity);
+    void inject(PreviewActivity previewActivity);
 }

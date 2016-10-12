@@ -16,10 +16,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-/**
- * @author Sergey Belenkiy;
- *         Adapter for FontPickerDialog;
- */
 public class FontsAdapter extends RecyclerView.Adapter<FontsAdapter.ViewHolder> {
 
     private Context context;
@@ -66,7 +62,7 @@ public class FontsAdapter extends RecyclerView.Adapter<FontsAdapter.ViewHolder> 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.fontTextView)
-        public TextView font;
+        TextView font;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -75,10 +71,6 @@ public class FontsAdapter extends RecyclerView.Adapter<FontsAdapter.ViewHolder> 
         }
     }
 
-    /**
-     * @param path is path to assets typeface;
-     * @return typeface from assets;
-     */
     private Typeface getTypeface(String path) {
         return Typeface.createFromAsset(context.getAssets(), path);
     }

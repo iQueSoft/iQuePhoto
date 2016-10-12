@@ -15,29 +15,19 @@ import net.iquesoft.iquephoto.view.fragment.TextFragment;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * @author Sergey Belenkiy
- *         Tool.java - Singleton class is model of editing tools in app.
- */
 public class Tool {
     @StringRes
-    private int title;
+    private int mTitle;
 
     @DrawableRes
-    private int image;
+    private int mIcon;
 
     private Fragment fragment;
 
-    /**
-     * @return list with all editor tools for adapter usage;
-     */
     public static List<Tool> getToolsList() {
         return Arrays.asList(tools);
     }
 
-    /**
-     * Array with all app editors tools;
-     */
     private static Tool tools[] = {
             new Tool(R.string.filters, R.drawable.ic_filter, new FiltersFragment()),
             new Tool(R.string.adjust, R.drawable.ic_adjust, AdjustFragment.newInstance()),
@@ -57,40 +47,27 @@ public class Tool {
 
     }
 
-    /**
-     * @param title is string Id from strings.xml;
-     * @param image is drawable Id form res/drawable.
-     */
-    private Tool(@StringRes int title, @DrawableRes int image) {
-        this.title = title;
-        this.image = image;
+    private Tool(@StringRes int title, @DrawableRes int icon) {
+        mTitle = title;
+        mIcon = icon;
     }
 
-    /**
-     * @param title    is string Id from strings.xml;
-     * @param image    is drawable Id form res/drawable;
-     * @param fragment it is Fragment used for control this tools;
-     */
-    private Tool(@StringRes int title, @DrawableRes int image, @Nullable Fragment fragment) {
-        this.title = title;
-        this.image = image;
+    private Tool(@StringRes int title, @DrawableRes int icon, @Nullable Fragment fragment) {
+        mTitle = title;
+        mIcon = icon;
         this.fragment = fragment;
     }
 
-    public int getImage() {
-        return image;
-    }
-
-    public void setImage(int image) {
-        this.image = image;
+    public int getIcon() {
+        return mIcon;
     }
 
     public int getTitle() {
-        return title;
+        return mTitle;
     }
 
     public void setTitle(int title) {
-        this.title = title;
+        mTitle = title;
     }
 
     /**

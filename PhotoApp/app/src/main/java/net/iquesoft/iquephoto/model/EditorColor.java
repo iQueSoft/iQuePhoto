@@ -1,19 +1,23 @@
 package net.iquesoft.iquephoto.model;
 
+import android.support.annotation.ColorRes;
+
 import net.iquesoft.iquephoto.R;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class EditorColor {
-    private int color;
-    private boolean selected;
+    @ColorRes
+    private int mColor;
+
+    private boolean mIsSelected;
 
     public static List<EditorColor> getColorsList() {
         return Arrays.asList(editorColors);
     }
 
-    public static EditorColor[] editorColors = {
+    private static EditorColor[] editorColors = {
             new EditorColor(R.color.brown),
             new EditorColor(R.color.red),
             new EditorColor(R.color.crimson),
@@ -37,24 +41,24 @@ public class EditorColor {
 
     };
 
-    public EditorColor(int color) {
-        this.color = color;
+    private EditorColor(@ColorRes int color) {
+        mColor = color;
     }
 
-    public EditorColor(int color, boolean selected) {
-        this.color = color;
-        this.selected = selected;
+    public EditorColor(@ColorRes int color, boolean isSelected) {
+        mColor = color;
+        mIsSelected = isSelected;
     }
 
     public int getColor() {
-        return color;
+        return mColor;
     }
 
-    public void setSelected(boolean selected) {
-        this.selected = selected;
+    public void setSelected(boolean isSelected) {
+        mIsSelected = isSelected;
     }
 
     public boolean isSelected() {
-        return selected;
+        return mIsSelected;
     }
 }

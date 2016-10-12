@@ -26,6 +26,7 @@ import net.iquesoft.iquephoto.di.modules.StartActivityModule;
 import net.iquesoft.iquephoto.presenter.StartActivityPresenterImpl;
 import net.iquesoft.iquephoto.utils.GalleryImageLoader;
 import net.iquesoft.iquephoto.view.IStartActivityView;
+import net.iquesoft.iquephoto.view.fragment.GalleryImagesFragment;
 
 import javax.inject.Inject;
 
@@ -39,6 +40,8 @@ public class StartActivity extends BaseActivity implements IStartActivityView, I
 
     @Inject
     StartActivityPresenterImpl presenter;
+
+    private GalleryImagesFragment mGalleryImagesFragment;
 
     private IStartActivityComponent startActivityComponent;
 
@@ -57,7 +60,7 @@ public class StartActivity extends BaseActivity implements IStartActivityView, I
 
         applicationTextView.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/Blacksword.otf"));
 
-        new GalleryImageLoader(this);
+        mGalleryImagesFragment = new GalleryImagesFragment();
     }
 
     @Override
@@ -70,13 +73,15 @@ public class StartActivity extends BaseActivity implements IStartActivityView, I
     }
 
     @OnClick(R.id.cameraButton)
-    public void onClickCamera(View view) {
+    void onClickCamera(View view) {
         presenter.openCamera();
     }
 
     @OnClick(R.id.galleryButton)
-    public void onClickGallery(View view) {
+    void onClickGallery(View view) {
         presenter.openGallery();
+        //mGalleryImagesFragment.show(getSupportFragmentManager(), StartActivity.class.getSimpleName());
+
     }
 
     @Override

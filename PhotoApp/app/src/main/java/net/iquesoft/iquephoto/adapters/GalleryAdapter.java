@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.model.GalleryImage;
+import net.iquesoft.iquephoto.model.ImageGallery;
 
 import java.util.List;
 
@@ -19,10 +19,10 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
 
     private Context mContext;
 
-    private List<GalleryImage> mGalleryImages;
+    private List<ImageGallery> mImageGalleries;
 
-    public GalleryAdapter(List<GalleryImage> galleryImages) {
-        mGalleryImages = galleryImages;
+    public GalleryAdapter(List<ImageGallery> imageGalleries) {
+        mImageGalleries = imageGalleries;
     }
 
     @Override
@@ -38,19 +38,19 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(GalleryAdapter.ViewHolder holder, int position) {
-        GalleryImage galleryImage = mGalleryImages.get(position);
+        ImageGallery imageGallery = mImageGalleries.get(position);
 
-        holder.galleryImage.setImageBitmap(galleryImage.getBitmap());
+        holder.galleryImage.setImageBitmap(imageGallery.getBitmap());
     }
 
     @Override
     public int getItemCount() {
-        return mGalleryImages.size();
+        return mImageGalleries.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.galleryImage)
+        @BindView(R.id.imageGallery)
         ImageView galleryImage;
 
         public ViewHolder(View itemView) {

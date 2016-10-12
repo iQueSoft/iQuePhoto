@@ -9,10 +9,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.adapters.AdjustAdapter;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseFragment;
-import net.iquesoft.iquephoto.core.EditorImageView;
+import net.iquesoft.iquephoto.core.ImageEditorView;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
 import net.iquesoft.iquephoto.model.Adjust;
 import net.iquesoft.iquephoto.presenter.AdjustFragmentPresenterImpl;
@@ -28,8 +29,17 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 public class AdjustFragment extends BaseFragment implements IBrightnessFragmentView {
+    private int mAdjustPosition;
+
+    private int mBrightnessValue;
+    private int mContrastValue;
+    private int mSaturationValue;
+    private int mWarmthValue;
+
+    private int mCurrentAdjust;
 
     private boolean mIsHide;
+    private boolean mSeekBarIsHide = true;
 
     private Unbinder mUnbinder;
 
@@ -43,6 +53,8 @@ public class AdjustFragment extends BaseFragment implements IBrightnessFragmentV
 
     @BindView(R.id.adjustSeekBar)
     DiscreteSeekBar seekBar;
+
+    private ImageEditorView mImageEditorView;
 
     @Inject
     AdjustFragmentPresenterImpl presenter;
@@ -65,21 +77,60 @@ public class AdjustFragment extends BaseFragment implements IBrightnessFragmentV
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_adjust, container, false);
 
-        // editorView = DataHolder.getInstance().getEditorView();
+        mImageEditorView = DataHolder.getInstance().getEditorView();
 
         mUnbinder = ButterKnife.bind(this, v);
 
         mAdapter = new AdjustAdapter(Adjust.getAdjustList());
 
-        mAdapter.setAdjustListener(adjust -> {
+        mAdapter.setAdjustListener((adjust, position) -> {
+            mAdjustPosition = position;
+
+            if (!mSeekBarIsHide) {
+                seekBar.setVisibility(View.GONE);
+                mSeekBarIsHide = true;
+            }
+
             switch (adjust.getTitle()) {
                 case R.string.contrast:
+                    mCurrentAdjust = adjust.getTitle();
+                    mContrastValue = adjust.getValue();
+
+                    if (mSeekBarIsHide) {
+                        seekBar.setProgress(mContrastValue);
+                        seekBar.setVisibility(View.VISIBLE);
+                        mSeekBarIsHide = false;
+                    }
                     break;
                 case R.string.brightness:
+                    mCurrentAdjust = adjust.getTitle();
+                    mBrightnessValue = adjust.getValue();
+
+                    if (mSeekBarIsHide) {
+                        seekBar.setProgress(mBrightnessValue);
+                        seekBar.setVisibility(View.VISIBLE);
+                        mSeekBarIsHide = false;
+                    }
                     break;
                 case R.string.saturation:
+                    mCurrentAdjust = adjust.getTitle();
+                    mSaturationValue = adjust.getValue();
+
+                    if (mSeekBarIsHide) {
+                        seekBar.setProgress(mSaturationValue);
+                        seekBar.setVisibility(View.VISIBLE);
+                        mSeekBarIsHide = false;
+                    }
                     break;
                 case R.string.warmth:
+                    mCurrentAdjust = adjust.getTitle();
+                    mWarmthValue = adjust.getValue();
+
+                    if (mSeekBarIsHide) {
+                        seekBar.setProgress(mWarmthValue);
+                        seekBar.setVisibility(View.VISIBLE);
+                        mSeekBarIsHide = false;
+                    }
                     break;
             }
         });
@@ -88,12 +139,26 @@ public class AdjustFragment extends BaseFragment implements IBrightnessFragmentV
 
         recyclerView.setAdapter(mAdapter);
 
-        v.setAlpha(0.8f);
+        //v.setAlpha(0.8f);
 
         seekBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
             @Override
             public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
-                //editorView.setBrightnessValue(value);
+                switch (mCurrentAdjust) {
+                    case R.string.contrast:
+                        mContrastValue = value;
+                        break;
+                    case R.string.brightness:
+                        mBrightnessValue = value;
+                        mImageEditorView.setBrightnessValue(mBrightnessValue);
+                        break;
+                    case R.string.saturation:
+                        mSaturationValue = value;
+                        break;
+                    case R.string.warmth:
+                        mWarmthValue = value;
+                        break;
+                }
             }
 
             @Override

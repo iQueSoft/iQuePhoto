@@ -88,13 +88,13 @@ public class FiltersAdapter extends RecyclerView.Adapter<FiltersAdapter.ViewHold
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.filterTitle)
-        public TextView filterTitle;
+        TextView filterTitle;
 
         @BindView(R.id.filterImage)
-        public CircularImageView filterIcon;
+        CircularImageView filterIcon;
 
         @BindView(R.id.filterChecked)
-        public ImageView filterChecked;
+        ImageView filterChecked;
 
         public ViewHolder(View itemView) {
             super(itemView);

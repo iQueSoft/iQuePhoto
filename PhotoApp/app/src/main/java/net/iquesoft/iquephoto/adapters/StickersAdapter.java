@@ -22,14 +22,14 @@ public class StickersAdapter extends RecyclerView.Adapter<StickersAdapter.ViewHo
 
     private List<Sticker> mStickersList;
 
-    private StickersListener mStickersListener;
+    private StickersListener mListener;
 
     public interface StickersListener {
         void onClick(Sticker sticker);
     }
 
-    public void setStickersListener(StickersListener stickersListener) {
-        this.mStickersListener = stickersListener;
+    public void setStickersListener(StickersListener listener) {
+        this.mListener = listener;
     }
 
     public StickersAdapter(List<Sticker> stickers) {
@@ -41,20 +41,20 @@ public class StickersAdapter extends RecyclerView.Adapter<StickersAdapter.ViewHo
         mContext = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(mContext);
 
-        View toolItem = inflater.inflate(R.layout.item_sticker, parent, false);
+        View view = inflater.inflate(R.layout.item_sticker, parent, false);
 
-        return new ViewHolder(toolItem);
+        return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(StickersAdapter.ViewHolder holder, int position) {
         final Sticker sticker = mStickersList.get(position);
+
         holder.stickerTitle.setText(mContext.getResources().getString(sticker.getTitle()));
         holder.stickerImage.setImageDrawable(mContext.getResources().getDrawable(sticker.getImage()));
 
-        holder.stickerImage.setOnClickListener(view -> mStickersListener.onClick(sticker));
+        holder.stickerImage.setOnClickListener(view -> mListener.onClick(sticker));
     }
-
 
     @Override
     public int getItemCount() {

@@ -53,7 +53,7 @@ public class PreviewActivity extends BaseActivity implements IPreviewActivityVie
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        setContentView(R.layout.activity_crop);
+        setContentView(R.layout.activity_preview);
 
         mBitmap = BitmapFactory.decodeFile(getIntent().getStringExtra("bitmap_path"));
 

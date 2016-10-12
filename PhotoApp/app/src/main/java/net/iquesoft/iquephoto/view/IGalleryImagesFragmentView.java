@@ -1,10 +1,10 @@
 package net.iquesoft.iquephoto.view;
 
-import net.iquesoft.iquephoto.model.GalleryImage;
+import net.iquesoft.iquephoto.model.ImageGallery;
 
 import java.util.List;
 
 public interface IGalleryImagesFragmentView {
 
-    void setupAdapter(List<GalleryImage> imagesList);
+    void setupAdapter(List<ImageGallery> imagesList);
 }

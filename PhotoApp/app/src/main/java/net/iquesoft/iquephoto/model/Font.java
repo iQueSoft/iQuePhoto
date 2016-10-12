@@ -3,24 +3,15 @@ package net.iquesoft.iquephoto.model;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * @author Sergey
- */
 public class Font {
-    private String title;
-    private String typeface;
-    private boolean selected;
+    private String mTitle;
+    private String mTypeface;
+    private boolean mIsSelected;
 
-    /**
-     * @return list with all fonts for adapter usage;
-     */
     public static List<Font> getFontsList() {
         return Arrays.asList(fonts);
     }
 
-    /**
-     * Array with all fonts;
-     */
     private static Font fonts[] = {
             new Font("Black sword", "Blacksword.otf"),
             new Font("Summer Hearts", "SummerHearts-Regular.otf"),
@@ -29,37 +20,33 @@ public class Font {
             new Font("Reis", "REIS-Regular.ttf"),
     };
 
-    /**
-     * @param title    is font title;
-     * @param typeface is string of font path.
-     */
     public Font(String title, String typeface) {
-        this.title = title;
-        this.typeface = typeface;
+        mTitle = title;
+        mTypeface = typeface;
     }
 
     public String getTitle() {
-        return title;
+        return mTitle;
     }
 
     public void setTitle(String title) {
-        this.title = title;
+        mTitle = title;
     }
 
     public String getTypeface() {
-        return "fonts/" + typeface;
+        return "fonts/" + mTypeface;
     }
 
     public void setTypeface(String typeface) {
-        this.typeface = typeface;
+        mTypeface = typeface;
     }
 
     public boolean isSelected() {
-        return selected;
+        return mIsSelected;
     }
 
-    public void setSelected(boolean selected) {
-        this.selected = selected;
+    public void setSelected(boolean isSelected) {
+        mIsSelected = isSelected;
     }
 }
 

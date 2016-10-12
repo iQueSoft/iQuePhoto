@@ -4,13 +4,18 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Environment;
+import android.provider.MediaStore;
 
 import java.io.File;
 
 public class ImageHelper {
 
     public static Bitmap getBitmap(String path) {
-        return BitmapFactory.decodeFile(path);
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+        options.inSampleSize = 8;
+
+        return BitmapFactory.decodeFile(path, options);
     }
 
     public static String getPath(String... pathInSd) {

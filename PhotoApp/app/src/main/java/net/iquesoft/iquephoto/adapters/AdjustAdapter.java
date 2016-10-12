@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.model.Adjust;
-import net.iquesoft.iquephoto.model.EditorColor;
 
 import java.util.List;
 
@@ -22,29 +21,29 @@ public class AdjustAdapter extends RecyclerView.Adapter<AdjustAdapter.ViewHolder
 
     private int checkedItem;
 
-    private Context context;
+    private Context mContext;
 
-    private List<Adjust> adjustList;
+    private List<Adjust> mAdjustList;
 
-    private AdjustListener adjustListener;
+    private AdjustListener mListener;
 
     public interface AdjustListener {
-        void onClick(Adjust adjust);
+        void onClick(Adjust adjust, int position);
     }
 
-    public void setAdjustListener(AdjustListener adjustListener) {
-        this.adjustListener = adjustListener;
+    public void setAdjustListener(AdjustListener listener) {
+        mListener = listener;
     }
 
     public AdjustAdapter(List<Adjust> adjustList) {
-        this.adjustList = adjustList;
+        mAdjustList = adjustList;
     }
 
     @Override
     public AdjustAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        context = parent.getContext();
+        mContext = parent.getContext();
 
-        LayoutInflater inflater = LayoutInflater.from(context);
+        LayoutInflater inflater = LayoutInflater.from(mContext);
 
         View toolItem = inflater.inflate(R.layout.item_adjust, parent, false);
 
@@ -53,13 +52,13 @@ public class AdjustAdapter extends RecyclerView.Adapter<AdjustAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(AdjustAdapter.ViewHolder holder, int position) {
-        final Adjust adjust = adjustList.get(position);
+        final Adjust adjust = mAdjustList.get(position);
 
-        holder.adjustTitle.setText(context.getText(adjust.getTitle()));
+        holder.adjustTitle.setText(mContext.getText(adjust.getTitle()));
 
-        holder.adjustIcon.setImageDrawable(context.getResources().getDrawable(adjust.getIcon()));
+        holder.adjustIcon.setImageDrawable(mContext.getResources().getDrawable(adjust.getIcon()));
 
-        holder.adjustValue.setText(adjust.getValue());
+        holder.adjustValue.setText(String.valueOf(adjust.getValue()));
 
         if (adjust.isSelected()) {
             //holder.colorSelected.setVisibility(View.VISIBLE);
@@ -69,25 +68,27 @@ public class AdjustAdapter extends RecyclerView.Adapter<AdjustAdapter.ViewHolder
 
         holder.adjustItem.setOnClickListener(view -> {
 
-            adjustList.get(checkedItem).setSelected(false);
+            mAdjustList.get(checkedItem).setSelected(false);
             notifyItemChanged(checkedItem);
 
             checkedItem = position;
-            adjustList.get(position).setSelected(true);
+            mAdjustList.get(position).setSelected(true);
 
             notifyItemChanged(position);
 
-            adjustListener.onClick(adjust);
+            mAdjustList.get(position).setValue(100);
+
+            mListener.onClick(adjust, position);
 
         });
     }
 
     @Override
     public int getItemCount() {
-        return adjustList.size();
+        return mAdjustList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.adjustItem)
         LinearLayout adjustItem;
 
@@ -100,7 +101,7 @@ public class AdjustAdapter extends RecyclerView.Adapter<AdjustAdapter.ViewHolder
         @BindView(R.id.adjustIcon)
         ImageView adjustIcon;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
 
             ButterKnife.bind(this, itemView);

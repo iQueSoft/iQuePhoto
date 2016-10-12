@@ -18,28 +18,28 @@ import butterknife.ButterKnife;
 
 public class FontsAdapter extends RecyclerView.Adapter<FontsAdapter.ViewHolder> {
 
-    private Context context;
+    private Context mContext;
 
-    private List<Font> fonts;
+    private List<Font> mFontsList;
 
-    private FontsListener fontsListener;
+    private FontsListener mListener;
 
     public interface FontsListener {
         void onClick(Font font);
     }
 
-    public void setFontsListener(FontsListener fontsListener) {
-        this.fontsListener = fontsListener;
+    public void setFontsListener(FontsListener listener) {
+        mListener = listener;
     }
 
     public FontsAdapter(List<Font> fonts) {
-        this.fonts = fonts;
+        mFontsList = fonts;
     }
 
     @Override
     public FontsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        context = parent.getContext();
-        LayoutInflater inflater = LayoutInflater.from(context);
+        mContext = parent.getContext();
+        LayoutInflater inflater = LayoutInflater.from(mContext);
 
         View toolItem = inflater.inflate(R.layout.item_font, parent, false);
 
@@ -48,16 +48,20 @@ public class FontsAdapter extends RecyclerView.Adapter<FontsAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(FontsAdapter.ViewHolder holder, int position) {
-        final Font font = fonts.get(position);
+        final Font font = mFontsList.get(position);
         holder.font.setText(font.getTitle());
         holder.font.setTypeface(getTypeface(font.getTypeface()));
 
-        holder.font.setOnClickListener(view -> fontsListener.onClick(font));
+        holder.font.setOnClickListener(view -> mListener.onClick(font));
     }
 
     @Override
     public int getItemCount() {
-        return fonts.size();
+        return mFontsList.size();
+    }
+
+    private Typeface getTypeface(String path) {
+        return Typeface.createFromAsset(mContext.getAssets(), path);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -69,9 +73,5 @@ public class FontsAdapter extends RecyclerView.Adapter<FontsAdapter.ViewHolder> 
 
             ButterKnife.bind(this, itemView);
         }
-    }
-
-    private Typeface getTypeface(String path) {
-        return Typeface.createFromAsset(context.getAssets(), path);
     }
 }

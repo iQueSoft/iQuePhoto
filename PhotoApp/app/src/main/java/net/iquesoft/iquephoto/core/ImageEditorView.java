@@ -38,6 +38,7 @@ import java.util.List;
 public class ImageEditorView extends ImageView {
 
     private Context mContext;
+    private Bitmap mBitmap;
 
     private int mViewWidth = 0;
     private int mViewHeight = 0;
@@ -46,9 +47,11 @@ public class ImageEditorView extends ImageView {
     private float mImgWidth = 0.0f;
     private float mImgHeight = 0.0f;
 
+    private float mBrightnessValue = 0;
+
     private Paint mPaintFilter;
+    private ColorMatrix mFilterColorMatrix;
     private boolean mHasFilter;
-    private int mFilterIntensity;
 
     private int mCheckedTextId = -1;
     private List<Text> mTextsList = new LinkedList<Text>();
@@ -110,7 +113,22 @@ public class ImageEditorView extends ImageView {
         mScale = 1.0f;
     }
 
+    @Override
+    public void onDraw(Canvas canvas) {
+        if (mIsInitialized) {
+            setMatrix();
+            canvas.drawBitmap(mBitmap, mMatrix, mPaintBitmap);
+        }
+        if (mHasFilter) {
+            canvas.drawBitmap(mBitmap, mMatrix, mPaintFilter);
+        }
+        if (mBrightnessValue != 0) {
+            canvas.drawBitmap(mBitmap, mMatrix, getBrightnessMatrix(mBrightnessValue));
+        }
+    }
+
     public void setFilter(@Nullable ColorMatrix colorMatrix) {
+        mFilterColorMatrix = colorMatrix;
         if (colorMatrix != null) {
             mHasFilter = true;
             mPaintFilter.setColorFilter(new ColorMatrixColorFilter(colorMatrix));
@@ -121,9 +139,33 @@ public class ImageEditorView extends ImageView {
     }
 
     public void setFilterIntensity(int intensity) {
-        mFilterIntensity = (int) (intensity * 2.55);
-        mPaintFilter.setAlpha(mFilterIntensity);
+        int filterIntensity = (int) (intensity * 2.55);
+        mPaintFilter.setAlpha(filterIntensity);
         invalidate();
+    }
+
+    public void setBrightnessValue(float brightnessValue) {
+        mBrightnessValue = brightnessValue;
+        invalidate();
+    }
+
+    private Paint getBrightnessMatrix(float value) {
+        Log.i("Brightness", "Value: " + String.valueOf(value));
+        ColorMatrix brightnessMatrix = new ColorMatrix();
+        brightnessMatrix.set(new float[]{1, 0, 0, 0, value,
+                0, 1, 0, 0, value,
+                0, 0, 1, 0, value,
+                0, 0, 0, 1, 0});
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        if (mHasFilter) {
+            ColorMatrix brightnessMatrixWithFilter = new ColorMatrix();
+            brightnessMatrixWithFilter.setConcat(brightnessMatrix, mFilterColorMatrix);
+            paint.setColorFilter(new ColorMatrixColorFilter(brightnessMatrixWithFilter));
+        } else {
+            paint.setColorFilter(new ColorMatrixColorFilter(brightnessMatrix));
+        }
+
+        return paint;
     }
 
     private void findCheckedText(int x, int y) {
@@ -177,52 +219,6 @@ public class ImageEditorView extends ImageView {
     }
 
     @Override
-    public Parcelable onSaveInstanceState() {
-        Parcelable superState = super.onSaveInstanceState();
-        SavedState ss = new SavedState(superState);
-        ss.image = getBitmap();
-        ss.backgroundColor = this.mBackgroundColor;
-        ss.overlayColor = this.mOverlayColor;
-        ss.touchPadding = this.mTouchPadding;
-        ss.angle = this.mAngle;
-        ss.exifRotation = this.mExifRotation;
-        ss.sourceUri = this.mSourceUri;
-        ss.saveUri = this.mSaveUri;
-        ss.compressFormat = this.mCompressFormat;
-        ss.outputMaxWidth = this.mOutputMaxWidth;
-        ss.outputMaxHeight = this.mOutputMaxHeight;
-        ss.outputWidth = this.mOutputWidth;
-        ss.outputHeight = this.mOutputHeight;
-        ss.inputImageWidth = this.mInputImageWidth;
-        ss.inputImageHeight = this.mInputImageHeight;
-        ss.outputImageWidth = this.mOutputImageWidth;
-        ss.outputImageHeight = this.mOutputImageHeight;
-        return ss;
-    }
-
-    @Override
-    public void onRestoreInstanceState(Parcelable state) {
-        SavedState ss = (SavedState) state;
-        super.onRestoreInstanceState(ss.getSuperState());
-        this.mTouchPadding = ss.touchPadding;
-        this.mAngle = ss.angle;
-        this.mExifRotation = ss.exifRotation;
-        this.mSourceUri = ss.sourceUri;
-        this.mSaveUri = ss.saveUri;
-        this.mCompressFormat = ss.compressFormat;
-        this.mOutputMaxWidth = ss.outputMaxWidth;
-        this.mOutputMaxHeight = ss.outputMaxHeight;
-        this.mOutputWidth = ss.outputWidth;
-        this.mOutputHeight = ss.outputHeight;
-        this.mInputImageWidth = ss.inputImageWidth;
-        this.mInputImageHeight = ss.inputImageHeight;
-        this.mOutputImageWidth = ss.outputImageWidth;
-        this.mOutputImageHeight = ss.outputImageHeight;
-        setImageBitmap(ss.image);
-        requestLayout();
-    }
-
-    @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         final int viewWidth = MeasureSpec.getSize(widthMeasureSpec);
         final int viewHeight = MeasureSpec.getSize(heightMeasureSpec);
@@ -236,23 +232,6 @@ public class ImageEditorView extends ImageView {
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         if (getDrawable() != null) setupLayout(mViewWidth, mViewHeight);
-    }
-
-    @Override
-    public void onDraw(Canvas canvas) {
-        if (mIsInitialized) {
-            setMatrix();
-            Bitmap bm = getBitmap();
-            if (bm != null) {
-                canvas.drawBitmap(bm, mMatrix, mPaintBitmap);
-                // draw edit frame
-                //drawCropFrame(canvas);
-            }
-        }
-        if (mHasFilter) {
-            Bitmap bm = getBitmap();
-            canvas.drawBitmap(bm, mMatrix, mPaintFilter);
-        }
     }
 
     @Override
@@ -480,7 +459,8 @@ public class ImageEditorView extends ImageView {
      */
     @Override
     public void setImageBitmap(Bitmap bitmap) {
-        super.setImageBitmap(bitmap); // calles setImageDrawable internally
+        super.setImageBitmap(bitmap);
+        mBitmap = bitmap; // calles setImageDrawable internally
     }
 
     /**
@@ -713,138 +693,5 @@ public class ImageEditorView extends ImageView {
 
     private enum TouchArea {
         OUT_OF_BOUNDS, CENTER, LEFT_TOP, RIGHT_TOP, LEFT_BOTTOM, RIGHT_BOTTOM
-    }
-
-    // Save/Restore support ////////////////////////////////////////////////////////////////////////
-
-    public static class SavedState extends BaseSavedState {
-        Bitmap image;
-        int backgroundColor;
-        int overlayColor;
-        int frameColor;
-        boolean showGuide;
-        boolean showHandle;
-        int handleSize;
-        int touchPadding;
-        float minFrameSize;
-        float customRatioX;
-        float customRatioY;
-        float frameStrokeWeight;
-        float guideStrokeWeight;
-        boolean isCropEnabled;
-        int handleColor;
-        int guideColor;
-        float initialFrameScale;
-        float angle;
-        boolean isAnimationEnabled;
-        int animationDuration;
-        int exifRotation;
-        Uri sourceUri;
-        Uri saveUri;
-        Bitmap.CompressFormat compressFormat;
-        int compressQuality;
-        boolean isDebug;
-        int outputMaxWidth;
-        int outputMaxHeight;
-        int outputWidth;
-        int outputHeight;
-        boolean isHandleShadowEnabled;
-        int inputImageWidth;
-        int inputImageHeight;
-        int outputImageWidth;
-        int outputImageHeight;
-
-        SavedState(Parcelable superState) {
-            super(superState);
-        }
-
-        private SavedState(Parcel in) {
-            super(in);
-            image = in.readParcelable(Bitmap.class.getClassLoader());
-            backgroundColor = in.readInt();
-            overlayColor = in.readInt();
-            frameColor = in.readInt();
-            showGuide = (in.readInt() != 0);
-            showHandle = (in.readInt() != 0);
-            handleSize = in.readInt();
-            touchPadding = in.readInt();
-            minFrameSize = in.readFloat();
-            customRatioX = in.readFloat();
-            customRatioY = in.readFloat();
-            frameStrokeWeight = in.readFloat();
-            guideStrokeWeight = in.readFloat();
-            isCropEnabled = (in.readInt() != 0);
-            handleColor = in.readInt();
-            guideColor = in.readInt();
-            initialFrameScale = in.readFloat();
-            angle = in.readFloat();
-            isAnimationEnabled = (in.readInt() != 0);
-            animationDuration = in.readInt();
-            exifRotation = in.readInt();
-            sourceUri = in.readParcelable(Uri.class.getClassLoader());
-            saveUri = in.readParcelable(Uri.class.getClassLoader());
-            compressFormat = (Bitmap.CompressFormat) in.readSerializable();
-            compressQuality = in.readInt();
-            isDebug = (in.readInt() != 0);
-            outputMaxWidth = in.readInt();
-            outputMaxHeight = in.readInt();
-            outputWidth = in.readInt();
-            outputHeight = in.readInt();
-            isHandleShadowEnabled = (in.readInt() != 0);
-            inputImageWidth = in.readInt();
-            inputImageHeight = in.readInt();
-            outputImageWidth = in.readInt();
-            outputImageHeight = in.readInt();
-        }
-
-        @Override
-        public void writeToParcel(Parcel out, int flag) {
-            super.writeToParcel(out, flag);
-            out.writeParcelable(image, flag);
-            out.writeInt(backgroundColor);
-            out.writeInt(overlayColor);
-            out.writeInt(frameColor);
-            out.writeInt(showGuide ? 1 : 0);
-            out.writeInt(showHandle ? 1 : 0);
-            out.writeInt(handleSize);
-            out.writeInt(touchPadding);
-            out.writeFloat(minFrameSize);
-            out.writeFloat(customRatioX);
-            out.writeFloat(customRatioY);
-            out.writeFloat(frameStrokeWeight);
-            out.writeFloat(guideStrokeWeight);
-            out.writeInt(isCropEnabled ? 1 : 0);
-            out.writeInt(handleColor);
-            out.writeInt(guideColor);
-            out.writeFloat(initialFrameScale);
-            out.writeFloat(angle);
-            out.writeInt(isAnimationEnabled ? 1 : 0);
-            out.writeInt(animationDuration);
-            out.writeInt(exifRotation);
-            out.writeParcelable(sourceUri, flag);
-            out.writeParcelable(saveUri, flag);
-            out.writeSerializable(compressFormat);
-            out.writeInt(compressQuality);
-            out.writeInt(isDebug ? 1 : 0);
-            out.writeInt(outputMaxWidth);
-            out.writeInt(outputMaxHeight);
-            out.writeInt(outputWidth);
-            out.writeInt(outputHeight);
-            out.writeInt(isHandleShadowEnabled ? 1 : 0);
-            out.writeInt(inputImageWidth);
-            out.writeInt(inputImageHeight);
-            out.writeInt(outputImageWidth);
-            out.writeInt(outputImageHeight);
-        }
-
-        public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
-            public SavedState createFromParcel(final Parcel inParcel) {
-                return new SavedState(inParcel);
-            }
-
-            public SavedState[] newArray(final int inSize) {
-                return new SavedState[inSize];
-            }
-        };
     }
 }

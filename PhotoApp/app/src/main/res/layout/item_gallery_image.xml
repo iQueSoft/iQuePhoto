@@ -6,7 +6,7 @@
     android:padding="1dp">
 
     <ImageView
-        android:id="@+id/galleryImage"
+        android:id="@+id/imageGallery"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:src="@drawable/original" />

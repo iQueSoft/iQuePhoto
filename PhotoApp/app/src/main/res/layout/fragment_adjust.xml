@@ -33,6 +33,7 @@
         android:id="@+id/adjustSeekBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         app:dsb_indicatorColor="@android:color/white"
         app:dsb_indicatorTextAppearance="@android:color/black"
         app:dsb_max="100"

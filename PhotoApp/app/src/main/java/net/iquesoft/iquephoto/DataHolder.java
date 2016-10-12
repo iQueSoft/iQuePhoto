@@ -2,7 +2,6 @@ package net.iquesoft.iquephoto;
 
 import android.graphics.Bitmap;
 
-import net.iquesoft.iquephoto.core.EditorImageView;
 import net.iquesoft.iquephoto.core.ImageEditorView;
 
 public class DataHolder {

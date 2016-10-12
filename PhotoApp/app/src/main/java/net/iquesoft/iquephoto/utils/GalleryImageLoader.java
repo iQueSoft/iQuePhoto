@@ -2,47 +2,64 @@ package net.iquesoft.iquephoto.utils;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.util.Log;
 
-import net.iquesoft.iquephoto.model.GalleryImage;
+import net.iquesoft.iquephoto.model.ImageGallery;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class GalleryImageLoader {
+public class GalleryImageLoader extends AsyncTask<Void, List<ImageGallery>, Void> {
 
     private Context mContext;
-    private List<GalleryImage> imagesList;
+    private List<ImageGallery> mImagesList;
+
+    private GalleryImageLoaderListener mListener;
+
+    public interface GalleryImageLoaderListener {
+        void fetchImages(List<ImageGallery> imageGalleryList);
+    }
+
+    public void setListener(GalleryImageLoaderListener listener) {
+        mListener = listener;
+    }
 
     public GalleryImageLoader(Context context) {
         mContext = context;
-        loadImage();
     }
 
-    public void loadImage() {
-        Thread loadThread = new Thread(() -> {
-            Cursor cursor = mContext.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null, null, null,
-                    null);
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+    }
 
-            if (cursor != null) {
-                cursor.moveToFirst();
-                imagesList = new ArrayList<GalleryImage>();
-                for (int i = 0; i < cursor.getCount(); i++) {
-                    cursor.moveToPosition(i);
+    @Override
+    protected Void doInBackground(Void... params) {
+        Cursor cursor = mContext.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null, null, null,
+                null);
 
-                    imagesList.add(new GalleryImage(i, cursor.getString(1)));
+        if (cursor != null) {
+            cursor.moveToFirst();
+            mImagesList = new ArrayList<ImageGallery>();
+            for (int i = 0; i < cursor.getCount(); i++) {
+                cursor.moveToPosition(i);
 
-                    Log.d("GalleryImageLoader", cursor.getString(1));
-                    Log.d("T", Thread.currentThread().getName());
-                }
-                cursor.close();
+                mImagesList.add(new ImageGallery(i, cursor.getString(1)));
+
+                Log.d("GalleryImageLoader", cursor.getString(1));
+                Log.d("T", Thread.currentThread().getName());
             }
-        });
-        loadThread.start();
+            cursor.close();
+        }
+
+        return null;
     }
 
-    public List<GalleryImage> getImagesList() {
-        return imagesList;
+    @Override
+    protected void onPostExecute(Void aVoid) {
+        super.onPostExecute(aVoid);
+        mListener.fetchImages(mImagesList);
     }
 }

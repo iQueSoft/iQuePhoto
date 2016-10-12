@@ -1,35 +1,24 @@
 package net.iquesoft.iquephoto.view.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.isseiaoki.simplecropview.util.Utils;
-
 import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapters.ToolsAdapter;
 import net.iquesoft.iquephoto.common.BaseActivity;
-import net.iquesoft.iquephoto.core.EditorImageView;
 import net.iquesoft.iquephoto.core.ImageEditorView;
 import net.iquesoft.iquephoto.di.IHasComponent;
 import net.iquesoft.iquephoto.di.components.IApplicationComponent;
@@ -87,13 +76,10 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
         } catch (IOException e) {
             e.printStackTrace();
         }
-        //mExecutor = Executors.newSingleThreadExecutor();
 
         Log.i(EditorActivity.class.getSimpleName(), "Height " + mBitmap.getHeight() + "\nWidth " + mBitmap.getWidth());
 
-        //Uri uri = getIntent().getData();
         imageEditorView.setImageBitmap(mBitmap);
-        //mEditorImageView.setImageBitmap(mBitmap);
 
         DataHolder.getInstance().setEditorView(imageEditorView);
     }
@@ -212,39 +198,5 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
     @Override
     public IEditorActivityComponent getComponent() {
         return editorActivityComponent;
-    }
-
-    public int calcImageSize() {
-        DisplayMetrics metrics = new DisplayMetrics();
-        Display display = getWindowManager().getDefaultDisplay();
-        display.getMetrics(metrics);
-        return Math.min(Math.max(metrics.widthPixels, metrics.heightPixels), 2048);
-    }
-
-    public static class LoadScaledImageTask implements Runnable {
-        private Handler mHandler = new Handler(Looper.getMainLooper());
-        Context context;
-        Uri uri;
-        EditorImageView editorView;
-        int width;
-
-        public LoadScaledImageTask(Context context, Uri uri, EditorImageView editorView, int width) {
-            this.context = context;
-            this.uri = uri;
-            this.editorView = editorView;
-            this.width = width;
-        }
-
-        @Override
-        public void run() {
-            int maxSize = Utils.getMaxSize();
-            int requestSize = Math.min(width, maxSize);
-            try {
-                final Bitmap bitmapFromUri = Utils.decodeSampledBitmapFromUri(context, uri, requestSize);
-                mHandler.post(() -> editorView.setImageBitmap(bitmapFromUri));
-            } catch (OutOfMemoryError | Exception e) {
-                e.printStackTrace();
-            }
-        }
     }
 }

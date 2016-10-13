@@ -21,6 +21,8 @@ import net.iquesoft.iquephoto.view.IBrightnessFragmentView;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import butterknife.BindView;
@@ -29,12 +31,10 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 public class AdjustFragment extends BaseFragment implements IBrightnessFragmentView {
+
     private int mAdjustPosition;
 
-    private int mBrightnessValue;
-    private int mContrastValue;
-    private int mSaturationValue;
-    private int mWarmthValue;
+    private List<Adjust> mAdjustList = Adjust.getAdjustList();
 
     private int mCurrentAdjust;
 
@@ -81,7 +81,7 @@ public class AdjustFragment extends BaseFragment implements IBrightnessFragmentV
 
         mUnbinder = ButterKnife.bind(this, v);
 
-        mAdapter = new AdjustAdapter(Adjust.getAdjustList());
+        mAdapter = new AdjustAdapter(mAdjustList);
 
         mAdapter.setAdjustListener((adjust, position) -> {
             mAdjustPosition = position;
@@ -94,40 +94,36 @@ public class AdjustFragment extends BaseFragment implements IBrightnessFragmentV
             switch (adjust.getTitle()) {
                 case R.string.contrast:
                     mCurrentAdjust = adjust.getTitle();
-                    mContrastValue = adjust.getValue();
 
                     if (mSeekBarIsHide) {
-                        seekBar.setProgress(mContrastValue);
+                        seekBar.setProgress(adjust.getValue());
                         seekBar.setVisibility(View.VISIBLE);
                         mSeekBarIsHide = false;
                     }
                     break;
                 case R.string.brightness:
                     mCurrentAdjust = adjust.getTitle();
-                    mBrightnessValue = adjust.getValue();
 
                     if (mSeekBarIsHide) {
-                        seekBar.setProgress(mBrightnessValue);
+                        seekBar.setProgress(adjust.getValue());
                         seekBar.setVisibility(View.VISIBLE);
                         mSeekBarIsHide = false;
                     }
                     break;
                 case R.string.saturation:
                     mCurrentAdjust = adjust.getTitle();
-                    mSaturationValue = adjust.getValue();
 
                     if (mSeekBarIsHide) {
-                        seekBar.setProgress(mSaturationValue);
+                        seekBar.setProgress(adjust.getValue());
                         seekBar.setVisibility(View.VISIBLE);
                         mSeekBarIsHide = false;
                     }
                     break;
                 case R.string.warmth:
                     mCurrentAdjust = adjust.getTitle();
-                    mWarmthValue = adjust.getValue();
 
                     if (mSeekBarIsHide) {
-                        seekBar.setProgress(mWarmthValue);
+                        seekBar.setProgress(adjust.getValue());
                         seekBar.setVisibility(View.VISIBLE);
                         mSeekBarIsHide = false;
                     }
@@ -144,19 +140,23 @@ public class AdjustFragment extends BaseFragment implements IBrightnessFragmentV
         seekBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
             @Override
             public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
-                switch (mCurrentAdjust) {
+                Adjust adjust = mAdjustList.get(mAdjustPosition);
+                adjust.setValue(value);
+
+                mAdapter.notifyItemChanged(mAdjustPosition);
+
+                switch (adjust.getTitle()) {
                     case R.string.contrast:
-                        mContrastValue = value;
+
                         break;
                     case R.string.brightness:
-                        mBrightnessValue = value;
-                        mImageEditorView.setBrightnessValue(mBrightnessValue);
+                        mImageEditorView.setBrightnessValue(adjust.getValue());
                         break;
                     case R.string.saturation:
-                        mSaturationValue = value;
+
                         break;
                     case R.string.warmth:
-                        mWarmthValue = value;
+                        mImageEditorView.setWarmthValue(adjust.getValue());
                         break;
                 }
             }

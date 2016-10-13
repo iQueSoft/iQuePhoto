@@ -44,7 +44,7 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
     @Inject
     EditorActivityPresenterImpl presenter;
 
-    private IEditorActivityComponent editorActivityComponent;
+    private IEditorActivityComponent mComponent;
 
     @BindView(R.id.editorImageView)
     ImageEditorView imageEditorView;
@@ -86,11 +86,11 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
 
     @Override
     protected void setupComponent(IApplicationComponent component) {
-        editorActivityComponent = DaggerIEditorActivityComponent.builder()
+        mComponent = DaggerIEditorActivityComponent.builder()
                 .editorActivityModule(new EditorActivityModule(this))
                 .iApplicationComponent(component)
                 .build();
-        editorActivityComponent.inject(this);
+        mComponent.inject(this);
     }
 
     @Override
@@ -197,6 +197,6 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
 
     @Override
     public IEditorActivityComponent getComponent() {
-        return editorActivityComponent;
+        return mComponent;
     }
 }

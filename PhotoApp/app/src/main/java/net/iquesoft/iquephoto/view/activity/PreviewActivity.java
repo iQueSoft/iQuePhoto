@@ -8,10 +8,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.view.View;
 import android.view.WindowManager;
-import android.widget.ProgressBar;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.isseiaoki.simplecropview.CropImageView;
 
 import net.iquesoft.iquephoto.R;
@@ -36,13 +35,12 @@ public class PreviewActivity extends BaseActivity implements IPreviewActivityVie
 
     private Bitmap mBitmap;
 
+    private MaterialDialog mProgressDialog;
+
     @BindView(R.id.cropImageView)
     CropImageView cropImageView;
 
-    @BindView(R.id.cropProgress)
-    ProgressBar progressBar;
-
-    private ICropActivityComponent cropActivityComponent;
+    private ICropActivityComponent mComponent;
 
     @Inject
     PreviewActivityPresenterImpl presenter;
@@ -66,11 +64,11 @@ public class PreviewActivity extends BaseActivity implements IPreviewActivityVie
 
     @Override
     protected void setupComponent(IApplicationComponent component) {
-        cropActivityComponent = DaggerICropActivityComponent.builder()
+        mComponent = DaggerICropActivityComponent.builder()
                 .iApplicationComponent(component)
                 .cropActivityModule(new CropActivityModule(this))
                 .build();
-        cropActivityComponent.inject(this);
+        mComponent.inject(this);
     }
 
     @OnClick(R.id.buttonFlipHorizontal)
@@ -144,7 +142,7 @@ public class PreviewActivity extends BaseActivity implements IPreviewActivityVie
 
     @Override
     public ICropActivityComponent getComponent() {
-        return cropActivityComponent;
+        return mComponent;
     }
 
     @Override
@@ -152,12 +150,19 @@ public class PreviewActivity extends BaseActivity implements IPreviewActivityVie
         Intent intent = new Intent(PreviewActivity.this, EditorActivity.class);
         intent.setData(uri);
         startActivity(intent);
+        mProgressDialog.dismiss();
         finish();
     }
 
     @Override
     public void showProgress() {
-        progressBar.setVisibility(View.VISIBLE);
+        mProgressDialog = new MaterialDialog.Builder(this)
+                .content(R.string.processing)
+                .progress(true, 0)
+                .widgetColor(getResources().getColor(android.R.color.black))
+                .contentColor(getResources().getColor(android.R.color.black))
+                .canceledOnTouchOutside(false)
+                .show();
     }
 
     @Override
@@ -167,6 +172,6 @@ public class PreviewActivity extends BaseActivity implements IPreviewActivityVie
 
     @Override
     public void dismissProgress() {
-        progressBar.setVisibility(View.GONE);
+        mProgressDialog.dismiss();
     }
 }

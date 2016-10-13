@@ -18,8 +18,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -38,7 +36,7 @@ import java.util.List;
 public class ImageEditorView extends ImageView {
 
     private Context mContext;
-    private Bitmap mBitmap;
+    private Bitmap mSourceBitmap;
 
     private int mViewWidth = 0;
     private int mViewHeight = 0;
@@ -48,8 +46,13 @@ public class ImageEditorView extends ImageView {
     private float mImgHeight = 0.0f;
 
     private float mBrightnessValue = 0;
+    private float mWarmthValue = 0;
 
-    private Paint mPaintFilter;
+    private ColorMatrix mAdjustColorMatrix;
+    private ColorMatrixColorFilter mAdjustColorMatrixColorFilter;
+
+    private Paint mFilterPaint;
+
     private ColorMatrix mFilterColorMatrix;
     private boolean mHasFilter;
 
@@ -107,7 +110,9 @@ public class ImageEditorView extends ImageView {
         mPaintBitmap = new Paint();
         mPaintBitmap.setFilterBitmap(true);
 
-        mPaintFilter = new Paint();
+        mFilterPaint = new Paint();
+
+        mAdjustColorMatrix = new ColorMatrix();
 
         mMatrix = new Matrix();
         mScale = 1.0f;
@@ -117,21 +122,30 @@ public class ImageEditorView extends ImageView {
     public void onDraw(Canvas canvas) {
         if (mIsInitialized) {
             setMatrix();
-            canvas.drawBitmap(mBitmap, mMatrix, mPaintBitmap);
+            canvas.drawBitmap(mSourceBitmap, mMatrix, mPaintBitmap);
         }
         if (mHasFilter) {
-            canvas.drawBitmap(mBitmap, mMatrix, mPaintFilter);
+            canvas.drawBitmap(mSourceBitmap, mMatrix, mFilterPaint);
         }
-        if (mBrightnessValue != 0) {
-            canvas.drawBitmap(mBitmap, mMatrix, getBrightnessMatrix(mBrightnessValue));
-        }
+
+        canvas.drawBitmap(mSourceBitmap, mMatrix, getAdjustPaint());
+    }
+
+    private Paint getAdjustPaint() {
+        Paint paint = new Paint();
+
+        mAdjustColorMatrix.setConcat(getWarmthColorMatrix(mWarmthValue), getBrightnessColorMatrix(mBrightnessValue));
+
+        paint.setColorFilter(new ColorMatrixColorFilter(mAdjustColorMatrix));
+
+        return paint;
     }
 
     public void setFilter(@Nullable ColorMatrix colorMatrix) {
         mFilterColorMatrix = colorMatrix;
         if (colorMatrix != null) {
             mHasFilter = true;
-            mPaintFilter.setColorFilter(new ColorMatrixColorFilter(colorMatrix));
+            mFilterPaint.setColorFilter(new ColorMatrixColorFilter(colorMatrix));
         } else {
             mHasFilter = false;
         }
@@ -140,7 +154,7 @@ public class ImageEditorView extends ImageView {
 
     public void setFilterIntensity(int intensity) {
         int filterIntensity = (int) (intensity * 2.55);
-        mPaintFilter.setAlpha(filterIntensity);
+        mFilterPaint.setAlpha(filterIntensity);
         invalidate();
     }
 
@@ -149,23 +163,28 @@ public class ImageEditorView extends ImageView {
         invalidate();
     }
 
-    private Paint getBrightnessMatrix(float value) {
-        Log.i("Brightness", "Value: " + String.valueOf(value));
-        ColorMatrix brightnessMatrix = new ColorMatrix();
-        brightnessMatrix.set(new float[]{1, 0, 0, 0, value,
+    public void setWarmthValue(float warmthValue) {
+        mWarmthValue = warmthValue;
+        invalidate();
+    }
+
+    private ColorMatrix getWarmthColorMatrix(float value) {
+        float temp = value / 220;
+
+        return new ColorMatrix(new float[]
+                {
+                        1, 0, 0, temp, 0,
+                        0, 1, 0, temp / 2, 0,
+                        0, 0, 1, temp / 4, 0,
+                        0, 0, 0, 1, 0
+                });
+    }
+
+    private ColorMatrix getBrightnessColorMatrix(float value) {
+        return new ColorMatrix(new float[]{1, 0, 0, 0, value,
                 0, 1, 0, 0, value,
                 0, 0, 1, 0, value,
                 0, 0, 0, 1, 0});
-        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        if (mHasFilter) {
-            ColorMatrix brightnessMatrixWithFilter = new ColorMatrix();
-            brightnessMatrixWithFilter.setConcat(brightnessMatrix, mFilterColorMatrix);
-            paint.setColorFilter(new ColorMatrixColorFilter(brightnessMatrixWithFilter));
-        } else {
-            paint.setColorFilter(new ColorMatrixColorFilter(brightnessMatrix));
-        }
-
-        return paint;
     }
 
     private void findCheckedText(int x, int y) {
@@ -417,32 +436,6 @@ public class ImageEditorView extends ImageView {
         return cropped;
     }*/
 
-
-    /*private void saveToFile(Bitmap bitmap, final Uri uri) {
-        OutputStream outputStream = null;
-        try {
-            outputStream = getContext().getContentResolver()
-                    .openOutputStream(uri);
-            if (outputStream != null) {
-                bitmap.compress(mCompressFormat, mCompressQuality, outputStream);
-            }
-        } catch (IOException e) {
-            Logger.e("An error occurred while saving the image: " + uri, e);
-            postErrorOnMainThread(mSaveCallback);
-        } finally {
-            Utils.closeQuietly(outputStream);
-        }
-
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                if (mSaveCallback != null) mSaveCallback.onSuccess(uri);
-            }
-        });
-    }*/
-
-    // Public methods //////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get source image bitmap
      *
@@ -460,19 +453,7 @@ public class ImageEditorView extends ImageView {
     @Override
     public void setImageBitmap(Bitmap bitmap) {
         super.setImageBitmap(bitmap);
-        mBitmap = bitmap; // calles setImageDrawable internally
-    }
-
-    /**
-     * Set source image resource id
-     *
-     * @param resId source image resource id
-     */
-    @Override
-    public void setImageResource(int resId) {
-        mIsInitialized = false;
-        super.setImageResource(resId);
-        updateLayout();
+        mSourceBitmap = bitmap; // calles setImageDrawable internally
     }
 
     /**
@@ -519,67 +500,6 @@ public class ImageEditorView extends ImageView {
     }
 
     /**
-     * Crop image from Uri
-     *
-     * @param saveUri      Uri for saving the cropped image
-     * @param cropCallback Callback for cropping the image
-     * @param saveCallback Callback for saving the image
-     *//*
-    public void startCrop(Uri saveUri, CropCallback cropCallback, SaveCallback saveCallback) {
-        mSaveUri = saveUri;
-        mCropCallback = cropCallback;
-        mSaveCallback = saveCallback;
-        if (mIsCropping) {
-            postErrorOnMainThread(mCropCallback);
-            postErrorOnMainThread(mSaveCallback);
-            return;
-        }
-        mIsCropping = true;
-        mExecutor.submit(new Runnable() {
-            @Override
-            public void run() {
-                Bitmap cropped;
-
-                // Use thumbnail for crop
-                if (mSourceUri == null) {
-
-                }
-                // Use file for crop
-                else {
-                    //cropped = decodeRegion();
-                }
-
-                // Success
-                if (cropped != null) {
-                    //cropped = scaleBitmapIfNeeded(cropped);
-                    final Bitmap tmp = cropped;
-                    mOutputImageWidth = tmp.getWidth();
-                    mOutputImageHeight = tmp.getHeight();
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (mCropCallback != null) mCropCallback.onSuccess(tmp);
-                            if (mIsDebug) invalidate();
-                        }
-                    });
-                }
-                // Error
-                else {
-                    postErrorOnMainThread(mCropCallback);
-                }
-
-                if (mSaveUri == null) {
-                    postErrorOnMainThread(mSaveCallback);
-                    return;
-                }
-                saveToFile(cropped, mSaveUri);
-                mIsCropping = false;
-            }
-        });
-    }*/
-
-
-    /**
      * Set image overlay color
      *
      * @param overlayColor color resId or color int(ex. 0xFFFFFFFF)
@@ -608,79 +528,6 @@ public class ImageEditorView extends ImageView {
      */
     public void setTouchPaddingInDp(int paddingDp) {
         mTouchPadding = (int) (paddingDp * getDensity());
-    }
-
-    /**
-     * Set locking the crop frame.
-     *
-     * @param enabled should lock crop frame?
-     */
-    @Override
-    public void setEnabled(boolean enabled) {
-        super.setEnabled(enabled);
-        mIsEnabled = enabled;
-    }
-
-    /**
-     * Set Image Load callback
-     *
-     * @param callback callback
-     */
-    public void setLoadCallback(LoadCallback callback) {
-        mLoadCallback = callback;
-    }
-
-    /**
-     * Set Image Crop callback
-     *
-     * @param callback callback
-     */
-    public void setCropCallback(CropCallback callback) {
-        mCropCallback = callback;
-    }
-
-    /**
-     * Set Image Save callback
-     *
-     * @param callback callback
-     */
-    public void setSaveCallback(SaveCallback callback) {
-        mSaveCallback = callback;
-    }
-
-    /**
-     * Set fixed width for output
-     * (After cropping, the image is scaled to the specified size.)
-     *
-     * @param outputWidth output width
-     */
-    public void setOutputWidth(int outputWidth) {
-        mOutputWidth = outputWidth;
-        mOutputHeight = 0;
-    }
-
-    /**
-     * Set fixed height for output
-     * (After cropping, the image is scaled to the specified size.)
-     *
-     * @param outputHeight output height
-     */
-    public void setOutputHeight(int outputHeight) {
-        mOutputHeight = outputHeight;
-        mOutputWidth = 0;
-    }
-
-    /**
-     * Set maximum size for output
-     * (If cropped image size is larger than max size, the image is scaled to the smaller size.
-     * If fixed output width/height has already set, these parameters are ignored.)
-     *
-     * @param maxWidth  max output width
-     * @param maxHeight max output height
-     */
-    public void setOutputMaxSize(int maxWidth, int maxHeight) {
-        mOutputMaxWidth = maxWidth;
-        mOutputMaxHeight = maxHeight;
     }
 
     private void setScale(float mScale) {

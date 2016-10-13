@@ -40,7 +40,6 @@ public class PreviewActivityPresenterImpl implements IPreviewActivityPresenter {
     private SaveCallback saveCallback = new SaveCallback() {
         @Override
         public void onSuccess(Uri outputUri) {
-            view.dismissProgress();
             view.startEditingImage(outputUri);
         }
 

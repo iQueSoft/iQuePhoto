@@ -41,7 +41,7 @@ public class ShareActivity extends BaseActivity implements IShareActivityView, I
     @Inject
     ShareActivityPresenterImpl presenter;
 
-    private IShareActivityComponent shareActivityComponent;
+    private IShareActivityComponent mComponent;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -79,11 +79,11 @@ public class ShareActivity extends BaseActivity implements IShareActivityView, I
 
     @Override
     protected void setupComponent(IApplicationComponent component) {
-        shareActivityComponent = DaggerIShareActivityComponent.builder()
+        mComponent = DaggerIShareActivityComponent.builder()
                 .iApplicationComponent(component)
                 .shareActivityModule(new ShareActivityModule(this))
                 .build();
-        shareActivityComponent.inject(this);
+        mComponent.inject(this);
     }
 
     @Override
@@ -93,7 +93,7 @@ public class ShareActivity extends BaseActivity implements IShareActivityView, I
 
     @Override
     public IShareActivityComponent getComponent() {
-        return shareActivityComponent;
+        return mComponent;
     }
 
     @OnClick(R.id.shareBack)

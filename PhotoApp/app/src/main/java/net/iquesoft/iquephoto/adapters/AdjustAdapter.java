@@ -1,6 +1,7 @@
 package net.iquesoft.iquephoto.adapters;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,18 +46,19 @@ public class AdjustAdapter extends RecyclerView.Adapter<AdjustAdapter.ViewHolder
 
         LayoutInflater inflater = LayoutInflater.from(mContext);
 
-        View toolItem = inflater.inflate(R.layout.item_adjust, parent, false);
+        View view = inflater.inflate(R.layout.item_adjust, parent, false);
 
-        return new AdjustAdapter.ViewHolder(toolItem);
+        return new AdjustAdapter.ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(AdjustAdapter.ViewHolder holder, int position) {
         final Adjust adjust = mAdjustList.get(position);
+        Drawable drawable = mContext.getResources().getDrawable(adjust.getIcon());
 
         holder.adjustTitle.setText(mContext.getText(adjust.getTitle()));
 
-        holder.adjustIcon.setImageDrawable(mContext.getResources().getDrawable(adjust.getIcon()));
+        holder.adjustIcon.setImageDrawable(drawable);
 
         holder.adjustValue.setText(String.valueOf(adjust.getValue()));
 
@@ -75,8 +77,6 @@ public class AdjustAdapter extends RecyclerView.Adapter<AdjustAdapter.ViewHolder
             mAdjustList.get(position).setSelected(true);
 
             notifyItemChanged(position);
-
-            mAdjustList.get(position).setValue(100);
 
             mListener.onClick(adjust, position);
 

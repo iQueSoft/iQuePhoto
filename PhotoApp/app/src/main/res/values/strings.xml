@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">iQuePhoto</string>
 
+    <string name="processing">Processing…</string>
+
     <!-- START - Start screen. -->
     <string name="camera">Camera</string>
     <string name="gallery">Gallery</string>

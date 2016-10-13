@@ -24,7 +24,6 @@ import net.iquesoft.iquephoto.di.components.DaggerIStartActivityComponent;
 import net.iquesoft.iquephoto.di.components.IStartActivityComponent;
 import net.iquesoft.iquephoto.di.modules.StartActivityModule;
 import net.iquesoft.iquephoto.presenter.StartActivityPresenterImpl;
-import net.iquesoft.iquephoto.utils.GalleryImageLoader;
 import net.iquesoft.iquephoto.view.IStartActivityView;
 import net.iquesoft.iquephoto.view.fragment.GalleryImagesFragment;
 
@@ -73,7 +72,7 @@ public class StartActivity extends BaseActivity implements IStartActivityView, I
     }
 
     @OnClick(R.id.cameraButton)
-    void onClickCamera(View view) {
+    void onClickCamera() {
         presenter.openCamera();
     }
 

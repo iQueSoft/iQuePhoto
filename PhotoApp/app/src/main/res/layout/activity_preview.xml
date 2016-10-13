@@ -45,41 +45,28 @@
         android:layout_height="1dp"
         android:background="#ffffff" />
 
-    <FrameLayout
+    <com.isseiaoki.simplecropview.CropImageView
+        android:id="@+id/cropImageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1">
-
-        <com.isseiaoki.simplecropview.CropImageView
-            android:id="@+id/cropImageView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingBottom="16dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:paddingTop="16dp"
-            custom:scv_background_color="@android:color/black"
-            custom:scv_crop_mode="free"
-            custom:scv_frame_color="@color/white"
-            custom:scv_frame_stroke_weight="1dp"
-            custom:scv_guide_color="@color/white"
-            custom:scv_guide_show_mode="show_always"
-            custom:scv_guide_stroke_weight="1dp"
-            custom:scv_handle_color="@color/white"
-            custom:scv_handle_show_mode="show_always"
-            custom:scv_handle_size="14dp"
-            custom:scv_min_frame_size="50dp"
-            custom:scv_overlay_color="#aa1c1c1c"
-            custom:scv_touch_padding="8dp" />
-
-        <ProgressBar
-            android:id="@+id/cropProgress"
-            style="@style/Widget.AppCompat.ProgressBar"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
-            android:layout_gravity="center"
-            android:visibility="gone" />
-    </FrameLayout>
+        android:layout_weight="1"
+        android:paddingBottom="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="16dp"
+        custom:scv_background_color="@android:color/black"
+        custom:scv_crop_mode="free"
+        custom:scv_frame_color="@color/white"
+        custom:scv_frame_stroke_weight="1dp"
+        custom:scv_guide_color="@color/white"
+        custom:scv_guide_show_mode="show_always"
+        custom:scv_guide_stroke_weight="1dp"
+        custom:scv_handle_color="@color/white"
+        custom:scv_handle_show_mode="show_always"
+        custom:scv_handle_size="14dp"
+        custom:scv_min_frame_size="50dp"
+        custom:scv_overlay_color="#aa1c1c1c"
+        custom:scv_touch_padding="8dp" />
 
     <View
         android:layout_width="fill_parent"

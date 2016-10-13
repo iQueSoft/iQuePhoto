@@ -20,7 +20,7 @@ import butterknife.ButterKnife;
 
 public class FiltersAdapter extends RecyclerView.Adapter<FiltersAdapter.ViewHolder> {
 
-    private int checkedItem = 0;
+    private int mSelectedFilter = 0;
 
     private Context mContext;
 
@@ -46,9 +46,9 @@ public class FiltersAdapter extends RecyclerView.Adapter<FiltersAdapter.ViewHold
 
         LayoutInflater inflater = LayoutInflater.from(mContext);
 
-        View toolItem = inflater.inflate(R.layout.item_filter, parent, false);
+        View view = inflater.inflate(R.layout.item_filter, parent, false);
 
-        return new ViewHolder(toolItem);
+        return new ViewHolder(view);
     }
 
     @Override
@@ -57,11 +57,11 @@ public class FiltersAdapter extends RecyclerView.Adapter<FiltersAdapter.ViewHold
         holder.filterTitle.setText(mContext.getResources().getString(filter.getTitle()));
         holder.filterIcon.setImageDrawable(mContext.getResources().getDrawable(filter.getImage()));
 
-        if (checkedItem == 0)
-            mFiltersList.get(checkedItem).setSelected(true);
+        if (mSelectedFilter == 0)
+            mFiltersList.get(mSelectedFilter).setSelected(true);
 
         if (filter.isSelected()) {
-            checkedItem = position;
+            mSelectedFilter = position;
             holder.filterChecked.setVisibility(View.VISIBLE);
         } else {
             holder.filterChecked.setVisibility(View.GONE);
@@ -69,11 +69,11 @@ public class FiltersAdapter extends RecyclerView.Adapter<FiltersAdapter.ViewHold
 
         holder.filterIcon.setOnClickListener(view -> {
 
-            mFiltersList.get(checkedItem).setSelected(false);
+            mFiltersList.get(mSelectedFilter).setSelected(false);
 
             mFiltersList.get(position).setSelected(true);
 
-            notifyItemChanged(checkedItem);
+            notifyItemChanged(mSelectedFilter);
             notifyItemChanged(position);
 
             mFiltersListener.onClick(filter);

@@ -1,6 +1,8 @@
 package net.iquesoft.iquephoto.adapters;
 
 import android.content.Context;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +26,8 @@ public class FiltersAdapter extends RecyclerView.Adapter<FiltersAdapter.ViewHold
 
     private Context mContext;
 
+    private Drawable mDrawable;
+
     private List<Filter> mFiltersList;
 
     private FiltersListener mFiltersListener;
@@ -36,8 +40,9 @@ public class FiltersAdapter extends RecyclerView.Adapter<FiltersAdapter.ViewHold
         mFiltersListener = filtersListener;
     }
 
-    public FiltersAdapter(List<Filter> filters) {
+    public FiltersAdapter(List<Filter> filters, Drawable drawable) {
         mFiltersList = filters;
+        mDrawable = drawable;
     }
 
     @Override
@@ -54,8 +59,15 @@ public class FiltersAdapter extends RecyclerView.Adapter<FiltersAdapter.ViewHold
     @Override
     public void onBindViewHolder(FiltersAdapter.ViewHolder holder, int position) {
         final Filter filter = mFiltersList.get(position);
-        holder.filterTitle.setText(mContext.getResources().getString(filter.getTitle()));
-        holder.filterIcon.setImageDrawable(mContext.getResources().getDrawable(filter.getImage()));
+
+        holder.filterTitle.setText(filter.getTitle());
+
+        if (filter.getColorMatrix() != null) {
+            mDrawable.setColorFilter(new ColorMatrixColorFilter(filter.getColorMatrix()));
+            holder.filterIcon.setImageDrawable(mDrawable);
+        } else {
+            holder.filterIcon.setImageDrawable(mDrawable);
+        }
 
         if (mSelectedFilter == 0)
             mFiltersList.get(mSelectedFilter).setSelected(true);

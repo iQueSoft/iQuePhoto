@@ -182,4 +182,8 @@
     <string name="saturation">Saturation</string>
 
     <string name="preview">Preview</string>
+
+    <!-- START - Overlay -->
+    <string name="overlay">Overlay</string>
+    <string name="overlay_sky">Sky</string>
 </resources>

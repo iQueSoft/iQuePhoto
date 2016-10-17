@@ -2,6 +2,8 @@ package net.iquesoft.iquephoto.view.activity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentTransaction;
@@ -77,6 +79,8 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
             e.printStackTrace();
         }
 
+        DataHolder.getInstance().setDrawable(getScaledDrawable());
+
         Log.i(EditorActivity.class.getSimpleName(), "Height " + mBitmap.getHeight() + "\nWidth " + mBitmap.getWidth());
 
         imageEditorView.setImageBitmap(mBitmap);
@@ -102,6 +106,12 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
     @Override
     public void onBackPressed() {
         presenter.onBackPressed(mBitmap, mBitmap);
+    }
+
+    private Drawable getScaledDrawable() {
+        Bitmap bitmap = Bitmap.createScaledBitmap(mBitmap, 150, 150, false);
+
+        return new BitmapDrawable(getResources(), bitmap);
     }
 
     @Override

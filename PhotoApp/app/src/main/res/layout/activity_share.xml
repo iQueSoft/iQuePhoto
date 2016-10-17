@@ -30,6 +30,11 @@
             android:textStyle="bold" />
     </LinearLayout>
 
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="#ffffff" />
+
     <android.support.design.widget.TabLayout
         android:id="@+id/imageSizeTabLayout"
         android:layout_width="match_parent"
@@ -37,11 +42,6 @@
         app:tabIndicatorColor="@color/white"
         app:tabSelectedTextColor="@color/white"
         app:tabTextColor="@android:color/darker_gray" />
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="#ffffff" />
 
     <ImageView
         android:id="@+id/shareImage"

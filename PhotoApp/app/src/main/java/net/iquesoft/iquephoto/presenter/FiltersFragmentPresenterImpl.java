@@ -6,7 +6,7 @@ import javax.inject.Inject;
 
 public class FiltersFragmentPresenterImpl implements IFiltersFragmentPresenter {
 
-    private IFiltersFragmentView view;
+    private IFiltersFragmentView mView;
 
     @Inject
     public FiltersFragmentPresenterImpl() {
@@ -15,11 +15,11 @@ public class FiltersFragmentPresenterImpl implements IFiltersFragmentPresenter {
 
     @Override
     public void init(IFiltersFragmentView view) {
-        this.view = view;
+        mView = view;
     }
 
     @Override
     public void onResume() {
-        view.setFiltersAdapter();
+        mView.setFiltersAdapter();
     }
 }

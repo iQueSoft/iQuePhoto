@@ -12,14 +12,20 @@ import android.widget.LinearLayout;
 import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapters.FiltersAdapter;
+import net.iquesoft.iquephoto.adapters.OverlaysAdapter;
 import net.iquesoft.iquephoto.common.BaseFragment;
 import net.iquesoft.iquephoto.core.ImageEditorView;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
 import net.iquesoft.iquephoto.model.Filter;
+import net.iquesoft.iquephoto.model.Overlay;
 import net.iquesoft.iquephoto.presenter.FiltersFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presenter.OverlayFragmentPresenterImpl;
 import net.iquesoft.iquephoto.view.IFiltersFragmentView;
+import net.iquesoft.iquephoto.view.IOverlayFragmentView;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -28,7 +34,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-public class FiltersFragment extends BaseFragment implements IFiltersFragmentView {
+public class OverlayFragment extends BaseFragment implements IOverlayFragmentView {
 
     private boolean mIsHide;
     private boolean mIsSeekBarHide;
@@ -39,10 +45,14 @@ public class FiltersFragment extends BaseFragment implements IFiltersFragmentVie
 
     private ImageEditorView mImageEditorView;
 
-    private Filter mCurrentFilter;
+    private List<Overlay> mOverlayList = Overlay.getOverlaysList();
+
+    private OverlaysAdapter mAdapter;
+
+    private int mCurrentFilter;
 
     @Inject
-    FiltersFragmentPresenterImpl presenter;
+    OverlayFragmentPresenterImpl presenter;
 
     @BindView(R.id.filterSeekBar)
     DiscreteSeekBar seekBar;
@@ -50,8 +60,8 @@ public class FiltersFragment extends BaseFragment implements IFiltersFragmentVie
     @BindView(R.id.hideFiltersButton)
     ImageView hideFiltersButton;
 
-    @BindView(R.id.filtersList)
-    RecyclerView filtersList;
+    @BindView(R.id.overlayRecyclerView)
+    RecyclerView recyclerView;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -69,17 +79,23 @@ public class FiltersFragment extends BaseFragment implements IFiltersFragmentVie
     public void onResume() {
         super.onResume();
         presenter.init(this);
-        presenter.onResume();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_filters, container, false);
+        View v = inflater.inflate(R.layout.fragment_overlay, container, false);
         //v.setAlpha(0.8f);
 
         mUnbinder = ButterKnife.bind(this, v);
 
         mImageEditorView = DataHolder.getInstance().getEditorView();
+
+        mAdapter = new OverlaysAdapter(mOverlayList);
+
+        mAdapter.setOverlayListener(overlay -> mImageEditorView.setOverlay(getResources().getDrawable(overlay.getImage())));
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        recyclerView.setAdapter(mAdapter);
 
         seekBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
             @Override
@@ -113,33 +129,8 @@ public class FiltersFragment extends BaseFragment implements IFiltersFragmentVie
         mUnbinder.unbind();
     }
 
-    @Override
-    public void setFiltersAdapter() {
-        FiltersAdapter filtersAdapter = new FiltersAdapter(Filter.getFiltersList(), DataHolder.getInstance().getDrawable());
 
-        filtersAdapter.setFiltersListener(filter -> {
-            if (mCurrentFilter == filter) {
-                if (!mIsSeekBarHide)
-                    seekBar.setVisibility(View.VISIBLE);
-                else {
-                    seekBar.setVisibility(View.GONE);
-                }
-            } else {
-                seekBar.setVisibility(View.GONE);
-                seekBar.setProgress(100);
-                mImageEditorView.setFilterIntensity(100);
-            }
-
-            mImageEditorView.setFilter(filter.getColorMatrix());
-            mCurrentFilter = filter;
-        });
-
-
-        filtersList.setLayoutManager(new LinearLayoutManager(null, LinearLayout.HORIZONTAL, false));
-        filtersList.setAdapter(filtersAdapter);
-    }
-
-    @OnClick(R.id.hideFiltersButton)
+    /*@OnClick(R.id.hideFiltersButton)
     public void onClickHideFilters(View view) {
         if (!mIsHide) {
             hideFiltersButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_expand_less));
@@ -150,5 +141,5 @@ public class FiltersFragment extends BaseFragment implements IFiltersFragmentVie
             filtersList.setVisibility(View.VISIBLE);
             mIsHide = false;
         }
-    }
+    }*/
 }

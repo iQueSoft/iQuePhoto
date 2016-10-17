@@ -6,6 +6,7 @@ import net.iquesoft.iquephoto.view.fragment.AdjustFragment;
 import net.iquesoft.iquephoto.view.fragment.DrawingFragment;
 import net.iquesoft.iquephoto.view.fragment.FiltersFragment;
 import net.iquesoft.iquephoto.view.activity.EditorActivity;
+import net.iquesoft.iquephoto.view.fragment.OverlayFragment;
 import net.iquesoft.iquephoto.view.fragment.ShowStickersFragment;
 import net.iquesoft.iquephoto.view.fragment.StickersFragment;
 import net.iquesoft.iquephoto.view.fragment.TextFragment;
@@ -31,4 +32,6 @@ public interface IEditorActivityComponent {
     void inject(StickersFragment stickersFragment);
 
     void inject(ShowStickersFragment showStickersFragment);
+
+    void inject(OverlayFragment overlayFragment);
 }

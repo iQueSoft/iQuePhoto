@@ -15,6 +15,7 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
@@ -36,7 +37,12 @@ import java.util.List;
 public class ImageEditorView extends ImageView {
 
     private Context mContext;
+
     private Bitmap mSourceBitmap;
+    private Bitmap mOverlayBitmap;
+    private Paint mOverlayPaint;
+
+    private Drawable mSourceDrawable;
 
     private int mViewWidth = 0;
     private int mViewHeight = 0;
@@ -89,8 +95,6 @@ public class ImageEditorView extends ImageView {
     private int mTouchPadding = 0;
 
     private boolean mIsEnabled = true;
-    private int mBackgroundColor;
-    private int mOverlayColor;
 
     public ImageEditorView(Context context) {
         this(context, null);
@@ -111,6 +115,7 @@ public class ImageEditorView extends ImageView {
         mPaintBitmap.setFilterBitmap(true);
 
         mFilterPaint = new Paint();
+        mOverlayPaint = new Paint();
 
         mAdjustColorMatrix = new ColorMatrix();
 
@@ -122,13 +127,15 @@ public class ImageEditorView extends ImageView {
     public void onDraw(Canvas canvas) {
         if (mIsInitialized) {
             setMatrix();
+
             canvas.drawBitmap(mSourceBitmap, mMatrix, mPaintBitmap);
         }
-        if (mHasFilter) {
-            canvas.drawBitmap(mSourceBitmap, mMatrix, mFilterPaint);
-        }
 
-        canvas.drawBitmap(mSourceBitmap, mMatrix, getAdjustPaint());
+        if (mOverlayBitmap != null)
+            canvas.drawBitmap(mOverlayBitmap, mMatrix, mOverlayPaint);
+        //canvas.drawBitmap(mSourceBitmap, mMatrix, mFilterPaint);
+
+        //canvas.drawBitmap(mSourceBitmap, mMatrix, getAdjustPaint());
     }
 
     private Paint getAdjustPaint() {
@@ -145,10 +152,25 @@ public class ImageEditorView extends ImageView {
         mFilterColorMatrix = colorMatrix;
         if (colorMatrix != null) {
             mHasFilter = true;
-            mFilterPaint.setColorFilter(new ColorMatrixColorFilter(colorMatrix));
+            //mFilterPaint.setColorFilter(new ColorMatrixColorFilter(colorMatrix));
+            mSourceDrawable.setColorFilter(new ColorMatrixColorFilter(colorMatrix));
+            mSourceBitmap = ((BitmapDrawable) mSourceDrawable).getBitmap();
         } else {
             mHasFilter = false;
         }
+        invalidate();
+    }
+
+    public void setOverlay(Drawable drawable) {
+        mOverlayBitmap = Bitmap.createScaledBitmap(((BitmapDrawable) drawable).getBitmap(),
+                mSourceBitmap.getWidth(), mSourceBitmap.getHeight(), false);
+        mOverlayPaint.setAlpha(150);
+        invalidate();
+    }
+
+    public void setOverlayOpacity(int value) {
+        int alpha = (int) Math.round(value / 1.5);
+        mOverlayPaint.setAlpha(alpha);
         invalidate();
     }
 
@@ -453,7 +475,8 @@ public class ImageEditorView extends ImageView {
     @Override
     public void setImageBitmap(Bitmap bitmap) {
         super.setImageBitmap(bitmap);
-        mSourceBitmap = bitmap; // calles setImageDrawable internally
+        mSourceBitmap = bitmap;
+        mSourceDrawable = new BitmapDrawable(bitmap);
     }
 
     /**
@@ -465,6 +488,9 @@ public class ImageEditorView extends ImageView {
     public void setImageDrawable(Drawable drawable) {
         mIsInitialized = false;
         super.setImageDrawable(drawable);
+
+        //mSourceBitmap = ((BitmapDrawable) drawable).getBitmap();
+
         updateLayout();
     }
 
@@ -497,26 +523,6 @@ public class ImageEditorView extends ImageView {
         mOutputImageWidth = 0;
         mOutputImageHeight = 0;
         mAngle = mExifRotation;
-    }
-
-    /**
-     * Set image overlay color
-     *
-     * @param overlayColor color resId or color int(ex. 0xFFFFFFFF)
-     */
-    public void setOverlayColor(int overlayColor) {
-        this.mOverlayColor = overlayColor;
-        invalidate();
-    }
-
-    /**
-     * Set view background color
-     *
-     * @param bgColor color resId or color int(ex. 0xFFFFFFFF)
-     */
-    public void setBackgroundColor(int bgColor) {
-        this.mBackgroundColor = bgColor;
-        invalidate();
     }
 
     /**

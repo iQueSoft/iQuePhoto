@@ -10,11 +10,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Filter {
-    @StringRes
-    private int mTitle;
 
-    @DrawableRes
-    private int mImage;
+    private String mTitle;
 
     private boolean mIsSelected;
 
@@ -26,33 +23,33 @@ public class Filter {
 
     private static Filter[] filters = {
 
-            new Filter(R.string.filter_original, R.drawable.original),
+            new Filter("Original"),
 
-            new Filter(R.string.filter_sunny, R.drawable.sunny, new ColorMatrix(new float[]{
+            new Filter("F01", new ColorMatrix(new float[]{
                     1.5f, 0, 0, 0, 0,
                     0, 1.5f, 0, 0, 0,
                     0, 0, 1.5f, 0, 0,
                     0, 0, 0, 1, 0})),
 
-            new Filter(R.string.filter_darken, R.drawable.darknen, new ColorMatrix(new float[]{
+            new Filter("F02", new ColorMatrix(new float[]{
                     0.5f, 0, 0, 0, 0,
                     0, 0.5f, 0, 0, 0,
                     0, 0, 0.5f, 0, 0,
                     0, 0, 0, 1, 0})),
 
-            new Filter(R.string.filter_darken, R.drawable.darknen, new ColorMatrix(new float[]{
+            new Filter("F03", new ColorMatrix(new float[]{
                     2, -1, 0, 0, 0,
                     -1, 2, 0, 0, 0,
                     0, -1, 2, 0, 0,
                     0, 0, 0, 1, 0})),
 
-            new Filter(R.string.filter_purple, R.drawable.purple, new ColorMatrix(new float[]{
+            new Filter("F04", new ColorMatrix(new float[]{
                     1, 0, 0, 0, 0,
                     0, 1, 0, 0, 0,
                     0.50f, 0, 1, 0, 0,
                     0, 0, 0, 1, 0})),
 
-            new Filter(R.string.filter_darken, R.drawable.darknen, new ColorMatrix(new float[]{
+            new Filter("F05", new ColorMatrix(new float[]{
                     1.5f, 0, 0, 0, -40,
                     0, 1.5f, 0, 0, -40,
                     0, 0, 1.5f, 0, -40,
@@ -64,7 +61,7 @@ public class Filter {
                     -0.016f, -0.016f, 1.483f, 0, 0,
                     -0.03f, 0.05f, -0.02f, 0, 1}))),*/
 
-            new Filter(R.string.filter_purple, R.drawable.purple, new ColorMatrix(new float[]{
+            new Filter("F06", new ColorMatrix(new float[]{
                     1, 0, 0, 0.2f, 0,
                     0, 1, 0, 0, 0,
                     0, 0, 1, 0.2f, 0,
@@ -78,7 +75,7 @@ public class Filter {
                     0, 0, 0, 0, 0,
                     0, 0, 0, 1, 0}))),*/
 
-            new Filter(R.string.filter_lime, R.drawable.lime, new ColorMatrix(new float[]{
+            new Filter("F07", new ColorMatrix(new float[]{
                     1, 0, 0, 0, 0,
                     0, 1.65f, 0, 0, 0,
                     0, 0, 0, 0.5f, 0,
@@ -90,13 +87,13 @@ public class Filter {
                     0, 0.3f, 0, 0, 0,
                     0, 0, 0, 1, 0}))),*/
 
-            new Filter(R.string.filter_peachy, R.drawable.peachy, new ColorMatrix(new float[]{
+            new Filter("F08", new ColorMatrix(new float[]{
                     1, 0, 0, 0, 0,
                     0, 0.5f, 0, 0, 0,
                     0, 0, 0, 0.5f, 0,
                     0, 0, 0, 1, 0})),
 
-            new Filter(R.string.filter_magenta, R.drawable.magenta, new ColorMatrix(new float[]{
+            new Filter("F09", new ColorMatrix(new float[]{
                     1, 0, 0, 0, 0,
                     0, 0, 0, 0, 0,
                     0, 0, 1, 1, 0,
@@ -108,19 +105,19 @@ public class Filter {
                     0.272f, 0.0534f, 0.131f, 0, 0,
                     0, 0, 0, 1, 0}))),*/
 
-            new Filter(R.string.filter_light_gray, R.drawable.light_grey, new ColorMatrix(new float[]{
+            new Filter("BW01", new ColorMatrix(new float[]{
                     1, 0, 0, 0, 0,
                     1, 0, 0, 0, 0,
                     1, 0, 0, 0, 0,
                     0, 0, 0, 1, 0})),
 
-            new Filter(R.string.filter_mid_grey, R.drawable.mid_grey, new ColorMatrix(new float[]{
+            new Filter("BW02", new ColorMatrix(new float[]{
                     0, 1, 0, 0, 0,
                     0, 1, 0, 0, 0,
                     0, 1, 0, 0, 0,
                     0, 0, 0, 1, 0})),
 
-            new Filter(R.string.filter_dark_grey, R.drawable.dark_grey, new ColorMatrix(new float[]{
+            new Filter("BW03", new ColorMatrix(new float[]{
                     0, 0, 1, 0, 0,
                     0, 0, 1, 0, 0,
                     0, 0, 1, 0, 0,
@@ -131,31 +128,21 @@ public class Filter {
 
     }
 
-    private Filter(@StringRes int title, @DrawableRes int image) {
+    private Filter(String title) {
         mTitle = title;
-        mImage = image;
     }
 
-    private Filter(@StringRes int title, @DrawableRes int image, ColorMatrix colorMatrix) {
+    private Filter(String title, ColorMatrix colorMatrix) {
         mTitle = title;
-        mImage = image;
         mColorMatrix = colorMatrix;
     }
 
-    public int getTitle() {
+    public String getTitle() {
         return mTitle;
     }
 
-    public void setTitle(int title) {
+    public void setTitle(String title) {
         mTitle = title;
-    }
-
-    public int getImage() {
-        return mImage;
-    }
-
-    public void setImage(int image) {
-        mImage = image;
     }
 
     public boolean isSelected() {

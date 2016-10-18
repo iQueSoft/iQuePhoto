@@ -1,6 +1,7 @@
 package net.iquesoft.iquephoto.adapters;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +12,6 @@ import android.widget.TextView;
 import com.mikhaellopez.circularimageview.CircularImageView;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.model.Filter;
 import net.iquesoft.iquephoto.model.Overlay;
 
 import java.util.List;
@@ -21,7 +21,7 @@ import butterknife.ButterKnife;
 
 public class OverlaysAdapter extends RecyclerView.Adapter<OverlaysAdapter.ViewHolder> {
 
-    private int mSelectedFilter = 0;
+    private int mSelectedOverlay = 0;
 
     private Context mContext;
 
@@ -57,13 +57,18 @@ public class OverlaysAdapter extends RecyclerView.Adapter<OverlaysAdapter.ViewHo
         final Overlay overlay = mOverlayList.get(position);
 
         holder.title.setText(overlay.getTitle());
-        holder.image.setImageDrawable(mContext.getResources().getDrawable(overlay.getImage()));
 
-        if (mSelectedFilter == 0)
-            mOverlayList.get(mSelectedFilter).setSelected(true);
+        try {
+            holder.image.setImageDrawable(mContext.getResources().getDrawable(overlay.getImage()));
+        } catch (Resources.NotFoundException e) {
+            e.printStackTrace();
+        }
+
+        if (mSelectedOverlay == 0)
+            mOverlayList.get(mSelectedOverlay).setSelected(true);
 
         if (overlay.isSelected()) {
-            mSelectedFilter = position;
+            mSelectedOverlay = position;
             holder.overlaySelected.setVisibility(View.VISIBLE);
         } else {
             holder.overlaySelected.setVisibility(View.GONE);
@@ -71,11 +76,11 @@ public class OverlaysAdapter extends RecyclerView.Adapter<OverlaysAdapter.ViewHo
 
         holder.image.setOnClickListener(view -> {
 
-            mOverlayList.get(mSelectedFilter).setSelected(false);
+            mOverlayList.get(mSelectedOverlay).setSelected(false);
 
             mOverlayList.get(position).setSelected(true);
 
-            notifyItemChanged(mSelectedFilter);
+            notifyItemChanged(mSelectedOverlay);
             notifyItemChanged(position);
 
             listener.onClick(overlay);

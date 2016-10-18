@@ -3,8 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorPrimary"
+    android:background="@android:color/black"
     android:orientation="vertical">
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorLine" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -34,11 +39,11 @@
         android:id="@+id/stickerTabLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:tabGravity="center"
         app:tabIndicatorColor="@color/white"
         app:tabMode="scrollable"
         app:tabSelectedTextColor="@color/white"
-        app:tabTextColor="@android:color/darker_gray"
-        app:tabGravity="center">
+        app:tabTextColor="@android:color/darker_gray">
 
         <android.support.design.widget.TabItem
             android:layout_width="wrap_content"

@@ -39,7 +39,9 @@ public class ImageEditorView extends ImageView {
     private Context mContext;
 
     private Bitmap mSourceBitmap;
+
     private Bitmap mOverlayBitmap;
+    private Bitmap mFrameBitmap;
     private Paint mOverlayPaint;
 
     private Drawable mSourceDrawable;
@@ -133,6 +135,9 @@ public class ImageEditorView extends ImageView {
 
         if (mOverlayBitmap != null)
             canvas.drawBitmap(mOverlayBitmap, mMatrix, mOverlayPaint);
+
+        if (mFrameBitmap != null)
+            canvas.drawBitmap(mFrameBitmap, mMatrix, mPaintBitmap);
         //canvas.drawBitmap(mSourceBitmap, mMatrix, mFilterPaint);
 
         //canvas.drawBitmap(mSourceBitmap, mMatrix, getAdjustPaint());
@@ -161,15 +166,29 @@ public class ImageEditorView extends ImageView {
         invalidate();
     }
 
-    public void setOverlay(Drawable drawable) {
-        mOverlayBitmap = Bitmap.createScaledBitmap(((BitmapDrawable) drawable).getBitmap(),
-                mSourceBitmap.getWidth(), mSourceBitmap.getHeight(), false);
-        mOverlayPaint.setAlpha(150);
+    public void setFrame(@Nullable Drawable drawable) {
+        if (drawable != null) {
+            mFrameBitmap = Bitmap.createScaledBitmap(((BitmapDrawable) drawable).getBitmap(),
+                    mSourceBitmap.getWidth(), mSourceBitmap.getHeight(), false);
+        } else {
+            mFrameBitmap = null;
+        }
+    }
+
+    public void setOverlay(@Nullable Drawable drawable) {
+        if (drawable != null) {
+            mOverlayBitmap = Bitmap.createScaledBitmap(((BitmapDrawable) drawable).getBitmap(),
+                    mSourceBitmap.getWidth(), mSourceBitmap.getHeight(), false);
+            mOverlayPaint.setAlpha(125);
+        } else {
+            mOverlayBitmap = null;
+        }
+
         invalidate();
     }
 
     public void setOverlayOpacity(int value) {
-        int alpha = (int) Math.round(value / 1.5);
+        int alpha = (int) Math.round(value * 1.5);
         mOverlayPaint.setAlpha(alpha);
         invalidate();
     }

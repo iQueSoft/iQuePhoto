@@ -149,7 +149,7 @@
     <!-- Draw tool - END -->
 
     <!-- For frame tool. -->
-    <string name="frame">Frame</string>
+    <string name="frames">Frames</string>
 
     <!-- For color picker. -->
     <string name="cancel">Cancel</string>
@@ -177,7 +177,7 @@
     <string name="select_font">Select a font</string>
     <!-- Font picker dialog - END. -->
 
-    <string name="adjust">Adjust</string>
+    <string name="adjusts">Adjusts</string>
     <string name="warmth">Warmth</string>
     <string name="saturation">Saturation</string>
 

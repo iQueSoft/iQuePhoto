@@ -3,7 +3,7 @@
     xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackground"
+    android:background="@android:color/black"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -43,7 +43,7 @@
     <View
         android:layout_width="fill_parent"
         android:layout_height="1dp"
-        android:background="#ffffff" />
+        android:background="@color/colorLine" />
 
     <com.isseiaoki.simplecropview.CropImageView
         android:id="@+id/cropImageView"
@@ -71,7 +71,7 @@
     <View
         android:layout_width="fill_parent"
         android:layout_height="1dp"
-        android:background="#ffffff" />
+        android:background="@color/colorLine" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -116,9 +116,7 @@
     <View
         android:layout_width="fill_parent"
         android:layout_height="1dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:background="#ffffff" />
+        android:background="@color/colorLine" />
 
     <HorizontalScrollView
         android:id="@+id/tab_bar"

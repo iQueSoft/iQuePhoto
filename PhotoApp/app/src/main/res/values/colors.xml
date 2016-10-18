@@ -6,6 +6,8 @@
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#FF4081</color>
 
+    <color name="colorLine">#4f4f4f</color>
+
     <color name="green_yellow">#ADFF2F</color>
     <color name="spring_green">#00FF7F</color>
     <color name="green">#00FF00</color>

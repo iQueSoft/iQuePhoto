@@ -10,7 +10,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@color/colorBackground">
+        android:background="@android:color/black">
 
         <ImageButton
             android:id="@+id/buttonEditorBack"
@@ -36,7 +36,7 @@
     <View
         android:layout_width="fill_parent"
         android:layout_height="1dp"
-        android:background="#ffffff" />
+        android:background="@color/colorLine" />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -65,11 +65,16 @@
             android:visibility="visible" />
     </FrameLayout>
 
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorLine" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/toolsView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorBackground"
+        android:background="@android:color/black"
         android:paddingBottom="5dp"
         android:paddingTop="5dp" />
 </LinearLayout>

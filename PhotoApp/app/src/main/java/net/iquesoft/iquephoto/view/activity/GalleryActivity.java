@@ -47,7 +47,7 @@ public class GalleryActivity extends BaseActivity implements IGalleryActivityVie
 
         galleryImageLoader.setListener(imageGalleryList -> {
             mAdapter = new GalleryImageAdapter(imageGalleryList);
-            mRecyclerView.setLayoutManager(new GridLayoutManager(this, 4));
+            mRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
             mRecyclerView.setAdapter(mAdapter);
         });
 

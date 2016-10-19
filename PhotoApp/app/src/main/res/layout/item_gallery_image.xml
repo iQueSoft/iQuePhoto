@@ -7,7 +7,7 @@
 
     <ImageView
         android:id="@+id/galleryImage"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:scaleType="fitCenter" />
+        android:layout_width="125dp"
+        android:layout_height="125dp"
+        android:scaleType="fitXY" />
 </LinearLayout>

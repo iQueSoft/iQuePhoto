@@ -37,9 +37,8 @@ public class GalleryImageLoader extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... params) {
-        Cursor cursor = mContext.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null, null, null,
-                null);
-
+        Cursor cursor = mContext.getContentResolver()
+                .query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null, null, null, null);
         if (cursor != null) {
             cursor.moveToFirst();
             mImagesList = new ArrayList<GalleryImage>();

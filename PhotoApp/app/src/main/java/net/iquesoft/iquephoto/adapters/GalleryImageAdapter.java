@@ -8,10 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
-import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
+import com.squareup.picasso.Picasso;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.model.GalleryImage;
@@ -25,10 +22,7 @@ public class GalleryImageAdapter extends RecyclerView.Adapter<GalleryImageAdapte
 
     private Context mContext;
 
-    private ImageLoader mImageLoader = ImageLoader.getInstance();
-
     private List<GalleryImage> mGalleryImageList;
-    private DisplayImageOptions mDisplayImageOptions;
 
     public GalleryImageAdapter(List<GalleryImage> galleryImageList) {
 
@@ -36,15 +30,6 @@ public class GalleryImageAdapter extends RecyclerView.Adapter<GalleryImageAdapte
 
         Log.i(GalleryImageAdapter.class.getSimpleName(), String.valueOf(mGalleryImageList.size() + 1));
 
-        mDisplayImageOptions = new DisplayImageOptions.Builder()
-                .showImageOnLoading(R.drawable.ic_image_loading)
-                .showImageForEmptyUri(R.drawable.ic_image_loading)
-                .showImageOnFail(R.drawable.ic_image_fail)
-                .cacheInMemory(true)
-                .cacheOnDisk(true)
-                .considerExifParams(true)
-                .displayer(new RoundedBitmapDisplayer(0))
-                .build();
     }
 
     @Override
@@ -62,9 +47,12 @@ public class GalleryImageAdapter extends RecyclerView.Adapter<GalleryImageAdapte
     public void onBindViewHolder(GalleryImageAdapter.ViewHolder holder, int position) {
         GalleryImage galleryImage = mGalleryImageList.get(position);
 
-        mImageLoader.displayImage("file://" + galleryImage.getPath(), holder.galleryImage, mDisplayImageOptions);
-
-        //holder.galleryImage.setImageBitmap(galleryImage.getBitmap());
+        Picasso.with(mContext)
+                .load("file://" + galleryImage.getPath())
+                .resize(250, 250)
+                .centerCrop()
+                .placeholder(R.drawable.ic_image_loading)
+                .into(holder.galleryImage);
     }
 
     @Override

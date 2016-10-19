@@ -4,7 +4,7 @@ import net.iquesoft.iquephoto.presenter.AdjustFragmentPresenterImpl;
 import net.iquesoft.iquephoto.presenter.DrawingFragmentPresenterImpl;
 import net.iquesoft.iquephoto.presenter.EditorActivityPresenterImpl;
 import net.iquesoft.iquephoto.presenter.FiltersFragmentPresenterImpl;
-import net.iquesoft.iquephoto.presenter.FrameFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presenter.FramesFragmentPresenterImpl;
 import net.iquesoft.iquephoto.presenter.OverlayFragmentPresenterImpl;
 import net.iquesoft.iquephoto.presenter.ShowStickersFragmentPresenterImpl;
 import net.iquesoft.iquephoto.presenter.StickersFragmentPresenterImpl;
@@ -69,8 +69,8 @@ public class EditorActivityModule {
     }
 
     @Provides
-    FrameFragmentPresenterImpl provideFrameFragmentPresenterImpl() {
-        return new FrameFragmentPresenterImpl();
+    FramesFragmentPresenterImpl provideFrameFragmentPresenterImpl() {
+        return new FramesFragmentPresenterImpl();
     }
 
 }

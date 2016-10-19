@@ -1,7 +1,5 @@
 package net.iquesoft.iquephoto.di.modules;
 
-import net.iquesoft.iquephoto.presenter.GalleryImagesPresenterImpl;
-import net.iquesoft.iquephoto.presenter.IGalleryImagesFragmentPresenter;
 import net.iquesoft.iquephoto.presenter.StartActivityPresenterImpl;
 import net.iquesoft.iquephoto.view.IStartActivityView;
 
@@ -25,10 +23,5 @@ public class StartActivityModule {
     @Provides
     IStartActivityView provideStartActivityContractView() {
         return mView;
-    }
-
-    @Provides
-    GalleryImagesPresenterImpl provideGalleryImagesPresenterImpl() {
-        return new GalleryImagesPresenterImpl();
     }
 }

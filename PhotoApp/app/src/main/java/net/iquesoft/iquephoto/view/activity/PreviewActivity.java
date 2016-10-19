@@ -140,7 +140,6 @@ public class PreviewActivity extends BaseActivity implements IPreviewActivityVie
         return Uri.fromFile(new File(getCacheDir(), "cropped"));
     }
 
-    @Override
     public ICropActivityComponent getComponent() {
         return mComponent;
     }

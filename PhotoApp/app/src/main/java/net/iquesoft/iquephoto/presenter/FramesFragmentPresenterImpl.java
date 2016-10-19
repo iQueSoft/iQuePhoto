@@ -4,12 +4,12 @@ import net.iquesoft.iquephoto.view.IFrameFragmentView;
 
 import javax.inject.Inject;
 
-public class FrameFragmentPresenterImpl implements IFrameFragmentPresenter {
+public class FramesFragmentPresenterImpl implements IFramesFragmentPresenter {
 
     private IFrameFragmentView mView;
 
     @Inject
-    public FrameFragmentPresenterImpl() {
+    public FramesFragmentPresenterImpl() {
 
     }
 

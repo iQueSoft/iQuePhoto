@@ -9,7 +9,6 @@ import android.provider.MediaStore;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
-import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,7 +24,6 @@ import net.iquesoft.iquephoto.di.components.IStartActivityComponent;
 import net.iquesoft.iquephoto.di.modules.StartActivityModule;
 import net.iquesoft.iquephoto.presenter.StartActivityPresenterImpl;
 import net.iquesoft.iquephoto.view.IStartActivityView;
-import net.iquesoft.iquephoto.view.fragment.GalleryImagesFragment;
 
 import javax.inject.Inject;
 
@@ -40,9 +38,7 @@ public class StartActivity extends BaseActivity implements IStartActivityView, I
     @Inject
     StartActivityPresenterImpl presenter;
 
-    private GalleryImagesFragment mGalleryImagesFragment;
-
-    private IStartActivityComponent startActivityComponent;
+    private IStartActivityComponent mComponent;
 
     @BindView(R.id.applicationName)
     TextView applicationTextView;
@@ -58,17 +54,15 @@ public class StartActivity extends BaseActivity implements IStartActivityView, I
         ButterKnife.bind(this);
 
         applicationTextView.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/Blacksword.otf"));
-
-        mGalleryImagesFragment = new GalleryImagesFragment();
     }
 
     @Override
     protected void setupComponent(IApplicationComponent component) {
-        startActivityComponent = DaggerIStartActivityComponent.builder()
+        mComponent = DaggerIStartActivityComponent.builder()
                 .iApplicationComponent(component)
                 .startActivityModule(new StartActivityModule(this))
                 .build();
-        startActivityComponent.inject(this);
+        mComponent.inject(this);
     }
 
     @OnClick(R.id.cameraButton)
@@ -77,10 +71,8 @@ public class StartActivity extends BaseActivity implements IStartActivityView, I
     }
 
     @OnClick(R.id.galleryButton)
-    void onClickGallery(View view) {
+    void onClickGallery() {
         presenter.openGallery();
-        //mGalleryImagesFragment.show(getSupportFragmentManager(), StartActivity.class.getSimpleName());
-
     }
 
     @Override
@@ -119,9 +111,11 @@ public class StartActivity extends BaseActivity implements IStartActivityView, I
                 .request(Manifest.permission.READ_EXTERNAL_STORAGE)
                 .subscribe(granted -> {
                     if (granted) {
-                        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-                        photoPickerIntent.setType("image/*");
-                        startActivityForResult(photoPickerIntent, REQ_GALLERY);
+                        /*Intent intent = new Intent(Intent.ACTION_PICK);
+                        intent.setType("image*//*");
+                        startActivityForResult(intent, REQ_GALLERY);*/
+                        Intent intent = new Intent(StartActivity.this, GalleryActivity.class);
+                        startActivity(intent);
                     } else {
                         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
                                 .setTitle(getString(R.string.permission_denied))
@@ -146,8 +140,7 @@ public class StartActivity extends BaseActivity implements IStartActivityView, I
         Toast.makeText(getBaseContext(), "Coming soon!", Toast.LENGTH_SHORT).show();
     }
 
-    @Override
     public IStartActivityComponent getComponent() {
-        return startActivityComponent;
+        return mComponent;
     }
 }

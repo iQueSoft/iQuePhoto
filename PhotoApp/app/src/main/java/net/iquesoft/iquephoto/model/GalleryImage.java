@@ -4,15 +4,14 @@ import android.graphics.Bitmap;
 
 import net.iquesoft.iquephoto.utils.ImageHelper;
 
-public class ImageGallery {
+public class GalleryImage {
     private int mId;
-    private String path;
+    private String mPath;
     private Bitmap mBitmap;
 
-    public ImageGallery(int id, String path) {
+    public GalleryImage(int id, String path) {
         mId = id;
-        this.path = path;
-        mBitmap = ImageHelper.getBitmap(path);
+        mPath = path;
     }
 
     public int getId() {
@@ -24,12 +23,15 @@ public class ImageGallery {
     }
 
     public String getPath() {
-        return path;
+        return mPath;
     }
 
     public void setPath(String path) {
-        this.path = path;
-        mBitmap = ImageHelper.getBitmap(path);
+        mPath = path;
+    }
+
+    public void setBitmap(Bitmap bitmap) {
+        mBitmap = bitmap;
     }
 
     public Bitmap getBitmap() {

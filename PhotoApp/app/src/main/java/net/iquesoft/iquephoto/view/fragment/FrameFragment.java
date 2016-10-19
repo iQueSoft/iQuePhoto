@@ -15,7 +15,7 @@ import net.iquesoft.iquephoto.common.BaseFragment;
 import net.iquesoft.iquephoto.core.ImageEditorView;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
 import net.iquesoft.iquephoto.model.Frame;
-import net.iquesoft.iquephoto.presenter.FrameFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presenter.FramesFragmentPresenterImpl;
 import net.iquesoft.iquephoto.view.IFrameFragmentView;
 
 import java.util.List;
@@ -40,7 +40,7 @@ public class FrameFragment extends BaseFragment implements IFrameFragmentView {
     private ImageEditorView mImageEditorView;
     
     @Inject
-    FrameFragmentPresenterImpl presenter;
+    FramesFragmentPresenterImpl presenter;
 
     @BindView(R.id.hideFrameButton)
     ImageView hideButton;
@@ -68,7 +68,7 @@ public class FrameFragment extends BaseFragment implements IFrameFragmentView {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_frame, container, false);
+        View v = inflater.inflate(R.layout.fragment_frames, container, false);
         //v.setAlpha(0.8f);
 
         mUnbinder = ButterKnife.bind(this, v);

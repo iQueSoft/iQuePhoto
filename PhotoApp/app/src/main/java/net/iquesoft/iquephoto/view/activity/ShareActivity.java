@@ -91,7 +91,6 @@ public class ShareActivity extends BaseActivity implements IShareActivityView, I
         finish();
     }
 
-    @Override
     public IShareActivityComponent getComponent() {
         return mComponent;
     }

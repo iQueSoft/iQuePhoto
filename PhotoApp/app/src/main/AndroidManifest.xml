@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <uses-feature android:name="android.hardware.camera" />
 
@@ -16,9 +17,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
         <activity
-            android:name=".view.activity.EditorActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".view.activity.StartActivity"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -27,6 +25,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".view.activity.EditorActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.activity.GalleryActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".view.activity.CameraActivity"
             android:screenOrientation="portrait" />

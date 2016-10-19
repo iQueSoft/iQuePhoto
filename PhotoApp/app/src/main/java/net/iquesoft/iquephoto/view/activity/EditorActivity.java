@@ -205,7 +205,6 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
     }
 
 
-    @Override
     public IEditorActivityComponent getComponent() {
         return mComponent;
     }

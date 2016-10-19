@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorBackground"
     android:orientation="vertical"
-    tools:context=".view.activity.StartActivity">
+    tools:context=".mView.activity.StartActivity">
 
     <ImageView
         android:id="@+id/applicationIcon"

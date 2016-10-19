@@ -6,20 +6,20 @@ import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.util.Log;
 
-import net.iquesoft.iquephoto.model.ImageGallery;
+import net.iquesoft.iquephoto.model.GalleryImage;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class GalleryImageLoader extends AsyncTask<Void, List<ImageGallery>, Void> {
+public class GalleryImageLoader extends AsyncTask<Void, Void, Void> {
 
     private Context mContext;
-    private List<ImageGallery> mImagesList;
+    private List<GalleryImage> mImagesList;
 
     private GalleryImageLoaderListener mListener;
 
     public interface GalleryImageLoaderListener {
-        void fetchImages(List<ImageGallery> imageGalleryList);
+        void fetchImages(List<GalleryImage> galleryImageList);
     }
 
     public void setListener(GalleryImageLoaderListener listener) {
@@ -42,11 +42,11 @@ public class GalleryImageLoader extends AsyncTask<Void, List<ImageGallery>, Void
 
         if (cursor != null) {
             cursor.moveToFirst();
-            mImagesList = new ArrayList<ImageGallery>();
+            mImagesList = new ArrayList<GalleryImage>();
             for (int i = 0; i < cursor.getCount(); i++) {
                 cursor.moveToPosition(i);
 
-                mImagesList.add(new ImageGallery(i, cursor.getString(1)));
+                mImagesList.add(new GalleryImage(i, cursor.getString(1)));
 
                 Log.d("GalleryImageLoader", cursor.getString(1));
                 Log.d("T", Thread.currentThread().getName());
@@ -60,6 +60,7 @@ public class GalleryImageLoader extends AsyncTask<Void, List<ImageGallery>, Void
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
+        Log.i(GalleryImageLoader.class.getSimpleName(), String.valueOf(mImagesList.size() + 1));
         mListener.fetchImages(mImagesList);
     }
 }

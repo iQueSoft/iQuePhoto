@@ -35,42 +35,37 @@
 
     </RelativeLayout>
 
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorLine" />
+
     <android.support.design.widget.TabLayout
         android:id="@+id/stickerTabLayout"
+        style="@style/MyCustomTabLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:tabGravity="center"
         app:tabIndicatorColor="@color/white"
         app:tabMode="scrollable"
         app:tabSelectedTextColor="@color/white"
-        app:tabTextColor="@android:color/darker_gray">
+        app:tabTextColor="@android:color/darker_gray" />
 
-        <android.support.design.widget.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Left" />
-
-        <android.support.design.widget.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Center" />
-
-        <android.support.design.widget.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Right" />
-    </android.support.design.widget.TabLayout>
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorLine" />
 
     <LinearLayout
         android:id="@+id/stickersLayout"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="175dp"
         android:orientation="vertical">
 
-        <android.support.v4.mView.ViewPager
+        <android.support.v4.view.ViewPager
             android:id="@+id/stickersViewPager"
             android:layout_width="match_parent"
-            android:layout_height="300dp" />
+            android:layout_height="wrap_content" />
 
         <LinearLayout
             android:layout_width="match_parent"

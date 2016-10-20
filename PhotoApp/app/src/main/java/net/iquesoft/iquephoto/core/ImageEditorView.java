@@ -1,9 +1,5 @@
 package net.iquesoft.iquephoto.core;
 
-import com.isseiaoki.simplecropview.callback.CropCallback;
-import com.isseiaoki.simplecropview.callback.LoadCallback;
-import com.isseiaoki.simplecropview.callback.SaveCallback;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -15,10 +11,8 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
-import android.os.Handler;
-import android.os.Looper;
+import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -29,12 +23,19 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import net.iquesoft.iquephoto.R;
+import net.iquesoft.iquephoto.model.Sticker;
 import net.iquesoft.iquephoto.model.Text;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ImageEditorView extends ImageView {
+
+    private int mCheckedTextId = -1;
+    private int mCheckedStickerId = -1;
+
+    private float mPreMoveX;
+    private float mPreMoveY;
 
     private Context mContext;
 
@@ -43,6 +44,9 @@ public class ImageEditorView extends ImageView {
     private Bitmap mOverlayBitmap;
     private Bitmap mFrameBitmap;
     private Paint mOverlayPaint;
+
+    private List<Text> mTextsList;
+    private List<Sticker> mStickersList;
 
     private Drawable mSourceDrawable;
 
@@ -59,38 +63,19 @@ public class ImageEditorView extends ImageView {
     private ColorMatrix mAdjustColorMatrix;
     private ColorMatrixColorFilter mAdjustColorMatrixColorFilter;
 
+    private Paint mPaintBitmap;
     private Paint mFilterPaint;
 
     private ColorMatrix mFilterColorMatrix;
     private boolean mHasFilter;
 
-    private int mCheckedTextId = -1;
-    private List<Text> mTextsList = new LinkedList<Text>();
-
     private boolean mIsInitialized = false;
     private Matrix mMatrix = null;
     private Paint mPaintTranslucent;
-    private Paint mPaintBitmap;
+
     private RectF mImageRect;
     private PointF mCenter = new PointF();
     private float mLastX, mLastY;
-    private LoadCallback mLoadCallback = null;
-    private CropCallback mCropCallback = null;
-    private SaveCallback mSaveCallback = null;
-    private Handler mHandler = new Handler(Looper.getMainLooper());
-    private Uri mSourceUri = null;
-    private Uri mSaveUri = null;
-    private int mExifRotation = 0;
-    private int mOutputMaxWidth;
-    private int mOutputMaxHeight;
-    private int mOutputWidth = 0;
-    private int mOutputHeight = 0;
-    private Bitmap.CompressFormat mCompressFormat = Bitmap.CompressFormat.PNG;
-    private int mInputImageWidth = 0;
-    private int mInputImageHeight = 0;
-    private int mOutputImageWidth = 0;
-    private int mOutputImageHeight = 0;
-    private boolean mIsLoading = false;
 
     private TouchArea mTouchArea = TouchArea.OUT_OF_BOUNDS;
 
@@ -112,6 +97,8 @@ public class ImageEditorView extends ImageView {
 
         mContext = context;
 
+        mStickersList = new ArrayList<>();
+
         mPaintTranslucent = new Paint();
         mPaintBitmap = new Paint();
         mPaintBitmap.setFilterBitmap(true);
@@ -127,6 +114,8 @@ public class ImageEditorView extends ImageView {
 
     @Override
     public void onDraw(Canvas canvas) {
+        canvas.save();
+
         if (mIsInitialized) {
             setMatrix();
 
@@ -138,9 +127,111 @@ public class ImageEditorView extends ImageView {
 
         if (mFrameBitmap != null)
             canvas.drawBitmap(mFrameBitmap, mMatrix, mPaintBitmap);
+
+        if (mStickersList.size() > 0) {
+            drawStickers(canvas);
+        }
+
+        if (mTextsList.size() > 0) {
+            drawTexts(canvas);
+        }
+
+        canvas.restore();
         //canvas.drawBitmap(mSourceBitmap, mMatrix, mFilterPaint);
 
         //canvas.drawBitmap(mSourceBitmap, mMatrix, getAdjustPaint());
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        final int viewWidth = MeasureSpec.getSize(widthMeasureSpec);
+        final int viewHeight = MeasureSpec.getSize(heightMeasureSpec);
+
+        setMeasuredDimension(viewWidth, viewHeight);
+
+        mViewWidth = viewWidth - getPaddingLeft() - getPaddingRight();
+        mViewHeight = viewHeight - getPaddingTop() - getPaddingBottom();
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        if (getDrawable() != null) setupLayout(mViewWidth, mViewHeight);
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        int touchCount = event.getPointerCount();
+
+        mPreMoveX = event.getX();
+        mPreMoveY = event.getY();
+
+        if (!mIsInitialized) return false;
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                onDown(event);
+                return true;
+            case MotionEvent.ACTION_MOVE:
+                // Todo: Move sticker.
+
+                float distanceX = mPreMoveX - event.getX();
+                float distanceY = mPreMoveY - event.getY();
+
+                if (mCheckedTextId != -1) {
+
+                } else {
+                    // Todo: Move text.
+                }
+
+                Sticker sticker = mStickersList.get(mCheckedStickerId);
+                sticker.setX(sticker.getX() + distanceX);
+                sticker.setY(sticker.getY() + distanceY);
+
+                onMove(event);
+                if (mTouchArea != TouchArea.OUT_OF_BOUNDS) {
+                    getParent().requestDisallowInterceptTouchEvent(true);
+                }
+                return true;
+            case MotionEvent.ACTION_CANCEL:
+                getParent().requestDisallowInterceptTouchEvent(false);
+                //onCancel();
+                return true;
+            case MotionEvent.ACTION_UP:
+                getParent().requestDisallowInterceptTouchEvent(false);
+                //onUp(event);
+                return true;
+        }
+
+        invalidate();
+
+        return true;
+    }
+
+    public void addSticker(Sticker sticker) {
+        sticker.setBitmap(((BitmapDrawable) mContext.getResources().getDrawable(sticker.getImage())).getBitmap());
+        mStickersList.add(sticker);
+        invalidate();
+    }
+
+    private void drawStickers(Canvas canvas) {
+        for (Sticker sticker : mStickersList) {
+            canvas.drawBitmap(sticker.getBitmap(), mImageRect.centerX(), mImageRect.centerY(), mPaintBitmap);
+        }
+    }
+
+    public void addText(Text text) {
+        mTextsList.add(text);
+        invalidate();
+    }
+
+    private void drawTexts(Canvas canvas) {
+        for (Text text : mTextsList) {
+            canvas.drawText(text.getText(), text.getX(), text.getY(), text.getPaint());
+        }
     }
 
     private Paint getAdjustPaint() {
@@ -278,26 +369,6 @@ public class ImageEditorView extends ImageView {
         }
     }
 
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        final int viewWidth = MeasureSpec.getSize(widthMeasureSpec);
-        final int viewHeight = MeasureSpec.getSize(heightMeasureSpec);
-
-        setMeasuredDimension(viewWidth, viewHeight);
-
-        mViewWidth = viewWidth - getPaddingLeft() - getPaddingRight();
-        mViewHeight = viewHeight - getPaddingTop() - getPaddingBottom();
-    }
-
-    @Override
-    protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        if (getDrawable() != null) setupLayout(mViewWidth, mViewHeight);
-    }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-    }
 
     private void setMatrix() {
         mMatrix.reset();
@@ -336,33 +407,6 @@ public class ImageEditorView extends ImageView {
         RectF applied = new RectF();
         matrix.mapRect(applied, rect);
         return applied;
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        if (!mIsInitialized) return false;
-        if (!mIsEnabled) return false;
-        if (mIsLoading) return false;
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                onDown(event);
-                return true;
-            case MotionEvent.ACTION_MOVE:
-                onMove(event);
-                if (mTouchArea != TouchArea.OUT_OF_BOUNDS) {
-                    getParent().requestDisallowInterceptTouchEvent(true);
-                }
-                return true;
-            case MotionEvent.ACTION_CANCEL:
-                getParent().requestDisallowInterceptTouchEvent(false);
-                //onCancel();
-                return true;
-            case MotionEvent.ACTION_UP:
-                getParent().requestDisallowInterceptTouchEvent(false);
-                //onUp(event);
-                return true;
-        }
-        return false;
     }
 
     private void onDown(MotionEvent e) {
@@ -406,8 +450,6 @@ public class ImageEditorView extends ImageView {
     private boolean isInsideVertical(float y) {
         return mImageRect.top <= y && mImageRect.bottom >= y;
     }
-
-    // Utility /////////////////////////////////////////////////////////////////////////////////////
 
     private float getDensity() {
         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -526,33 +568,10 @@ public class ImageEditorView extends ImageView {
     }
 
     private void updateLayout() {
-        resetImageInfo();
         Drawable d = getDrawable();
         if (d != null) {
             setupLayout(mViewWidth, mViewHeight);
         }
-    }
-
-    private void resetImageInfo() {
-        if (mIsLoading) return;
-        mSourceUri = null;
-        mSaveUri = null;
-        mInputImageWidth = 0;
-        mInputImageHeight = 0;
-        mOutputImageWidth = 0;
-        mOutputImageHeight = 0;
-        mAngle = mExifRotation;
-    }
-
-    /**
-     * Set crop frame handle touch padding(touch area) in density-independent pixels.
-     * <p>
-     * handle touch area : a circle of radius R.(R = handle size + touch padding)
-     *
-     * @param paddingDp crop frame handle touch padding(touch area) in density-independent pixels
-     */
-    public void setTouchPaddingInDp(int paddingDp) {
-        mTouchPadding = (int) (paddingDp * getDensity());
     }
 
     private void setScale(float mScale) {
@@ -563,7 +582,33 @@ public class ImageEditorView extends ImageView {
         this.mCenter = mCenter;
     }
 
+
     private enum TouchArea {
         OUT_OF_BOUNDS, CENTER, LEFT_TOP, RIGHT_TOP, LEFT_BOTTOM, RIGHT_BOTTOM
+    }
+
+    public class MakeImage extends AsyncTask<Void, Void, Bitmap> {
+        private Canvas mCanvas;
+        private Bitmap mBitmap;
+
+        @Override
+        protected Bitmap doInBackground(Void... params) {
+
+            mBitmap = mSourceBitmap.copy(mSourceBitmap.getConfig(), false);
+            mCanvas = new Canvas(mBitmap);
+
+            if (mOverlayBitmap != null)
+                mCanvas.drawBitmap(mOverlayBitmap, mMatrix, mOverlayPaint);
+
+            if (mFrameBitmap != null)
+                mCanvas.drawBitmap(mFrameBitmap, mMatrix, mPaintBitmap);
+
+            return mBitmap;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            super.onPostExecute(bitmap);
+        }
     }
 }

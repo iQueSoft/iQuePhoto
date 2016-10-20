@@ -12,6 +12,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import net.iquesoft.iquephoto.DataHolder;
+import net.iquesoft.iquephoto.core.ImageEditorView;
 import net.iquesoft.iquephoto.model.Text;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseFragment;
@@ -37,7 +39,7 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
     private int color = 0x7f0b004f; // Default color white
 
     private String textString;
-    private Typeface typeface;
+    private Typeface mTypeface;
 
     private boolean hasText;
     private boolean isHide = false;
@@ -45,7 +47,7 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
 
     private Unbinder mUnbinder;
 
-    // private EditorImageView editorView;
+    private ImageEditorView mImageEditorView;
 
     private Text text;
 
@@ -86,13 +88,12 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_text, container, false);
-        v.setAlpha(0.8f);
 
         mUnbinder = ButterKnife.bind(this, v);
 
         mContext = v.getContext();
 
-        //editorView = DataHolder.getInstance().getEditorView();
+        mImageEditorView = DataHolder.getInstance().getEditorView();
 
         fontPickerDialog = new FontPickerDialog(v.getContext());
         RGBColorPickerDialog = new RGBColorPickerDialog(v.getContext());
@@ -133,20 +134,20 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
     }
 
     @OnClick(R.id.addTextButton)
-    public void onClickAddText() {
+    void onClickAddText() {
         textString = editText.getText().toString();
         if (!textString.isEmpty()) {
             color = RGBColorPickerDialog.getColor();
-            typeface = fontPickerDialog.getTypeface();
+            mTypeface = fontPickerDialog.getTypeface();
 
-            presenter.addText(textString, color, typeface, seekBar.getProgress());
+            presenter.addText(textString, color, mTypeface, seekBar.getProgress());
         } else {
             Toast.makeText(mContext, getResources().getString(R.string.text_is_empty), Toast.LENGTH_SHORT).show();
         }
     }
 
     @OnClick(R.id.hideTextSettingsButton)
-    public void onClickHideTextSettings() {
+    void onClickHide() {
         if (!isHide) {
             hideTextSettings.setImageDrawable(getResources().getDrawable(R.drawable.ic_expand_less));
             textSettingsLayout.setVisibility(View.GONE);
@@ -159,12 +160,12 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
     }
 
     @OnClick(R.id.textColorButton)
-    public void onClickTextColorButton() {
+    void onClickTextColorButton() {
         RGBColorPickerDialog.show();
     }
 
     @OnClick(R.id.textButton)
-    public void onClickTextButton() {
+    void onClickTextButton() {
         textString = editText.getText().toString();
         color = RGBColorPickerDialog.getColor();
         if (textString.length() > 0) {
@@ -174,7 +175,7 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
     }
 
     @OnClick(R.id.deleteTextButton)
-    public void onClickDeleteText() {
+    void onClickDeleteText() {
         if (!isDeleteActive) {
             isDeleteActive = true;
             deleteTextButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_delete_on));
@@ -199,12 +200,12 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
     }
 
     public void setTypeface(Typeface typeface) {
-        this.typeface = typeface;
+        this.mTypeface = typeface;
     }
 
     @Override
     public void onAddTextComplete(Text text) {
-        //editorView.addText(text);
+        mImageEditorView.addText(text);
         Toast.makeText(mContext, getResources().getString(R.string.text_added), Toast.LENGTH_SHORT).show();
     }
 

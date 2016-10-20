@@ -24,6 +24,16 @@ public class GalleryImageAdapter extends RecyclerView.Adapter<GalleryImageAdapte
 
     private List<GalleryImage> mGalleryImageList;
 
+    private GalleryImageListener mListener;
+
+    public void setListener(GalleryImageListener listener) {
+        mListener = listener;
+    }
+
+    public interface GalleryImageListener {
+        void onClick(GalleryImage galleryImage);
+    }
+
     public GalleryImageAdapter(List<GalleryImage> galleryImageList) {
 
         mGalleryImageList = galleryImageList;
@@ -53,6 +63,10 @@ public class GalleryImageAdapter extends RecyclerView.Adapter<GalleryImageAdapte
                 .centerCrop()
                 .placeholder(R.drawable.ic_image_loading)
                 .into(holder.galleryImage);
+
+        holder.galleryImage.setOnClickListener(v -> {
+            mListener.onClick(galleryImage);
+        });
     }
 
     @Override

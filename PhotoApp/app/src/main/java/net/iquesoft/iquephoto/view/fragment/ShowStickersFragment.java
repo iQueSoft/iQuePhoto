@@ -8,9 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapters.StickersAdapter;
 import net.iquesoft.iquephoto.common.BaseFragment;
+import net.iquesoft.iquephoto.core.ImageEditorView;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
 import net.iquesoft.iquephoto.model.Sticker;
 import net.iquesoft.iquephoto.model.StickersSet;
@@ -35,7 +37,7 @@ public class ShowStickersFragment extends BaseFragment implements IShowStickersF
     @BindView(R.id.stickersRecyclerView)
     RecyclerView recyclerView;
 
-    //private EditorImageView editorView;
+    private ImageEditorView mImageEditorView;
 
     @Inject
     ShowStickersFragmentPresenterImpl presenter;
@@ -67,15 +69,15 @@ public class ShowStickersFragment extends BaseFragment implements IShowStickersF
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_show_stickers, container, false);
-        v.setAlpha(0.85f);
 
         mUnbinder = ButterKnife.bind(this, v);
 
-        //editorView = DataHolder.getInstance().getEditorView();
+        mImageEditorView = DataHolder.getInstance().getEditorView();
 
         StickersAdapter adapter = new StickersAdapter(getStickers(mPosition));
         adapter.setStickersListener(sticker -> {
             //editorView.addSticker(sticker);
+            mImageEditorView.addSticker(sticker);
         });
 
         recyclerView.setLayoutManager(new GridLayoutManager(v.getContext(), 4));

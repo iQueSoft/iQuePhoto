@@ -53,7 +53,7 @@ public class PreviewActivity extends BaseActivity implements IPreviewActivityVie
 
         setContentView(R.layout.activity_preview);
 
-        mBitmap = BitmapFactory.decodeFile(getIntent().getStringExtra("bitmap_path"));
+        mBitmap = BitmapFactory.decodeFile(getIntent().getStringExtra("Image"));
 
         Log.i(PreviewActivity.class.getSimpleName(), "Height " + mBitmap.getHeight() + "\nWidth " + mBitmap.getWidth());
 

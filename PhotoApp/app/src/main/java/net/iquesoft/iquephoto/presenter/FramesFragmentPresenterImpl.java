@@ -1,12 +1,12 @@
 package net.iquesoft.iquephoto.presenter;
 
-import net.iquesoft.iquephoto.view.IFrameFragmentView;
+import net.iquesoft.iquephoto.view.IFramesFragmentView;
 
 import javax.inject.Inject;
 
 public class FramesFragmentPresenterImpl implements IFramesFragmentPresenter {
 
-    private IFrameFragmentView mView;
+    private IFramesFragmentView mView;
 
     @Inject
     public FramesFragmentPresenterImpl() {
@@ -14,7 +14,7 @@ public class FramesFragmentPresenterImpl implements IFramesFragmentPresenter {
     }
 
     @Override
-    public void init(IFrameFragmentView view) {
+    public void init(IFramesFragmentView view) {
         mView = view;
     }
 }

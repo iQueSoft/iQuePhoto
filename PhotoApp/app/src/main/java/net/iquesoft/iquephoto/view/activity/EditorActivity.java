@@ -109,7 +109,7 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
     }
 
     private Drawable getScaledDrawable() {
-        Bitmap bitmap = Bitmap.createScaledBitmap(mBitmap, 150, 150, false);
+        Bitmap bitmap = Bitmap.createScaledBitmap(mBitmap, 640, 640, false);
 
         return new BitmapDrawable(getResources(), bitmap);
     }

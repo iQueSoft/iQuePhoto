@@ -23,7 +23,7 @@ public class FramesAdapter extends RecyclerView.Adapter<FramesAdapter.ViewHolder
 
     private Context mContext;
 
-    private List<Frame> mFrameList;
+    private List<Frame> mFramesList;
 
     private FramesListener mListener;
 
@@ -35,8 +35,8 @@ public class FramesAdapter extends RecyclerView.Adapter<FramesAdapter.ViewHolder
         mListener = listener;
     }
 
-    public FramesAdapter(List<Frame> frameList) {
-        mFrameList = frameList;
+    public FramesAdapter(List<Frame> framesList) {
+        mFramesList = framesList;
     }
 
     @Override
@@ -52,7 +52,7 @@ public class FramesAdapter extends RecyclerView.Adapter<FramesAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(FramesAdapter.ViewHolder holder, int position) {
-        Frame frame = mFrameList.get(position);
+        Frame frame = mFramesList.get(position);
 
         holder.title.setText(frame.getTitle());
 
@@ -63,7 +63,7 @@ public class FramesAdapter extends RecyclerView.Adapter<FramesAdapter.ViewHolder
         }
 
         if (mSelectedOverlay == 0)
-            mFrameList.get(mSelectedOverlay).setSelected(true);
+            mFramesList.get(mSelectedOverlay).setSelected(true);
 
         if (frame.isSelected()) {
             mSelectedOverlay = position;
@@ -74,9 +74,9 @@ public class FramesAdapter extends RecyclerView.Adapter<FramesAdapter.ViewHolder
 
         holder.image.setOnClickListener(view -> {
 
-            mFrameList.get(mSelectedOverlay).setSelected(false);
+            mFramesList.get(mSelectedOverlay).setSelected(false);
 
-            mFrameList.get(position).setSelected(true);
+            mFramesList.get(position).setSelected(true);
 
             notifyItemChanged(mSelectedOverlay);
             notifyItemChanged(position);
@@ -88,7 +88,7 @@ public class FramesAdapter extends RecyclerView.Adapter<FramesAdapter.ViewHolder
 
     @Override
     public int getItemCount() {
-        return mFrameList.size();
+        return mFramesList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

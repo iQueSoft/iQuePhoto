@@ -14,10 +14,12 @@ public class StickersPagerAdapter extends FragmentPagerAdapter {
 
     private Context mContext;
 
-    private List<StickersSet> mStickersSets = StickersSet.getStickersSetsList();
+    private List<StickersSet> mStickersSetsList;
 
-    public StickersPagerAdapter(FragmentManager fm) {
+    public StickersPagerAdapter(FragmentManager fm, Context context, List<StickersSet> stickersSetList) {
         super(fm);
+        mContext = context;
+        mStickersSetsList = stickersSetList;
     }
 
     @Override
@@ -27,11 +29,13 @@ public class StickersPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return mStickersSets.size();
+        return mStickersSetsList.size();
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return mContext.getString(mStickersSets.get(position).getTitle());
+        return null;//mContext.getString(mStickersSetsList.get(position).getTitle());
     }
+
+
 }

@@ -1,3 +1,4 @@
+/*
 package net.iquesoft.iquephoto.core;
 
 import android.content.Context;
@@ -183,12 +184,13 @@ public class EditorView extends View implements View.OnTouchListener {
                 canvas.drawPath(drawing.getPath(), drawing.getPaint());
 
             }
-           /* try {
+            try {
                 canvas.drawPath(drawingPath, drawingPaint);
                 canvas.drawPath(drawingCirclePath, drawingCirclePaint);
             } catch (NullPointerException e) {
                 Log.i("Drawing", "is null!");
-            }*/
+            }
+
         }
 
     }
@@ -256,9 +258,39 @@ public class EditorView extends View implements View.OnTouchListener {
         this.invalidate();
     }
 
-    /**
-     *
-     */
+    *
+            *
+    @param
+    path-
+    directory path
+    to saving
+    image with
+    padding and
+    with text
+    /
+            *@return
+    path to
+    saved image
+    *
+    @param
+    drawingPath-
+    directory drawingPath
+    to saving
+    editorImage with
+    padding and
+    with text
+    /
+            *@return
+    drawingPath to
+    saved editorImage
+    *<p>
+    *
+    Determine the
+    degree between
+    the first
+    two fingers
+
+
     private Paint getBrightnessMatrix(float value) {
         Log.i("Brightness", "Value: " + String.valueOf(value));
         ColorMatrix brightnessMatrix = new ColorMatrix();
@@ -350,9 +382,10 @@ public class EditorView extends View implements View.OnTouchListener {
         }
     }
 
-    /**
-     *
-     */
+    *
+            *
+
+
     public void addText(Text text) {
         if (text.getSize() == 0) {
             text.setSize(defaultTextSize);
@@ -367,9 +400,10 @@ public class EditorView extends View implements View.OnTouchListener {
         invalidate();
     }
 
-    /**
-     *
-     */
+    *
+            *
+
+
     public void addSticker(Sticker sticker) {
         sticker.setX(100);
         sticker.setY(100);
@@ -379,9 +413,10 @@ public class EditorView extends View implements View.OnTouchListener {
         invalidate();
     }
 
-    /**
-     *
-     */
+    *
+            *
+
+
     // Todo: Make text opacity.
     private void drawTexts(Canvas canvas, Paint paint) {
         if (isSaveInProccess) {
@@ -429,7 +464,8 @@ public class EditorView extends View implements View.OnTouchListener {
 
                 if (deleteTextActivated) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.MyAlertDialogStyle)
-                            /*.setTitle(context.getString(R.string.permission_denied))*/
+                            .setTitle(context.getString(R.string.permission_denied))
+
                             .setMessage(context.getString(R.string.text_delete_alert))
                             .setPositiveButton(context.getString(R.string.yes), (dialogInterface, i2) -> {
                                 deleteText(textsList.get(checkedTextId));
@@ -457,9 +493,10 @@ public class EditorView extends View implements View.OnTouchListener {
         }
     }
 
-    /**
-     *
-     */
+    *
+            *
+
+
     private void drawSticker(Canvas canvas, Paint paint) {
         //if (isSaveInProccess) {
         for (Sticker sticker : stickersList) {
@@ -473,20 +510,25 @@ public class EditorView extends View implements View.OnTouchListener {
             canvas.drawRect(sticker.getStickerArea(), paint);
             //}
         }
-        /*} else {
-            for (int i = 0; i < textsList.size(); i++) {
-                Text text = textsList.get(i);
-                text.setPaintParams(paint);
-                canvas.drawText(text.getText(), text.getX(), text.getY() + text.getSize(), paint);
-                if (drawTextBorder) {
-                    if (checkedTextId == -1 || (checkedTextId != -1 && checkedTextId == i)) {
-                        paint.setColor(Text.STICKER_BACKGROUND_COLOR);
-                        canvas.drawRect(text.getTextArea(), paint);
-                    }
+    }
+
+    else
+
+    {
+        for (int i = 0; i < textsList.size(); i++) {
+            Text text = textsList.get(i);
+            text.setPaintParams(paint);
+            canvas.drawText(text.getText(), text.getX(), text.getY() + text.getSize(), paint);
+            if (drawTextBorder) {
+                if (checkedTextId == -1 || (checkedTextId != -1 && checkedTextId == i)) {
+                    paint.setColor(Text.STICKER_BACKGROUND_COLOR);
+                    canvas.drawRect(text.getTextArea(), paint);
                 }
             }
-        }*/
+        }
     }
+
+}
 
     private void drawImage(Canvas canvas, Paint paint) {
         calculateImagePart();
@@ -711,405 +753,411 @@ public class EditorView extends View implements View.OnTouchListener {
         setOnTouchListener(this);
     }
 
-    /**
-     * @param path - directory path to saving image with padding and with text/
-     * @return path to saved image
-     */
-    public String[] saveImages(String path) throws IOException, OutOfMemoryError {
-        if (!isEmpty()) {
-            List<String> files = new LinkedList<String>();
-            EditorImage image = editorImage;
-            long saveImagesTime = System.currentTimeMillis();
-            String fileName = String.format("%d_editor.jpg", saveImagesTime);
-            File file = new File(path, fileName);
-            FileOutputStream fos = null;
-            try {
-                fos = new FileOutputStream(file, false);
-                float pixelDensity = (float) (imagePart.width()) / (imageRect.width());
-                Bitmap processedBitmap = createBitmap(imagePart.width(), imagePart.height(), (int) ((getImagePadding() * pixelDensity)));
-                scalingForSave = (float) processedBitmap.getWidth() / allSquare.width();
-                if (processedBitmap != null && processedBitmap.getWidth() != 0) {
-                    isSaveInProccess = true;
-                    Canvas canvas = new Canvas(processedBitmap);
-                    draw(canvas);
-                    if (processedBitmap.compress(
-                            Bitmap.CompressFormat.JPEG, 100, fos)) {
-                        files.add(file.getAbsolutePath());
-                    }
-                    isSaveInProccess = false;
-                    processedBitmap.recycle();
-                }
-            } catch (IOException e) {
-                throw new IOException("Error to save file! File = " + file);
-            } catch (OutOfMemoryError e) {
-                Toast.makeText(getContext(), "Out of memory!", Toast.LENGTH_SHORT).show();
-            } finally {
-                try {
-                    if (fos != null) {
-                        fos.close();
-                    }
-                } catch (IOException e) {
-                    Log.e(TAG, "Error to close FOS!", e);
-                }
-            }
-            return files.toArray(new String[0]);
+*
+        *@param path-directory path to saving image with padding and with text/
+        *@return path to saved image
+
+
+public String[]saveImages(String path)throws IOException,OutOfMemoryError{
+        if(!isEmpty()){
+        List<String>files=new LinkedList<String>();
+        EditorImage image=editorImage;
+        long saveImagesTime=System.currentTimeMillis();
+        String fileName=String.format("%d_editor.jpg",saveImagesTime);
+        File file=new File(path,fileName);
+        FileOutputStream fos=null;
+        try{
+        fos=new FileOutputStream(file,false);
+        float pixelDensity=(float)(imagePart.width())/(imageRect.width());
+        Bitmap processedBitmap=createBitmap(imagePart.width(),imagePart.height(),(int)((getImagePadding()*pixelDensity)));
+        scalingForSave=(float)processedBitmap.getWidth()/allSquare.width();
+        if(processedBitmap!=null&&processedBitmap.getWidth()!=0){
+        isSaveInProccess=true;
+        Canvas canvas=new Canvas(processedBitmap);
+        draw(canvas);
+        if(processedBitmap.compress(
+        Bitmap.CompressFormat.JPEG,100,fos)){
+        files.add(file.getAbsolutePath());
+        }
+        isSaveInProccess=false;
+        processedBitmap.recycle();
+        }
+        }catch(IOException e){
+        throw new IOException("Error to save file! File = "+file);
+        }catch(OutOfMemoryError e){
+        Toast.makeText(getContext(),"Out of memory!",Toast.LENGTH_SHORT).show();
+        }finally{
+        try{
+        if(fos!=null){
+        fos.close();
+        }
+        }catch(IOException e){
+        Log.e(TAG,"Error to close FOS!",e);
+        }
+        }
+        return files.toArray(new String[0]);
         }
 
         return null;
+        }
+
+private float distance(float x0,float x1,float y0,float y1){
+
+        float x=x0-x1;
+        float y=y0-y1;
+        return(float)Math.sqrt(x*x+y*y);
+        }
+
+private float dispDistance(){
+
+        return(float)Math.sqrt(getWidth()*getWidth()+getHeight()*getHeight());
+        }
+
+private LongClickAsyncTask longClickAsyncTask;
+
+@Override
+public boolean onTouch(View v,MotionEvent event){
+        int currentX=(int)event.getRawX();
+        int currentY=(int)event.getRawY();
+        if(!isEmpty()){
+        int touchCount=event.getPointerCount();
+        switch(event.getAction()){
+        case MotionEvent.ACTION_DOWN:
+        if(drawingActivated){
+        drawingStart(event.getX(),event.getY());
+        invalidate();
+        break;
+        }
+        case MotionEvent.ACTION_POINTER_1_DOWN:
+        case MotionEvent.ACTION_POINTER_2_DOWN:
+        if(touchCount>=2){
+        float distance=distance(event.getX(0),event.getX(1),event.getY(0),event.getY(1));
+        if(isFreeTransform()){
+        if(checkedTextId==-1){
+        float ab=(float)(mRotateCenterDistance*Math.cos(Math.toRadians(mRotateCenterAngle)));
+        float aB=(float)(mRotateCenterDistance*Math.cos(Math.toRadians(mRotateCenterAngle-mIndependentAngle)))*mIndependentScale;
+        float ac=(float)(mRotateCenterDistance*Math.sin(Math.toRadians(mRotateCenterAngle)));
+        float aC=(float)(mRotateCenterDistance*Math.sin(Math.toRadians(mRotateCenterAngle-mIndependentAngle)))*mIndependentScale;
+        editorImage.setLeft((int)(editorImage.getLeft()+(aB-ab)));
+        editorImage.setTop((int)(editorImage.getTop()+(aC-ac)));
+        mIndependentAngle=0;
+        mIndependentScale=1f;
+        fingersAngle=rotation(event);
+        float centerX=(event.getX(0)+event.getX(1))/2+editorImage.getLeft();
+        float centerY=(event.getY(0)+event.getY(1))/2+editorImage.getTop();
+        mRotateCenterAngle=Math.toDegrees(Math.atan(centerY/centerX));
+        mRotateCenterDistance=centerX/Math.cos(Math.toRadians(mRotateCenterAngle));
+        }
+        }
+        mPrevDistance=distance;
+        isScaling=true;
+        longClick=false;
+
+        // Todo: Draw sticker border this.
+
+        }else{
+        // Todo: drawTextBorder = true;
+        drawStickerBorder=true;
+        int DOUBLE_TAP_SECOND=400;
+        if(System.currentTimeMillis()<=mLastTime+DOUBLE_TAP_SECOND){
+        if(30>Math.abs(mPrevMoveX-event.getX())+Math.abs(mPrevMoveY-event.getY())){
+        isDoubleTap=true;
+        mDoubleTapX=(int)event.getX();
+        mDoubleTapY=(int)event.getY();
+        }
+        }
+        mLastTime=System.currentTimeMillis();
+        mPrevMoveX=(int)event.getX();
+        mPrevMoveY=(int)event.getY();
+        findCheckedText(mPrevMoveX,mPrevMoveY); // FIXME: Check it
+        findCheckedSticker(mPrevMoveX,mPrevMoveY);
+        longClick=true;
+        longClickAsyncTask=new LongClickAsyncTask(this);
+        longClickAsyncTask.execute(checkedTextId);
+        }
+        break;
+        case MotionEvent.ACTION_MOVE:
+        imageCentering=true;
+        if(drawingActivated){
+        drawingMove(event.getX(),event.getY());
+        invalidate();
+        break;
+        }
+        if(!isEmpty()){
+        if(touchCount>=2&&isScaling){
+        float dist=distance(event.getX(0),event.getX(1),event.getY(0),event.getY(1));
+        float scale=(dist-mPrevDistance)/dispDistance();
+        mPrevDistance=dist;
+        scale+=1;
+        scale=scale*scale;
+        if(checkedTextId==-1){
+        if(isFreeTransform()){
+        editorImage.setRoationDegrees(editorImage.getRoationDegrees()+fingersAngle-rotation(event));
+        mIndependentAngle=mIndependentAngle+fingersAngle-rotation(event);
+        fingersAngle=rotation(event);
+        if(editorImage.getScale()*scale>0&&editorImage.getScale()*scale<editorImage.getMaxScale()){
+        mIndependentScale=mIndependentScale*scale;
+        }
+        editorImage.setFreeScale(editorImage.getScale()*scale);
+        }
+        }else{
+        textsList.get(checkedTextId).setSize(textsList.get(checkedTextId).getSize()*scale);
+        }
+        if(checkedStickerId!=-1){
+        stickersList.get(checkedStickerId).setSize(stickersList.get(checkedStickerId).getSize()*scale);
+        }
+        longClick=false;
+        }else if(!isScaling){
+        int distanceX=mPrevMoveX-(int)event.getX();
+        int distanceY=mPrevMoveY-(int)event.getY();
+        if(8<Math.abs(distanceX)+Math.abs(distanceY)){
+        longClick=false;
+        }
+        mPrevMoveX=(int)event.getX();
+        mPrevMoveY=(int)event.getY();
+        if(checkedTextId==-1){
+        if(isFreeTransform()){
+        editorImage.setLeft(editorImage.getLeft()+Math.round(distanceX));
+        editorImage.setTop(editorImage.getTop()+Math.round(distanceY));
+        if(longClick&&System.currentTimeMillis()>mLastTime+LONG_PRESS_MILLISECOND+100){
+        if(onSquareEditorPictureClickListener!=null){
+        longClick=false;
+        }
+        }
+        }
+        }else{
+        Text text=textsList.get(checkedTextId);
+        text.setX(text.getX()-Math.round(distanceX));
+        text.setY(text.getY()-Math.round(distanceY));
+        if(longClick&&System.currentTimeMillis()>mLastTime+LONG_PRESS_TEXT_MILLISECOND){
+        if(onSquareEditorPictureClickListener!=null){
+        longClick=false;
+        }
+        }
+        }
+        if(checkedStickerId!=-1){
+        // FIXME: If sticker doesn't move.
+        Sticker sticker=stickersList.get(checkedStickerId);
+        sticker.setX(sticker.getX()-Math.round(distanceX));
+        sticker.setY(sticker.getY()-Math.round(distanceY));
+        }
+        }
+        }
+        break;
+        case MotionEvent.ACTION_UP:
+        if(drawingActivated){
+        drawingStop();
+        invalidate();
+        break;
+        }
+        case MotionEvent.ACTION_POINTER_UP:
+        case MotionEvent.ACTION_POINTER_2_UP:
+        if(longClickAsyncTask!=null){
+        longClickAsyncTask.cancel(true);
+        }
+        if(event.getPointerCount()<=1){
+        drawTextBorder=false;
+        longClick=false;
+        isScaling=false;
+        if(isDoubleTap){
+        if(30>Math.abs(mDoubleTapX-event.getX())+Math.abs(mDoubleTapY-event.getY())){
+        // angle = 90;
+        if(checkedTextId==-1){
+        //  editorImage.setmBitmap(rotateImage(editorImage.getBitmap(), angle));
+        }else{
+        if(squareEditorListener!=null){
+        squareEditorListener.editText(textsList.get(checkedTextId));
+        }
+        }
+        }
+        }
+        }
+        break;
+        }
+        invalidate();
+        return true;
+        }else{
+        return false;
+        }
+        }
+
+        *
+        *@param drawingPath-directory drawingPath to saving editorImage with padding and with text/
+        *@return drawingPath to saved editorImage
+
+
+public String[]saveImages(String drawingPath)throws IOException,OutOfMemoryError{
+        if(!isEmpty()){
+        List<String>files=new LinkedList<String>();
+        EditorImage editorImage=this.editorImage;
+        long saveImagesTime=System.currentTimeMillis();
+        String fileName=String.format("%d_editor.jpg",saveImagesTime);
+        File file=new File(drawingPath,fileName);
+        FileOutputStream fos=null;
+        try{
+        fos=new FileOutputStream(file,false);
+        float pixelDensity=(float)(imagePart.width())/(imageRect.width());
+        Bitmap processedBitmap=createBitmap(imagePart.width(),imagePart.height(),(int)((getImagePadding()*pixelDensity)));
+        scalingForSave=(float)processedBitmap.getWidth()/imageArea.width();
+        if(processedBitmap!=null&&processedBitmap.getWidth()!=0){
+        isSaveInProccess=true;
+        Canvas canvas=new Canvas(processedBitmap);
+        draw(canvas);
+        if(processedBitmap.compress(
+        Bitmap.CompressFormat.JPEG,100,fos)){
+        files.add(file.getAbsolutePath());
+        }
+        isSaveInProccess=false;
+        // FileUtil.recycle(processedBitmap);
+        }
+        }catch(IOException e){
+        throw new IOException("Error to save file! File = "+file);
+        }catch(OutOfMemoryError e){
+        Toast.makeText(getContext(),"Out of memory!",Toast.LENGTH_SHORT).show();
+        }finally{
+        try{
+        if(fos!=null){
+        fos.close();
+        }
+        }catch(IOException e){
+        Log.e(TAG,"Error to close FOS!",e);
+        }
+        }
+        return files.toArray(new String[0]);
+        }
+
+        return null;
+        }
+
+
+public String[]saveImages(String drawingPath,String fileName)throws IOException,OutOfMemoryError{
+        if(!isEmpty()){
+        List<String>files=new LinkedList<String>();
+        EditorImage editorImage=this.editorImage;
+        File file=new File(drawingPath,fileName);
+        FileOutputStream fos=null;
+        try{
+        fos=new FileOutputStream(file,false);
+        float pixelDensity=(float)(imagePart.width())/(imageRect.width());
+        Bitmap processedBitmap=createBitmap(imagePart.width(),imagePart.height(),(int)((getImagePadding()*pixelDensity)));
+        scalingForSave=(float)processedBitmap.getWidth()/imageArea.width();
+        if(processedBitmap!=null&&processedBitmap.getWidth()!=0){
+        isSaveInProccess=true;
+        Canvas canvas=new Canvas(processedBitmap);
+        draw(canvas);
+        if(processedBitmap.compress(
+        Bitmap.CompressFormat.JPEG,100,fos)){
+        files.add(file.getAbsolutePath());
+        }
+        isSaveInProccess=false;
+        //FileUtil.recycle(processedBitmap);
+        }
+        }catch(IOException e){
+        throw new IOException("Error to save file! File = "+file);
+        }catch(OutOfMemoryError e){
+        Toast.makeText(getContext(),"Out of memory!",Toast.LENGTH_SHORT).show();
+        }finally{
+        try{
+        if(fos!=null){
+        fos.close();
+        }
+        }catch(IOException e){
+        Log.e(TAG,"Error to close FOS!",e);
+        }
+        }
+        return files.toArray(new String[0]);
+        }
+
+        return null;
+        }
+
+
+        *
+        *Determine the degree between the first two fingers
+
+
+private float rotation(MotionEvent event){
+        double delta_x=(event.getX(0)-event.getX(1));
+        double delta_y=(event.getY(0)-event.getY(1));
+        double radians=Math.atan2(delta_y,delta_x);
+        return(float)Math.toDegrees(radians);
+        }
+
+public OnSquareEditorListener getSquareEditorListener(){
+        return squareEditorListener;
+        }
+
+public void setSquareEditorListener(OnSquareEditorListener squareEditorListener){
+        this.squareEditorListener=squareEditorListener;
+        }
+
+public void setChangeImage(boolean changeImage){
+        this.changeImage=changeImage;
+        }
+
+public void setOnSquareEditorPictureClickListener(OnSquareEditorPictureClickListener onSquareEditorPictureClickListener){
+        this.onSquareEditorPictureClickListener=onSquareEditorPictureClickListener;
+        }
+
+public boolean isDeleteTextActivated(){
+        return deleteTextActivated;
+        }
+
+public void setDeleteTextActivated(boolean deleteTextActivated){
+        this.deleteTextActivated=deleteTextActivated;
+        }
+
+public boolean isTextActivated(){
+        return textActivated;
+        }
+
+public void setTextActivated(boolean textActivated){
+        this.textActivated=textActivated;
+        }
+
+public interface OnSquareEditorListener {
+    public void editText(Text giantSquareText);
+}
+
+public interface OnSquareEditorPictureClickListener {
+    void onPictureLongClick();
+
+    void onTextLongClick(int id);
+}
+
+private static class LongClickAsyncTask extends AsyncTask<Integer, Void, Integer> {
+    private final EditorView engine;
+
+    private LongClickAsyncTask(EditorView engine) {
+        this.engine = engine;
     }
-
-    private float distance(float x0, float x1, float y0, float y1) {
-
-        float x = x0 - x1;
-        float y = y0 - y1;
-        return (float) Math.sqrt(x * x + y * y);
-    }
-
-    private float dispDistance() {
-
-        return (float) Math.sqrt(getWidth() * getWidth() + getHeight() * getHeight());
-    }
-
-    private LongClickAsyncTask longClickAsyncTask;
 
     @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        int currentX = (int) event.getRawX();
-        int currentY = (int) event.getRawY();
-        if (!isEmpty()) {
-            int touchCount = event.getPointerCount();
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    if (drawingActivated) {
-                        drawingStart(event.getX(), event.getY());
-                        invalidate();
-                        break;
-                    }
-                case MotionEvent.ACTION_POINTER_1_DOWN:
-                case MotionEvent.ACTION_POINTER_2_DOWN:
-                    if (touchCount >= 2) {
-                        float distance = distance(event.getX(0), event.getX(1), event.getY(0), event.getY(1));
-                        if (isFreeTransform()) {
-                            if (checkedTextId == -1) {
-                                float ab = (float) (mRotateCenterDistance * Math.cos(Math.toRadians(mRotateCenterAngle)));
-                                float aB = (float) (mRotateCenterDistance * Math.cos(Math.toRadians(mRotateCenterAngle - mIndependentAngle))) * mIndependentScale;
-                                float ac = (float) (mRotateCenterDistance * Math.sin(Math.toRadians(mRotateCenterAngle)));
-                                float aC = (float) (mRotateCenterDistance * Math.sin(Math.toRadians(mRotateCenterAngle - mIndependentAngle))) * mIndependentScale;
-                                editorImage.setLeft((int) (editorImage.getLeft() + (aB - ab)));
-                                editorImage.setTop((int) (editorImage.getTop() + (aC - ac)));
-                                mIndependentAngle = 0;
-                                mIndependentScale = 1f;
-                                fingersAngle = rotation(event);
-                                float centerX = (event.getX(0) + event.getX(1)) / 2 + editorImage.getLeft();
-                                float centerY = (event.getY(0) + event.getY(1)) / 2 + editorImage.getTop();
-                                mRotateCenterAngle = Math.toDegrees(Math.atan(centerY / centerX));
-                                mRotateCenterDistance = centerX / Math.cos(Math.toRadians(mRotateCenterAngle));
-                            }
-                        }
-                        mPrevDistance = distance;
-                        isScaling = true;
-                        longClick = false;
-
-                        // Todo: Draw sticker border this.
-
-                    } else {
-                        // Todo: drawTextBorder = true;
-                        drawStickerBorder = true;
-                        int DOUBLE_TAP_SECOND = 400;
-                        if (System.currentTimeMillis() <= mLastTime + DOUBLE_TAP_SECOND) {
-                            if (30 > Math.abs(mPrevMoveX - event.getX()) + Math.abs(mPrevMoveY - event.getY())) {
-                                isDoubleTap = true;
-                                mDoubleTapX = (int) event.getX();
-                                mDoubleTapY = (int) event.getY();
-                            }
-                        }
-                        mLastTime = System.currentTimeMillis();
-                        mPrevMoveX = (int) event.getX();
-                        mPrevMoveY = (int) event.getY();
-                        findCheckedText(mPrevMoveX, mPrevMoveY); // FIXME: Check it
-                        findCheckedSticker(mPrevMoveX, mPrevMoveY);
-                        longClick = true;
-                        longClickAsyncTask = new LongClickAsyncTask(this);
-                        longClickAsyncTask.execute(checkedTextId);
-                    }
-                    break;
-                case MotionEvent.ACTION_MOVE:
-                    imageCentering = true;
-                    if (drawingActivated) {
-                        drawingMove(event.getX(), event.getY());
-                        invalidate();
-                        break;
-                    }
-                    if (!isEmpty()) {
-                        if (touchCount >= 2 && isScaling) {
-                            float dist = distance(event.getX(0), event.getX(1), event.getY(0), event.getY(1));
-                            float scale = (dist - mPrevDistance) / dispDistance();
-                            mPrevDistance = dist;
-                            scale += 1;
-                            scale = scale * scale;
-                            if (checkedTextId == -1) {
-                                if (isFreeTransform()) {
-                                    editorImage.setRoationDegrees(editorImage.getRoationDegrees() + fingersAngle - rotation(event));
-                                    mIndependentAngle = mIndependentAngle + fingersAngle - rotation(event);
-                                    fingersAngle = rotation(event);
-                                    if (editorImage.getScale() * scale > 0 && editorImage.getScale() * scale < editorImage.getMaxScale()) {
-                                        mIndependentScale = mIndependentScale * scale;
-                                    }
-                                    editorImage.setFreeScale(editorImage.getScale() * scale);
-                                }
-                            } else {
-                                textsList.get(checkedTextId).setSize(textsList.get(checkedTextId).getSize() * scale);
-                            }
-                            if (checkedStickerId != -1) {
-                                stickersList.get(checkedStickerId).setSize(stickersList.get(checkedStickerId).getSize() * scale);
-                            }
-                            longClick = false;
-                        } else if (!isScaling) {
-                            int distanceX = mPrevMoveX - (int) event.getX();
-                            int distanceY = mPrevMoveY - (int) event.getY();
-                            if (8 < Math.abs(distanceX) + Math.abs(distanceY)) {
-                                longClick = false;
-                            }
-                            mPrevMoveX = (int) event.getX();
-                            mPrevMoveY = (int) event.getY();
-                            if (checkedTextId == -1) {
-                                if (isFreeTransform()) {
-                                    editorImage.setLeft(editorImage.getLeft() + Math.round(distanceX));
-                                    editorImage.setTop(editorImage.getTop() + Math.round(distanceY));
-                                    if (longClick && System.currentTimeMillis() > mLastTime + LONG_PRESS_MILLISECOND + 100) {
-                                        if (onSquareEditorPictureClickListener != null) {
-                                            longClick = false;
-                                        }
-                                    }
-                                }
-                            } else {
-                                Text text = textsList.get(checkedTextId);
-                                text.setX(text.getX() - Math.round(distanceX));
-                                text.setY(text.getY() - Math.round(distanceY));
-                                if (longClick && System.currentTimeMillis() > mLastTime + LONG_PRESS_TEXT_MILLISECOND) {
-                                    if (onSquareEditorPictureClickListener != null) {
-                                        longClick = false;
-                                    }
-                                }
-                            }
-                            if (checkedStickerId != -1) {
-                                // FIXME: If sticker doesn't move.
-                                Sticker sticker = stickersList.get(checkedStickerId);
-                                sticker.setX(sticker.getX() - Math.round(distanceX));
-                                sticker.setY(sticker.getY() - Math.round(distanceY));
-                            }
-                        }
-                    }
-                    break;
-                case MotionEvent.ACTION_UP:
-                    if (drawingActivated) {
-                        drawingStop();
-                        invalidate();
-                        break;
-                    }
-                case MotionEvent.ACTION_POINTER_UP:
-                case MotionEvent.ACTION_POINTER_2_UP:
-                    if (longClickAsyncTask != null) {
-                        longClickAsyncTask.cancel(true);
-                    }
-                    if (event.getPointerCount() <= 1) {
-                        drawTextBorder = false;
-                        longClick = false;
-                        isScaling = false;
-                        if (isDoubleTap) {
-                            if (30 > Math.abs(mDoubleTapX - event.getX()) + Math.abs(mDoubleTapY - event.getY())) {
-                                // angle = 90;
-                                if (checkedTextId == -1) {
-                                    //  editorImage.setmBitmap(rotateImage(editorImage.getBitmap(), angle));
-                                } else {
-                                    if (squareEditorListener != null) {
-                                        squareEditorListener.editText(textsList.get(checkedTextId));
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    break;
+    protected Integer doInBackground(Integer... params) {
+        try {
+            if (params[0] == -1) {
+                Thread.sleep(LONG_PRESS_MILLISECOND);
+            } else {
+                Thread.sleep(LONG_PRESS_TEXT_MILLISECOND);
             }
-            invalidate();
-            return true;
-        } else {
-            return false;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
+        return params[0];
     }
 
-    /**
-     * @param drawingPath - directory drawingPath to saving editorImage with padding and with text/
-     * @return drawingPath to saved editorImage
-     */
-    /*public String[] saveImages(String drawingPath) throws IOException, OutOfMemoryError {
-        if (!isEmpty()) {
-            List<String> files = new LinkedList<String>();
-            EditorImage editorImage = this.editorImage;
-            long saveImagesTime = System.currentTimeMillis();
-            String fileName = String.format("%d_editor.jpg", saveImagesTime);
-            File file = new File(drawingPath, fileName);
-            FileOutputStream fos = null;
-            try {
-                fos = new FileOutputStream(file, false);
-                float pixelDensity = (float) (imagePart.width()) / (imageRect.width());
-                Bitmap processedBitmap = createBitmap(imagePart.width(), imagePart.height(), (int) ((getImagePadding() * pixelDensity)));
-                scalingForSave = (float) processedBitmap.getWidth() / imageArea.width();
-                if (processedBitmap != null && processedBitmap.getWidth() != 0) {
-                    isSaveInProccess = true;
-                    Canvas canvas = new Canvas(processedBitmap);
-                    draw(canvas);
-                    if (processedBitmap.compress(
-                            Bitmap.CompressFormat.JPEG, 100, fos)) {
-                        files.add(file.getAbsolutePath());
-                    }
-                    isSaveInProccess = false;
-                    // FileUtil.recycle(processedBitmap);
-                }
-            } catch (IOException e) {
-                throw new IOException("Error to save file! File = " + file);
-            } catch (OutOfMemoryError e) {
-                Toast.makeText(getContext(), "Out of memory!", Toast.LENGTH_SHORT).show();
-            } finally {
-                try {
-                    if (fos != null) {
-                        fos.close();
-                    }
-                } catch (IOException e) {
-                    Log.e(TAG, "Error to close FOS!", e);
-                }
-            }
-            return files.toArray(new String[0]);
-        }
-
-        return null;
-    }*/
-
-    /*public String[] saveImages(String drawingPath, String fileName) throws IOException, OutOfMemoryError {
-        if (!isEmpty()) {
-            List<String> files = new LinkedList<String>();
-            EditorImage editorImage = this.editorImage;
-            File file = new File(drawingPath, fileName);
-            FileOutputStream fos = null;
-            try {
-                fos = new FileOutputStream(file, false);
-                float pixelDensity = (float) (imagePart.width()) / (imageRect.width());
-                Bitmap processedBitmap = createBitmap(imagePart.width(), imagePart.height(), (int) ((getImagePadding() * pixelDensity)));
-                scalingForSave = (float) processedBitmap.getWidth() / imageArea.width();
-                if (processedBitmap != null && processedBitmap.getWidth() != 0) {
-                    isSaveInProccess = true;
-                    Canvas canvas = new Canvas(processedBitmap);
-                    draw(canvas);
-                    if (processedBitmap.compress(
-                            Bitmap.CompressFormat.JPEG, 100, fos)) {
-                        files.add(file.getAbsolutePath());
-                    }
-                    isSaveInProccess = false;
-                    //FileUtil.recycle(processedBitmap);
-                }
-            } catch (IOException e) {
-                throw new IOException("Error to save file! File = " + file);
-            } catch (OutOfMemoryError e) {
-                Toast.makeText(getContext(), "Out of memory!", Toast.LENGTH_SHORT).show();
-            } finally {
-                try {
-                    if (fos != null) {
-                        fos.close();
-                    }
-                } catch (IOException e) {
-                    Log.e(TAG, "Error to close FOS!", e);
-                }
-            }
-            return files.toArray(new String[0]);
-        }
-
-        return null;
-    }*/
-
-    /**
-     * Determine the degree between the first two fingers
-     */
-    private float rotation(MotionEvent event) {
-        double delta_x = (event.getX(0) - event.getX(1));
-        double delta_y = (event.getY(0) - event.getY(1));
-        double radians = Math.atan2(delta_y, delta_x);
-        return (float) Math.toDegrees(radians);
-    }
-
-    public OnSquareEditorListener getSquareEditorListener() {
-        return squareEditorListener;
-    }
-
-    public void setSquareEditorListener(OnSquareEditorListener squareEditorListener) {
-        this.squareEditorListener = squareEditorListener;
-    }
-
-    public void setChangeImage(boolean changeImage) {
-        this.changeImage = changeImage;
-    }
-
-    public void setOnSquareEditorPictureClickListener(OnSquareEditorPictureClickListener onSquareEditorPictureClickListener) {
-        this.onSquareEditorPictureClickListener = onSquareEditorPictureClickListener;
-    }
-
-    public boolean isDeleteTextActivated() {
-        return deleteTextActivated;
-    }
-
-    public void setDeleteTextActivated(boolean deleteTextActivated) {
-        this.deleteTextActivated = deleteTextActivated;
-    }
-
-    public boolean isTextActivated() {
-        return textActivated;
-    }
-
-    public void setTextActivated(boolean textActivated) {
-        this.textActivated = textActivated;
-    }
-
-    public interface OnSquareEditorListener {
-        public void editText(Text giantSquareText);
-    }
-
-    public interface OnSquareEditorPictureClickListener {
-        void onPictureLongClick();
-
-        void onTextLongClick(int id);
-    }
-
-    private static class LongClickAsyncTask extends AsyncTask<Integer, Void, Integer> {
-        private final EditorView engine;
-
-        private LongClickAsyncTask(EditorView engine) {
-            this.engine = engine;
-        }
-
-        @Override
-        protected Integer doInBackground(Integer... params) {
-            try {
-                if (params[0] == -1) {
-                    Thread.sleep(LONG_PRESS_MILLISECOND);
-                } else {
-                    Thread.sleep(LONG_PRESS_TEXT_MILLISECOND);
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            return params[0];
-        }
-
-        @Override
-        protected void onPostExecute(Integer aVoid) {
-            super.onPostExecute(aVoid);
-            if (engine.longClick && !engine.isEmpty() && engine.onSquareEditorPictureClickListener != null) {
-                if (aVoid == -1) {
-                    engine.onSquareEditorPictureClickListener.onPictureLongClick();
-                } else {
-                    engine.onSquareEditorPictureClickListener.onTextLongClick(aVoid);
-                }
+    @Override
+    protected void onPostExecute(Integer aVoid) {
+        super.onPostExecute(aVoid);
+        if (engine.longClick && !engine.isEmpty() && engine.onSquareEditorPictureClickListener != null) {
+            if (aVoid == -1) {
+                engine.onSquareEditorPictureClickListener.onPictureLongClick();
+            } else {
+                engine.onSquareEditorPictureClickListener.onTextLongClick(aVoid);
             }
         }
     }
 }
+}
 
+*/

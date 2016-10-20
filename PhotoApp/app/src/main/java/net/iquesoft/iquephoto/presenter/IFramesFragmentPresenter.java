@@ -1,7 +1,7 @@
 package net.iquesoft.iquephoto.presenter;
 
 import net.iquesoft.iquephoto.common.BaseFragmentPresenter;
-import net.iquesoft.iquephoto.view.IFrameFragmentView;
+import net.iquesoft.iquephoto.view.IFramesFragmentView;
 
-public interface IFramesFragmentPresenter extends BaseFragmentPresenter<IFrameFragmentView>{
+public interface IFramesFragmentPresenter extends BaseFragmentPresenter<IFramesFragmentView>{
 }

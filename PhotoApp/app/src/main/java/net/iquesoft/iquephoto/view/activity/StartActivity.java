@@ -2,10 +2,8 @@ package net.iquesoft.iquephoto.view.activity;
 
 import android.Manifest;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Typeface;
 import android.net.Uri;
-import android.provider.MediaStore;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
@@ -33,7 +31,6 @@ import butterknife.OnClick;
 
 public class StartActivity extends BaseActivity implements IStartActivityView, IHasComponent<IStartActivityComponent> {
     private static final int REQ_CAMERA = 1;
-    private static final int REQ_GALLERY = 2;
 
     @Inject
     StartActivityPresenterImpl presenter;
@@ -84,24 +81,6 @@ public class StartActivity extends BaseActivity implements IStartActivityView, I
             case REQ_CAMERA:
                 startActivity(intent);
                 break;
-            case REQ_GALLERY:
-                try {
-                    Uri uri = data.getData();
-                    String[] filePath = {MediaStore.Images.Media.DATA};
-                    Cursor cursor = getContentResolver().query(uri,
-                            filePath, null, null, null);
-                    cursor.moveToFirst();
-
-                    int columnIndex = cursor.getColumnIndex(filePath[0]);
-                    String path = cursor.getString(columnIndex);
-                    cursor.close();
-
-                    intent.putExtra("bitmap_path", path);
-                    startActivity(intent);
-                } catch (NullPointerException e) {
-                    e.printStackTrace();
-                    Toast.makeText(getBaseContext(), R.string.error, Toast.LENGTH_SHORT).show();
-                }
         }
     }
 
@@ -111,9 +90,6 @@ public class StartActivity extends BaseActivity implements IStartActivityView, I
                 .request(Manifest.permission.READ_EXTERNAL_STORAGE)
                 .subscribe(granted -> {
                     if (granted) {
-                        /*Intent intent = new Intent(Intent.ACTION_PICK);
-                        intent.setType("image*//*");
-                        startActivityForResult(intent, REQ_GALLERY);*/
                         Intent intent = new Intent(StartActivity.this, GalleryActivity.class);
                         startActivity(intent);
                     } else {

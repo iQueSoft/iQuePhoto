@@ -13,8 +13,11 @@ import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapters.StickersPagerAdapter;
 import net.iquesoft.iquephoto.common.BaseFragment;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
+import net.iquesoft.iquephoto.model.StickersSet;
 import net.iquesoft.iquephoto.presenter.StickersFragmentPresenterImpl;
 import net.iquesoft.iquephoto.view.IStickersFragmentView;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -26,6 +29,8 @@ import butterknife.Unbinder;
 public class StickersFragment extends BaseFragment implements IStickersFragmentView {
 
     private boolean mIsHide = false;
+
+    private List<StickersSet> mStickersSetsList = StickersSet.getStickersSetsList();
 
     private Unbinder mUnbinder;
     private StickersPagerAdapter mPagerAdapter;
@@ -72,10 +77,16 @@ public class StickersFragment extends BaseFragment implements IStickersFragmentV
 
         mUnbinder = ButterKnife.bind(this, v);
 
-        mPagerAdapter = new StickersPagerAdapter(getChildFragmentManager());
+        mPagerAdapter = new StickersPagerAdapter(getChildFragmentManager(), getContext(), mStickersSetsList);
         viewPager.setAdapter(mPagerAdapter);
 
         tabLayout.setupWithViewPager(viewPager);
+
+        for (int i = 0; i < tabLayout.getTabCount(); i++) {
+            TabLayout.Tab tab = tabLayout.getTabAt(i);
+            StickersSet stickersSet = mStickersSetsList.get(i);
+            tab.setIcon(stickersSet.getIcon());
+        }
 
         return v;
     }
@@ -87,7 +98,7 @@ public class StickersFragment extends BaseFragment implements IStickersFragmentV
     }
 
     @OnClick(R.id.hideStickersButton)
-    public void onClickHideStickers() {
+    void onClickHide() {
         if (!mIsHide) {
             hideStickersButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_expand_less));
             stickersLayout.setVisibility(View.GONE);

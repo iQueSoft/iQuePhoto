@@ -9,7 +9,7 @@ import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.view.fragment.DrawingFragment;
 import net.iquesoft.iquephoto.view.fragment.AdjustFragment;
 import net.iquesoft.iquephoto.view.fragment.FiltersFragment;
-import net.iquesoft.iquephoto.view.fragment.FrameFragment;
+import net.iquesoft.iquephoto.view.fragment.FramesFragment;
 import net.iquesoft.iquephoto.view.fragment.OverlayFragment;
 import net.iquesoft.iquephoto.view.fragment.StickersFragment;
 import net.iquesoft.iquephoto.view.fragment.TextFragment;
@@ -35,7 +35,7 @@ public class Tool {
             new Tool(R.string.adjusts, R.drawable.ic_adjust, AdjustFragment.newInstance()),
             new Tool(R.string.overlay, R.drawable.ic_overlay, new OverlayFragment()),
             new Tool(R.string.stickers, R.drawable.ic_stiker, StickersFragment.newInstance()),
-            new Tool(R.string.frames, R.drawable.ic_frame, new FrameFragment()),
+            new Tool(R.string.frames, R.drawable.ic_frame, new FramesFragment()),
             new Tool(R.string.drawing, R.drawable.ic_brush, DrawingFragment.newInstance()),
             new Tool(R.string.text, R.drawable.ic_letters, TextFragment.newInstance())
     };

@@ -11,7 +11,7 @@ import net.iquesoft.iquephoto.model.GalleryImage;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GalleryImageLoader extends AsyncTask<Void, Void, Void> {
+public class ImageScanner extends AsyncTask<Void, Void, Void> {
 
     private Context mContext;
     private List<GalleryImage> mImagesList;
@@ -26,7 +26,7 @@ public class GalleryImageLoader extends AsyncTask<Void, Void, Void> {
         mListener = listener;
     }
 
-    public GalleryImageLoader(Context context) {
+    public ImageScanner(Context context) {
         mContext = context;
     }
 
@@ -47,7 +47,7 @@ public class GalleryImageLoader extends AsyncTask<Void, Void, Void> {
 
                 mImagesList.add(new GalleryImage(i, cursor.getString(1)));
 
-                Log.d("GalleryImageLoader", cursor.getString(1));
+                Log.d("ImageScanner", cursor.getString(1));
                 Log.d("T", Thread.currentThread().getName());
             }
             cursor.close();
@@ -59,7 +59,7 @@ public class GalleryImageLoader extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        Log.i(GalleryImageLoader.class.getSimpleName(), String.valueOf(mImagesList.size() + 1));
+        Log.i(ImageScanner.class.getSimpleName(), String.valueOf(mImagesList.size() + 1));
         mListener.fetchImages(mImagesList);
     }
 }

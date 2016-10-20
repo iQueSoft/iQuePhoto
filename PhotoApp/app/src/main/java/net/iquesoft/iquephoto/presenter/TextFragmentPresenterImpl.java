@@ -23,11 +23,7 @@ public class TextFragmentPresenterImpl implements ITextFragmentPresenter {
 
     @Override
     public void addText(String text, int color, Typeface typeface, int opacity) {
-        Text photoEditorText = new Text();
-        photoEditorText.setTypeface(typeface);
-        photoEditorText.setText(text);
-        photoEditorText.setColor(color);
-        photoEditorText.setOpacity(opacity);
+        Text photoEditorText = new Text(text, typeface, color, opacity);
 
         view.onAddTextComplete(photoEditorText);
     }

@@ -20,10 +20,14 @@ public class Frame {
     }
 
     private static Frame[] frames = {
-            new Frame("GRUNGE01", R.drawable.frame_grunge_01)
+            new Frame("GRUNGE01", R.drawable.frame_grunge_01),
+            new Frame("GRUNGE02", R.drawable.frame_grunge_02),
+            new Frame("GRUNGE03", R.drawable.frame_grunge_03),
+            new Frame("GRUNGE04", R.drawable.frame_grunge_04),
+            new Frame("HL01", R.drawable.frame_h_01)
     };
 
-    public Frame(String title, @DrawableRes int image) {
+    private Frame(String title, @DrawableRes int image) {
         mTitle = title;
         mImage = image;
     }

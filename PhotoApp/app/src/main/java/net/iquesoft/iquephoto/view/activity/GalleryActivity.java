@@ -1,5 +1,6 @@
 package net.iquesoft.iquephoto.view.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,7 +15,7 @@ import net.iquesoft.iquephoto.di.components.IApplicationComponent;
 import net.iquesoft.iquephoto.di.components.IGalleryActivityComponent;
 import net.iquesoft.iquephoto.di.modules.GalleryActivityModule;
 import net.iquesoft.iquephoto.presenter.GalleryActivityPresenterImpl;
-import net.iquesoft.iquephoto.utils.GalleryImageLoader;
+import net.iquesoft.iquephoto.utils.ImageScanner;
 import net.iquesoft.iquephoto.view.IGalleryActivityView;
 
 import javax.inject.Inject;
@@ -42,11 +43,16 @@ public class GalleryActivity extends BaseActivity implements IGalleryActivityVie
 
         setContentView(R.layout.activity_gallery);
 
-        GalleryImageLoader galleryImageLoader = new GalleryImageLoader(this);
+        ImageScanner galleryImageLoader = new ImageScanner(this);
         galleryImageLoader.execute();
 
         galleryImageLoader.setListener(imageGalleryList -> {
             mAdapter = new GalleryImageAdapter(imageGalleryList);
+            mAdapter.setListener(galleryImage -> {
+                Intent intent = new Intent(GalleryActivity.this, PreviewActivity.class);
+                intent.putExtra("Image", galleryImage.getPath());
+                startActivity(intent);
+            });
             mRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
             mRecyclerView.setAdapter(mAdapter);
         });

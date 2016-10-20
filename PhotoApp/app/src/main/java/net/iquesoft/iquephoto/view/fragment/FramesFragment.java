@@ -16,7 +16,7 @@ import net.iquesoft.iquephoto.core.ImageEditorView;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
 import net.iquesoft.iquephoto.model.Frame;
 import net.iquesoft.iquephoto.presenter.FramesFragmentPresenterImpl;
-import net.iquesoft.iquephoto.view.IFrameFragmentView;
+import net.iquesoft.iquephoto.view.IFramesFragmentView;
 
 import java.util.List;
 
@@ -27,7 +27,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-public class FrameFragment extends BaseFragment implements IFrameFragmentView {
+public class FramesFragment extends BaseFragment implements IFramesFragmentView {
 
     private boolean mIsHide;
 
@@ -38,7 +38,7 @@ public class FrameFragment extends BaseFragment implements IFrameFragmentView {
     private FramesAdapter mAdapter;
 
     private ImageEditorView mImageEditorView;
-    
+
     @Inject
     FramesFragmentPresenterImpl presenter;
 

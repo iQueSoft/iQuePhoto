@@ -1,7 +1,6 @@
 package net.iquesoft.iquephoto.model;
 
-import android.graphics.Color;
-import android.graphics.Rect;
+import android.graphics.Bitmap;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
 
@@ -11,19 +10,20 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Sticker {
-    public static final int STICKER_AREA_MARGIN = 7;
-    public static final int STICKER_BACKGROUND_COLOR = Color.parseColor("#80404040");
 
     @StringRes
     private int mTitle;
 
     private int mImage;
 
-    private float size = 100;
+    private Bitmap mBitmap;
 
-    private int x, y;
+    private float mScale;
 
-    private Rect stickerArea = new Rect();
+    private float mSize = 100;
+
+    private float mX = 0;
+    private float mY = 0;
 
     private static Sticker flagStickers[] = {
             new Sticker(R.string.flag_ukraine, R.drawable.flag_ukraine),
@@ -31,7 +31,6 @@ public class Sticker {
             new Sticker(R.string.flag_germany, R.drawable.flag_germany),
             new Sticker(R.string.flag_brazil, R.drawable.flag_brazil)
     };
-
 
     private static Sticker emoticonsStickers[] = {
             new Sticker(R.string.emoticon_happy, R.drawable.emoticon_happy),
@@ -53,9 +52,9 @@ public class Sticker {
 
     };
 
-    public Sticker(@StringRes int title, @DrawableRes int image) {
+    private Sticker(@StringRes int title, @DrawableRes int image) {
         mTitle = title;
-        this.mImage = image;
+        mImage = image;
     }
 
     public int getTitle() {
@@ -71,7 +70,7 @@ public class Sticker {
     }
 
     public void setImage(int image) {
-        this.mImage = image;
+        mImage = image;
     }
 
     /**
@@ -88,38 +87,45 @@ public class Sticker {
         return Arrays.asList(emoticonsStickers);
     }
 
-    public int getX() {
-        return x;
+    public float getX() {
+        return mX;
     }
 
-    public void setX(int x) {
-        this.x = x;
+    public void setX(float x) {
+        mX = x;
     }
 
-    public int getY() {
-        return y;
+    public float getY() {
+        return mY;
     }
 
-    public void setY(int y) {
-        this.y = y;
-    }
-
-    public Rect getStickerArea() {
-        stickerArea.top += getSize() + getY() - STICKER_AREA_MARGIN;
-        stickerArea.bottom += getSize() + getY() + STICKER_AREA_MARGIN;
-        stickerArea.left += getX() - STICKER_AREA_MARGIN;
-        stickerArea.right += getX() + STICKER_AREA_MARGIN;
-
-        return stickerArea;
+    public void setY(float y) {
+        mY = y;
     }
 
     public float getSize() {
-        return size;
+        return mSize;
     }
 
     public void setSize(float size) {
-        this.size = size;
+        mSize = size;
         //setStickerArea();
+    }
+
+    public Bitmap getBitmap() {
+        return mBitmap;
+    }
+
+    public void setBitmap(Bitmap bitmap) {
+        mBitmap = bitmap;
+    }
+
+    public float getScale() {
+        return mScale;
+    }
+
+    public void setScale(float scale) {
+        mScale = scale;
     }
 }
 

@@ -6,28 +6,40 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.DisplayMetrics;
+import android.util.Log;
 
 import com.isseiaoki.simplecropview.CropImageView;
 import com.isseiaoki.simplecropview.callback.CropCallback;
 import com.isseiaoki.simplecropview.callback.SaveCallback;
 
+import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.view.IPreviewActivityView;
 
 import javax.inject.Inject;
 
 public class PreviewActivityPresenterImpl implements IPreviewActivityPresenter {
 
-    private IPreviewActivityView view;
+    private static final int[] CROP_MODES = {
+            R.string.crop_free,
+            R.string.crop_original,
+            R.string.crop_square,
+            R.string.crop_3_4,
+            R.string.crop_4_3,
+            R.string.crop_9_16,
+            R.string.crop_16_9
+    };
+
+    private IPreviewActivityView mView;
 
     @Inject
     public PreviewActivityPresenterImpl(IPreviewActivityView view) {
-        this.view = view;
+        mView = view;
     }
 
     private CropCallback cropCallback = new CropCallback() {
         @Override
         public void onSuccess(Bitmap cropped) {
-            view.dismissProgress();
+            mView.dismissProgress();
             //view.startEditingImage(cropped);
         }
 
@@ -40,7 +52,7 @@ public class PreviewActivityPresenterImpl implements IPreviewActivityPresenter {
     private SaveCallback saveCallback = new SaveCallback() {
         @Override
         public void onSuccess(Uri outputUri) {
-            view.startEditingImage(outputUri);
+            mView.startEditingImage(outputUri);
         }
 
         @Override
@@ -50,8 +62,16 @@ public class PreviewActivityPresenterImpl implements IPreviewActivityPresenter {
     };
 
     @Override
+    public void initCropModes() {
+        for (int i = 0; i < CROP_MODES.length; i++) {
+            if (i == 0) mView.createTab(CROP_MODES[i], true);
+            else mView.createTab(CROP_MODES[i], false);
+        }
+    }
+
+    @Override
     public void cropImage(Uri uri, CropImageView cropImageView) {
-        view.showProgress();
+        mView.showProgress();
         cropImageView.startCrop(uri, cropCallback, saveCallback);
     }
 
@@ -64,7 +84,7 @@ public class PreviewActivityPresenterImpl implements IPreviewActivityPresenter {
         if (flippedBitmap != null) {
             flippedBitmap.setDensity(DisplayMetrics.DENSITY_DEFAULT);
             Drawable drawable = new BitmapDrawable(flippedBitmap);
-            view.flipImage(drawable);
+            mView.flipImage(drawable);
         }
     }
 
@@ -77,7 +97,7 @@ public class PreviewActivityPresenterImpl implements IPreviewActivityPresenter {
         if (flippedBitmap != null) {
             flippedBitmap.setDensity(DisplayMetrics.DENSITY_DEFAULT);
             Drawable drawable = new BitmapDrawable(flippedBitmap);
-            view.flipImage(drawable);
+            mView.flipImage(drawable);
         }
     }
 }

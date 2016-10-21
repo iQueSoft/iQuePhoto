@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Window;
-import android.widget.TextView;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapters.FontsAdapter;
@@ -17,20 +16,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-/**
- * @author Sergey
- */
 public class FontPickerDialog extends Dialog {
 
-    // Todo: Make text style like as normal, bold and italic text.
-    private int color;
-    private String text;
-    private Context context;
+    private int mColor;
+    private String mText;
+    private Context mContext;
 
     private Typeface typeface;
-
-    @BindView(R.id.textPreview)
-    TextView textPreview;
 
     @BindView(R.id.fontsList)
     RecyclerView fontsList;
@@ -40,19 +32,17 @@ public class FontPickerDialog extends Dialog {
 
     public FontPickerDialog(Context context) {
         super(context);
-        this.context = context;
+        mContext = context;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
+
         setContentView(R.layout.dialog_font_picker);
 
         ButterKnife.bind(this);
-
-        textPreview.setText(text);
-        textPreview.setTextColor(color);
 
         initFontsList();
     }
@@ -73,21 +63,14 @@ public class FontPickerDialog extends Dialog {
         fontsList.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         fontsAdapter.setFontsListener(font -> {
             typeface = Typeface.createFromAsset(getContext().getAssets(), font.getTypeface());
-            textPreview.setTypeface(typeface);
         });
         fontsList.setAdapter(fontsAdapter);
 
     }
 
-    /**
-     * Show this dialog.
-     *
-     * @param text  need for text preview;
-     * @param color is text preview text color.
-     */
     public void showDialog(String text, int color) {
-        this.text = text;
-        this.color = color;
+        mText = text;
+        mColor = color;
         show();
     }
 
@@ -116,14 +99,14 @@ public class FontPickerDialog extends Dialog {
     }
 
     public void setColor(int color) {
-        this.color = color;
+        mColor = color;
     }
 
     public String getText() {
-        return text;
+        return mText;
     }
 
     public void setText(String text) {
-        this.text = text;
+        mText = text;
     }
 }

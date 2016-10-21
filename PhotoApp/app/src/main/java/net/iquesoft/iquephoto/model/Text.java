@@ -1,19 +1,18 @@
 package net.iquesoft.iquephoto.model;
 
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 
 public class Text {
 
-    public static final int TEXT_AREA_MARGIN = 7;
-    public static final int TEXT_BACKGROUND_COLOR = Color.parseColor("#80404040");
+    public static final float DEFAULT_SIZE = 100f;
+    public static final int DEFAULT_COLOR = 0xFF000000;
 
     private String mText;
     private Typeface mTypeface;
     private String mTypefacePath;
-    private float mSize = 120f;
+    private float mSize;
 
     private int mColor;
     private int mX;
@@ -39,7 +38,7 @@ public class Text {
 
     public void setX(int x) {
         mX = x;
-        setTextArea();
+        setRect();
     }
 
     public int getY() {
@@ -48,7 +47,7 @@ public class Text {
 
     public void setY(int y) {
         mY = y;
-        setTextArea();
+        setRect();
     }
 
     public String getText() {
@@ -57,7 +56,7 @@ public class Text {
 
     public void setText(String text) {
         mText = text;
-        setTextArea();
+        setRect();
     }
 
     public Typeface getTypeface() {
@@ -66,7 +65,7 @@ public class Text {
 
     public void setTypeface(Typeface typeface) {
         mTypeface = typeface;
-        setTextArea();
+        setRect();
     }
 
     public float getSize() {
@@ -75,7 +74,7 @@ public class Text {
 
     public void setSize(float size) {
         mSize = size;
-        setTextArea();
+        setRect();
     }
 
     public int getColor() {
@@ -91,7 +90,6 @@ public class Text {
         final StringBuffer sb = new StringBuffer("Text{");
         sb.append("mText='").append(mText).append('\'');
         sb.append(", mTypeface=").append(mTypeface);
-        sb.append(", mTypefacePath='").append(mTypefacePath).append('\'');
         sb.append(", mSize=").append(mSize);
         sb.append(", mColor=").append(mColor);
         sb.append(", mX=").append(mX);
@@ -101,27 +99,18 @@ public class Text {
         return sb.toString();
     }
 
-    public Rect getTextArea() {
+    public Rect getRect() {
         return mRect;
     }
 
-    private void setTextArea() {
-        if (getText() != null && mTypeface != null) {
-            Paint paint = new Paint();
-            setPaintParams(paint);
-            paint.getTextBounds(getText(), 0, getText().length(), mRect);
-            mRect.top += getSize() + getY() - TEXT_AREA_MARGIN;
-            mRect.bottom += getSize() + getY() + TEXT_AREA_MARGIN;
-            mRect.left += getX() - TEXT_AREA_MARGIN;
-            mRect.right += getX() + TEXT_AREA_MARGIN;
+    private void setRect() {
+        if (getText() != null) {
+            getPaint().getTextBounds(getText(), 0, getText().length(), mRect);
+            mRect.top += getSize() + getY();
+            mRect.bottom += getSize() + getY();
+            mRect.left += getX();
+            mRect.right += getX();
         }
-    }
-
-    public void setPaintParams(Paint paint) {
-        paint.setColor(getColor());
-        paint.setTypeface(getTypeface());
-        paint.setAntiAlias(true);
-        paint.setTextSize(getSize());
     }
 
     public String getTypefacePath() {
@@ -144,6 +133,8 @@ public class Text {
         mPaint.setTypeface(mTypeface);
         mPaint.setAlpha(mOpacity);
         mPaint.setColor(mColor);
+        mPaint.setAntiAlias(true);
+        mPaint.setTextSize(mSize);
 
         return mPaint;
     }

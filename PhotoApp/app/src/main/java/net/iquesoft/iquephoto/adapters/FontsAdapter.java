@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.model.Font;
+import net.iquesoft.iquephoto.model.Text;
 
 import java.util.List;
 
@@ -19,6 +20,8 @@ import butterknife.ButterKnife;
 public class FontsAdapter extends RecyclerView.Adapter<FontsAdapter.ViewHolder> {
 
     private Context mContext;
+
+    private String mText;
 
     private List<Font> mFontsList;
 
@@ -49,10 +52,12 @@ public class FontsAdapter extends RecyclerView.Adapter<FontsAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(FontsAdapter.ViewHolder holder, int position) {
         final Font font = mFontsList.get(position);
-        holder.font.setText(font.getTitle());
-        holder.font.setTypeface(getTypeface(font.getTypeface()));
 
-        holder.font.setOnClickListener(view -> mListener.onClick(font));
+        holder.fontTitle.setText(font.getTitle());
+
+        holder.previewText.setTypeface(getTypeface(font.getTypeface()));
+
+        holder.fontTitle.setOnClickListener(view -> mListener.onClick(font));
     }
 
     @Override
@@ -65,8 +70,11 @@ public class FontsAdapter extends RecyclerView.Adapter<FontsAdapter.ViewHolder> 
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.fontTextView)
-        TextView font;
+        @BindView(R.id.previewText)
+        TextView previewText;
+
+        @BindView(R.id.fontTitle)
+        TextView fontTitle;
 
         public ViewHolder(View itemView) {
             super(itemView);

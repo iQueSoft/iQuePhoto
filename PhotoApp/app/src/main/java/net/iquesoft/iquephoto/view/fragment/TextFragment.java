@@ -38,18 +38,15 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
 
     private int color = 0x7f0b004f; // Default color white
 
-    private String textString;
+    private String mText;
     private Typeface mTypeface;
 
-    private boolean hasText;
     private boolean isHide = false;
     private boolean isDeleteActive = false;
 
     private Unbinder mUnbinder;
 
     private ImageEditorView mImageEditorView;
-
-    private Text text;
 
     private FontPickerDialog fontPickerDialog;
     private RGBColorPickerDialog RGBColorPickerDialog;
@@ -68,9 +65,6 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
 
     @BindView(R.id.textSettingsLayout)
     LinearLayout textSettingsLayout;
-
-    @BindView(R.id.deleteTextButton)
-    ImageView deleteTextButton;
 
     @BindView(R.id.textField)
     EditText editText;
@@ -135,12 +129,12 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
 
     @OnClick(R.id.addTextButton)
     void onClickAddText() {
-        textString = editText.getText().toString();
-        if (!textString.isEmpty()) {
+        mText = editText.getText().toString();
+        if (!mText.isEmpty()) {
             color = RGBColorPickerDialog.getColor();
             mTypeface = fontPickerDialog.getTypeface();
 
-            presenter.addText(textString, color, mTypeface, seekBar.getProgress());
+            presenter.addText(mText, color, mTypeface, seekBar.getProgress());
         } else {
             Toast.makeText(mContext, getResources().getString(R.string.text_is_empty), Toast.LENGTH_SHORT).show();
         }
@@ -166,27 +160,10 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
 
     @OnClick(R.id.textButton)
     void onClickTextButton() {
-        textString = editText.getText().toString();
+        mText = editText.getText().toString();
         color = RGBColorPickerDialog.getColor();
-        if (textString.length() > 0) {
-            fontPickerDialog.showDialog(textString, color);
-        }
-
-    }
-
-    @OnClick(R.id.deleteTextButton)
-    void onClickDeleteText() {
-        if (!isDeleteActive) {
-            isDeleteActive = true;
-            deleteTextButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_delete_on));
-
-            //editorView.setDeleteTextActivated(true);
-            Toast.makeText(mContext, getResources().getString(R.string.text_delete_enabled), Toast.LENGTH_SHORT).show();
-        } else {
-            isDeleteActive = false;
-            //editorView.setDeleteTextActivated(false);
-            deleteTextButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_delete_off));
-            Toast.makeText(mContext, getResources().getString(R.string.text_delete_disabled), Toast.LENGTH_SHORT).show();
+        if (mText.length() > 0) {
+            fontPickerDialog.showDialog(mText, color);
         }
 
     }

@@ -22,6 +22,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class GalleryActivity extends BaseActivity implements IGalleryActivityView, IHasComponent<IGalleryActivityComponent> {
 
@@ -52,6 +53,7 @@ public class GalleryActivity extends BaseActivity implements IGalleryActivityVie
                 Intent intent = new Intent(GalleryActivity.this, PreviewActivity.class);
                 intent.putExtra("Image", galleryImage.getPath());
                 startActivity(intent);
+                finish();
             });
             mRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
             mRecyclerView.setAdapter(mAdapter);
@@ -67,6 +69,11 @@ public class GalleryActivity extends BaseActivity implements IGalleryActivityVie
                 .galleryActivityModule(new GalleryActivityModule(this))
                 .build();
         mComponent.inject(this);
+    }
+
+    @OnClick(R.id.buttonGalleryBack)
+    void onClickBack() {
+        super.onBackPressed();
     }
 
     @Override

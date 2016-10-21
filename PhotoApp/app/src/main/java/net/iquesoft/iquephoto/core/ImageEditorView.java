@@ -3,12 +3,15 @@ package net.iquesoft.iquephoto.core;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PointF;
+import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -31,18 +34,21 @@ import java.util.List;
 
 public class ImageEditorView extends ImageView {
 
+    private float mPrevDistance;
+    private boolean isScaling;
+
     private int mCheckedTextId = -1;
     private int mCheckedStickerId = -1;
 
-    private float mPreMoveX;
-    private float mPreMoveY;
+    private int mPreMoveX;
+    private int mPreMoveY;
 
     private Context mContext;
 
     private Bitmap mSourceBitmap;
-
     private Bitmap mOverlayBitmap;
     private Bitmap mFrameBitmap;
+
     private Paint mOverlayPaint;
 
     private List<Text> mTextsList;
@@ -65,6 +71,7 @@ public class ImageEditorView extends ImageView {
 
     private Paint mPaintBitmap;
     private Paint mFilterPaint;
+    private Paint mHandlePaint;
 
     private ColorMatrix mFilterColorMatrix;
     private boolean mHasFilter;
@@ -73,8 +80,12 @@ public class ImageEditorView extends ImageView {
     private Matrix mMatrix = null;
     private Paint mPaintTranslucent;
 
+    private Rect mResizeHandleRect;
+    private Rect mDeleteHandleRect;
+
     private RectF mImageRect;
     private PointF mCenter = new PointF();
+
     private float mLastX, mLastY;
 
     private TouchArea mTouchArea = TouchArea.OUT_OF_BOUNDS;
@@ -98,6 +109,7 @@ public class ImageEditorView extends ImageView {
         mContext = context;
 
         mStickersList = new ArrayList<>();
+        mTextsList = new ArrayList<>();
 
         mPaintTranslucent = new Paint();
         mPaintBitmap = new Paint();
@@ -105,6 +117,10 @@ public class ImageEditorView extends ImageView {
 
         mFilterPaint = new Paint();
         mOverlayPaint = new Paint();
+        mHandlePaint = new Paint();
+
+        mResizeHandleRect = new Rect();
+        mDeleteHandleRect = new Rect();
 
         mAdjustColorMatrix = new ColorMatrix();
 
@@ -166,49 +182,61 @@ public class ImageEditorView extends ImageView {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         int touchCount = event.getPointerCount();
-
-        mPreMoveX = event.getX();
-        mPreMoveY = event.getY();
-
-        if (!mIsInitialized) return false;
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                onDown(event);
-                return true;
-            case MotionEvent.ACTION_MOVE:
-                // Todo: Move sticker.
-
-                float distanceX = mPreMoveX - event.getX();
-                float distanceY = mPreMoveY - event.getY();
-
-                if (mCheckedTextId != -1) {
-
+                if (touchCount >= 2) {
+                    float distance = distance(event.getX(0), event.getX(1), event.getY(0), event.getY(1));
+                    mPrevDistance = distance;
+                    isScaling = true;
                 } else {
-                    // Todo: Move text.
+                    mPreMoveX = (int) event.getX();
+                    mPreMoveY = (int) event.getY();
+                    findCheckedText(mPreMoveX, mPreMoveY);
                 }
+                break;
+            case MotionEvent.ACTION_MOVE:
+                if (touchCount >= 2 && isScaling) {
+                    float dist = distance(event.getX(0), event.getX(1), event.getY(0), event.getY(1));
+                    float scale = (dist - mPrevDistance) / dispDistance();
+                    mPrevDistance = dist;
+                    scale += 1;
+                    scale = scale * scale;
+                    if (mCheckedStickerId != -1)
+                        mTextsList.get(mCheckedTextId).setSize(mTextsList.get(mCheckedTextId).getSize() * scale);
 
-                Sticker sticker = mStickersList.get(mCheckedStickerId);
-                sticker.setX(sticker.getX() + distanceX);
-                sticker.setY(sticker.getY() + distanceY);
+                } else if (!isScaling) {
+                    int distanceX = mPreMoveX - (int) event.getX();
+                    int distanceY = mPreMoveY - (int) event.getY();
 
-                onMove(event);
-                if (mTouchArea != TouchArea.OUT_OF_BOUNDS) {
-                    getParent().requestDisallowInterceptTouchEvent(true);
+                    mPreMoveX = (int) event.getX();
+                    mPreMoveY = (int) event.getY();
+                    if (mCheckedTextId != -1) {
+
+                        Text text = mTextsList.get(mCheckedTextId);
+                        text.setX(text.getX() - Math.round(distanceX));
+                        text.setY(text.getY() - Math.round(distanceY));
+                    }
                 }
-                return true;
-            case MotionEvent.ACTION_CANCEL:
-                getParent().requestDisallowInterceptTouchEvent(false);
-                //onCancel();
-                return true;
+                break;
             case MotionEvent.ACTION_UP:
-                getParent().requestDisallowInterceptTouchEvent(false);
-                //onUp(event);
-                return true;
+            case MotionEvent.ACTION_POINTER_UP:
+                break;
         }
-
         invalidate();
-
         return true;
+
+    }
+
+    private float distance(float x0, float x1, float y0, float y1) {
+
+        float x = x0 - x1;
+        float y = y0 - y1;
+        return (float) Math.sqrt(x * x + y * y);
+    }
+
+    private float dispDistance() {
+
+        return (float) Math.sqrt(getWidth() * getWidth() + getHeight() * getHeight());
     }
 
     public void addSticker(Sticker sticker) {
@@ -224,6 +252,19 @@ public class ImageEditorView extends ImageView {
     }
 
     public void addText(Text text) {
+        if (text.getSize() == 0) {
+            text.setSize(Text.DEFAULT_SIZE);
+        }
+        if (text.getColor() == 0) {
+            text.setColor(Text.DEFAULT_COLOR);
+        }
+        if (text.getTypeface() == null) {
+            text.setTypeface(Typeface.DEFAULT);
+        }
+
+        text.setX(100);
+        text.setY(100);
+
         mTextsList.add(text);
         invalidate();
     }
@@ -231,6 +272,10 @@ public class ImageEditorView extends ImageView {
     private void drawTexts(Canvas canvas) {
         for (Text text : mTextsList) {
             canvas.drawText(text.getText(), text.getX(), text.getY(), text.getPaint());
+            Paint paint = new Paint();
+            paint.setColor(Color.DKGRAY);
+            canvas.drawRect(text.getRect(), paint);
+            Log.i("Draw text", text.toString());
         }
     }
 
@@ -321,43 +366,14 @@ public class ImageEditorView extends ImageView {
 
     private void findCheckedText(int x, int y) {
         for (int i = mTextsList.size() - 1; i >= 0; i--) {
-            if (mTextsList.get(i).getTextArea().contains(x, y)) {
+            if (mTextsList.get(i).getRect().contains(x, y)) {
                 mCheckedTextId = i;
-                Log.d("Text", mTextsList.get(i).getText());
-
-                /*if (deleteTextActivated) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.MyAlertDialogStyle)
-                            *//*.setTitle(context.getString(R.string.permission_denied))*//*
-                            .setMessage(mContext.getString(R.string.text_delete_alert))
-                            .setPositiveButton(mContext.getString(R.string.yes), (dialogInterface, i2) -> {
-                                deleteText(mTextsList.get(mCheckedTextId));
-                            })
-                            .setNegativeButton(mContext.getString(R.string.no), (dialogInterface, i1) -> {
-                                dialogInterface.dismiss();
-                            });
-                    builder.show();
-
-                } else {
-                    return;
-                }*/
+                Log.i("checked text", String.valueOf(mCheckedTextId));
+                return;
             }
         }
         mCheckedTextId = -1;
     }
-
-    /*public void addText(Text text) {
-        if (text.getSize() == 0) {
-            text.setSize(defaultTextSize);
-        }
-        if (text.getColor() == 0) {
-            text.setColor(defaultTextColor);
-        }
-        if (text.getTypeface() == null) {
-            text.setTypeface(textTypeface);
-        }
-        this.textsList.add(text);
-        invalidate();
-    }*/
 
     private void deleteText(Text text) {
         if (mTextsList != null && mTextsList.contains(text)) {
@@ -481,58 +497,10 @@ public class ImageEditorView extends ImageView {
         return angle % 180 == 0 ? height : width;
     }
 
-
-    /*private Bitmap scaleBitmapIfNeeded(Bitmap cropped) {
-        int width = cropped.getWidth();
-        int height = cropped.getHeight();
-        int outWidth = 0;
-        int outHeight = 0;
-        float imageRatio = getRatioX(mFrameRect.width()) / getRatioY(mFrameRect.height());
-
-        if (mOutputWidth > 0) {
-            outWidth = mOutputWidth;
-            outHeight = Math.round(mOutputWidth / imageRatio);
-        } else if (mOutputHeight > 0) {
-            outHeight = mOutputHeight;
-            outWidth = Math.round(mOutputHeight * imageRatio);
-        } else {
-            if (mOutputMaxWidth > 0 && mOutputMaxHeight > 0
-                    && (width > mOutputMaxWidth || height > mOutputMaxHeight)) {
-                float maxRatio = (float) mOutputMaxWidth / (float) mOutputMaxHeight;
-                if (maxRatio >= imageRatio) {
-                    outHeight = mOutputMaxHeight;
-                    outWidth = Math.round((float) mOutputMaxHeight * imageRatio);
-                } else {
-                    outWidth = mOutputMaxWidth;
-                    outHeight = Math.round((float) mOutputMaxWidth / imageRatio);
-                }
-            }
-        }
-
-        if (outWidth > 0 && outHeight > 0) {
-            Bitmap scaled = Utils.getScaledBitmap(cropped, outWidth, outHeight);
-            if (cropped != getBitmap() && cropped != scaled) {
-                cropped.recycle();
-            }
-            cropped = scaled;
-        }
-        return cropped;
-    }*/
-
-    /**
-     * Get source image bitmap
-     *
-     * @return src bitmap
-     */
     public Bitmap getImageBitmap() {
         return getBitmap();
     }
 
-    /**
-     * Set source image bitmap
-     *
-     * @param bitmap src image bitmap
-     */
     @Override
     public void setImageBitmap(Bitmap bitmap) {
         super.setImageBitmap(bitmap);
@@ -540,11 +508,6 @@ public class ImageEditorView extends ImageView {
         mSourceDrawable = new BitmapDrawable(bitmap);
     }
 
-    /**
-     * Set image drawable.
-     *
-     * @param drawable source image drawable
-     */
     @Override
     public void setImageDrawable(Drawable drawable) {
         mIsInitialized = false;
@@ -555,11 +518,6 @@ public class ImageEditorView extends ImageView {
         updateLayout();
     }
 
-    /**
-     * Set image uri
-     *
-     * @param uri source image local uri
-     */
     @Override
     public void setImageURI(Uri uri) {
         mIsInitialized = false;
@@ -574,12 +532,12 @@ public class ImageEditorView extends ImageView {
         }
     }
 
-    private void setScale(float mScale) {
-        this.mScale = mScale;
+    private void setScale(float scale) {
+        mScale = scale;
     }
 
-    private void setCenter(PointF mCenter) {
-        this.mCenter = mCenter;
+    private void setCenter(PointF center) {
+        mCenter = center;
     }
 
 

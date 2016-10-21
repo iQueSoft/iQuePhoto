@@ -118,101 +118,14 @@
         android:layout_height="1dp"
         android:background="@color/colorLine" />
 
-    <HorizontalScrollView
-        android:id="@+id/tab_bar"
+    <android.support.design.widget.TabLayout
+        android:id="@+id/cropTabLayout"
+        style="@style/MyCustomTabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scrollbars="none">
-
-        <LinearLayout
-            android:id="@+id/tab_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:orientation="horizontal"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp">
-
-            <Button
-                android:id="@+id/cropFree"
-                style="@style/AppTheme.Button.Borderless"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_margin="4dp"
-                android:padding="4dp"
-                android:text="@string/crop_free" />
-
-            <Button
-                android:id="@+id/cropOriginal"
-                style="@style/AppTheme.Button.Borderless"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_margin="4dp"
-                android:padding="4dp"
-                android:text="@string/crop_original" />
-
-            <Button
-                android:id="@+id/cropSquare"
-                style="@style/AppTheme.Button.Borderless"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_margin="4dp"
-                android:padding="4dp"
-                android:text="@string/crop_square" />
-
-            <Button
-                android:id="@+id/crop3x4"
-                style="@style/AppTheme.Button.Borderless"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_margin="4dp"
-                android:padding="4dp"
-                android:text="@string/crop_3_4" />
-
-            <Button
-                android:id="@+id/crop4x3"
-                style="@style/AppTheme.Button.Borderless"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_margin="4dp"
-                android:padding="4dp"
-                android:text="@string/crop_4_3" />
-
-            <Button
-                android:id="@+id/crop9x16"
-                style="@style/AppTheme.Button.Borderless"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_margin="4dp"
-                android:padding="4dp"
-                android:text="@string/crop_9_16" />
-
-            <Button
-                android:id="@+id/crop16x9"
-                style="@style/AppTheme.Button.Borderless"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_margin="4dp"
-                android:padding="4dp"
-                android:text="@string/crop_16_9" />
-
-            <Button
-                android:id="@+id/crop7x5"
-                style="@style/AppTheme.Button.Borderless"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_margin="8dp"
-                android:padding="4dp"
-                android:text="@string/crop_7_5" />
-
-        </LinearLayout>
-    </HorizontalScrollView>
+        custom:tabIndicatorColor="@color/white"
+        custom:tabMode="scrollable"
+        custom:tabSelectedTextColor="@color/white"
+        custom:tabTextColor="@color/white" />
 
 </LinearLayout>

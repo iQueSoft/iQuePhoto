@@ -7,6 +7,8 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
+import android.support.design.widget.TabLayout;
 import android.util.Log;
 import android.view.WindowManager;
 
@@ -37,6 +39,9 @@ public class PreviewActivity extends BaseActivity implements IPreviewActivityVie
 
     private MaterialDialog mProgressDialog;
 
+    @BindView(R.id.cropTabLayout)
+    TabLayout tabLayout;
+
     @BindView(R.id.cropImageView)
     CropImageView cropImageView;
 
@@ -59,6 +64,47 @@ public class PreviewActivity extends BaseActivity implements IPreviewActivityVie
 
         ButterKnife.bind(this);
 
+        presenter.initCropModes();
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                switch (tab.getPosition()) {
+                    case 0:
+                        cropImageView.setCropMode(CropImageView.CropMode.FREE);
+                        break;
+                    case 1:
+                        cropImageView.setCropMode(CropImageView.CropMode.FIT_IMAGE);
+                        break;
+                    case 2:
+                        cropImageView.setCropMode(CropImageView.CropMode.SQUARE);
+                        break;
+                    case 3:
+                        cropImageView.setCropMode(CropImageView.CropMode.RATIO_3_4);
+                        break;
+                    case 4:
+                        cropImageView.setCropMode(CropImageView.CropMode.RATIO_4_3);
+                        break;
+                    case 5:
+                        cropImageView.setCropMode(CropImageView.CropMode.RATIO_9_16);
+                        break;
+                    case 6:
+                        cropImageView.setCropMode(CropImageView.CropMode.RATIO_16_9);
+                        break;
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
         cropImageView.setImageBitmap(mBitmap);
     }
 
@@ -79,41 +125,6 @@ public class PreviewActivity extends BaseActivity implements IPreviewActivityVie
     @OnClick(R.id.buttonFlipVertical)
     void onClickFlipVertical() {
         presenter.flipImageVertical(cropImageView.getImageBitmap());
-    }
-
-    @OnClick(R.id.cropFree)
-    void onClickCropFree() {
-        cropImageView.setCropMode(CropImageView.CropMode.FREE);
-    }
-
-    @OnClick(R.id.cropOriginal)
-    void onClickCropOriginal() {
-        cropImageView.setCropMode(CropImageView.CropMode.FIT_IMAGE);
-    }
-
-    @OnClick(R.id.cropSquare)
-    void onClickCropSquare() {
-        cropImageView.setCropMode(CropImageView.CropMode.SQUARE);
-    }
-
-    @OnClick(R.id.crop3x4)
-    void onClickCrop3x4() {
-        cropImageView.setCropMode(CropImageView.CropMode.RATIO_3_4);
-    }
-
-    @OnClick(R.id.crop4x3)
-    void onClickCrop4x3() {
-        cropImageView.setCropMode(CropImageView.CropMode.RATIO_4_3);
-    }
-
-    @OnClick(R.id.crop9x16)
-    void onClickCrop9x16() {
-        cropImageView.setCropMode(CropImageView.CropMode.RATIO_9_16);
-    }
-
-    @OnClick(R.id.crop16x9)
-    void onClickCrop16x9() {
-        cropImageView.setCropMode(CropImageView.CropMode.RATIO_16_9);
     }
 
     @OnClick(R.id.buttonCropBack)
@@ -172,5 +183,10 @@ public class PreviewActivity extends BaseActivity implements IPreviewActivityVie
     @Override
     public void dismissProgress() {
         mProgressDialog.dismiss();
+    }
+
+    @Override
+    public void createTab(@StringRes int title, boolean selected) {
+        tabLayout.addTab(tabLayout.newTab().setText(title), selected);
     }
 }

@@ -2,6 +2,7 @@ package net.iquesoft.iquephoto.view;
 
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.support.annotation.StringRes;
 
 public interface IPreviewActivityView {
 
@@ -12,4 +13,6 @@ public interface IPreviewActivityView {
     void flipImage(Drawable drawable);
 
     void dismissProgress();
+
+    void createTab(@StringRes int title, boolean selected);
 }

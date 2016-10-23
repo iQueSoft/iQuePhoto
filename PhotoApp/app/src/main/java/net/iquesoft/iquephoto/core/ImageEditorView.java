@@ -37,6 +37,32 @@ public class ImageEditorView extends ImageView {
     private float mPrevDistance;
     private boolean isScaling;
 
+
+    // START - For text and sticker
+    private float MIN_SCALE = 0.5f;
+    private float MAX_SCALE = 0.5f;
+
+    private Bitmap mDeleteHandleBitmap;
+    private Bitmap mResizeHandleBitmap;
+    private Bitmap mFrontHandleBitmap;
+
+    private Rect mResizeHandleRect;
+    private Rect mDeleteHandleRect;
+    private Rect mFrontHandleRect;
+
+    private int mDeleteHandleBitmapWidth;
+    private int mDeleteHandleBitmapHeight;
+    private int mResizeHandleBitmapWidth;
+    private int mResizeHandleBitmapHeight;
+    private int mFrontHandleBitmapWidth;
+    private int mFrontHandleBitmapHeight;
+
+    private Paint mHandlePaint;
+    private Paint mStickerFramePaint;
+
+    private Matrix mStickerMatrix = new Matrix();
+    // END - For text and sticker.
+
     private int mCheckedTextId = -1;
     private int mCheckedStickerId = -1;
 
@@ -71,7 +97,6 @@ public class ImageEditorView extends ImageView {
 
     private Paint mPaintBitmap;
     private Paint mFilterPaint;
-    private Paint mHandlePaint;
 
     private ColorMatrix mFilterColorMatrix;
     private boolean mHasFilter;
@@ -80,8 +105,6 @@ public class ImageEditorView extends ImageView {
     private Matrix mMatrix = null;
     private Paint mPaintTranslucent;
 
-    private Rect mResizeHandleRect;
-    private Rect mDeleteHandleRect;
 
     private RectF mImageRect;
     private PointF mCenter = new PointF();
@@ -126,6 +149,14 @@ public class ImageEditorView extends ImageView {
 
         mMatrix = new Matrix();
         mScale = 1.0f;
+
+        // START - For sticker and text
+        mStickerFramePaint = new Paint();
+        mStickerFramePaint.setColor(getResources().getColor(R.color.white));
+        mStickerFramePaint.setAntiAlias(true);
+        mStickerFramePaint.setDither(true);
+        mStickerFramePaint.setStyle(Paint.Style.STROKE);
+        mStickerFramePaint.setStrokeWidth(2.0f);
     }
 
     @Override
@@ -247,7 +278,49 @@ public class ImageEditorView extends ImageView {
 
     private void drawStickers(Canvas canvas) {
         for (Sticker sticker : mStickersList) {
-            canvas.drawBitmap(sticker.getBitmap(), mImageRect.centerX(), mImageRect.centerY(), mPaintBitmap);
+
+            float[] arrayOfFloat = new float[9];
+            mStickerMatrix.getValues(arrayOfFloat);
+            float f1 = 0.0F * arrayOfFloat[0] + 0.0F * arrayOfFloat[1] + arrayOfFloat[2];
+            float f2 = 0.0F * arrayOfFloat[3] + 0.0F * arrayOfFloat[4] + arrayOfFloat[5];
+            float f3 = arrayOfFloat[0] * sticker.getBitmap().getWidth() + 0.0F * arrayOfFloat[1] + arrayOfFloat[2];
+            float f4 = arrayOfFloat[3] * sticker.getBitmap().getWidth() + 0.0F * arrayOfFloat[4] + arrayOfFloat[5];
+            float f5 = 0.0F * arrayOfFloat[0] + arrayOfFloat[1] * sticker.getBitmap().getHeight() + arrayOfFloat[2];
+            float f6 = 0.0F * arrayOfFloat[3] + arrayOfFloat[4] * sticker.getBitmap().getHeight() + arrayOfFloat[5];
+            float f7 = arrayOfFloat[0] * sticker.getBitmap().getWidth() + arrayOfFloat[1] * sticker.getBitmap().getHeight() + arrayOfFloat[2];
+            float f8 = arrayOfFloat[3] * sticker.getBitmap().getWidth() + arrayOfFloat[4] * sticker.getBitmap().getHeight() + arrayOfFloat[5];
+
+            canvas.drawBitmap(sticker.getBitmap(), mStickerMatrix, null);
+
+            mDeleteHandleRect.left = (int) (f3 - mDeleteHandleBitmapWidth / 2);
+            mDeleteHandleRect.right = (int) (f3 + mDeleteHandleBitmapWidth / 2);
+            mDeleteHandleRect.top = (int) (f4 - mDeleteHandleBitmapHeight / 2);
+            mDeleteHandleRect.bottom = (int) (f4 + mDeleteHandleBitmapHeight / 2);
+
+            mResizeHandleRect.left = (int) (f7 - mResizeHandleBitmapWidth / 2);
+            mResizeHandleRect.right = (int) (f7 + mResizeHandleBitmapWidth / 2);
+            mResizeHandleRect.top = (int) (f8 - mResizeHandleBitmapHeight / 2);
+            mResizeHandleRect.bottom = (int) (f8 + mResizeHandleBitmapHeight / 2);
+
+            mFrontHandleRect.left = (int) (f1 - mFrontHandleBitmapWidth / 2);
+            mFrontHandleRect.right = (int) (f1 + mFrontHandleBitmapWidth / 2);
+            mFrontHandleRect.top = (int) (f2 - mFrontHandleBitmapHeight / 2);
+            mFrontHandleRect.bottom = (int) (f2 + mFrontHandleBitmapHeight / 2);
+
+            /*dst_flipV.left = (int) (f5 - topBitmapWidth / 2);
+            dst_flipV.right = (int) (f5 + topBitmapWidth / 2);
+            dst_flipV.top = (int) (f6 - topBitmapHeight / 2);
+            dst_flipV.bottom = (int) (f6 + topBitmapHeight / 2);*/
+
+            canvas.drawLine(f1, f2, f3, f4, mHandlePaint);
+            canvas.drawLine(f3, f4, f7, f8, mHandlePaint);
+            canvas.drawLine(f5, f6, f7, f8, mHandlePaint);
+            canvas.drawLine(f5, f6, f1, f2, mHandlePaint);
+
+            canvas.drawBitmap(mDeleteHandleBitmap, null, mDeleteHandleRect, null);
+            canvas.drawBitmap(mResizeHandleBitmap, null, mResizeHandleRect, null);
+            canvas.drawBitmap(mFrontHandleBitmap, null, mFrontHandleRect, null);
+
         }
     }
 

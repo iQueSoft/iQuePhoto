@@ -35,58 +35,37 @@
 
     </RelativeLayout>
 
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="@color/colorLine" />
-
-    <android.support.design.widget.TabLayout
-        android:id="@+id/stickerTabLayout"
-        style="@style/MyCustomTabLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:tabGravity="center"
-        app:tabIndicatorColor="@color/white"
-        app:tabMode="scrollable"
-        app:tabSelectedTextColor="@color/white"
-        app:tabTextColor="@android:color/darker_gray" />
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="@color/colorLine" />
-
     <LinearLayout
         android:id="@+id/stickersLayout"
         android:layout_width="wrap_content"
-        android:layout_height="175dp"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
+
+        <!--<View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorLine" />-->
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/stickerTabLayout"
+            style="@style/MyCustomTabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:tabGravity="center"
+            app:tabIndicatorColor="@color/white"
+            app:tabMode="scrollable"
+            app:tabSelectedTextColor="@color/white"
+            app:tabTextColor="@android:color/darker_gray" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorLine" />
 
         <android.support.v4.view.ViewPager
             android:id="@+id/stickersViewPager"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="right"
-            android:orientation="horizontal"
-            android:padding="10dp">
-
-            <ImageView
-                android:id="@+id/imageView4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="20dp"
-                android:src="@drawable/ic_delete_off_24" />
-
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_add" />
-        </LinearLayout>
+            android:layout_height="175dp" />
     </LinearLayout>
 
 

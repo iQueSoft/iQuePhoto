@@ -33,6 +33,7 @@ public class StickersFragment extends BaseFragment implements IStickersFragmentV
     private List<StickersSet> mStickersSetsList = StickersSet.getStickersSetsList();
 
     private Unbinder mUnbinder;
+    
     private StickersPagerAdapter mPagerAdapter;
 
     @Inject

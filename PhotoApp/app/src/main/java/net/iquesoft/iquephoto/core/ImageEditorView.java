@@ -57,8 +57,7 @@ public class ImageEditorView extends ImageView {
     private int mFrontHandleBitmapWidth;
     private int mFrontHandleBitmapHeight;
 
-    private Paint mHandlePaint;
-    private Paint mStickerFramePaint;
+    private Paint mFramePaint;
 
     private Matrix mStickerMatrix = new Matrix();
     // END - For text and sticker.
@@ -140,23 +139,38 @@ public class ImageEditorView extends ImageView {
 
         mFilterPaint = new Paint();
         mOverlayPaint = new Paint();
-        mHandlePaint = new Paint();
-
-        mResizeHandleRect = new Rect();
-        mDeleteHandleRect = new Rect();
 
         mAdjustColorMatrix = new ColorMatrix();
 
         mMatrix = new Matrix();
+
         mScale = 1.0f;
 
-        // START - For sticker and text
-        mStickerFramePaint = new Paint();
-        mStickerFramePaint.setColor(getResources().getColor(R.color.white));
-        mStickerFramePaint.setAntiAlias(true);
-        mStickerFramePaint.setDither(true);
-        mStickerFramePaint.setStyle(Paint.Style.STROKE);
-        mStickerFramePaint.setStrokeWidth(2.0f);
+        initStickerView();
+    }
+
+    private void initStickerView() {
+        mDeleteHandleBitmap = ((BitmapDrawable) getResources().getDrawable(R.drawable.ic_handle_delete)).getBitmap();
+        mResizeHandleBitmap = ((BitmapDrawable) getResources().getDrawable(R.drawable.ic_handle_resize)).getBitmap();
+        mFrontHandleBitmap = ((BitmapDrawable) getResources().getDrawable(R.drawable.ic_handle_edit)).getBitmap();
+
+        mDeleteHandleBitmapHeight = (int) (mDeleteHandleBitmap.getHeight() * mScale);
+        mDeleteHandleBitmapWidth = (int) (mDeleteHandleBitmap.getWidth() * mScale);
+        mResizeHandleBitmapHeight = (int) (mResizeHandleBitmap.getHeight() * mScale);
+        mResizeHandleBitmapWidth = (int) (mResizeHandleBitmap.getWidth() * mScale);
+        mFrontHandleBitmapHeight = (int) (mFrontHandleBitmap.getHeight() * mScale);
+        mFrontHandleBitmapWidth = (int) (mFrontHandleBitmap.getWidth() * mScale);
+
+        mResizeHandleRect = new Rect();
+        mDeleteHandleRect = new Rect();
+        mFrontHandleRect = new Rect();
+
+        mFramePaint = new Paint();
+        mFramePaint.setColor(Color.WHITE);
+        mFramePaint.setAntiAlias(true);
+        mFramePaint.setDither(true);
+        mFramePaint.setStyle(Paint.Style.STROKE);
+        mFramePaint.setStrokeWidth(7.5f);
     }
 
     @Override
@@ -215,6 +229,10 @@ public class ImageEditorView extends ImageView {
         int touchCount = event.getPointerCount();
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                if (isInButton(event, mDeleteHandleRect)) {
+                    mStickersList.clear();
+                    invalidate(); n
+                }
                 if (touchCount >= 2) {
                     float distance = distance(event.getX(0), event.getX(1), event.getY(0), event.getY(1));
                     mPrevDistance = distance;
@@ -312,16 +330,24 @@ public class ImageEditorView extends ImageView {
             dst_flipV.top = (int) (f6 - topBitmapHeight / 2);
             dst_flipV.bottom = (int) (f6 + topBitmapHeight / 2);*/
 
-            canvas.drawLine(f1, f2, f3, f4, mHandlePaint);
-            canvas.drawLine(f3, f4, f7, f8, mHandlePaint);
-            canvas.drawLine(f5, f6, f7, f8, mHandlePaint);
-            canvas.drawLine(f5, f6, f1, f2, mHandlePaint);
+            canvas.drawLine(f1, f2, f3, f4, mFramePaint);
+            canvas.drawLine(f3, f4, f7, f8, mFramePaint);
+            canvas.drawLine(f5, f6, f7, f8, mFramePaint);
+            canvas.drawLine(f5, f6, f1, f2, mFramePaint);
 
             canvas.drawBitmap(mDeleteHandleBitmap, null, mDeleteHandleRect, null);
             canvas.drawBitmap(mResizeHandleBitmap, null, mResizeHandleRect, null);
             canvas.drawBitmap(mFrontHandleBitmap, null, mFrontHandleRect, null);
 
         }
+    }
+
+    private boolean isInButton(MotionEvent event, Rect rect) {
+        int left = rect.left;
+        int right = rect.right;
+        int top = rect.top;
+        int bottom = rect.bottom;
+        return event.getX(0) >= left && event.getX(0) <= right && event.getY(0) >= top && event.getY(0) <= bottom;
     }
 
     public void addText(Text text) {

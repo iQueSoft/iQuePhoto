@@ -17,6 +17,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
+import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -36,11 +37,6 @@ public class ImageEditorView extends ImageView {
 
     private float mPrevDistance;
     private boolean isScaling;
-
-
-    // START - For text and sticker
-    private float MIN_SCALE = 0.5f;
-    private float MAX_SCALE = 0.5f;
 
     private Bitmap mDeleteHandleBitmap;
     private Bitmap mResizeHandleBitmap;
@@ -91,9 +87,12 @@ public class ImageEditorView extends ImageView {
     private Matrix mMatrix = null;
     private Paint mPaintTranslucent;
 
-
     private RectF mImageRect;
+
     private PointF mCenter = new PointF();
+
+    private boolean mIsInResize;
+    private boolean mIsInSide;
 
     private float mLastX, mLastY;
 
@@ -146,7 +145,7 @@ public class ImageEditorView extends ImageView {
         mFramePaint.setAntiAlias(true);
         mFramePaint.setDither(true);
         mFramePaint.setStyle(Paint.Style.STROKE);
-        mFramePaint.setStrokeWidth(7.5f);
+        mFramePaint.setStrokeWidth(5.5f);
     }
 
     @Override
@@ -202,68 +201,56 @@ public class ImageEditorView extends ImageView {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        int touchCount = event.getPointerCount();
+        int action = MotionEventCompat.getActionMasked(event);
 
-        switch (event.getAction()) {
+        switch (action) {
             case MotionEvent.ACTION_DOWN:
-                /*if (isInButton(event, mDeleteHandleRect)) {
-                    mStickersList.clear();
-                    invalidate();
-                }*/
-                if (touchCount >= 2) {
-                    float distance = distance(event.getX(0), event.getX(1), event.getY(0), event.getY(1));
-                    mPrevDistance = distance;
-                    isScaling = true;
-                } else {
-                    mPreMoveX = (int) event.getX();
-                    mPreMoveY = (int) event.getY();
-
-                    //findCheckedText(mPreMoveX, mPreMoveY);
-                    findCheckedSticker(event);
-                }
+                //findCheckedText(mPreMoveX, mPreMoveY);
+                findCheckedSticker(event);
                 break;
             case MotionEvent.ACTION_MOVE:
-                if (touchCount >= 2 && isScaling) {
-                    float dist = distance(event.getX(0), event.getX(1), event.getY(0), event.getY(1));
-                    float scale = (dist - mPrevDistance) / dispDistance();
-                    mPrevDistance = dist;
-                    scale += 1;
-                    scale = scale * scale;
-                    if (mCheckedStickerId != -1)
-                        mTextsList.get(mCheckedTextId).setSize(mTextsList.get(mCheckedTextId).getSize() * scale);
+                if (mCheckedStickerId != -1) {
+                    if (mIsInResize) {
+                        EditorSticker sticker = mStickersList.get(mCheckedStickerId);
 
-                } else if (!isScaling) {
-                    int distanceX = mPreMoveX - (int) event.getX();
-                    int distanceY = mPreMoveY - (int) event.getY();
+                        float stickerScale = diagonalLength(event, sticker.getPoint()) / sticker.getLength();
+                        sticker.getMatrix().postScale(stickerScale, stickerScale, sticker.getPoint().x, sticker.getPoint().y);
 
-                    mPreMoveX = (int) event.getX();
-                    mPreMoveY = (int) event.getY();
-                    if (mCheckedTextId != -1) {
+                        invalidate();
+                    } else if (mIsInSide) {
+                        float x = event.getX(0);
+                        float y = event.getY(0);
 
-                        Text text = mTextsList.get(mCheckedTextId);
-                        text.setX(text.getX() - Math.round(distanceX));
-                        text.setY(text.getY() - Math.round(distanceY));
-                    }
-                    float x = event.getX(0);
-                    float y = event.getY(0);
-
-                    if (mCheckedStickerId != -1) {
-                        mStickersList.get(mCheckedStickerId).getMatrix().postTranslate(distanceX, distanceY);
+                        mStickersList.get(mCheckedStickerId).getMatrix().postTranslate(x - mLastX, y - mLastY);
 
                         mLastX = x;
                         mLastY = y;
                         invalidate();
                     }
-
                 }
+                //mTextsList.get(mCheckedTextId).setSize(mTextsList.get(mCheckedTextId).getSize() * scale);
+
                 break;
             case MotionEvent.ACTION_UP:
+                mIsInResize = false;
+                mIsInSide = false;
+                break;
             case MotionEvent.ACTION_POINTER_UP:
                 break;
         }
         invalidate();
         return true;
 
+    }
+
+    private void midPointToStartPoint(MotionEvent event, EditorSticker sticker) {
+        float[] arrayOfFloat = new float[9];
+        sticker.getMatrix().getValues(arrayOfFloat);
+        float f1 = 0.0f * arrayOfFloat[0] + 0.0f * arrayOfFloat[1] + arrayOfFloat[2];
+        float f2 = 0.0f * arrayOfFloat[3] + 0.0f * arrayOfFloat[4] + arrayOfFloat[5];
+        float f3 = f1 + event.getX(0);
+        float f4 = f2 + event.getY(0);
+        sticker.getPoint().set(f3 / 2, f4 / 2);
     }
 
     private float distance(float x0, float x1, float y0, float y1) {
@@ -490,10 +477,18 @@ public class ImageEditorView extends ImageView {
 
     private void findCheckedSticker(MotionEvent event) {
         for (int i = mStickersList.size() - 1; i >= 0; i--) {
-            EditorSticker editorSticker = mStickersList.get(i);
-            if (isInBitmap(event, editorSticker)) {
+            EditorSticker sticker = mStickersList.get(i);
+            if (isInBitmap(event, sticker)) {
+                mIsInSide = true;
                 mCheckedStickerId = i;
                 return;
+            } else if (isInButton(event, sticker.getDeleteHandleRect())) {
+                mStickersList.remove(i);
+                return;
+            } else if (isInResize(event, sticker.getResizeHandleRect())) {
+                mIsInResize = true;
+                midPointToStartPoint(event, sticker);
+                sticker.setLength(diagonalLength(event, sticker.getPoint()));
             }
         }
         mCheckedStickerId = -1;
@@ -509,6 +504,18 @@ public class ImageEditorView extends ImageView {
         }
     }
 
+    private boolean isInResize(MotionEvent event, Rect resizeHandleRect) {
+        int left = -20 + resizeHandleRect.left;
+        int top = -20 + resizeHandleRect.top;
+        int right = 20 + resizeHandleRect.right;
+        int bottom = 20 + resizeHandleRect.bottom;
+        return event.getX(0) >= left && event.getX(0) <= right && event.getY(0) >= top && event.getY(0) <= bottom;
+    }
+
+    private float diagonalLength(MotionEvent event, PointF pointF) {
+        float diagonalLength = (float) Math.hypot(event.getX(0) - pointF.x, event.getY(0) - pointF.y);
+        return diagonalLength;
+    }
 
     private void setMatrix() {
         mMatrix.reset();
@@ -547,40 +554,6 @@ public class ImageEditorView extends ImageView {
         RectF applied = new RectF();
         matrix.mapRect(applied, rect);
         return applied;
-    }
-
-    private void onDown(MotionEvent e) {
-        invalidate();
-        mLastX = e.getX();
-        mLastY = e.getY();
-        //checkTouchArea(e.getX(), e.getY());
-    }
-
-    private void onMove(MotionEvent e) {
-        float diffX = e.getX() - mLastX;
-        float diffY = e.getY() - mLastY;
-        switch (mTouchArea) {
-            case CENTER:
-                //moveFrame(diffX, diffY);
-                break;
-            case LEFT_TOP:
-                //moveHandleLT(diffX, diffY);
-                break;
-            case RIGHT_TOP:
-                //moveHandleRT(diffX, diffY);
-                break;
-            case LEFT_BOTTOM:
-                // moveHandleLB(diffX, diffY);
-                break;
-            case RIGHT_BOTTOM:
-                //moveHandleRB(diffX, diffY);
-                break;
-            case OUT_OF_BOUNDS:
-                break;
-        }
-        invalidate();
-        mLastX = e.getX();
-        mLastY = e.getY();
     }
 
     private boolean isInsideHorizontal(float x) {

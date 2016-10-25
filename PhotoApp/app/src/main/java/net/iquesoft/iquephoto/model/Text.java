@@ -14,6 +14,12 @@ public class Text {
     private String mTypefacePath;
     private float mSize;
 
+    private Rect mResizeHandleRect;
+    private Rect mDeleteHandleRect;
+    private Rect mFrontHandleRect;
+
+    private Paint.FontMetrics mFontMetrics;
+
     private int mColor;
     private int mX;
     private int mY;
@@ -29,6 +35,10 @@ public class Text {
         mColor = color;
         mOpacity = opacity;
         mRect = new Rect();
+        mDeleteHandleRect = new Rect();
+        mResizeHandleRect = new Rect();
+        mFrontHandleRect = new Rect();
+
         mPaint = new Paint();
     }
 
@@ -85,18 +95,12 @@ public class Text {
         mColor = color;
     }
 
-    @Override
-    public String toString() {
-        final StringBuffer sb = new StringBuffer("Text{");
-        sb.append("mText='").append(mText).append('\'');
-        sb.append(", mTypeface=").append(mTypeface);
-        sb.append(", mSize=").append(mSize);
-        sb.append(", mColor=").append(mColor);
-        sb.append(", mX=").append(mX);
-        sb.append(", mY=").append(mY);
-        sb.append(", mRect=").append(mRect);
-        sb.append('}');
-        return sb.toString();
+    public Rect getDeleteHandleRect() {
+        return mDeleteHandleRect;
+    }
+
+    public Rect getResizeHandleRect() {
+        return mResizeHandleRect;
     }
 
     public Rect getRect() {

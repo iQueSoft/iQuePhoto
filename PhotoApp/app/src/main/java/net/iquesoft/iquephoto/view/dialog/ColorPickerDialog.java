@@ -15,28 +15,23 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-/**
- * Created by Sergey on 9/16/2016.
- */
 public class ColorPickerDialog extends Dialog {
-    private final static String TAG = ColorPickerDialog.class.getSimpleName();
-
-    private int color;
-    private Context context;
-    private ColorListener listener;
+    private int mColor;
+    private Context mContext;
+    private ColorListener mListener;
 
     public interface ColorListener {
         void onClick(int color);
     }
 
-    private ColorAdapter adapter;
+    private ColorAdapter mAdapter;
 
     @BindView(R.id.colorRecyclerView)
     RecyclerView recyclerView;
 
     public ColorPickerDialog(Context context) {
         super(context);
-        this.context = context;
+        mContext = context;
     }
 
     @Override
@@ -47,19 +42,19 @@ public class ColorPickerDialog extends Dialog {
 
         ButterKnife.bind(this);
 
-        adapter = new ColorAdapter(EditorColor.getColorsList());
+        mAdapter = new ColorAdapter(EditorColor.getColorsList());
 
-        adapter.setColorListener(editorColor -> {
-            this.color = editorColor.getColor();
+        mAdapter.setColorListener(editorColor -> {
+            mColor = editorColor.getColor();
         });
 
-        recyclerView.setLayoutManager(new GridLayoutManager(context, 4));
-        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new GridLayoutManager(mContext, 4));
+        recyclerView.setAdapter(mAdapter);
     }
 
     @OnClick(R.id.applyColor)
     void onClickApply() {
-        listener.onClick(color);
+        mListener.onClick(mColor);
         dismiss();
     }
 
@@ -69,6 +64,6 @@ public class ColorPickerDialog extends Dialog {
     }
 
     public void setListener(ColorListener listener) {
-        this.listener = listener;
+        this.mListener = listener;
     }
 }

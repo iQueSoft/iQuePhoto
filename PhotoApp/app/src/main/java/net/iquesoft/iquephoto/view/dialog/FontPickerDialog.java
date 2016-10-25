@@ -22,13 +22,13 @@ public class FontPickerDialog extends Dialog {
     private String mText;
     private Context mContext;
 
-    private Typeface typeface;
+    private Typeface mTypeface;
 
     @BindView(R.id.fontsList)
     RecyclerView fontsList;
 
-    private boolean bold;
-    private boolean italic;
+    private boolean mBold;
+    private boolean mItalic;
 
     public FontPickerDialog(Context context) {
         super(context);
@@ -49,7 +49,7 @@ public class FontPickerDialog extends Dialog {
 
     @OnClick(R.id.applyTextStyle)
     void onClickApplyTextStyle() {
-        //textFragment.setTypeface(typeface);
+        //textFragment.setTypeface(mTypeface);
         dismiss();
     }
 
@@ -62,7 +62,7 @@ public class FontPickerDialog extends Dialog {
         FontsAdapter fontsAdapter = new FontsAdapter(Font.getFontsList());
         fontsList.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         fontsAdapter.setFontsListener(font -> {
-            typeface = Typeface.createFromAsset(getContext().getAssets(), font.getTypeface());
+            mTypeface = Typeface.createFromAsset(getContext().getAssets(), font.getTypeface());
         });
         fontsList.setAdapter(fontsAdapter);
 
@@ -75,7 +75,7 @@ public class FontPickerDialog extends Dialog {
     }
 
     public Typeface getTypeface() {
-        return typeface;
+        return mTypeface;
     }
 
     public int getColor() {
@@ -83,19 +83,19 @@ public class FontPickerDialog extends Dialog {
     }
 
     public boolean isItalic() {
-        return italic;
+        return mItalic;
     }
 
     public void setItalic(boolean italic) {
-        this.italic = italic;
+        mItalic = italic;
     }
 
     public boolean isBold() {
-        return bold;
+        return mBold;
     }
 
     public void setBold(boolean bold) {
-        this.bold = bold;
+        mBold = bold;
     }
 
     public void setColor(int color) {

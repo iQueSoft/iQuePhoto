@@ -5,17 +5,28 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.PointF;
 import android.graphics.Rect;
 
 import net.iquesoft.iquephoto.model.Sticker;
 
 public class EditorSticker {
+    private float mMinScale = 0.5f;
+    private float mMaxScale = 1.2f;
+
+    private double mHalfDiagonalLength;
+
+    private float mLength;
+
     private Sticker mSticker;
     private Matrix mMatrix;
+
+    private PointF mPoint;
 
     private Rect mResizeHandleRect;
     private Rect mDeleteHandleRect;
     private Rect mFrontHandleRect;
+
 
     public EditorSticker(Sticker sticker) {
         mSticker = sticker;
@@ -25,6 +36,7 @@ public class EditorSticker {
         mResizeHandleRect = new Rect();
         mDeleteHandleRect = new Rect();
         mFrontHandleRect = new Rect();
+        mPoint = new PointF();
     }
 
     public Bitmap getBitmap() {
@@ -79,5 +91,34 @@ public class EditorSticker {
         canvas.drawBitmap(resizeHandleBitmap, null, mResizeHandleRect, null);
         canvas.drawBitmap(frontHandleBitmap, null, mFrontHandleRect, null);
     }
+
+    public Rect getDeleteHandleRect() {
+        return mDeleteHandleRect;
+    }
+
+    public Rect getResizeHandleRect() {
+        return mResizeHandleRect;
+    }
+
+    public void setLength(float length) {
+        mLength = length;
+    }
+
+    public float getLength() {
+        return mLength;
+    }
+
+    public PointF getPoint() {
+        return mPoint;
+    }
+
+    public float getMinScale() {
+        return mMinScale;
+    }
+
+    public float getMaxScale() {
+        return mMaxScale;
+    }
+
 
 }

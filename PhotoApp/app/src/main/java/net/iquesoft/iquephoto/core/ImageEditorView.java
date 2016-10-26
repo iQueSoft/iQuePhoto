@@ -40,6 +40,7 @@ public class ImageEditorView extends ImageView {
 
     private Bitmap mDeleteHandleBitmap;
     private Bitmap mResizeHandleBitmap;
+    private Bitmap mRotateHandleBitmap;
     private Bitmap mFrontHandleBitmap;
 
     private Paint mFramePaint;
@@ -138,7 +139,8 @@ public class ImageEditorView extends ImageView {
     private void initStickerView() {
         mDeleteHandleBitmap = ((BitmapDrawable) getResources().getDrawable(R.drawable.ic_handle_delete)).getBitmap();
         mResizeHandleBitmap = ((BitmapDrawable) getResources().getDrawable(R.drawable.ic_handle_resize)).getBitmap();
-        mFrontHandleBitmap = ((BitmapDrawable) getResources().getDrawable(R.drawable.ic_handle_edit)).getBitmap();
+        mFrontHandleBitmap = ((BitmapDrawable) getResources().getDrawable(R.drawable.ic_handle_front)).getBitmap();
+        mRotateHandleBitmap = ((BitmapDrawable) getResources().getDrawable(R.drawable.ic_handle_rotate)).getBitmap();
 
         mFramePaint = new Paint();
         mFramePaint.setColor(Color.WHITE);
@@ -274,9 +276,10 @@ public class ImageEditorView extends ImageView {
     }
 
     private void drawStickers(Canvas canvas) {
-        for (EditorSticker editorSticker : mStickersList) {
-            editorSticker.drawSticker(canvas,
+        for (EditorSticker sticker : mStickersList) {
+            sticker.drawSticker(canvas,
                     mDeleteHandleBitmap,
+                    mRotateHandleBitmap,
                     mResizeHandleBitmap,
                     mFrontHandleBitmap,
                     mFramePaint);
@@ -481,6 +484,9 @@ public class ImageEditorView extends ImageView {
             if (isInBitmap(event, sticker)) {
                 mIsInSide = true;
                 mCheckedStickerId = i;
+
+                mLastX = event.getX(0);
+                mLastY = event.getY(0);
                 return;
             } else if (isInButton(event, sticker.getDeleteHandleRect())) {
                 mStickersList.remove(i);

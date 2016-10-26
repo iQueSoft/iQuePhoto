@@ -121,6 +121,9 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
                 try {
                     presenter.changeTool(tool);
                     switch (tool.getTitle()) {
+                        case R.string.stickers:
+                            imageEditorView.setStickersActivated(true);
+                            break;
                         case R.string.text:
                             //editorView.setTextActivated(true);
                             break;
@@ -128,6 +131,7 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
                             //editorView.setDrawingActivated(true);
                             break;
                         default:
+                            imageEditorView.setStickersActivated(false);
                             //editorView.setTextActivated(false);
                             //editorView.setDrawingActivated(false);
                             break;

@@ -36,7 +36,15 @@ import java.util.List;
 public class ImageEditorView extends ImageView {
 
     private float mPrevDistance;
-    private boolean isScaling;
+
+    private boolean mIsStickersActivated;
+    private boolean mIsTextActivated;
+
+    private EditorSticker mCurrentSticker;
+
+    private boolean mIsInResize;
+    private boolean mIsInSide;
+    private boolean mIsInRotate;
 
     private Bitmap mDeleteHandleBitmap;
     private Bitmap mResizeHandleBitmap;
@@ -92,8 +100,6 @@ public class ImageEditorView extends ImageView {
 
     private PointF mCenter = new PointF();
 
-    private boolean mIsInResize;
-    private boolean mIsInSide;
 
     private float mLastX, mLastY;
 
@@ -133,10 +139,10 @@ public class ImageEditorView extends ImageView {
 
         mScale = 1.0f;
 
-        initStickerView();
+        initFrame();
     }
 
-    private void initStickerView() {
+    private void initFrame() {
         mDeleteHandleBitmap = ((BitmapDrawable) getResources().getDrawable(R.drawable.ic_handle_delete)).getBitmap();
         mResizeHandleBitmap = ((BitmapDrawable) getResources().getDrawable(R.drawable.ic_handle_resize)).getBitmap();
         mFrontHandleBitmap = ((BitmapDrawable) getResources().getDrawable(R.drawable.ic_handle_front)).getBitmap();
@@ -156,7 +162,6 @@ public class ImageEditorView extends ImageView {
 
         if (mIsInitialized) {
             setMatrix();
-
             canvas.drawBitmap(mSourceBitmap, mMatrix, mPaintBitmap);
         }
 
@@ -208,41 +213,62 @@ public class ImageEditorView extends ImageView {
         switch (action) {
             case MotionEvent.ACTION_DOWN:
                 //findCheckedText(mPreMoveX, mPreMoveY);
-                findCheckedSticker(event);
+                if (mIsStickersActivated) {
+                    findCheckedSticker(event);
+                }
                 break;
             case MotionEvent.ACTION_MOVE:
-                if (mCheckedStickerId != -1) {
-                    if (mIsInResize) {
+                if (mIsStickersActivated) {
+                    if (mCheckedStickerId != -1) {
+                        if (mIsInResize) {
+                            EditorSticker sticker = mStickersList.get(mCheckedStickerId);
+
+                            float stickerScale = diagonalLength(event, sticker.getPoint()) / sticker.getLength();
+                            sticker.getMatrix().postScale(stickerScale, stickerScale, sticker.getPoint().x, sticker.getPoint().y);
+
+                            invalidate();
+                        } else if (mIsInSide) {
+                            float x = event.getX(0);
+                            float y = event.getY(0);
+
+                            mStickersList.get(mCheckedStickerId).getMatrix().postTranslate(x - mLastX, y - mLastY);
+
+                            mLastX = x;
+                            mLastY = y;
+                            invalidate();
+                        }
+                    } else if (mIsInRotate) {
                         EditorSticker sticker = mStickersList.get(mCheckedStickerId);
-
-                        float stickerScale = diagonalLength(event, sticker.getPoint()) / sticker.getLength();
-                        sticker.getMatrix().postScale(stickerScale, stickerScale, sticker.getPoint().x, sticker.getPoint().y);
-
-                        invalidate();
-                    } else if (mIsInSide) {
-                        float x = event.getX(0);
-                        float y = event.getY(0);
-
-                        mStickersList.get(mCheckedStickerId).getMatrix().postTranslate(x - mLastX, y - mLastY);
-
-                        mLastX = x;
-                        mLastY = y;
-                        invalidate();
+                        Matrix matrix = sticker.getMatrix();
+                        sticker.getMatrix().postRotate((rotationToStartPoint(event, matrix) - sticker.getRotateDegree()) * 2, sticker.getPoint().x, sticker.getPoint().y);
+                        sticker.setRotateDegree(rotationToStartPoint(event, matrix));
                     }
+
                 }
                 //mTextsList.get(mCheckedTextId).setSize(mTextsList.get(mCheckedTextId).getSize() * scale);
-
                 break;
             case MotionEvent.ACTION_UP:
                 mIsInResize = false;
                 mIsInSide = false;
+                mIsInRotate = false;
                 break;
             case MotionEvent.ACTION_POINTER_UP:
                 break;
         }
+
         invalidate();
+
         return true;
 
+    }
+
+    private float rotationToStartPoint(MotionEvent event, Matrix matrix) {
+        float[] arrayOfFloat = new float[9];
+        matrix.getValues(arrayOfFloat);
+        float x = 0.0f * arrayOfFloat[0] + 0.0f * arrayOfFloat[1] + arrayOfFloat[2];
+        float y = 0.0f * arrayOfFloat[3] + 0.0f * arrayOfFloat[4] + arrayOfFloat[5];
+        double arc = Math.atan2(event.getY(0) - y, event.getX(0) - x);
+        return (float) Math.toDegrees(arc);
     }
 
     private void midPointToStartPoint(MotionEvent event, EditorSticker sticker) {
@@ -269,9 +295,12 @@ public class ImageEditorView extends ImageView {
 
     public void addSticker(Sticker sticker) {
         sticker.setBitmap(((BitmapDrawable) mContext.getResources().getDrawable(sticker.getImage())).getBitmap());
+
         EditorSticker editorSticker = new EditorSticker(sticker);
+        editorSticker.setInEdit(true);
 
         mStickersList.add(editorSticker);
+
         invalidate();
     }
 
@@ -481,6 +510,7 @@ public class ImageEditorView extends ImageView {
     private void findCheckedSticker(MotionEvent event) {
         for (int i = mStickersList.size() - 1; i >= 0; i--) {
             EditorSticker sticker = mStickersList.get(i);
+
             if (isInBitmap(event, sticker)) {
                 mIsInSide = true;
                 mCheckedStickerId = i;
@@ -488,14 +518,22 @@ public class ImageEditorView extends ImageView {
                 mLastX = event.getX(0);
                 mLastY = event.getY(0);
                 return;
-            } else if (isInButton(event, sticker.getDeleteHandleRect())) {
-                mStickersList.remove(i);
-                return;
-            } else if (isInResize(event, sticker.getResizeHandleRect())) {
-                mIsInResize = true;
-                midPointToStartPoint(event, sticker);
-                sticker.setLength(diagonalLength(event, sticker.getPoint()));
+            } else if (sticker.isInEdit()) {
+                if (isInButton(event, sticker.getDeleteHandleRect())) {
+                    mStickersList.remove(i);
+                    return;
+                } else if (isInButton(event, sticker.getRotateHandleRect())) {
+                    mIsInRotate = true;
+                    mCheckedStickerId = i;
+                    return;
+                } else if (isInResize(event, sticker.getResizeHandleRect())) {
+                    mIsInResize = true;
+                    midPointToStartPoint(event, sticker);
+                    sticker.setLength(diagonalLength(event, sticker.getPoint()));
+                    return;
+                }
             }
+
         }
         mCheckedStickerId = -1;
     }
@@ -519,8 +557,7 @@ public class ImageEditorView extends ImageView {
     }
 
     private float diagonalLength(MotionEvent event, PointF pointF) {
-        float diagonalLength = (float) Math.hypot(event.getX(0) - pointF.x, event.getY(0) - pointF.y);
-        return diagonalLength;
+        return (float) Math.hypot(event.getX(0) - pointF.x, event.getY(0) - pointF.y);
     }
 
     private void setMatrix() {
@@ -643,6 +680,31 @@ public class ImageEditorView extends ImageView {
         mCenter = center;
     }
 
+    public void setStickersActivated(boolean isStickersActivated) {
+        mIsStickersActivated = isStickersActivated;
+
+        if (mStickersList.size() > 0) {
+            if (!mIsStickersActivated) {
+                for (EditorSticker sticker : mStickersList) {
+                    sticker.setInEdit(false);
+                }
+                invalidate();
+            } else {
+                for (int i = 0; i < mStickersList.size(); i++) {
+                    if (i == (mStickersList.size() - 1)) {
+                        mStickersList.get(i).setInEdit(true);
+                    } else {
+                        mStickersList.get(i).setInEdit(false);
+                    }
+                }
+                invalidate();
+            }
+        }
+    }
+
+    public void setTextActivated(boolean isTextActivated) {
+        mIsTextActivated = isTextActivated;
+    }
 
     private enum TouchArea {
         OUT_OF_BOUNDS, CENTER, LEFT_TOP, RIGHT_TOP, LEFT_BOTTOM, RIGHT_BOTTOM

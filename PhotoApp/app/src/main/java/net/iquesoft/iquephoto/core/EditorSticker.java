@@ -12,10 +12,13 @@ import net.iquesoft.iquephoto.model.Sticker;
 class EditorSticker {
     private float mMinScale = 0.5f;
     private float mMaxScale = 1.2f;
-    
+
     private double mHalfDiagonalLength;
 
+    private boolean mIsInEdit;
+
     private float mLength;
+    private float mRotateDegree;
 
     private Sticker mSticker;
     private Matrix mMatrix;
@@ -38,6 +41,8 @@ class EditorSticker {
         mFrontHandleRect = new Rect();
 
         mPoint = new PointF();
+
+        mHalfDiagonalLength = Math.hypot(getBitmap().getWidth(), getBitmap().getHeight());
     }
 
     public Bitmap getBitmap() {
@@ -84,15 +89,17 @@ class EditorSticker {
         mResizeHandleRect.top = (int) (f8 - resizeHandleBitmap.getHeight() / 2);
         mResizeHandleRect.bottom = (int) (f8 + resizeHandleBitmap.getHeight() / 2);
 
-        canvas.drawLine(f1, f2, f3, f4, paint);
-        canvas.drawLine(f3, f4, f7, f8, paint);
-        canvas.drawLine(f5, f6, f7, f8, paint);
-        canvas.drawLine(f5, f6, f1, f2, paint);
+        if (mIsInEdit) {
+            canvas.drawLine(f1, f2, f3, f4, paint);
+            canvas.drawLine(f3, f4, f7, f8, paint);
+            canvas.drawLine(f5, f6, f7, f8, paint);
+            canvas.drawLine(f5, f6, f1, f2, paint);
 
-        canvas.drawBitmap(deleteHandleBitmap, null, mDeleteHandleRect, null);
-        canvas.drawBitmap(resizeHandleBitmap, null, mResizeHandleRect, null);
-        canvas.drawBitmap(frontHandleBitmap, null, mFrontHandleRect, null);
-        canvas.drawBitmap(rotateHandleBitmap, null, mRotateHandleRect, null);
+            canvas.drawBitmap(deleteHandleBitmap, null, mDeleteHandleRect, null);
+            canvas.drawBitmap(resizeHandleBitmap, null, mResizeHandleRect, null);
+            canvas.drawBitmap(frontHandleBitmap, null, mFrontHandleRect, null);
+            canvas.drawBitmap(rotateHandleBitmap, null, mRotateHandleRect, null);
+        }
     }
 
     Rect getDeleteHandleRect() {
@@ -103,8 +110,24 @@ class EditorSticker {
         return mResizeHandleRect;
     }
 
+    Rect getRotateHandleRect() {
+        return mRotateHandleRect;
+    }
+
     void setLength(float length) {
         mLength = length;
+    }
+
+    void setRotateDegree(float rotateDegree) {
+        mRotateDegree = rotateDegree;
+    }
+
+    float getRotateDegree() {
+        return mRotateDegree;
+    }
+
+    double getHalfDiagonalLength() {
+        return mHalfDiagonalLength;
     }
 
     float getLength() {
@@ -123,5 +146,11 @@ class EditorSticker {
         return mMaxScale;
     }
 
+    boolean isInEdit() {
+        return mIsInEdit;
+    }
 
+    void setInEdit(boolean inEdit) {
+        mIsInEdit = inEdit;
+    }
 }

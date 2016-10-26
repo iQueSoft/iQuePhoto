@@ -25,15 +25,18 @@ class EditorSticker {
 
     private PointF mPoint;
 
+    private float mStickerHeight;
+    private float mStickerWight;
+
     private Rect mRotateHandleRect;
     private Rect mResizeHandleRect;
     private Rect mDeleteHandleRect;
     private Rect mFrontHandleRect;
 
-    EditorSticker(Sticker sticker) {
+    EditorSticker(Sticker sticker, Matrix matrix) {
         mSticker = sticker;
 
-        mMatrix = new Matrix();
+        mMatrix = new Matrix(matrix);
 
         mRotateHandleRect = new Rect();
         mResizeHandleRect = new Rect();
@@ -41,6 +44,9 @@ class EditorSticker {
         mFrontHandleRect = new Rect();
 
         mPoint = new PointF();
+
+        mStickerHeight = getBitmap().getHeight();
+        mStickerWight = getBitmap().getWidth();
 
         mHalfDiagonalLength = Math.hypot(getBitmap().getWidth(), getBitmap().getHeight());
     }
@@ -152,5 +158,13 @@ class EditorSticker {
 
     void setInEdit(boolean inEdit) {
         mIsInEdit = inEdit;
+    }
+
+    float getStickerHeight() {
+        return mStickerHeight;
+    }
+
+    float getStickerWight() {
+        return mStickerWight;
     }
 }

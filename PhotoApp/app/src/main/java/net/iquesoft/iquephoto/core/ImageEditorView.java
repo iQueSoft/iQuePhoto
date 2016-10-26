@@ -100,7 +100,6 @@ public class ImageEditorView extends ImageView {
 
     private PointF mCenter = new PointF();
 
-
     private float mLastX, mLastY;
 
     private TouchArea mTouchArea = TouchArea.OUT_OF_BOUNDS;
@@ -228,22 +227,15 @@ public class ImageEditorView extends ImageView {
 
                             invalidate();
                         } else if (mIsInSide) {
-                            float x = event.getX(0);
-                            float y = event.getY(0);
-
-                            mStickersList.get(mCheckedStickerId).getMatrix().postTranslate(x - mLastX, y - mLastY);
-
-                            mLastX = x;
-                            mLastY = y;
-                            invalidate();
+                            moveSticker(event.getX(0), event.getY(0),
+                                    mStickersList.get(mCheckedStickerId));
+                        } else if (mIsInRotate) {
+                            EditorSticker sticker = mStickersList.get(mCheckedStickerId);
+                            Matrix matrix = sticker.getMatrix();
+                            sticker.getMatrix().postRotate((rotationToStartPoint(event, matrix) - sticker.getRotateDegree()) * 2, sticker.getPoint().x, sticker.getPoint().y);
+                            sticker.setRotateDegree(rotationToStartPoint(event, matrix));
                         }
-                    } else if (mIsInRotate) {
-                        EditorSticker sticker = mStickersList.get(mCheckedStickerId);
-                        Matrix matrix = sticker.getMatrix();
-                        sticker.getMatrix().postRotate((rotationToStartPoint(event, matrix) - sticker.getRotateDegree()) * 2, sticker.getPoint().x, sticker.getPoint().y);
-                        sticker.setRotateDegree(rotationToStartPoint(event, matrix));
                     }
-
                 }
                 //mTextsList.get(mCheckedTextId).setSize(mTextsList.get(mCheckedTextId).getSize() * scale);
                 break;
@@ -260,6 +252,16 @@ public class ImageEditorView extends ImageView {
 
         return true;
 
+    }
+
+    private void moveSticker(float x, float y, EditorSticker sticker) {
+        if (isStickerInsideImageHorizontal(x, sticker) && isStickerInsideImageVertical(y, sticker)) {
+            sticker.getMatrix().postTranslate(x - mLastX, y - mLastY);
+
+            mLastX = x;
+            mLastY = y;
+            invalidate();
+        }
     }
 
     private float rotationToStartPoint(MotionEvent event, Matrix matrix) {
@@ -296,7 +298,7 @@ public class ImageEditorView extends ImageView {
     public void addSticker(Sticker sticker) {
         sticker.setBitmap(((BitmapDrawable) mContext.getResources().getDrawable(sticker.getImage())).getBitmap());
 
-        EditorSticker editorSticker = new EditorSticker(sticker);
+        EditorSticker editorSticker = new EditorSticker(sticker, mMatrix);
         editorSticker.setInEdit(true);
 
         mStickersList.add(editorSticker);
@@ -326,6 +328,7 @@ public class ImageEditorView extends ImageView {
     private boolean isInBitmap(MotionEvent event, EditorSticker editorSticker) {
         float[] arrayOfFloat1 = new float[9];
         editorSticker.getMatrix().getValues(arrayOfFloat1);
+        //mMatrix.getValues(arrayOfFloat1);
 
         float f1 = 0.0F * arrayOfFloat1[0] + 0.0F * arrayOfFloat1[1] + arrayOfFloat1[2];
         float f2 = 0.0F * arrayOfFloat1[3] + 0.0F * arrayOfFloat1[4] + arrayOfFloat1[5];
@@ -599,12 +602,14 @@ public class ImageEditorView extends ImageView {
         return applied;
     }
 
-    private boolean isInsideHorizontal(float x) {
-        return mImageRect.left <= x && mImageRect.right >= x;
+    private boolean isStickerInsideImageHorizontal(float x, EditorSticker sticker) {
+        return (mImageRect.left + sticker.getStickerWight()) <= x
+                && (mImageRect.right + sticker.getStickerWight()) >= x;
     }
 
-    private boolean isInsideVertical(float y) {
-        return mImageRect.top <= y && mImageRect.bottom >= y;
+    private boolean isStickerInsideImageVertical(float y, EditorSticker sticker) {
+        return (mImageRect.top + (sticker.getStickerHeight() / 2)) <= y
+                && (mImageRect.bottom + (sticker.getStickerHeight() / 2)) >= y;
     }
 
     private float getDensity() {

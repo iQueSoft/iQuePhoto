@@ -142,6 +142,7 @@ public class ImageEditorView extends ImageView {
     }
 
     private void initFrame() {
+        // FIXME: Exception on Android 6 and higher (VectorGraphics to BitmapDrawable).
         mDeleteHandleBitmap = ((BitmapDrawable) getResources().getDrawable(R.drawable.ic_handle_delete)).getBitmap();
         mResizeHandleBitmap = ((BitmapDrawable) getResources().getDrawable(R.drawable.ic_handle_resize)).getBitmap();
         mFrontHandleBitmap = ((BitmapDrawable) getResources().getDrawable(R.drawable.ic_handle_front)).getBitmap();
@@ -214,14 +215,15 @@ public class ImageEditorView extends ImageView {
                 //findCheckedText(mPreMoveX, mPreMoveY);
                 if (mIsStickersActivated) {
                     findCheckedSticker(event);
+                } else if (mIsTextActivated) {
+
                 }
                 break;
             case MotionEvent.ACTION_MOVE:
                 if (mIsStickersActivated) {
                     if (mCheckedStickerId != -1) {
+                        EditorSticker sticker = mStickersList.get(mCheckedStickerId);
                         if (mIsInResize) {
-                            EditorSticker sticker = mStickersList.get(mCheckedStickerId);
-
                             float stickerScale = diagonalLength(event, sticker.getPoint()) / sticker.getLength();
                             sticker.getMatrix().postScale(stickerScale, stickerScale, sticker.getPoint().x, sticker.getPoint().y);
 
@@ -230,7 +232,6 @@ public class ImageEditorView extends ImageView {
                             moveSticker(event.getX(0), event.getY(0),
                                     mStickersList.get(mCheckedStickerId));
                         } else if (mIsInRotate) {
-                            EditorSticker sticker = mStickersList.get(mCheckedStickerId);
                             Matrix matrix = sticker.getMatrix();
                             sticker.getMatrix().postRotate((rotationToStartPoint(event, matrix) - sticker.getRotateDegree()) * 2, sticker.getPoint().x, sticker.getPoint().y);
                             sticker.setRotateDegree(rotationToStartPoint(event, matrix));
@@ -298,7 +299,7 @@ public class ImageEditorView extends ImageView {
     public void addSticker(Sticker sticker) {
         sticker.setBitmap(((BitmapDrawable) mContext.getResources().getDrawable(sticker.getImage())).getBitmap());
 
-        EditorSticker editorSticker = new EditorSticker(sticker, mMatrix);
+        EditorSticker editorSticker = new EditorSticker(sticker);
         editorSticker.setInEdit(true);
 
         mStickersList.add(editorSticker);
@@ -447,6 +448,7 @@ public class ImageEditorView extends ImageView {
     }
 
     public void setOverlay(@Nullable Drawable drawable) {
+        // FIXME: OutMemoryException when work with large image.
         if (drawable != null) {
             mOverlayBitmap = Bitmap.createScaledBitmap(((BitmapDrawable) drawable).getBitmap(),
                     mSourceBitmap.getWidth(), mSourceBitmap.getHeight(), false);

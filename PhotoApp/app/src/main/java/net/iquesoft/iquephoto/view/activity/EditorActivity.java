@@ -68,7 +68,7 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.activity_editor);
-
+        
         ButterKnife.bind(this);
 
         presenter.createToolsBox();

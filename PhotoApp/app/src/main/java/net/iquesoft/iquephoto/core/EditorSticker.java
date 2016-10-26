@@ -33,10 +33,10 @@ class EditorSticker {
     private Rect mDeleteHandleRect;
     private Rect mFrontHandleRect;
 
-    EditorSticker(Sticker sticker, Matrix matrix) {
+    EditorSticker(Sticker sticker) {
         mSticker = sticker;
 
-        mMatrix = new Matrix(matrix);
+        mMatrix = new Matrix();
 
         mRotateHandleRect = new Rect();
         mResizeHandleRect = new Rect();

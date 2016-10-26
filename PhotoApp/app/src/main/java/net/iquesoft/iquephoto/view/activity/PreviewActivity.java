@@ -117,6 +117,7 @@ public class PreviewActivity extends BaseActivity implements IPreviewActivityVie
         mComponent.inject(this);
     }
 
+    // FIXME: Flip bug.
     @OnClick(R.id.buttonFlipHorizontal)
     void onClickFlipHorizontal() {
         presenter.flipImageHorizontal(cropImageView.getImageBitmap());
@@ -142,6 +143,7 @@ public class PreviewActivity extends BaseActivity implements IPreviewActivityVie
         cropImageView.rotateImage(CropImageView.RotateDegrees.ROTATE_90D);
     }
 
+    // FIXME: If picture is large button works when I click it twice.
     @OnClick(R.id.buttonCrop)
     void onClickCrop() {
         presenter.cropImage(createSaveUri(), cropImageView);

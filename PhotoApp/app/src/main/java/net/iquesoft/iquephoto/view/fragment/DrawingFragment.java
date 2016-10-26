@@ -7,8 +7,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseFragment;
+import net.iquesoft.iquephoto.core.ImageEditorView;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
 import net.iquesoft.iquephoto.presenter.DrawingFragmentPresenterImpl;
 import net.iquesoft.iquephoto.view.IDrawingFragmentView;
@@ -24,8 +26,6 @@ import butterknife.Unbinder;
 
 public class DrawingFragment extends BaseFragment implements IDrawingFragmentView {
 
-    private ColorPickerDialog colorPickerDialog;
-    
     @Inject
     DrawingFragmentPresenterImpl presenter;
 
@@ -34,6 +34,10 @@ public class DrawingFragment extends BaseFragment implements IDrawingFragmentVie
 
     @BindView(R.id.hideDrawingButton)
     ImageView hideDrawingButton;
+
+    private ColorPickerDialog mColorPickerDialog;
+
+    private ImageEditorView mImageEditorView;
 
     private boolean mIsHide;
 
@@ -64,12 +68,13 @@ public class DrawingFragment extends BaseFragment implements IDrawingFragmentVie
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_drawing, container, false);
-        v.setAlpha(0.8f);
 
         mUnbinder = ButterKnife.bind(this, v);
 
-        colorPickerDialog = new ColorPickerDialog(v.getContext());
-        colorPickerDialog.setListener(color -> {
+        mImageEditorView = DataHolder.getInstance().getEditorView();
+
+        mColorPickerDialog = new ColorPickerDialog(v.getContext());
+        mColorPickerDialog.setListener(color -> {
             //DataHolder.getInstance().getEditorView();//.setDrawingColor(color);
         });
         RGBColorPickerDialog = new RGBColorPickerDialog(v.getContext());
@@ -85,7 +90,7 @@ public class DrawingFragment extends BaseFragment implements IDrawingFragmentVie
 
     @OnClick(R.id.brushColorButton)
     public void onClickBrushColor() {
-        colorPickerDialog.show();
+        mColorPickerDialog.show();
     }
 
     @OnClick(R.id.hideDrawingButton)

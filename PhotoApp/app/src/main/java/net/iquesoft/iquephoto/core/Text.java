@@ -1,4 +1,4 @@
-package net.iquesoft.iquephoto.model;
+package net.iquesoft.iquephoto.core;
 
 import android.graphics.Paint;
 import android.graphics.Rect;

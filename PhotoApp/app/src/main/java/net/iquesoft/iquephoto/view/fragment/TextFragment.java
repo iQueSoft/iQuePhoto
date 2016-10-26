@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.core.ImageEditorView;
-import net.iquesoft.iquephoto.model.Text;
+import net.iquesoft.iquephoto.core.Text;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseFragment;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;

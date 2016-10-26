@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.model.Font;
-import net.iquesoft.iquephoto.model.Text;
 
 import java.util.List;
 

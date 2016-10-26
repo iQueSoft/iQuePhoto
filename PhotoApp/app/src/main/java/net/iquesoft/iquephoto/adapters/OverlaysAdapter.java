@@ -41,7 +41,7 @@ public class OverlaysAdapter extends RecyclerView.Adapter<OverlaysAdapter.ViewHo
     public OverlaysAdapter(List<Overlay> overlayList) {
         mOverlayList = overlayList;
     }
-
+    
     @Override
     public OverlaysAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         mContext = parent.getContext();
@@ -78,7 +78,7 @@ public class OverlaysAdapter extends RecyclerView.Adapter<OverlaysAdapter.ViewHo
         } else {
             holder.overlaySelected.setVisibility(View.GONE);
         }
-        
+
         holder.image.setOnClickListener(view -> {
 
             mOverlayList.get(mSelectedOverlay).setSelected(false);

@@ -2,7 +2,7 @@ package net.iquesoft.iquephoto.presenter;
 
 import android.graphics.Typeface;
 
-import net.iquesoft.iquephoto.model.Text;
+import net.iquesoft.iquephoto.core.Text;
 import net.iquesoft.iquephoto.view.ITextFragmentView;
 
 import javax.inject.Inject;

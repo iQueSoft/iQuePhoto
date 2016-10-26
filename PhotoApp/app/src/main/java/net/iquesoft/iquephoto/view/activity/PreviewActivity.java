@@ -60,7 +60,9 @@ public class PreviewActivity extends BaseActivity implements IPreviewActivityVie
 
         mBitmap = BitmapFactory.decodeFile(getIntent().getStringExtra("Image"));
 
-        Log.i(PreviewActivity.class.getSimpleName(), "Height " + mBitmap.getHeight() + "\nWidth " + mBitmap.getWidth());
+        Log.i(PreviewActivity.class.getSimpleName(), "Height "
+                + mBitmap.getHeight()
+                + "\nWidth " + mBitmap.getWidth());
 
         ButterKnife.bind(this);
 

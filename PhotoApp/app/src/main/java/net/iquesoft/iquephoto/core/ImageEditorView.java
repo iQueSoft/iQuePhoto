@@ -8,6 +8,7 @@ import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -28,24 +29,32 @@ import android.widget.Toast;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.model.Sticker;
-import net.iquesoft.iquephoto.model.Text;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ImageEditorView extends ImageView {
+    private int mDrawingColor = Color.BLACK;
+
+    private float mDrawingWidth;
 
     private float mPrevDistance;
-
+    
+    private boolean mIsInitialized;
+    private boolean mHasFilter;
     private boolean mIsDrawingActivated;
     private boolean mIsTextActivated;
     private boolean mIsStickersActivated;
 
-    private EditorSticker mCurrentSticker;
-
     private boolean mIsInResize;
     private boolean mIsInSide;
     private boolean mIsInRotate;
+
+    private EditorSticker mCurrentSticker;
+
+    private Bitmap mSourceBitmap;
+    private Bitmap mOverlayBitmap;
+    private Bitmap mFrameBitmap;
 
     private Bitmap mDeleteHandleBitmap;
     private Bitmap mResizeHandleBitmap;
@@ -63,13 +72,18 @@ public class ImageEditorView extends ImageView {
 
     private Context mContext;
 
-    private Bitmap mSourceBitmap;
-    private Bitmap mOverlayBitmap;
-    private Bitmap mFrameBitmap;
-
+    private Paint mImagePaint;
+    private Paint mFilterPaint;
     private Paint mOverlayPaint;
+    private Paint mDrawingPaint;
+    private Paint mPaintTranslucent;
+    private Paint mDrawingCirclePaint;
+
+    private Path mDrawingPath;
+    private Path mDrawingCirclePath;
 
     private List<Text> mTextsList;
+    private List<Drawing> mDrawingList;
     private List<EditorSticker> mStickersList;
 
     private Drawable mSourceDrawable;
@@ -85,20 +99,13 @@ public class ImageEditorView extends ImageView {
     private float mWarmthValue = 0;
 
     private ColorMatrix mAdjustColorMatrix;
+    private ColorMatrix mFilterColorMatrix;
+
     private ColorMatrixColorFilter mAdjustColorMatrixColorFilter;
 
-    private Paint mPaintBitmap;
-    private Paint mFilterPaint;
-
-    private ColorMatrix mFilterColorMatrix;
-    private boolean mHasFilter;
-
-    private boolean mIsInitialized = false;
     private Matrix mMatrix = null;
-    private Paint mPaintTranslucent;
 
     private RectF mImageRect;
-
     private PointF mCenter = new PointF();
 
     private float mLastX, mLastY;
@@ -123,23 +130,49 @@ public class ImageEditorView extends ImageView {
 
         mContext = context;
 
-        mStickersList = new ArrayList<>();
         mTextsList = new ArrayList<>();
 
-        mPaintTranslucent = new Paint();
-        mPaintBitmap = new Paint();
-        mPaintBitmap.setFilterBitmap(true);
+        mStickersList = new ArrayList<>();
 
+        mImagePaint = new Paint();
         mFilterPaint = new Paint();
         mOverlayPaint = new Paint();
 
+        mPaintTranslucent = new Paint();
+
         mAdjustColorMatrix = new ColorMatrix();
+
+        mImagePaint.setFilterBitmap(true);
 
         mMatrix = new Matrix();
 
         mScale = 1.0f;
 
         initFrame();
+        initDrawing();
+    }
+
+    private void initDrawing() {
+        mDrawingList = new ArrayList<>();
+
+        mDrawingPaint = new Paint();
+        mDrawingCirclePaint = new Paint();
+
+        mDrawingPath = new Path();
+        mDrawingCirclePath = new Path();
+
+        mDrawingPaint.setAntiAlias(true);
+        mDrawingPaint.setStyle(Paint.Style.STROKE);
+        mDrawingPaint.setColor(Drawing.DEFAULT_COLOR);
+        mDrawingPaint.setStrokeJoin(Paint.Join.ROUND);
+        mDrawingPaint.setStrokeCap(Paint.Cap.ROUND);
+        mDrawingPaint.setStrokeWidth(Drawing.DEFAULT_STROKE_WIDTH);
+
+        mDrawingCirclePaint.setAntiAlias(true);
+        mDrawingCirclePaint.setColor(Drawing.DEFAULT_COLOR);
+        mDrawingCirclePaint.setStyle(Paint.Style.STROKE);
+        mDrawingCirclePaint.setStrokeJoin(Paint.Join.MITER);
+        mDrawingCirclePaint.setStrokeWidth(4f);
     }
 
     private void initFrame() {
@@ -163,14 +196,14 @@ public class ImageEditorView extends ImageView {
 
         if (mIsInitialized) {
             setMatrix();
-            canvas.drawBitmap(mSourceBitmap, mMatrix, mPaintBitmap);
+            canvas.drawBitmap(mSourceBitmap, mMatrix, mImagePaint);
         }
 
         if (mOverlayBitmap != null)
             canvas.drawBitmap(mOverlayBitmap, mMatrix, mOverlayPaint);
 
         if (mFrameBitmap != null)
-            canvas.drawBitmap(mFrameBitmap, mMatrix, mPaintBitmap);
+            canvas.drawBitmap(mFrameBitmap, mMatrix, mImagePaint);
 
         if (mStickersList.size() > 0) {
             drawStickers(canvas);
@@ -178,6 +211,12 @@ public class ImageEditorView extends ImageView {
 
         if (mTextsList.size() > 0) {
             drawTexts(canvas);
+        }
+
+        if (mDrawingList.size() > 0) {
+            for (Drawing drawing : mDrawingList) {
+                canvas.drawPath(drawing.getPath(), drawing.getPaint());
+            }
         }
 
         canvas.restore();
@@ -213,11 +252,14 @@ public class ImageEditorView extends ImageView {
 
         switch (action) {
             case MotionEvent.ACTION_DOWN:
-                //findCheckedText(mPreMoveX, mPreMoveY);
                 if (mIsStickersActivated) {
                     findCheckedSticker(event);
                 } else if (mIsTextActivated) {
-
+                    // TODO: Find touched text.
+                } else if (mIsDrawingActivated) {
+                    if (isInsideImageHorizontal(event.getX())
+                            && isInsideImageVertical(event.getY()))
+                        drawingStart(event);
                 }
                 break;
             case MotionEvent.ACTION_MOVE:
@@ -238,6 +280,10 @@ public class ImageEditorView extends ImageView {
                             sticker.setRotateDegree(rotationToStartPoint(event, matrix));
                         }
                     }
+                } else if (mIsDrawingActivated) {
+                    if (isInsideImageHorizontal(event.getX(0))
+                            && isInsideImageVertical(event.getY(0)))
+                        drawingMove(event);
                 }
                 //mTextsList.get(mCheckedTextId).setSize(mTextsList.get(mCheckedTextId).getSize() * scale);
                 break;
@@ -245,6 +291,12 @@ public class ImageEditorView extends ImageView {
                 mIsInResize = false;
                 mIsInSide = false;
                 mIsInRotate = false;
+
+                if (mIsDrawingActivated) {
+                    if (isInsideImageHorizontal(event.getX(0))
+                            && isInsideImageVertical(event.getY(0)))
+                        drawingStop();
+                }
                 break;
             case MotionEvent.ACTION_POINTER_UP:
                 break;
@@ -254,6 +306,47 @@ public class ImageEditorView extends ImageView {
 
         return true;
 
+    }
+
+    private void drawingStart(MotionEvent event) {
+        Log.i("Drawing", "START");
+        mDrawingPath.reset();
+        mDrawingPath.moveTo(event.getX(), event.getY());
+        mLastX = event.getX();
+        mLastY = event.getY();
+
+        invalidate();
+    }
+
+    private void drawingMove(MotionEvent event) {
+        Log.i("Drawing", "MOVE");
+        float dX = Math.abs(event.getX() - mLastX);
+        float dY = Math.abs(event.getY() - mLastY);
+
+        if (dX >= Drawing.TOUCH_TOLERANCE || dY >= Drawing.TOUCH_TOLERANCE) {
+            mDrawingPath.quadTo(mLastX, mLastY, (event.getX() + mLastX) / 2, (event.getY(0) + mLastY) / 2);
+
+            mLastX = event.getX();
+            mLastY = event.getY();
+
+            mDrawingCirclePath.reset();
+            mDrawingCirclePath.addCircle(mLastX, mLastY, 30, Path.Direction.CW);
+        }
+
+        invalidate();
+    }
+
+    private void drawingStop() {
+        Log.i("Drawing", "STOP");
+        mDrawingPath.lineTo(mLastX, mLastY);
+        mDrawingList.add(new Drawing(new Paint(mDrawingPaint), new Path(mDrawingPath)));
+        mDrawingPath.reset();
+
+        invalidate();
+    }
+
+    public void setDrawingColor(int color) {
+        mDrawingColor = color;
     }
 
     private void moveSticker(float x, float y, EditorSticker sticker) {
@@ -605,6 +698,14 @@ public class ImageEditorView extends ImageView {
         return applied;
     }
 
+    private boolean isInsideImageHorizontal(float x) {
+        return mImageRect.left <= x && mImageRect.right >= x;
+    }
+
+    private boolean isInsideImageVertical(float y) {
+        return mImageRect.top <= y && mImageRect.bottom >= y;
+    }
+
     private boolean isStickerInsideImageHorizontal(float x, EditorSticker sticker) {
         return (mImageRect.left + sticker.getStickerWight()) <= x
                 && (mImageRect.right + sticker.getStickerWight()) >= x;
@@ -736,7 +837,7 @@ public class ImageEditorView extends ImageView {
                 mCanvas.drawBitmap(mOverlayBitmap, mMatrix, mOverlayPaint);
 
             if (mFrameBitmap != null)
-                mCanvas.drawBitmap(mFrameBitmap, mMatrix, mPaintBitmap);
+                mCanvas.drawBitmap(mFrameBitmap, mMatrix, mImagePaint);
 
             return mBitmap;
         }

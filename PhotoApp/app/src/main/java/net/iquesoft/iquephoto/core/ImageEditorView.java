@@ -37,8 +37,9 @@ public class ImageEditorView extends ImageView {
 
     private float mPrevDistance;
 
-    private boolean mIsStickersActivated;
+    private boolean mIsDrawingActivated;
     private boolean mIsTextActivated;
+    private boolean mIsStickersActivated;
 
     private EditorSticker mCurrentSticker;
 
@@ -711,6 +712,10 @@ public class ImageEditorView extends ImageView {
 
     public void setTextActivated(boolean isTextActivated) {
         mIsTextActivated = isTextActivated;
+    }
+
+    public void setDrawingActivated(boolean isDrawingActivated) {
+        mIsDrawingActivated = isDrawingActivated;
     }
 
     private enum TouchArea {

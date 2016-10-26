@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mikhaellopez.circularimageview.CircularImageView;
+import com.squareup.picasso.Picasso;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.model.Overlay;
@@ -59,8 +60,12 @@ public class OverlaysAdapter extends RecyclerView.Adapter<OverlaysAdapter.ViewHo
         holder.title.setText(overlay.getTitle());
 
         try {
-            holder.image.setImageDrawable(mContext.getResources().getDrawable(overlay.getImage()));
-        } catch (Resources.NotFoundException e) {
+            Picasso.with(mContext)
+                    .load(overlay.getImage())
+                    .resize(100, 100)
+                    .into(holder.image);
+
+        } catch (Resources.NotFoundException | IllegalArgumentException e) {
             e.printStackTrace();
         }
 
@@ -73,7 +78,7 @@ public class OverlaysAdapter extends RecyclerView.Adapter<OverlaysAdapter.ViewHo
         } else {
             holder.overlaySelected.setVisibility(View.GONE);
         }
-
+        
         holder.image.setOnClickListener(view -> {
 
             mOverlayList.get(mSelectedOverlay).setSelected(false);

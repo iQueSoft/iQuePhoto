@@ -68,7 +68,7 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.activity_editor);
-        
+
         ButterKnife.bind(this);
 
         presenter.createToolsBox();
@@ -125,15 +125,15 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
                             imageEditorView.setStickersActivated(true);
                             break;
                         case R.string.text:
-                            //editorView.setTextActivated(true);
+                            imageEditorView.setTextActivated(true);
                             break;
                         case R.string.drawing:
-                            //editorView.setDrawingActivated(true);
+                            imageEditorView.setDrawingActivated(true);
                             break;
                         default:
                             imageEditorView.setStickersActivated(false);
-                            //editorView.setTextActivated(false);
-                            //editorView.setDrawingActivated(false);
+                            imageEditorView.setTextActivated(false);
+                            imageEditorView.setDrawingActivated(false);
                             break;
                     }
                 } catch (NullPointerException e) {

@@ -43,17 +43,17 @@
         android:paddingBottom="10dp">
 
         <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
-            android:id="@+id/mView"
+            android:id="@+id/brashSizeSeekBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:dsb_indicatorColor="@android:color/white"
             app:dsb_indicatorTextAppearance="@android:color/black"
             app:dsb_max="100"
-            app:dsb_min="-100"
+            app:dsb_min="1"
+            app:dsb_value="10"
             app:dsb_progressColor="@android:color/white"
             app:dsb_rippleColor="@android:color/white"
-            app:dsb_trackColor="@android:color/white"
-            app:dsb_value="0" />
+            app:dsb_trackColor="@android:color/white" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -68,33 +68,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:src="@drawable/ic_eraser" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/textView5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="0"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginBottom="5dp"
-                    android:text="@string/size"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
 
             <ImageView
                 android:id="@+id/brushColorButton"

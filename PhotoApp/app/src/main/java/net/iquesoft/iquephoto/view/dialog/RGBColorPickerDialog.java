@@ -16,9 +16,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-/**
- * @author Sergey
- */
 public class RGBColorPickerDialog extends Dialog implements DiscreteSeekBar.OnProgressChangeListener {
 
     private int color;

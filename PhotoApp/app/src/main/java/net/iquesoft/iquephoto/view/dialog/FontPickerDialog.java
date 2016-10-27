@@ -2,7 +2,9 @@ package net.iquesoft.iquephoto.view.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -41,6 +43,8 @@ public class FontPickerDialog extends Dialog {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         setContentView(R.layout.dialog_font_picker);
+
+        //getWindow().setBackgroundDrawable(new ColorDrawable(mContext.getResources().getColor(R.color.transparency)));
 
         ButterKnife.bind(this);
 

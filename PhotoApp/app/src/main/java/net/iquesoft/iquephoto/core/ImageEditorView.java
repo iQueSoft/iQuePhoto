@@ -10,6 +10,8 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
@@ -17,6 +19,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.annotation.ColorRes;
 import android.support.annotation.Nullable;
 import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
@@ -34,12 +37,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ImageEditorView extends ImageView {
-    private int mDrawingColor = Color.BLACK;
-
-    private float mDrawingWidth;
 
     private float mPrevDistance;
-    
+
     private boolean mIsInitialized;
     private boolean mHasFilter;
     private boolean mIsDrawingActivated;
@@ -172,7 +172,7 @@ public class ImageEditorView extends ImageView {
         mDrawingCirclePaint.setColor(Drawing.DEFAULT_COLOR);
         mDrawingCirclePaint.setStyle(Paint.Style.STROKE);
         mDrawingCirclePaint.setStrokeJoin(Paint.Join.MITER);
-        mDrawingCirclePaint.setStrokeWidth(4f);
+        mDrawingCirclePaint.setStrokeWidth(10f);
     }
 
     private void initFrame() {
@@ -217,6 +217,10 @@ public class ImageEditorView extends ImageView {
             for (Drawing drawing : mDrawingList) {
                 canvas.drawPath(drawing.getPath(), drawing.getPaint());
             }
+        }
+
+        if (!mDrawingPath.isEmpty()) {
+            canvas.drawPath(mDrawingPath, mDrawingPaint);
         }
 
         canvas.restore();
@@ -345,8 +349,12 @@ public class ImageEditorView extends ImageView {
         invalidate();
     }
 
-    public void setDrawingColor(int color) {
-        mDrawingColor = color;
+    public void setBrushColor(@ColorRes int color) {
+        mDrawingPaint.setColor(getResources().getColor(color));
+    }
+
+    public void setBrushSize(float brushSize) {
+        mDrawingPaint.setStrokeWidth(brushSize);
     }
 
     private void moveSticker(float x, float y, EditorSticker sticker) {

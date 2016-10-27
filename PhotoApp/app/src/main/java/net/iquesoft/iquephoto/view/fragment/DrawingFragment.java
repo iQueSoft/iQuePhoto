@@ -17,6 +17,8 @@ import net.iquesoft.iquephoto.view.IDrawingFragmentView;
 import net.iquesoft.iquephoto.view.dialog.ColorPickerDialog;
 import net.iquesoft.iquephoto.view.dialog.RGBColorPickerDialog;
 
+import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
+
 import javax.inject.Inject;
 
 import butterknife.BindView;
@@ -34,6 +36,9 @@ public class DrawingFragment extends BaseFragment implements IDrawingFragmentVie
 
     @BindView(R.id.hideDrawingButton)
     ImageView hideDrawingButton;
+
+    @BindView(R.id.brashSizeSeekBar)
+    DiscreteSeekBar brashSizeSeekBar;
 
     private ColorPickerDialog mColorPickerDialog;
 
@@ -74,10 +79,29 @@ public class DrawingFragment extends BaseFragment implements IDrawingFragmentVie
         mImageEditorView = DataHolder.getInstance().getEditorView();
 
         mColorPickerDialog = new ColorPickerDialog(v.getContext());
+
         mColorPickerDialog.setListener(color -> {
-            //DataHolder.getInstance().getEditorView();//.setDrawingColor(color);
+            mImageEditorView.setBrushColor(color);
         });
+
         RGBColorPickerDialog = new RGBColorPickerDialog(v.getContext());
+
+        brashSizeSeekBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
+            @Override
+            public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
+                mImageEditorView.setBrushSize(value);
+            }
+
+            @Override
+            public void onStartTrackingTouch(DiscreteSeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(DiscreteSeekBar seekBar) {
+
+            }
+        });
 
         return v;
     }

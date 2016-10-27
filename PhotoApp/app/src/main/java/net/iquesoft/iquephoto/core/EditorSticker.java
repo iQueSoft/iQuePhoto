@@ -48,6 +48,13 @@ class EditorSticker {
         mStickerHeight = getBitmap().getHeight();
         mStickerWight = getBitmap().getWidth();
 
+        int width = getBitmap().getWidth();
+        int height = getBitmap().getHeight();
+
+        float scale = (mMinScale + mMaxScale) / 2;
+
+        mMatrix.postScale(scale, scale, width / 2, height / 2);
+
         mHalfDiagonalLength = Math.hypot(getBitmap().getWidth(), getBitmap().getHeight());
     }
 
@@ -118,6 +125,10 @@ class EditorSticker {
 
     Rect getRotateHandleRect() {
         return mRotateHandleRect;
+    }
+
+    Rect getFrontHandleRect() {
+        return mFrontHandleRect;
     }
 
     void setLength(float length) {

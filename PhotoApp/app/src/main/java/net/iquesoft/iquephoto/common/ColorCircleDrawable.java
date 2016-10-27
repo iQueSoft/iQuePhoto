@@ -1,4 +1,4 @@
-package net.iquesoft.iquephoto.core;
+package net.iquesoft.iquephoto.common;
 
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;

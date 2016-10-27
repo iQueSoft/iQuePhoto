@@ -77,17 +77,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:orientation="horizontal"
-        android:paddingBottom="10dp"
-        android:paddingTop="10dp">
+        android:orientation="horizontal">
 
         <ImageButton
             android:id="@+id/buttonFlipVertical"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:background="?attr/selectableItemBackgroundBorderless"
+            android:paddingBottom="10dp"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
+            android:paddingTop="10dp"
             android:src="@drawable/ic_v_flip" />
 
         <ImageButton
@@ -95,8 +95,10 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:background="?attr/selectableItemBackgroundBorderless"
+            android:paddingBottom="10dp"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
+            android:paddingTop="10dp"
             android:src="@drawable/ic_rotate_left" />
 
         <ImageButton
@@ -104,8 +106,10 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:background="?attr/selectableItemBackgroundBorderless"
+            android:paddingBottom="10dp"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
+            android:paddingTop="10dp"
             android:src="@drawable/ic_rotate_right" />
 
         <ImageButton
@@ -113,8 +117,10 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:background="?attr/selectableItemBackgroundBorderless"
+            android:paddingBottom="10dp"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
+            android:paddingTop="10dp"
             android:src="@drawable/ic_h_flip" />
 
     </LinearLayout>

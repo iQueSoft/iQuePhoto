@@ -116,6 +116,7 @@
                         android:layout_gravity="center"
                         android:layout_weight="1"
                         android:src="@drawable/ic_font" />
+
                 </LinearLayout>
 
             </LinearLayout>

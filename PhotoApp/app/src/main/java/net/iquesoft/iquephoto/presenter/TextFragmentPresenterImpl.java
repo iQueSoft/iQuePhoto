@@ -1,7 +1,9 @@
 package net.iquesoft.iquephoto.presenter;
 
 import android.graphics.Typeface;
+import android.util.DisplayMetrics;
 
+import net.iquesoft.iquephoto.core.EditorText;
 import net.iquesoft.iquephoto.core.Text;
 import net.iquesoft.iquephoto.view.ITextFragmentView;
 
@@ -22,14 +24,7 @@ public class TextFragmentPresenterImpl implements ITextFragmentPresenter {
     }
 
     @Override
-    public void addText(String text, int color, Typeface typeface, int opacity) {
-        Text photoEditorText = new Text(text, typeface, color, opacity);
-
-        view.onAddTextComplete(photoEditorText);
-    }
-
-    @Override
-    public void deleteText(Text text) {
-        view.onDeleteTextComplete(text);
+    public void addText(String text, int color, Typeface typeface, int opacity, DisplayMetrics displayMetrics) {
+        view.onAddTextComplete(new EditorText(text, typeface, color, opacity, displayMetrics));
     }
 }

@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import net.iquesoft.iquephoto.DataHolder;
+import net.iquesoft.iquephoto.core.EditorText;
 import net.iquesoft.iquephoto.core.ImageEditorView;
 import net.iquesoft.iquephoto.core.Text;
 import net.iquesoft.iquephoto.R;
@@ -36,13 +37,12 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
 
     private Context mContext;
 
-    private int color = 0x7f0b004f; // Default color white
+    private int mColor;
 
     private String mText;
     private Typeface mTypeface;
 
     private boolean isHide = false;
-    private boolean isDeleteActive = false;
 
     private Unbinder mUnbinder;
 
@@ -131,10 +131,10 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
     void onClickAddText() {
         mText = editText.getText().toString();
         if (!mText.isEmpty()) {
-            color = RGBColorPickerDialog.getColor();
+            mColor = RGBColorPickerDialog.getColor();
             mTypeface = fontPickerDialog.getTypeface();
 
-            presenter.addText(mText, color, mTypeface, seekBar.getProgress());
+            presenter.addText(mText, mColor, mTypeface, seekBar.getProgress(), getResources().getDisplayMetrics());
         } else {
             Toast.makeText(mContext, getResources().getString(R.string.text_is_empty), Toast.LENGTH_SHORT).show();
         }
@@ -161,19 +161,19 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
     @OnClick(R.id.textButton)
     void onClickTextButton() {
         mText = editText.getText().toString();
-        color = RGBColorPickerDialog.getColor();
+        mColor = RGBColorPickerDialog.getColor();
         if (mText.length() > 0) {
-            fontPickerDialog.showDialog(mText, color);
+            fontPickerDialog.showDialog(mText, mColor);
         }
 
     }
 
     public int getColor() {
-        return color;
+        return mColor;
     }
 
     public void setColor(int color) {
-        this.color = color;
+        mColor = color;
     }
 
     public void setTypeface(Typeface typeface) {
@@ -181,15 +181,7 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
     }
 
     @Override
-    public void onAddTextComplete(Text text) {
-        mImageEditorView.addText(text);
-        Toast.makeText(mContext, getResources().getString(R.string.text_added), Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onDeleteTextComplete(Text text) {
-        if (isDeleteActive) {
-            //editorView.deleteText(text);
-        }
+    public void onAddTextComplete(EditorText editorText) {
+        mImageEditorView.addText(editorText);
     }
 }

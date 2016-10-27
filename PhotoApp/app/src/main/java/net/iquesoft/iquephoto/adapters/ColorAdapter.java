@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.core.ColorCircleDrawable;
+import net.iquesoft.iquephoto.common.ColorCircleDrawable;
 import net.iquesoft.iquephoto.model.EditorColor;
 
 import java.util.List;

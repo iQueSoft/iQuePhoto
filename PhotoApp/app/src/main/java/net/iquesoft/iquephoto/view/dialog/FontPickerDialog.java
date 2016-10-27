@@ -28,7 +28,7 @@ public class FontPickerDialog extends Dialog {
 
     @BindView(R.id.fontsList)
     RecyclerView fontsList;
-
+    
     private boolean mBold;
     private boolean mItalic;
 

@@ -134,7 +134,7 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
             mColor = RGBColorPickerDialog.getColor();
             mTypeface = fontPickerDialog.getTypeface();
 
-            presenter.addText(mText, mColor, mTypeface, seekBar.getProgress(), getResources().getDisplayMetrics());
+            presenter.addText(mText, mColor, mTypeface, seekBar.getProgress());
         } else {
             Toast.makeText(mContext, getResources().getString(R.string.text_is_empty), Toast.LENGTH_SHORT).show();
         }

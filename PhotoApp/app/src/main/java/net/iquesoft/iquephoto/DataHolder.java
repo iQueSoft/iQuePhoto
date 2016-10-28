@@ -6,7 +6,7 @@ import android.graphics.drawable.Drawable;
 import net.iquesoft.iquephoto.core.ImageEditorView;
 
 public class DataHolder {
-    private Drawable mDrawable;
+    private Bitmap mBitmap;
 
     private Bitmap mShareBitmap;
 
@@ -37,11 +37,11 @@ public class DataHolder {
         mShareBitmap = shareBitmap;
     }
 
-    public Drawable getDrawable() {
-        return mDrawable;
+    public void setBitmap(Bitmap bitmap) {
+        mBitmap = bitmap;
     }
 
-    public void setDrawable(Drawable drawable) {
-        mDrawable = drawable;
+    public Bitmap getBitmap() {
+        return mBitmap;
     }
 }

@@ -115,7 +115,7 @@ public class FiltersFragment extends BaseFragment implements IFiltersFragmentVie
 
     @Override
     public void setFiltersAdapter() {
-        FiltersAdapter filtersAdapter = new FiltersAdapter(Filter.getFiltersList(), DataHolder.getInstance().getDrawable());
+        FiltersAdapter filtersAdapter = new FiltersAdapter(Filter.getFiltersList(), DataHolder.getInstance().getBitmap());
 
         filtersAdapter.setFiltersListener(filter -> {
             if (mCurrentFilter == filter) {

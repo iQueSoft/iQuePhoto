@@ -58,6 +58,7 @@ class EditorSticker {
         mHalfDiagonalLength = Math.hypot(getBitmap().getWidth(), getBitmap().getHeight());
     }
 
+
     public Bitmap getBitmap() {
         return mSticker.getBitmap();
     }

@@ -24,7 +24,7 @@ public class TextFragmentPresenterImpl implements ITextFragmentPresenter {
     }
 
     @Override
-    public void addText(String text, int color, Typeface typeface, int opacity, DisplayMetrics displayMetrics) {
-        view.onAddTextComplete(new EditorText(text, typeface, color, opacity, displayMetrics));
+    public void addText(String text, int color, Typeface typeface, int opacity) {
+        view.onAddTextComplete(new EditorText(text, typeface, color, opacity));
     }
 }

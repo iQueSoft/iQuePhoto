@@ -18,13 +18,6 @@ public class Sticker {
 
     private Bitmap mBitmap;
 
-    private float mScale;
-
-    private float mSize = 100;
-
-    private float mX = 0;
-    private float mY = 0;
-
     private static Sticker flagStickers[] = {
             new Sticker(R.string.flag_ukraine, R.drawable.flag_ukraine),
             new Sticker(R.string.flag_russia, R.drawable.flag_russia),
@@ -73,43 +66,13 @@ public class Sticker {
         mImage = image;
     }
 
-    /**
-     * @return list with "Flag" stickers;
-     */
     public static List<Sticker> getFlagStickersList() {
         return Arrays.asList(flagStickers);
     }
 
-    /**
-     * @return list with "Emoticons" stickers;
-     */
+
     public static List<Sticker> getEmoticonsStickersList() {
         return Arrays.asList(emoticonsStickers);
-    }
-
-    public float getX() {
-        return mX;
-    }
-
-    public void setX(float x) {
-        mX = x;
-    }
-
-    public float getY() {
-        return mY;
-    }
-
-    public void setY(float y) {
-        mY = y;
-    }
-
-    public float getSize() {
-        return mSize;
-    }
-
-    public void setSize(float size) {
-        mSize = size;
-        //setStickerArea();
     }
 
     public Bitmap getBitmap() {
@@ -119,25 +82,7 @@ public class Sticker {
     public void setBitmap(Bitmap bitmap) {
         mBitmap = bitmap;
     }
-
-    public float getScale() {
-        return mScale;
-    }
-
-    public void setScale(float scale) {
-        mScale = scale;
-    }
 }
 
-    /*public void setStickerArea(Rect stickerArea) {
-        if (getText() != null && typeface != null) {
-            Paint paint = new Paint();
-            setPaintParams(paint);
-            paint.getTextBounds(getText(), 0, getText().length(), textArea);
-            textArea.top += getSize() + getY() - STICKER_AREA_MARGIN;
-            textArea.bottom += getSize() + getY() + STICKER_AREA_MARGIN;
-            textArea.left += getX() - STICKER_AREA_MARGIN;
-            textArea.right += getX() + STICKER_AREA_MARGIN;
-        }
-    }*/
+
 

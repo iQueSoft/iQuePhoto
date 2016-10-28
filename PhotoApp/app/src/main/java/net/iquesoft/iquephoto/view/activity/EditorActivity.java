@@ -79,7 +79,7 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
             e.printStackTrace();
         }
 
-        DataHolder.getInstance().setDrawable(getScaledDrawable());
+        DataHolder.getInstance().setBitmap(mBitmap);
 
         Log.i(EditorActivity.class.getSimpleName(), "Height " + mBitmap.getHeight() + "\nWidth " + mBitmap.getWidth());
 
@@ -99,19 +99,12 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
 
     @Override
     protected void onDestroy() {
-//        mExecutor.shutdown();
         super.onDestroy();
     }
 
     @Override
     public void onBackPressed() {
         presenter.onBackPressed(mBitmap, mBitmap);
-    }
-
-    private Drawable getScaledDrawable() {
-        Bitmap bitmap = Bitmap.createScaledBitmap(mBitmap, 640, 640, false);
-
-        return new BitmapDrawable(getResources(), bitmap);
     }
 
     @Override

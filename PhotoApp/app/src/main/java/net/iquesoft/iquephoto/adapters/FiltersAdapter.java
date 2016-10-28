@@ -1,6 +1,7 @@
 package net.iquesoft.iquephoto.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
@@ -11,8 +12,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mikhaellopez.circularimageview.CircularImageView;
+import com.squareup.picasso.Picasso;
 
 import net.iquesoft.iquephoto.R;
+import net.iquesoft.iquephoto.core.FilterBitmapDrawable;
 import net.iquesoft.iquephoto.model.Filter;
 
 import java.util.List;
@@ -24,9 +27,10 @@ public class FiltersAdapter extends RecyclerView.Adapter<FiltersAdapter.ViewHold
 
     private int mSelectedFilter = 0;
 
+    private Bitmap mBitmap;
+
     private Context mContext;
 
-    private Drawable mDrawable;
 
     private List<Filter> mFiltersList;
 
@@ -40,9 +44,10 @@ public class FiltersAdapter extends RecyclerView.Adapter<FiltersAdapter.ViewHold
         mFiltersListener = filtersListener;
     }
 
-    public FiltersAdapter(List<Filter> filters, Drawable drawable) {
+    public FiltersAdapter(List<Filter> filters, Bitmap bitmap) {
         mFiltersList = filters;
-        mDrawable = drawable;
+        mBitmap = bitmap;
+
     }
 
     @Override
@@ -62,11 +67,13 @@ public class FiltersAdapter extends RecyclerView.Adapter<FiltersAdapter.ViewHold
 
         holder.filterTitle.setText(filter.getTitle());
 
+        FilterBitmapDrawable filterBitmapDrawable = new FilterBitmapDrawable(mBitmap);
+
         if (filter.getColorMatrix() != null) {
-            mDrawable.setColorFilter(new ColorMatrixColorFilter(filter.getColorMatrix()));
-            holder.filterIcon.setImageDrawable(mDrawable);
+            filterBitmapDrawable.setColorFilter(new ColorMatrixColorFilter(filter.getColorMatrix()));
+            holder.filterIcon.setImageDrawable(filterBitmapDrawable);
         } else {
-            holder.filterIcon.setImageDrawable(mDrawable);
+            holder.filterIcon.setImageDrawable(filterBitmapDrawable);
         }
 
         if (mSelectedFilter == 0)

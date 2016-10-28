@@ -38,8 +38,6 @@ public class ImageEditorView extends ImageView {
 
     private float mBrushSize;
 
-    private int mScreenWidth, mScreenHeight;
-
     private boolean mIsInitialized;
     private boolean mHasFilter;
     private boolean mIsDrawingActivated;
@@ -142,11 +140,6 @@ public class ImageEditorView extends ImageView {
         mMatrix = new Matrix();
 
         mScale = 1.0f;
-
-        mDisplayMetrics = getResources().getDisplayMetrics();
-
-        mScreenWidth = mDisplayMetrics.widthPixels;
-        mScreenHeight = mDisplayMetrics.heightPixels;
 
         initFrame();
         initDrawing();
@@ -266,6 +259,11 @@ public class ImageEditorView extends ImageView {
                         drawingStart(event);
                 }
                 break;
+            case MotionEvent.ACTION_POINTER_DOWN:
+                mIsInSide = false;
+                mIsInRotate = false;
+                mIsInResize = false;
+                break;
             case MotionEvent.ACTION_MOVE:
                 if (mIsStickersActivated) {
                     if (mCheckedStickerId != -1) {
@@ -288,7 +286,19 @@ public class ImageEditorView extends ImageView {
                     if (mCheckedTextId != -1) {
                         EditorText editorText = mTextsList.get(mCheckedTextId);
                         if (mIsInSide) {
-                            // TODO: Move text;
+                            float distanceX = event.getX() - mLastX;
+                            float distanceY = event.getY() - mLastY;
+
+                            int newX = editorText.getX() + (int) distanceX;
+                            int newY = editorText.getY() + (int) distanceY;
+
+                            editorText.setX(newX);
+                            editorText.setY(newY);
+
+                            mLastX = event.getX();
+                            mLastY = event.getY();
+
+                            invalidate();
                         }
                     }
                 } else if (mIsDrawingActivated) {
@@ -416,6 +426,26 @@ public class ImageEditorView extends ImageView {
         invalidate();
     }
 
+    private boolean isInResize(MotionEvent event, Rect resizeHandleRect) {
+        int left = -20 + resizeHandleRect.left;
+        int top = -20 + resizeHandleRect.top;
+        int right = 20 + resizeHandleRect.right;
+        int bottom = 20 + resizeHandleRect.bottom;
+        return event.getX(0) >= left && event.getX(0) <= right && event.getY(0) >= top && event.getY(0) <= bottom;
+    }
+
+    private void midDiagonalPoint(PointF pointF, EditorSticker editorSticker) {
+        float[] arrayOfFloat = new float[9];
+        editorSticker.getMatrix().getValues(arrayOfFloat);
+        float f1 = 0.0F * arrayOfFloat[0] + 0.0F * arrayOfFloat[1] + arrayOfFloat[2];
+        float f2 = 0.0F * arrayOfFloat[3] + 0.0F * arrayOfFloat[4] + arrayOfFloat[5];
+        float f3 = arrayOfFloat[0] * editorSticker.getBitmap().getWidth() + arrayOfFloat[1] * editorSticker.getBitmap().getHeight() + arrayOfFloat[2];
+        float f4 = arrayOfFloat[3] * editorSticker.getBitmap().getWidth() + arrayOfFloat[4] * editorSticker.getBitmap().getHeight() + arrayOfFloat[5];
+        float f5 = f1 + f3;
+        float f6 = f2 + f4;
+        pointF.set(f5 / 2.0F, f6 / 2.0F);
+    }
+
     private void drawStickers(Canvas canvas) {
         for (EditorSticker sticker : mStickersList) {
             sticker.drawSticker(canvas,
@@ -450,37 +480,6 @@ public class ImageEditorView extends ImageView {
 
         float f7 = arrayOfFloat1[0] * mStickersList.get(0).getBitmap().getWidth() + arrayOfFloat1[1] * sticker.getBitmap().getHeight() + arrayOfFloat1[2];
         float f8 = arrayOfFloat1[3] * mStickersList.get(0).getBitmap().getWidth() + arrayOfFloat1[4] * sticker.getBitmap().getHeight() + arrayOfFloat1[5];
-
-        float[] arrayOfFloat2 = new float[4];
-        float[] arrayOfFloat3 = new float[4];
-
-        arrayOfFloat2[0] = f1;
-        arrayOfFloat2[1] = f3;
-        arrayOfFloat2[2] = f7;
-        arrayOfFloat2[3] = f5;
-
-        arrayOfFloat3[0] = f2;
-        arrayOfFloat3[1] = f4;
-        arrayOfFloat3[2] = f8;
-        arrayOfFloat3[3] = f6;
-        return pointInRect(arrayOfFloat2, arrayOfFloat3, event.getX(0), event.getY(0));
-    }
-
-    private boolean isInTextBitmap(MotionEvent event, EditorText text) {
-        float[] arrayOfFloat1 = new float[9];
-        text.getMatrix().getValues(arrayOfFloat1);
-
-        float f1 = 0.0F * arrayOfFloat1[0] + 0.0F * arrayOfFloat1[1] + arrayOfFloat1[2];
-        float f2 = 0.0F * arrayOfFloat1[3] + 0.0F * arrayOfFloat1[4] + arrayOfFloat1[5];
-
-        float f3 = arrayOfFloat1[0] * text.getBitmap().getWidth() + 0.0F * arrayOfFloat1[1] + arrayOfFloat1[2];
-        float f4 = arrayOfFloat1[3] * text.getBitmap().getWidth() + 0.0F * arrayOfFloat1[4] + arrayOfFloat1[5];
-
-        float f5 = 0.0F * arrayOfFloat1[0] + arrayOfFloat1[1] * text.getBitmap().getHeight() + arrayOfFloat1[2];
-        float f6 = 0.0F * arrayOfFloat1[3] + arrayOfFloat1[4] * text.getBitmap().getHeight() + arrayOfFloat1[5];
-
-        float f7 = arrayOfFloat1[0] * mStickersList.get(0).getBitmap().getWidth() + arrayOfFloat1[1] * text.getBitmap().getHeight() + arrayOfFloat1[2];
-        float f8 = arrayOfFloat1[3] * mStickersList.get(0).getBitmap().getWidth() + arrayOfFloat1[4] * text.getBitmap().getHeight() + arrayOfFloat1[5];
 
         float[] arrayOfFloat2 = new float[4];
         float[] arrayOfFloat3 = new float[4];
@@ -632,27 +631,21 @@ public class ImageEditorView extends ImageView {
         for (int i = mTextsList.size() - 1; i >= 0; i--) {
             EditorText text = mTextsList.get(i);
 
-            if (isInTextBitmap(event, text)) {
-                mIsInSide = true;
+            if (text.getFrameRect().contains(event.getX(), event.getY())) {
                 mCheckedTextId = i;
+                mIsInSide = true;
 
-                mLastX = event.getX(0);
-                mLastY = event.getY(0);
+                mLastX = event.getX();
+                mLastY = event.getY();
+
                 return;
-            } else if (text.isInEdit()) {
-                if (isInButton(event, text.getDeleteHandleRect())) {
-                    mTextsList.remove(i);
-                    invalidate();
-                    return;
-                } else if (isInButton(event, text.getRotateHandleRect())) {
-                    mIsInRotate = true;
-                    mCheckedTextId = i;
-                    return;
-                } else if (isInButton(event, text.getResizeHandleRect())) {
-                    mIsInResize = true;
-                    // TODO: Resize for text.
-                    return;
-                }
+            } else if (text.getDeleteHandleDstRect().contains(event.getX(), event.getY())) {
+                mTextsList.remove(i);
+                mCheckedTextId = -1;
+                return;
+            } else if (text.getRotateHandleDstRect().contains(event.getX(), event.getY())) {
+                mCheckedTextId = i;
+                mIsInRotate = true;
             }
         }
         mCheckedTextId = -1;
@@ -672,6 +665,7 @@ public class ImageEditorView extends ImageView {
             } else if (sticker.isInEdit()) {
                 if (isInButton(event, sticker.getDeleteHandleRect())) {
                     mStickersList.remove(i);
+                    mCheckedStickerId = -1;
                     invalidate();
                     return;
                 } else if (isInButton(event, sticker.getRotateHandleRect())) {

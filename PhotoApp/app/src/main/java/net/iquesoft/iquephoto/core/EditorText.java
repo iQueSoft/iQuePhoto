@@ -5,35 +5,29 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.PointF;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.support.annotation.Nullable;
 import android.text.TextPaint;
-import android.util.DisplayMetrics;
-import android.util.TypedValue;
+
+import net.iquesoft.iquephoto.utils.RectUtil;
 
 public class EditorText {
+    static final int PADDING = 25;
     static final int DEFAULT_COLOR = Color.BLACK;
     static final int DEFAULT_OPACITY = 255;
-    static final float DEFAULT_SIZE = 16;
-
-    private float mMinScale = 0.5f;
-    private float mMaxScale = 1.5f;
-
-    private final float mMaxFontSize = 25;
-    private final float mMinFontSize = 14;
+    static final float DEFAULT_SIZE = 80;
 
     private String mText;
 
     private int mColor;
     private int mOpacity;
 
-    private float mSize;
-    private float mBaseline;
-    private float mRotateDegree;
+    private int mX = 300;
+    private int mY = 300;
 
-    private double mHalfDiagonalLength;
+    private float mRotateDegree = 0;
 
     private boolean mIsInEdit;
 
@@ -41,33 +35,22 @@ public class EditorText {
 
     private TextPaint mTextPaint;
 
-    private DisplayMetrics mDisplayMetrics;
+    private Rect mTextRect;
 
-    private Paint.FontMetrics mFontMetrics;
+    private RectF mFrameRect;
+    private RectF mDeleteHandleDstRect;
+    private RectF mRotateHandleDstRect;
+    private RectF mResizeHandleDstRect;
+    private RectF mFrontHandleDstRect;
 
-    private Bitmap mBitmap;
-
-    private Canvas mCanvas;
-
-    private PointF mPointF;
-
-    private Rect mRect;
-
-    private Rect mRotateHandleRect;
-    private Rect mResizeHandleRect;
-    private Rect mDeleteHandleRect;
-    private Rect mFrontHandleRect;
+    private Rect mRotateHandleSrcRect;
+    private Rect mResizeHandleSrcRect;
+    private Rect mDeleteHandleSrcRect;
+    private Rect mFrontHandleSrcRect;
 
     private Matrix mMatrix;
 
-    public EditorText(String text,
-                      @Nullable Typeface typeface,
-                      int color,
-                      int opacity,
-                      DisplayMetrics displayMetrics) {
-
-        mDisplayMetrics = displayMetrics;
-
+    public EditorText(String text, @Nullable Typeface typeface, int color, int opacity) {
         mText = text;
 
         if (typeface != null)
@@ -76,28 +59,28 @@ public class EditorText {
             mTypeface = Typeface.DEFAULT;
 
         mColor = color;
-        mOpacity = opacity;
+        mOpacity = 255;
 
         initTextPaint();
         initEditorText();
-
-
     }
 
     private void initEditorText() {
 
-        createTextBitmap();
-
-        mCanvas = new Canvas(mBitmap);
-
         mMatrix = new Matrix();
 
-        mPointF = new PointF();
+        mTextRect = new Rect();
+        mFrameRect = new RectF();
 
-        mRotateHandleRect = new Rect();
-        mDeleteHandleRect = new Rect();
-        mResizeHandleRect = new Rect();
-        mFrontHandleRect = new Rect();
+        mRotateHandleSrcRect = new Rect();
+        mDeleteHandleSrcRect = new Rect();
+        mResizeHandleSrcRect = new Rect();
+        mFrontHandleSrcRect = new Rect();
+
+        mDeleteHandleDstRect = new RectF(0, 0, 30 << 1, 30 << 1);
+        mResizeHandleDstRect = new RectF(0, 0, 30 << 1, 30 << 1);
+        mFrontHandleDstRect = new RectF(0, 0, 30 << 1, 30 << 1);
+        mRotateHandleDstRect = new RectF(0, 0, 30 << 1, 30 << 1);
     }
 
     private void initTextPaint() {
@@ -107,79 +90,82 @@ public class EditorText {
         mTextPaint.setColor(mColor);
         mTextPaint.setAlpha(mOpacity);
 
-        mSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, mSize, mDisplayMetrics);
-
-        mTextPaint.setTextSize(mSize);
+        mTextPaint.setTextSize(DEFAULT_SIZE);
         mTextPaint.setTypeface(mTypeface);
         mTextPaint.setTextAlign(Paint.Align.CENTER);
 
-        mFontMetrics = mTextPaint.getFontMetrics();
-
-        mBaseline = mFontMetrics.descent - mFontMetrics.ascent;
-
     }
-
-    private Bitmap createTextBitmap() {
-
-        return Bitmap.createBitmap((int) mBaseline, (int) mSize, Bitmap.Config.ARGB_8888);
-    }
-
-    /*private int getTextWidth() {
-        return mFontMetrics.
-    }*/
 
     void drawText(Canvas canvas, Bitmap deleteHandleBitmap, Bitmap rotateHandleBitmap, Bitmap resizeHandleBitmap,
-                  Bitmap frontHandleBitmap, Paint paint) {
+                  Bitmap frontHandleBitmap, Paint framePaint) {
 
-        mBitmap = createTextBitmap();
+        mTextPaint.getTextBounds(mText, 0, mText.length(), mTextRect);
+        mTextRect.offset(mX - (mTextRect.width() >> 1), mY);
 
-        mCanvas.drawText(mText, mBitmap.getWidth() / 2, mBitmap.getHeight() / 2, mTextPaint);
+        mFrameRect.set(mTextRect.left - PADDING, mTextRect.top - PADDING,
+                mTextRect.right + PADDING, mTextRect.bottom + PADDING);
 
-        float[] arrayOfFloat = new float[9];
-        mMatrix.getValues(arrayOfFloat);
+        canvas.drawText(mText, mX, mY, mTextPaint);
 
-        float f1 = 0.0F * arrayOfFloat[0] + 0.0F * arrayOfFloat[1] + arrayOfFloat[2];
-        float f2 = 0.0F * arrayOfFloat[3] + 0.0F * arrayOfFloat[4] + arrayOfFloat[5];
-        float f3 = arrayOfFloat[0] * mBitmap.getWidth() + 0.0F * arrayOfFloat[1] + arrayOfFloat[2];
-        float f4 = arrayOfFloat[3] * mBitmap.getWidth() + 0.0F * arrayOfFloat[4] + arrayOfFloat[5];
-        float f5 = 0.0F * arrayOfFloat[0] + arrayOfFloat[1] * mBitmap.getHeight() + arrayOfFloat[2];
-        float f6 = 0.0F * arrayOfFloat[3] + arrayOfFloat[4] * mBitmap.getHeight() + arrayOfFloat[5];
-        float f7 = arrayOfFloat[0] * mBitmap.getWidth() + arrayOfFloat[1] * mBitmap.getHeight() + arrayOfFloat[2];
-        float f8 = arrayOfFloat[3] * mBitmap.getWidth() + arrayOfFloat[4] * mBitmap.getHeight() + arrayOfFloat[5];
+        mDeleteHandleSrcRect.set(0, 0, deleteHandleBitmap.getWidth(), deleteHandleBitmap.getHeight());
+        mResizeHandleSrcRect.set(0, 0, resizeHandleBitmap.getWidth(), resizeHandleBitmap.getHeight());
+        mFrontHandleSrcRect.set(0, 0, frontHandleBitmap.getWidth(), frontHandleBitmap.getHeight());
+        mRotateHandleSrcRect.set(0, 0, rotateHandleBitmap.getWidth(), rotateHandleBitmap.getHeight());
 
-        canvas.drawBitmap(mBitmap, mMatrix, null);
+        int offsetValue = ((int) mDeleteHandleDstRect.width()) >> 1;
 
-        mDeleteHandleRect.left = (int) (f1 - deleteHandleBitmap.getWidth() / 2);
-        mDeleteHandleRect.right = (int) (f1 + deleteHandleBitmap.getWidth() / 2);
-        mDeleteHandleRect.top = (int) (f2 - deleteHandleBitmap.getHeight() / 2);
-        mDeleteHandleRect.bottom = (int) (f2 + deleteHandleBitmap.getHeight() / 2);
+        mDeleteHandleDstRect.offset(mFrameRect.left - offsetValue, mFrameRect.top - offsetValue);
+        mResizeHandleDstRect.offset(mFrameRect.right - offsetValue, mFrameRect.bottom - offsetValue);
+        mRotateHandleDstRect.offset(mFrameRect.right - offsetValue, mFrameRect.top - offsetValue);
+        mFrontHandleDstRect.offset(mFrameRect.left - offsetValue, mFrameRect.bottom - offsetValue);
 
-        mRotateHandleRect.left = (int) (f3 - rotateHandleBitmap.getWidth() / 2);
-        mRotateHandleRect.right = (int) (f3 + rotateHandleBitmap.getWidth() / 2);
-        mRotateHandleRect.top = (int) (f4 - rotateHandleBitmap.getHeight() / 2);
-        mRotateHandleRect.bottom = (int) (f4 + rotateHandleBitmap.getHeight() / 2);
+        RectUtil.rotateRect(mDeleteHandleDstRect, mFrameRect.centerX(),
+                mFrameRect.centerY(), mRotateDegree);
 
-        mFrontHandleRect.left = (int) (f5 - frontHandleBitmap.getWidth() / 2);
-        mFrontHandleRect.right = (int) (f5 + frontHandleBitmap.getWidth() / 2);
-        mFrontHandleRect.top = (int) (f6 - frontHandleBitmap.getHeight() / 2);
-        mFrontHandleRect.bottom = (int) (f6 + frontHandleBitmap.getHeight() / 2);
+        RectUtil.rotateRect(mRotateHandleDstRect, mFrameRect.centerX(),
+                mFrameRect.centerY(), mRotateDegree);
 
-        mResizeHandleRect.left = (int) (f7 - resizeHandleBitmap.getWidth() / 2);
-        mResizeHandleRect.right = (int) (f7 + resizeHandleBitmap.getWidth() / 2);
-        mResizeHandleRect.top = (int) (f8 - resizeHandleBitmap.getHeight() / 2);
-        mResizeHandleRect.bottom = (int) (f8 + resizeHandleBitmap.getHeight() / 2);
+        RectUtil.rotateRect(mResizeHandleDstRect, mFrameRect.centerX(),
+                mFrameRect.centerY(), mRotateDegree);
 
-        if (mIsInEdit) {
-            canvas.drawLine(f1, f2, f3, f4, paint);
-            canvas.drawLine(f3, f4, f7, f8, paint);
-            canvas.drawLine(f5, f6, f7, f8, paint);
-            canvas.drawLine(f5, f6, f1, f2, paint);
+        RectUtil.rotateRect(mFrontHandleDstRect, mFrameRect.centerX(),
+                mFrameRect.centerY(), mRotateDegree);
 
-            canvas.drawBitmap(deleteHandleBitmap, null, mDeleteHandleRect, null);
-            canvas.drawBitmap(resizeHandleBitmap, null, mResizeHandleRect, null);
-            canvas.drawBitmap(frontHandleBitmap, null, mFrontHandleRect, null);
-            canvas.drawBitmap(rotateHandleBitmap, null, mRotateHandleRect, null);
-        }
+        canvas.drawRect(mFrameRect, framePaint);
+
+        canvas.drawBitmap(deleteHandleBitmap, mDeleteHandleSrcRect, mDeleteHandleDstRect, null);
+        canvas.drawBitmap(rotateHandleBitmap, mRotateHandleSrcRect, mRotateHandleDstRect, null);
+        canvas.drawBitmap(resizeHandleBitmap, mResizeHandleSrcRect, mResizeHandleDstRect, null);
+        canvas.drawBitmap(frontHandleBitmap, mFrontHandleSrcRect, mFrontHandleDstRect, null);
+
+    }
+
+    void setX(int x) {
+        mX = x;
+    }
+
+    void setY(int y) {
+        mY = y;
+    }
+
+    int getX() {
+        return mX;
+    }
+
+    int getY() {
+        return mY;
+    }
+
+    RectF getFrameRect() {
+        return mFrameRect;
+    }
+
+    RectF getDeleteHandleDstRect() {
+        return mDeleteHandleDstRect;
+    }
+
+    RectF getRotateHandleDstRect() {
+        return mRotateHandleDstRect;
     }
 
     Matrix getMatrix() {
@@ -187,23 +173,23 @@ public class EditorText {
     }
 
     Rect getDeleteHandleRect() {
-        return mDeleteHandleRect;
+        return mDeleteHandleSrcRect;
     }
 
     Rect getResizeHandleRect() {
-        return mResizeHandleRect;
+        return mResizeHandleSrcRect;
     }
 
     Rect getRotateHandleRect() {
-        return mRotateHandleRect;
+        return mRotateHandleSrcRect;
     }
 
     Rect getFrontHandleRect() {
-        return mFrontHandleRect;
+        return mFrontHandleSrcRect;
     }
 
     void setIsInEdit(boolean isInEdit) {
-        mIsInEdit = mIsInEdit;
+        mIsInEdit = isInEdit;
     }
 
     void setRotateDegree(float rotateDegree) {
@@ -212,10 +198,6 @@ public class EditorText {
 
     float getRotateDegree() {
         return mRotateDegree;
-    }
-
-    Bitmap getBitmap() {
-        return mBitmap;
     }
 
     boolean isInEdit() {

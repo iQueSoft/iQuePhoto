@@ -3,6 +3,7 @@ package net.iquesoft.iquephoto.adapters;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.ColorMatrixColorFilter;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,9 +14,9 @@ import android.widget.TextView;
 
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.core.FilterBitmapDrawable;
 import net.iquesoft.iquephoto.model.Filter;
 
 import java.util.List;
@@ -30,7 +31,6 @@ public class FiltersAdapter extends RecyclerView.Adapter<FiltersAdapter.ViewHold
     private Bitmap mBitmap;
 
     private Context mContext;
-
 
     private List<Filter> mFiltersList;
 
@@ -67,13 +67,15 @@ public class FiltersAdapter extends RecyclerView.Adapter<FiltersAdapter.ViewHold
 
         holder.filterTitle.setText(filter.getTitle());
 
-        FilterBitmapDrawable filterBitmapDrawable = new FilterBitmapDrawable(mBitmap);
+
+        // TODO: Filtered image.
+        Drawable drawable = new BitmapDrawable(mBitmap);
 
         if (filter.getColorMatrix() != null) {
-            filterBitmapDrawable.setColorFilter(new ColorMatrixColorFilter(filter.getColorMatrix()));
-            holder.filterIcon.setImageDrawable(filterBitmapDrawable);
+            drawable.setColorFilter(new ColorMatrixColorFilter(filter.getColorMatrix()));
+            holder.filterIcon.setImageDrawable(drawable);
         } else {
-            holder.filterIcon.setImageDrawable(filterBitmapDrawable);
+            holder.filterIcon.setImageDrawable(drawable);
         }
 
         if (mSelectedFilter == 0)

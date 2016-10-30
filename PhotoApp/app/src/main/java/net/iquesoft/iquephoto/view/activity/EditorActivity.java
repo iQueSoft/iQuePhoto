@@ -197,8 +197,7 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
         //DataHolder.getInstance().setShareBitmap(mEditorImageView.getAlteredBitmap());
 
         Intent intent = new Intent(EditorActivity.this, ShareActivity.class);
-
-        startActivity(intent);
+        imageEditorView.makeImage(intent);
     }
 
 

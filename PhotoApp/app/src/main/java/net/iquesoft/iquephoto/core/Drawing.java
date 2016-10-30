@@ -11,10 +11,12 @@ class Drawing {
 
     private Paint mPaint;
     private Path mPath;
+    private Path mOriginalPath;
 
-    Drawing(Paint paint, Path path) {
+    Drawing(Paint paint, Path path, Path originalPath) {
         mPaint = paint;
         mPath = path;
+        mOriginalPath = originalPath;
     }
 
     Paint getPaint() {
@@ -23,5 +25,9 @@ class Drawing {
 
     Path getPath() {
         return mPath;
+    }
+
+    Path getOriginalPath() {
+        return mOriginalPath;
     }
 }

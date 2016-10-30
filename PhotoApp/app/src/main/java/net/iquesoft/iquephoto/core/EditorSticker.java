@@ -33,8 +33,12 @@ class EditorSticker {
     private Rect mDeleteHandleRect;
     private Rect mFrontHandleRect;
 
-    EditorSticker(Sticker sticker) {
+    private EditorFrame mEditorFrame;
+
+    EditorSticker(Sticker sticker, EditorFrame editorFrame) {
         mSticker = sticker;
+
+        mEditorFrame = editorFrame;
 
         mMatrix = new Matrix();
 
@@ -67,8 +71,7 @@ class EditorSticker {
         return mMatrix;
     }
 
-    void drawSticker(Canvas canvas, Bitmap deleteHandleBitmap, Bitmap rotateHandleBitmap, Bitmap resizeHandleBitmap,
-                     Bitmap frontHandleBitmap, Paint paint) {
+    void drawSticker(Canvas canvas) {
         float[] arrayOfFloat = new float[9];
         mMatrix.getValues(arrayOfFloat);
 
@@ -83,36 +86,36 @@ class EditorSticker {
 
         canvas.drawBitmap(getBitmap(), mMatrix, null);
 
-        mDeleteHandleRect.left = (int) (f1 - deleteHandleBitmap.getWidth() / 2);
-        mDeleteHandleRect.right = (int) (f1 + deleteHandleBitmap.getWidth() / 2);
-        mDeleteHandleRect.top = (int) (f2 - deleteHandleBitmap.getHeight() / 2);
-        mDeleteHandleRect.bottom = (int) (f2 + deleteHandleBitmap.getHeight() / 2);
+        mDeleteHandleRect.left = (int) (f1 - mEditorFrame.getDeleteHandleBitmap().getWidth() / 2);
+        mDeleteHandleRect.right = (int) (f1 + mEditorFrame.getDeleteHandleBitmap().getWidth() / 2);
+        mDeleteHandleRect.top = (int) (f2 - mEditorFrame.getDeleteHandleBitmap().getHeight() / 2);
+        mDeleteHandleRect.bottom = (int) (f2 + mEditorFrame.getDeleteHandleBitmap().getHeight() / 2);
 
-        mRotateHandleRect.left = (int) (f3 - rotateHandleBitmap.getWidth() / 2);
-        mRotateHandleRect.right = (int) (f3 + rotateHandleBitmap.getWidth() / 2);
-        mRotateHandleRect.top = (int) (f4 - rotateHandleBitmap.getHeight() / 2);
-        mRotateHandleRect.bottom = (int) (f4 + rotateHandleBitmap.getHeight() / 2);
+        mRotateHandleRect.left = (int) (f3 - mEditorFrame.getRotateHandleBitmap().getWidth() / 2);
+        mRotateHandleRect.right = (int) (f3 + mEditorFrame.getRotateHandleBitmap().getWidth() / 2);
+        mRotateHandleRect.top = (int) (f4 - mEditorFrame.getRotateHandleBitmap().getHeight() / 2);
+        mRotateHandleRect.bottom = (int) (f4 + mEditorFrame.getRotateHandleBitmap().getHeight() / 2);
 
-        mFrontHandleRect.left = (int) (f5 - frontHandleBitmap.getWidth() / 2);
-        mFrontHandleRect.right = (int) (f5 + frontHandleBitmap.getWidth() / 2);
-        mFrontHandleRect.top = (int) (f6 - frontHandleBitmap.getHeight() / 2);
-        mFrontHandleRect.bottom = (int) (f6 + frontHandleBitmap.getHeight() / 2);
+        mFrontHandleRect.left = (int) (f5 - mEditorFrame.getFrontHandleBitmap().getWidth() / 2);
+        mFrontHandleRect.right = (int) (f5 + mEditorFrame.getFrontHandleBitmap().getWidth() / 2);
+        mFrontHandleRect.top = (int) (f6 - mEditorFrame.getFrontHandleBitmap().getHeight() / 2);
+        mFrontHandleRect.bottom = (int) (f6 + mEditorFrame.getFrontHandleBitmap().getHeight() / 2);
 
-        mResizeHandleRect.left = (int) (f7 - resizeHandleBitmap.getWidth() / 2);
-        mResizeHandleRect.right = (int) (f7 + resizeHandleBitmap.getWidth() / 2);
-        mResizeHandleRect.top = (int) (f8 - resizeHandleBitmap.getHeight() / 2);
-        mResizeHandleRect.bottom = (int) (f8 + resizeHandleBitmap.getHeight() / 2);
+        mResizeHandleRect.left = (int) (f7 - mEditorFrame.getResizeHandleBitmap().getWidth() / 2);
+        mResizeHandleRect.right = (int) (f7 + mEditorFrame.getResizeHandleBitmap().getWidth() / 2);
+        mResizeHandleRect.top = (int) (f8 - mEditorFrame.getResizeHandleBitmap().getHeight() / 2);
+        mResizeHandleRect.bottom = (int) (f8 + mEditorFrame.getResizeHandleBitmap().getHeight() / 2);
 
         if (mIsInEdit) {
-            canvas.drawLine(f1, f2, f3, f4, paint);
-            canvas.drawLine(f3, f4, f7, f8, paint);
-            canvas.drawLine(f5, f6, f7, f8, paint);
-            canvas.drawLine(f5, f6, f1, f2, paint);
+            canvas.drawLine(f1, f2, f3, f4, mEditorFrame.getPaint());
+            canvas.drawLine(f3, f4, f7, f8, mEditorFrame.getPaint());
+            canvas.drawLine(f5, f6, f7, f8, mEditorFrame.getPaint());
+            canvas.drawLine(f5, f6, f1, f2, mEditorFrame.getPaint());
 
-            canvas.drawBitmap(deleteHandleBitmap, null, mDeleteHandleRect, null);
-            canvas.drawBitmap(resizeHandleBitmap, null, mResizeHandleRect, null);
-            canvas.drawBitmap(frontHandleBitmap, null, mFrontHandleRect, null);
-            canvas.drawBitmap(rotateHandleBitmap, null, mRotateHandleRect, null);
+            canvas.drawBitmap(mEditorFrame.getDeleteHandleBitmap(), null, mDeleteHandleRect, null);
+            canvas.drawBitmap(mEditorFrame.getResizeHandleBitmap(), null, mResizeHandleRect, null);
+            canvas.drawBitmap(mEditorFrame.getFrontHandleBitmap(), null, mFrontHandleRect, null);
+            canvas.drawBitmap(mEditorFrame.getRotateHandleBitmap(), null, mRotateHandleRect, null);
         }
     }
 

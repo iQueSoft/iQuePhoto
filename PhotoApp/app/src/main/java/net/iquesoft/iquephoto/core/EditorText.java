@@ -1,9 +1,7 @@
 package net.iquesoft.iquephoto.core;
 
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -24,8 +22,8 @@ public class EditorText {
     private int mColor;
     private int mOpacity;
 
-    private int mX = 300;
-    private int mY = 300;
+    private int mX = 150;
+    private int mY = 150;
 
     private float mRotateDegree = 0;
 
@@ -37,20 +35,20 @@ public class EditorText {
 
     private Rect mTextRect;
 
+    private Rect mRotateHandleSrcRect;
+    private Rect mResizeHandleSrcRect;
+    private Rect mDeleteHandleSrcRect;
+    private Rect mFrontHandleSrcRect;
+
     private RectF mFrameRect;
     private RectF mDeleteHandleDstRect;
     private RectF mRotateHandleDstRect;
     private RectF mResizeHandleDstRect;
     private RectF mFrontHandleDstRect;
 
-    private Rect mRotateHandleSrcRect;
-    private Rect mResizeHandleSrcRect;
-    private Rect mDeleteHandleSrcRect;
-    private Rect mFrontHandleSrcRect;
+    private EditorFrame mEditorFrame;
 
-    private Matrix mMatrix;
-
-    public EditorText(String text, @Nullable Typeface typeface, int color, int opacity) {
+    EditorText(String text, @Nullable Typeface typeface, int color, int opacity, EditorFrame editorFrame) {
         mText = text;
 
         if (typeface != null)
@@ -61,26 +59,31 @@ public class EditorText {
         mColor = color;
         mOpacity = 255;
 
+        mEditorFrame = editorFrame;
+
         initTextPaint();
         initEditorText();
     }
 
     private void initEditorText() {
-
-        mMatrix = new Matrix();
-
         mTextRect = new Rect();
         mFrameRect = new RectF();
 
-        mRotateHandleSrcRect = new Rect();
-        mDeleteHandleSrcRect = new Rect();
-        mResizeHandleSrcRect = new Rect();
-        mFrontHandleSrcRect = new Rect();
+        mRotateHandleSrcRect = new Rect(0, 0, mEditorFrame.getDeleteHandleBitmap().getWidth(),
+                mEditorFrame.getDeleteHandleBitmap().getHeight());
+        mDeleteHandleSrcRect = new Rect(0, 0, mEditorFrame.getResizeHandleBitmap().getWidth(),
+                mEditorFrame.getResizeHandleBitmap().getHeight());
+        mResizeHandleSrcRect = new Rect(0, 0, mEditorFrame.getRotateHandleBitmap().getWidth(),
+                mEditorFrame.getRotateHandleBitmap().getHeight());
+        mFrontHandleSrcRect = new Rect(0, 0, mEditorFrame.getFrontHandleBitmap().getWidth(),
+                mEditorFrame.getFrontHandleBitmap().getHeight());
 
-        mDeleteHandleDstRect = new RectF(0, 0, 30 << 1, 30 << 1);
-        mResizeHandleDstRect = new RectF(0, 0, 30 << 1, 30 << 1);
-        mFrontHandleDstRect = new RectF(0, 0, 30 << 1, 30 << 1);
-        mRotateHandleDstRect = new RectF(0, 0, 30 << 1, 30 << 1);
+        int handleHalfSize = mEditorFrame.getDeleteHandleBitmap().getWidth() / 2;
+
+        mDeleteHandleDstRect = new RectF(0, 0, handleHalfSize << 1, handleHalfSize << 1);
+        mResizeHandleDstRect = new RectF(0, 0, handleHalfSize << 1, handleHalfSize << 1);
+        mFrontHandleDstRect = new RectF(0, 0, handleHalfSize << 1, handleHalfSize << 1);
+        mRotateHandleDstRect = new RectF(0, 0, handleHalfSize << 1, handleHalfSize << 1);
     }
 
     private void initTextPaint() {
@@ -93,24 +96,18 @@ public class EditorText {
         mTextPaint.setTextSize(DEFAULT_SIZE);
         mTextPaint.setTypeface(mTypeface);
         mTextPaint.setTextAlign(Paint.Align.CENTER);
-
     }
 
-    void drawText(Canvas canvas, Bitmap deleteHandleBitmap, Bitmap rotateHandleBitmap, Bitmap resizeHandleBitmap,
-                  Bitmap frontHandleBitmap, Paint framePaint) {
+    void drawText(Canvas canvas) {
 
         mTextPaint.getTextBounds(mText, 0, mText.length(), mTextRect);
+
         mTextRect.offset(mX - (mTextRect.width() >> 1), mY);
 
         mFrameRect.set(mTextRect.left - PADDING, mTextRect.top - PADDING,
                 mTextRect.right + PADDING, mTextRect.bottom + PADDING);
 
         canvas.drawText(mText, mX, mY, mTextPaint);
-
-        mDeleteHandleSrcRect.set(0, 0, deleteHandleBitmap.getWidth(), deleteHandleBitmap.getHeight());
-        mResizeHandleSrcRect.set(0, 0, resizeHandleBitmap.getWidth(), resizeHandleBitmap.getHeight());
-        mFrontHandleSrcRect.set(0, 0, frontHandleBitmap.getWidth(), frontHandleBitmap.getHeight());
-        mRotateHandleSrcRect.set(0, 0, rotateHandleBitmap.getWidth(), rotateHandleBitmap.getHeight());
 
         int offsetValue = ((int) mDeleteHandleDstRect.width()) >> 1;
 
@@ -131,13 +128,16 @@ public class EditorText {
         RectUtil.rotateRect(mFrontHandleDstRect, mFrameRect.centerX(),
                 mFrameRect.centerY(), mRotateDegree);
 
-        canvas.drawRect(mFrameRect, framePaint);
+        canvas.drawRect(mFrameRect, mEditorFrame.getPaint());
 
-        canvas.drawBitmap(deleteHandleBitmap, mDeleteHandleSrcRect, mDeleteHandleDstRect, null);
-        canvas.drawBitmap(rotateHandleBitmap, mRotateHandleSrcRect, mRotateHandleDstRect, null);
-        canvas.drawBitmap(resizeHandleBitmap, mResizeHandleSrcRect, mResizeHandleDstRect, null);
-        canvas.drawBitmap(frontHandleBitmap, mFrontHandleSrcRect, mFrontHandleDstRect, null);
-
+        canvas.drawBitmap(mEditorFrame.getDeleteHandleBitmap(),
+                mDeleteHandleSrcRect, mDeleteHandleDstRect, null);
+        canvas.drawBitmap(mEditorFrame.getRotateHandleBitmap(),
+                mRotateHandleSrcRect, mRotateHandleDstRect, null);
+        canvas.drawBitmap(mEditorFrame.getResizeHandleBitmap(),
+                mResizeHandleSrcRect, mResizeHandleDstRect, null);
+        canvas.drawBitmap(mEditorFrame.getFrontHandleBitmap(),
+                mFrontHandleSrcRect, mFrontHandleDstRect, null);
     }
 
     void setX(int x) {
@@ -166,10 +166,6 @@ public class EditorText {
 
     RectF getRotateHandleDstRect() {
         return mRotateHandleDstRect;
-    }
-
-    Matrix getMatrix() {
-        return mMatrix;
     }
 
     Rect getDeleteHandleRect() {

@@ -3,6 +3,7 @@ package net.iquesoft.iquephoto.di.modules;
 import android.app.Application;
 
 import net.iquesoft.iquephoto.PhotoApplication;
+import net.iquesoft.iquephoto.view.fragment.ToolsFragment;
 
 import javax.inject.Singleton;
 
@@ -22,5 +23,11 @@ public class ApplicationModule {
     @Singleton
     Application provideApplication() {
         return mApplication;
+    }
+
+    @Provides
+    @Singleton
+    ToolsFragment provideToolsFragment() {
+        return new ToolsFragment();
     }
 }

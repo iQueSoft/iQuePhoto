@@ -4,8 +4,6 @@ import android.graphics.Bitmap;
 import android.os.Environment;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.adapters.ToolsAdapter;
-import net.iquesoft.iquephoto.model.Tool;
 import net.iquesoft.iquephoto.view.IEditorActivityView;
 
 import java.io.File;
@@ -19,22 +17,11 @@ public class EditorActivityPresenterImpl implements IEditorActivityPresenter {
     private final static String IMAGE_STORAGE_PATH = Environment.getExternalStorageDirectory().toString() + "/" +
             android.os.Environment.DIRECTORY_DCIM + "/iQuePhoto";
 
-    private IEditorActivityView view;
+    private IEditorActivityView mView;
 
     @Inject
     public EditorActivityPresenterImpl(IEditorActivityView view) {
-        this.view = view;
-    }
-
-    @Override
-    public void createToolsBox() {
-        ToolsAdapter toolsAdapter = new ToolsAdapter(Tool.getToolsList());
-        view.initTools(toolsAdapter);
-    }
-
-    @Override
-    public void changeTool(Tool tool) {
-        view.changeTool(tool);
+        mView = view;
     }
 
     @Override
@@ -53,7 +40,7 @@ public class EditorActivityPresenterImpl implements IEditorActivityPresenter {
             out.flush();
             out.close();
 
-            view.showToastMessage(R.string.successfully_saved);
+            mView.showToastMessage(R.string.successfully_saved);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -63,7 +50,7 @@ public class EditorActivityPresenterImpl implements IEditorActivityPresenter {
     @Override
     public void onBackPressed(Bitmap bitmap, Bitmap alteredBitmap) {
         if (!bitmap.sameAs(alteredBitmap))
-            view.showAlertDialog();
-        else view.goBack();
+            mView.showAlertDialog();
+        else mView.goBack();
     }
 }

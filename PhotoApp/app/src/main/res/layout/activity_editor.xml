@@ -5,9 +5,10 @@
     android:layout_height="match_parent"
     android:background="@android:color/black"
     android:orientation="vertical"
-    tools:context=".mView.activity.EditorActivity">
+    tools:context=".view.activity.EditorActivity">
 
     <RelativeLayout
+        android:id="@+id/editorHeader"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@android:color/black">
@@ -22,6 +23,16 @@
             android:paddingLeft="5dp"
             android:src="@drawable/ic_arrow_back" />
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:drawableLeft="@drawable/ic_undo"
+            android:text="1"
+            android:textColor="@color/white"
+            android:textSize="22sp" />
+
         <ImageButton
             android:id="@+id/buttonShare"
             android:layout_width="wrap_content"
@@ -31,50 +42,32 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:paddingRight="5dp"
             android:src="@drawable/ic_share" />
-    </RelativeLayout>
 
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="@color/colorLine" />
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/colorLine" />
+    </RelativeLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1">
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_weight="1"
+        android:visibility="visible">
 
         <net.iquesoft.iquephoto.core.ImageEditorView
             android:id="@+id/editorImageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center" />
-
-        <ProgressBar
-            android:id="@+id/cropProgress"
-            style="@style/Widget.AppCompat.ProgressBar"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
-            android:layout_gravity="center"
-            android:visibility="gone" />
-
-        <FrameLayout
-            android:id="@+id/toolSettingsContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:visibility="visible" />
     </FrameLayout>
 
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="@color/colorLine" />
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/toolsView"
+    <FrameLayout
+        android:id="@+id/toolSettingsContainer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/black"
-        android:paddingBottom="5dp"
-        android:paddingTop="5dp" />
+        android:layout_height="175dp"
+        android:layout_gravity="bottom" />
+
 </LinearLayout>

@@ -177,7 +177,7 @@
     <string name="select_font">Select a font</string>
     <!-- Font picker dialog - END. -->
 
-    <string name="adjusts">Adjusts</string>
+    <string name="adjustment">Adjustment</string>
     <string name="warmth">Warmth</string>
     <string name="saturation">Saturation</string>
 
@@ -186,4 +186,9 @@
     <!-- START - Overlay -->
     <string name="overlay">Overlay</string>
     <string name="overlay_sky">Sky</string>
+
+    <string name="tilt_shift">Tilt Shift</string>
+    <string name="blur_off">Off</string>
+    <string name="blur_radial">Radial</string>
+    <string name="blur_linear">Linear</string>
 </resources>

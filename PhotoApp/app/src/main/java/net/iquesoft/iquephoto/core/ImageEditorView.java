@@ -18,6 +18,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.annotation.ColorRes;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -26,6 +27,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 
 import net.iquesoft.iquephoto.DataHolder;
+import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.model.Sticker;
 
 import java.util.ArrayList;
@@ -33,13 +35,12 @@ import java.util.List;
 
 public class ImageEditorView extends ImageView {
 
+    private int mCommand;
+
     private float mBrushSize;
 
     private boolean mIsInitialized;
     private boolean mHasFilter;
-    private boolean mIsDrawingActivated;
-    private boolean mIsTextActivated;
-    private boolean mIsStickersActivated;
 
     private boolean mIsInResize;
     private boolean mIsInSide;
@@ -53,8 +54,8 @@ public class ImageEditorView extends ImageView {
 
     private EditorFrame mEditorFrame;
 
-    private int mCheckedTextId = -1;
-    private int mCheckedStickerId = -1;
+    private EditorText mCurrentEditorText;
+    private EditorSticker mCurrentEditorSticker;
 
     private Context mContext;
 
@@ -213,7 +214,7 @@ public class ImageEditorView extends ImageView {
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        if (getDrawable() != null) setupLayout(mViewWidth, mViewHeight);
+        if (getBitmap() != null) setupLayout(mViewWidth, mViewHeight);
     }
 
     @Override
@@ -222,20 +223,21 @@ public class ImageEditorView extends ImageView {
     }
 
     @Override
+    public void setImageBitmap(Bitmap bitmap) {
+        mIsInitialized = false;
+        super.setImageBitmap(bitmap);
+        mSourceBitmap = bitmap;
+
+        updateLayout();
+    }
+
+    @Override
     public boolean onTouchEvent(MotionEvent event) {
         int action = MotionEventCompat.getActionMasked(event);
 
         switch (action) {
             case MotionEvent.ACTION_DOWN:
-                if (mIsStickersActivated) {
-                    findCheckedSticker(event);
-                } else if (mIsTextActivated) {
-                    findCheckedText(event);
-                } else if (mIsDrawingActivated) {
-                    if (isBrushInsideImageHorizontal(event.getX())
-                            && isBrushInsideImageVertical(event.getY()))
-                        drawingStart(event);
-                }
+                actionDown(event);
                 break;
             case MotionEvent.ACTION_POINTER_DOWN:
                 mIsInSide = false;
@@ -243,55 +245,13 @@ public class ImageEditorView extends ImageView {
                 mIsInResize = false;
                 break;
             case MotionEvent.ACTION_MOVE:
-                if (mIsStickersActivated) {
-                    if (mCheckedStickerId != -1) {
-                        EditorSticker sticker = mStickersList.get(mCheckedStickerId);
-                        if (mIsInResize) {
-                            float stickerScale = diagonalLength(event, sticker.getPoint()) / sticker.getLength();
-                            sticker.getMatrix().postScale(stickerScale, stickerScale, sticker.getPoint().x, sticker.getPoint().y);
-
-                            invalidate();
-                        } else if (mIsInSide) {
-                            moveSticker(event.getX(0), event.getY(0),
-                                    mStickersList.get(mCheckedStickerId));
-                        } else if (mIsInRotate) {
-                            Matrix matrix = sticker.getMatrix();
-                            sticker.getMatrix().postRotate((rotationToStartPoint(event, matrix) - sticker.getRotateDegree()) * 2, sticker.getPoint().x, sticker.getPoint().y);
-                            sticker.setRotateDegree(rotationToStartPoint(event, matrix));
-                        }
-                    }
-                } else if (mIsTextActivated) {
-                    if (mCheckedTextId != -1) {
-                        EditorText editorText = mTextsList.get(mCheckedTextId);
-                        if (mIsInSide) {
-                            float distanceX = event.getX() - mLastX;
-                            float distanceY = event.getY() - mLastY;
-
-                            int newX = editorText.getX() + (int) distanceX;
-                            int newY = editorText.getY() + (int) distanceY;
-
-                            editorText.setX(newX);
-                            editorText.setY(newY);
-
-                            mLastX = event.getX();
-                            mLastY = event.getY();
-
-                            invalidate();
-                        }
-                    }
-                } else if (mIsDrawingActivated) {
-                    if (isBrushInsideImageHorizontal(event.getX(0))
-                            && isBrushInsideImageVertical(event.getY(0)))
-                        drawingMove(event);
-                }
-                //mTextsList.get(mCheckedTextId).setSize(mTextsList.get(mCheckedTextId).getSize() * scale);
+                actionMove(event);
                 break;
             case MotionEvent.ACTION_UP:
                 mIsInResize = false;
                 mIsInSide = false;
                 mIsInRotate = false;
-
-                if (mIsDrawingActivated) {
+                if (mCommand == R.string.drawing) {
                     if (isBrushInsideImageHorizontal(event.getX(0))
                             && isBrushInsideImageVertical(event.getY(0)))
                         drawingStop();
@@ -304,6 +264,81 @@ public class ImageEditorView extends ImageView {
         invalidate();
 
         return true;
+    }
+
+    /**
+     * @param command: 1) filters;
+     *                 2) stickers;
+     *                 3) text;
+     *                 4) drawing;
+     *                 5) tilt shift.
+     */
+    public void setCommand(@StringRes int command) {
+        mCommand = command;
+    }
+
+    private void actionDown(MotionEvent event) {
+        switch (mCommand) {
+            case R.string.stickers:
+                findCheckedSticker(event);
+                break;
+            case R.string.text:
+                findCheckedText(event);
+                break;
+            case R.string.drawing:
+                drawingStart(event);
+                break;
+        }
+    }
+
+    private void actionMove(MotionEvent event) {
+        switch (mCommand) {
+            case R.string.stickers:
+                if (mCurrentEditorSticker != null) {
+                    if (mIsInResize) {
+                        float stickerScale = diagonalLength(event, mCurrentEditorSticker.getPoint()) / mCurrentEditorSticker.getLength();
+                        mCurrentEditorSticker.getMatrix().postScale(stickerScale, stickerScale, mCurrentEditorSticker.getPoint().x, mCurrentEditorSticker.getPoint().y);
+
+                        invalidate();
+                    } else if (mIsInSide) {
+                        moveSticker(event);
+                    } else if (mIsInRotate) {
+                        Matrix matrix = mCurrentEditorSticker.getMatrix();
+                        mCurrentEditorSticker.getMatrix().postRotate((rotationToStartPoint(event, matrix) - mCurrentEditorSticker.getRotateDegree()) * 2, mCurrentEditorSticker.getPoint().x, mCurrentEditorSticker.getPoint().y);
+                        mCurrentEditorSticker.setRotateDegree(rotationToStartPoint(event, matrix));
+                    }
+                }
+                break;
+            case R.string.text:
+                if (mCurrentEditorText != null) {
+                    if (mIsInSide) {
+                        float distanceX = event.getX() - mLastX;
+                        float distanceY = event.getY() - mLastY;
+
+                        int newX = mCurrentEditorText.getX() + (int) distanceX;
+                        int newY = mCurrentEditorText.getY() + (int) distanceY;
+
+                        mCurrentEditorText.setX(newX);
+                        mCurrentEditorText.setY(newY);
+
+                        mLastX = event.getX();
+                        mLastY = event.getY();
+
+                        invalidate();
+                    }
+                }
+                break;
+            case R.string.drawing:
+                if (isBrushInsideImageHorizontal(event.getX(0))
+                        && isBrushInsideImageVertical(event.getY(0)))
+                    drawingMove(event);
+                break;
+        }
+
+    }
+
+    public Bitmap getAlteredBitmap() {
+        return mAlteredBitmap;
     }
 
     private void drawingStart(MotionEvent event) {
@@ -362,14 +397,14 @@ public class ImageEditorView extends ImageView {
         mDrawingPaint.setStrokeWidth(mBrushSize);
     }
 
-    private void moveSticker(float x, float y, EditorSticker sticker) {
-        if (isStickerInsideImageHorizontal(x, sticker) && isStickerInsideImageVertical(y, sticker)) {
-            sticker.getMatrix().postTranslate(x - mLastX, y - mLastY);
+    private void moveSticker(MotionEvent event) {
+        //if (isStickerInsideImageHorizontal(event.getX(0), mCurrentEditorSticker) && isStickerInsideImageVertical(event.getY(0), mCurrentEditorSticker)) {
+        mCurrentEditorSticker.getMatrix().postTranslate(event.getX(0) - mLastX, event.getY(0) - mLastY);
 
-            mLastX = x;
-            mLastY = y;
-            invalidate();
-        }
+        mLastX = event.getX(0);
+        mLastY = event.getY(0);
+        invalidate();
+        //}
     }
 
     private float rotationToStartPoint(MotionEvent event, Matrix matrix) {
@@ -605,59 +640,61 @@ public class ImageEditorView extends ImageView {
 
     private void findCheckedText(MotionEvent event) {
         for (int i = mTextsList.size() - 1; i >= 0; i--) {
-            EditorText text = mTextsList.get(i);
+            EditorText editorText = mTextsList.get(i);
 
-            if (text.getFrameRect().contains(event.getX(), event.getY())) {
-                mCheckedTextId = i;
+            if (editorText.getFrameRect().contains(event.getX(), event.getY())) {
+                mCurrentEditorText = editorText;
                 mIsInSide = true;
 
                 mLastX = event.getX();
                 mLastY = event.getY();
 
                 return;
-            } else if (text.getDeleteHandleDstRect().contains(event.getX(), event.getY())) {
+            } else if (editorText.getDeleteHandleDstRect().contains(event.getX(), event.getY())) {
+                mCurrentEditorText = null;
                 mTextsList.remove(i);
-                mCheckedTextId = -1;
+                invalidate();
                 return;
-            } else if (text.getRotateHandleDstRect().contains(event.getX(), event.getY())) {
-                mCheckedTextId = i;
+            } else if (editorText.getRotateHandleDstRect().contains(event.getX(), event.getY())) {
+                mCurrentEditorText = editorText;
                 mIsInRotate = true;
+                return;
             }
         }
-        mCheckedTextId = -1;
+        mCurrentEditorText = null;
     }
 
     private void findCheckedSticker(MotionEvent event) {
         for (int i = mStickersList.size() - 1; i >= 0; i--) {
-            EditorSticker sticker = mStickersList.get(i);
+            EditorSticker editorSticker = mStickersList.get(i);
 
-            if (isInStickerBitmap(event, sticker)) {
+            if (isInStickerBitmap(event, editorSticker)) {
                 mIsInSide = true;
-                mCheckedStickerId = i;
+                mCurrentEditorSticker = editorSticker;
 
                 mLastX = event.getX(0);
                 mLastY = event.getY(0);
                 return;
-            } else if (sticker.isInEdit()) {
-                if (isInButton(event, sticker.getDeleteHandleRect())) {
+            } else if (editorSticker.isInEdit()) {
+                if (isInButton(event, editorSticker.getDeleteHandleRect())) {
+                    mCurrentEditorSticker = null;
                     mStickersList.remove(i);
-                    mCheckedStickerId = -1;
                     invalidate();
                     return;
-                } else if (isInButton(event, sticker.getRotateHandleRect())) {
+                } else if (isInButton(event, editorSticker.getRotateHandleRect())) {
                     mIsInRotate = true;
-                    mCheckedStickerId = i;
+                    mCurrentEditorSticker = null;
                     return;
-                } else if (isInButton(event, sticker.getResizeHandleRect())) {
+                } else if (isInButton(event, editorSticker.getResizeHandleRect())) {
                     mIsInResize = true;
-                    midPointToStartPoint(event, sticker);
-                    sticker.setLength(diagonalLength(event, sticker.getPoint()));
+                    midPointToStartPoint(event, editorSticker);
+                    editorSticker.setLength(diagonalLength(event, editorSticker.getPoint()));
                     return;
                 }
             }
 
         }
-        mCheckedStickerId = -1;
+        mCurrentEditorSticker = null;
     }
 
     private float diagonalLength(MotionEvent event, PointF pointF) {
@@ -730,7 +767,7 @@ public class ImageEditorView extends ImageView {
                 .getMetrics(displayMetrics);
         return displayMetrics.density;
     }
-    
+
     private Bitmap getBitmap() {
         Bitmap bm = null;
         Drawable d = getDrawable();
@@ -758,15 +795,6 @@ public class ImageEditorView extends ImageView {
         return getBitmap();
     }
 
-    @Override
-    public void setImageBitmap(Bitmap bitmap) {
-        mIsInitialized = false;
-        super.setImageBitmap(bitmap);
-        mSourceBitmap = bitmap;
-
-        updateLayout();
-    }
-
     private void updateLayout() {
         Bitmap bitmap = getBitmap();
         if (bitmap != null) {
@@ -780,45 +808,6 @@ public class ImageEditorView extends ImageView {
 
     private void setCenter(PointF center) {
         mCenter = center;
-    }
-
-    public void setStickersActivated(boolean isStickersActivated) {
-        mIsStickersActivated = isStickersActivated;
-
-        mIsTextActivated = false;
-        mIsDrawingActivated = false;
-
-        if (mStickersList.size() > 0) {
-            if (!mIsStickersActivated) {
-                for (EditorSticker sticker : mStickersList) {
-                    sticker.setInEdit(false);
-                }
-                invalidate();
-            } else {
-                for (int i = 0; i < mStickersList.size(); i++) {
-                    if (i == (mStickersList.size() - 1)) {
-                        mStickersList.get(i).setInEdit(true);
-                    } else {
-                        mStickersList.get(i).setInEdit(false);
-                    }
-                }
-                invalidate();
-            }
-        }
-    }
-
-    public void setTextActivated(boolean isTextActivated) {
-        mIsTextActivated = isTextActivated;
-
-        mIsStickersActivated = false;
-        mIsDrawingActivated = false;
-    }
-
-    public void setDrawingActivated(boolean isDrawingActivated) {
-        mIsDrawingActivated = isDrawingActivated;
-
-        mIsStickersActivated = false;
-        mIsTextActivated = false;
     }
 
     public void makeImage(Intent intent) {

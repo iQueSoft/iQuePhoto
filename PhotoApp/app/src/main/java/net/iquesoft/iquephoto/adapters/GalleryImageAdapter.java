@@ -52,7 +52,7 @@ public class GalleryImageAdapter extends RecyclerView.Adapter<GalleryImageAdapte
 
         return new GalleryImageAdapter.ViewHolder(view);
     }
-
+    
     @Override
     public void onBindViewHolder(GalleryImageAdapter.ViewHolder holder, int position) {
         GalleryImage galleryImage = mGalleryImageList.get(position);
@@ -61,7 +61,6 @@ public class GalleryImageAdapter extends RecyclerView.Adapter<GalleryImageAdapte
                 .load("file://" + galleryImage.getPath())
                 .resize(250, 250)
                 .centerCrop()
-                .placeholder(R.drawable.ic_image_loading)
                 .into(holder.galleryImage);
 
         holder.galleryImage.setOnClickListener(v -> {

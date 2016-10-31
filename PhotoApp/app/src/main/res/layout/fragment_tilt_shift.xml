@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@android:color/black"
@@ -12,26 +11,27 @@
         android:background="@color/colorLine" />
 
     <RelativeLayout
+        android:id="@+id/filterHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingRight="5dp">
 
         <Button
-            android:id="@+id/drawingCancel"
+            android:id="@+id/filterCancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerInParent="true"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:drawableLeft="@drawable/ic_left"
-            android:text="@string/drawing"
+            android:text="@string/tilt_shift"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="18sp"
             android:textStyle="bold" />
 
         <ImageButton
-            android:id="@+id/drawingApply"
+            android:id="@+id/filterApply"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -46,47 +46,48 @@
         android:background="@color/colorLine" />
 
     <LinearLayout
-        android:id="@+id/drawingSettings"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingBottom="10dp">
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp">
 
-        <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
-            android:id="@+id/brashSizeSeekBar"
+        <Button
+            android:id="@+id/blur_off"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:dsb_indicatorColor="@android:color/white"
-            app:dsb_indicatorTextAppearance="@android:color/black"
-            app:dsb_max="100"
-            app:dsb_min="1"
-            app:dsb_progressColor="@android:color/white"
-            app:dsb_rippleColor="@android:color/white"
-            app:dsb_trackColor="@android:color/white"
-            app:dsb_value="10" />
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:drawableTop="@drawable/ic_blur_off"
+            android:text="@string/blur_off"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/blur_radial"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp">
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:drawableTop="@drawable/ic_blur_radial"
+            android:text="@string/blur_radial"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
 
-            <ImageView
-                android:id="@+id/imageView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:src="@drawable/ic_eraser" />
-
-            <ImageView
-                android:id="@+id/brushColorButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:src="@drawable/ic_brush_color" />
-
-        </LinearLayout>
+        <Button
+            android:id="@+id/blur_linear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:drawableTop="@drawable/ic_blur_linear"
+            android:text="@string/blur_linear"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
     </LinearLayout>
 
+
 </LinearLayout>
+
+

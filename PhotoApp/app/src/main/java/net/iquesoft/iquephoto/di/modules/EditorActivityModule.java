@@ -1,6 +1,6 @@
 package net.iquesoft.iquephoto.di.modules;
 
-import net.iquesoft.iquephoto.presenter.AdjustFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presenter.AdjustmentFragmentPresenterImpl;
 import net.iquesoft.iquephoto.presenter.DrawingFragmentPresenterImpl;
 import net.iquesoft.iquephoto.presenter.EditorActivityPresenterImpl;
 import net.iquesoft.iquephoto.presenter.FiltersFragmentPresenterImpl;
@@ -9,6 +9,8 @@ import net.iquesoft.iquephoto.presenter.OverlayFragmentPresenterImpl;
 import net.iquesoft.iquephoto.presenter.ShowStickersFragmentPresenterImpl;
 import net.iquesoft.iquephoto.presenter.StickersFragmentPresenterImpl;
 import net.iquesoft.iquephoto.presenter.TextFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presenter.TiltShiftFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presenter.ToolsFragmentPresenterImpl;
 import net.iquesoft.iquephoto.view.IEditorActivityView;
 
 import dagger.Module;
@@ -34,13 +36,18 @@ public class EditorActivityModule {
     }
 
     @Provides
+    ToolsFragmentPresenterImpl provideToolsFragmentPresenterImpl() {
+        return new ToolsFragmentPresenterImpl();
+    }
+
+    @Provides
     FiltersFragmentPresenterImpl provideFiltersFragmentPresenterImpl() {
         return new FiltersFragmentPresenterImpl();
     }
 
     @Provides
-    AdjustFragmentPresenterImpl provideAdjustFragmentPresenterImpl() {
-        return new AdjustFragmentPresenterImpl();
+    AdjustmentFragmentPresenterImpl provideAdjustFragmentPresenterImpl() {
+        return new AdjustmentFragmentPresenterImpl();
     }
 
     @Provides
@@ -71,6 +78,11 @@ public class EditorActivityModule {
     @Provides
     FramesFragmentPresenterImpl provideFrameFragmentPresenterImpl() {
         return new FramesFragmentPresenterImpl();
+    }
+
+    @Provides
+    TiltShiftFragmentPresenterImpl provideTiltShiftFragmentPresenterImpl() {
+        return new TiltShiftFragmentPresenterImpl();
     }
 
 }

@@ -2,24 +2,21 @@ package net.iquesoft.iquephoto.view.activity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.adapters.ToolsAdapter;
 import net.iquesoft.iquephoto.common.BaseActivity;
 import net.iquesoft.iquephoto.core.ImageEditorView;
 import net.iquesoft.iquephoto.di.IHasComponent;
@@ -27,11 +24,10 @@ import net.iquesoft.iquephoto.di.components.IApplicationComponent;
 import net.iquesoft.iquephoto.di.components.DaggerIEditorActivityComponent;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
 import net.iquesoft.iquephoto.di.modules.EditorActivityModule;
-import net.iquesoft.iquephoto.model.Tool;
 import net.iquesoft.iquephoto.presenter.EditorActivityPresenterImpl;
 import net.iquesoft.iquephoto.utils.ImageHelper;
 import net.iquesoft.iquephoto.view.IEditorActivityView;
-
+import net.iquesoft.iquephoto.view.fragment.ToolsFragment;
 
 import java.io.IOException;
 
@@ -48,18 +44,21 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
 
     private IEditorActivityComponent mComponent;
 
+    private FragmentManager mFragmentManager;
+
+    @Inject
+    ToolsFragment toolsFragment;
+
+    @BindView(R.id.editorHeader)
+    RelativeLayout editorHeader;
+
     @BindView(R.id.editorImageView)
     ImageEditorView imageEditorView;
 
-    @BindView(R.id.toolsView)
-    RecyclerView tools;
-
     @BindView(R.id.toolSettingsContainer)
-    FrameLayout toolSettingsContainer;
+    FrameLayout fragmentContainer;
 
     private Bitmap mBitmap;
-
-    private Tool currentTool;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,8 +69,6 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
         setContentView(R.layout.activity_editor);
 
         ButterKnife.bind(this);
-
-        presenter.createToolsBox();
 
         try {
             mBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), getIntent().getData());
@@ -86,6 +83,10 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
         imageEditorView.setImageBitmap(mBitmap);
 
         DataHolder.getInstance().setEditorView(imageEditorView);
+
+        mFragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+        fragmentTransaction.replace(fragmentContainer.getId(), toolsFragment).commit();
     }
 
     @Override
@@ -105,53 +106,6 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
     @Override
     public void onBackPressed() {
         presenter.onBackPressed(mBitmap, mBitmap);
-    }
-
-    @Override
-    public void initTools(ToolsAdapter toolsAdapter) {
-        toolsAdapter.setToolsListener(tool -> {
-            if (tool != currentTool) {
-                try {
-                    presenter.changeTool(tool);
-                    switch (tool.getTitle()) {
-                        case R.string.stickers:
-                            imageEditorView.setStickersActivated(true);
-                            break;
-                        case R.string.text:
-                            imageEditorView.setTextActivated(true);
-                            break;
-                        case R.string.drawing:
-                            imageEditorView.setDrawingActivated(true);
-                            break;
-                        default:
-                            imageEditorView.setStickersActivated(false);
-                            imageEditorView.setTextActivated(false);
-                            imageEditorView.setDrawingActivated(false);
-                            break;
-                    }
-                } catch (NullPointerException e) {
-                    e.printStackTrace();
-
-                    Toast.makeText(getBaseContext(), getString(tool.getTitle()) + " coming soon!", Toast.LENGTH_SHORT).show();
-                }
-            } else {
-                toolSettingsContainer.setVisibility(View.GONE);
-                currentTool = null;
-            }
-        });
-        tools.setLayoutManager(new LinearLayoutManager(this, LinearLayout.HORIZONTAL, false));
-        tools.setAdapter(toolsAdapter);
-    }
-
-    @Override
-    public void changeTool(Tool tool) {
-        toolSettingsContainer.setVisibility(View.VISIBLE);
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-
-        //fragmentTransaction.setCustomAnimations(R.anim.slide_up, R.anim.slide_down);
-        fragmentTransaction.replace(toolSettingsContainer.getId(), tool.getFragment()).commit();
-
-        currentTool = tool;
     }
 
     @Override
@@ -178,6 +132,17 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
             dialogInterface.dismiss();
         });
         builder.show();
+    }
+
+    @Override
+    public void setupFragment(Fragment fragment) {
+        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+        fragmentTransaction.replace(fragmentContainer.getId(), fragment);
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+        // TODO: Hide header.
+        //editorHeader.setVisibility(View.GONE);
     }
 
     @Override

@@ -32,8 +32,6 @@ import butterknife.Unbinder;
 
 public class OverlayFragment extends BaseFragment implements IOverlayFragmentView {
 
-    private boolean mIsHide;
-
     private Unbinder mUnbinder;
 
     private ImageEditorView mImageEditorView;
@@ -47,9 +45,6 @@ public class OverlayFragment extends BaseFragment implements IOverlayFragmentVie
 
     @BindView(R.id.overlaySeekBar)
     DiscreteSeekBar seekBar;
-
-    @BindView(R.id.hideOverlayButton)
-    ImageView hideButton;
 
     @BindView(R.id.overlayRecyclerView)
     RecyclerView recyclerView;
@@ -75,7 +70,6 @@ public class OverlayFragment extends BaseFragment implements IOverlayFragmentVie
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_overlay, container, false);
-        //v.setAlpha(0.8f);
 
         mUnbinder = ButterKnife.bind(this, v);
 
@@ -134,19 +128,5 @@ public class OverlayFragment extends BaseFragment implements IOverlayFragmentVie
     public void onDestroyView() {
         super.onDestroyView();
         mUnbinder.unbind();
-    }
-
-
-    @OnClick(R.id.hideOverlayButton)
-    void onClickHide() {
-        if (!mIsHide) {
-            hideButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_expand_less));
-            recyclerView.setVisibility(View.GONE);
-            mIsHide = true;
-        } else {
-            hideButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_expand));
-            recyclerView.setVisibility(View.VISIBLE);
-            mIsHide = false;
-        }
     }
 }

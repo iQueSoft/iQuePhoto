@@ -34,9 +34,6 @@ public class DrawingFragment extends BaseFragment implements IDrawingFragmentVie
     @BindView(R.id.drawingSettings)
     LinearLayout drawingSettings;
 
-    @BindView(R.id.hideDrawingButton)
-    ImageView hideDrawingButton;
-
     @BindView(R.id.brashSizeSeekBar)
     DiscreteSeekBar brashSizeSeekBar;
 
@@ -116,18 +113,4 @@ public class DrawingFragment extends BaseFragment implements IDrawingFragmentVie
     public void onClickBrushColor() {
         mColorPickerDialog.show();
     }
-
-    @OnClick(R.id.hideDrawingButton)
-    public void onClickHide() {
-        if (!mIsHide) {
-            mIsHide = true;
-            hideDrawingButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_expand_less));
-            drawingSettings.setVisibility(View.GONE);
-        } else {
-            mIsHide = false;
-            hideDrawingButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_expand));
-            drawingSettings.setVisibility(View.VISIBLE);
-        }
-    }
-
 }

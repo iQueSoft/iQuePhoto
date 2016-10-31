@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -50,10 +51,14 @@ public class ToolsAdapter extends RecyclerView.Adapter<ToolsAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(ToolsAdapter.ViewHolder holder, int position) {
         final Tool tool = mToolsList.get(position);
-        holder.toolTitle.setText(mContext.getResources().getString(tool.getTitle()));
-        holder.toolIcon.setImageDrawable(mContext.getResources().getDrawable(tool.getIcon()));
 
-        holder.toolIcon.setOnClickListener(view -> mToolsListener.onClick(tool));
+        holder.toolButton.setText(mContext.getResources().getString(tool.getTitle()));
+
+        holder.toolButton.setCompoundDrawablesWithIntrinsicBounds(null,
+                mContext.getResources().getDrawable(tool.getIcon()),
+                null, null);
+
+        holder.toolButton.setOnClickListener(view -> mToolsListener.onClick(tool));
     }
 
     @Override
@@ -62,11 +67,8 @@ public class ToolsAdapter extends RecyclerView.Adapter<ToolsAdapter.ViewHolder> 
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.toolTitle)
-        TextView toolTitle;
-
-        @BindView(R.id.toolIcon)
-        ImageView toolIcon;
+        @BindView(R.id.toolButton)
+        Button toolButton;
 
         public ViewHolder(View itemView) {
             super(itemView);

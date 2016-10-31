@@ -16,27 +16,18 @@
         android:paddingRight="5dp">
 
         <Button
-            android:id="@+id/framesCancel"
+            android:id="@+id/adjustmentCancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerInParent="true"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:drawableLeft="@drawable/ic_left"
-            android:text="@string/frames"
+            android:text="@string/adjustment"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="18sp"
             android:textStyle="bold" />
-
-        <ImageButton
-            android:id="@+id/framesApply"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerInParent="true"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_apply_40" />
     </RelativeLayout>
 
     <View
@@ -45,9 +36,11 @@
         android:background="@color/colorLine" />
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/frameRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
+        android:id="@+id/adjustRecyclerView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
 
 </LinearLayout>
+
+

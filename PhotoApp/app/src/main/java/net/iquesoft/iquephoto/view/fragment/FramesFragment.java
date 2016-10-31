@@ -29,8 +29,6 @@ import butterknife.Unbinder;
 
 public class FramesFragment extends BaseFragment implements IFramesFragmentView {
 
-    private boolean mIsHide;
-
     private Unbinder mUnbinder;
 
     private List<Frame> mFrameList = Frame.getFramesList();
@@ -41,9 +39,6 @@ public class FramesFragment extends BaseFragment implements IFramesFragmentView 
 
     @Inject
     FramesFragmentPresenterImpl presenter;
-
-    @BindView(R.id.hideFrameButton)
-    ImageView hideButton;
 
     @BindView(R.id.frameRecyclerView)
     RecyclerView recyclerView;
@@ -69,7 +64,6 @@ public class FramesFragment extends BaseFragment implements IFramesFragmentView 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_frames, container, false);
-        //v.setAlpha(0.8f);
 
         mUnbinder = ButterKnife.bind(this, v);
 
@@ -96,18 +90,5 @@ public class FramesFragment extends BaseFragment implements IFramesFragmentView 
     public void onDestroyView() {
         super.onDestroyView();
         mUnbinder.unbind();
-    }
-
-    @OnClick(R.id.hideFrameButton)
-    void onClickHide() {
-        if (!mIsHide) {
-            hideButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_expand_less));
-            recyclerView.setVisibility(View.GONE);
-            mIsHide = true;
-        } else {
-            hideButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_expand));
-            recyclerView.setVisibility(View.VISIBLE);
-            mIsHide = false;
-        }
     }
 }

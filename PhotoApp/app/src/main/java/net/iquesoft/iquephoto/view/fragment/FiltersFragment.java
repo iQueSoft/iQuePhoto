@@ -30,10 +30,7 @@ import butterknife.Unbinder;
 
 public class FiltersFragment extends BaseFragment implements IFiltersFragmentView {
 
-    private boolean mIsHide;
     private boolean mIsSeekBarHide;
-
-    private int intensity;
 
     private Unbinder mUnbinder;
 
@@ -46,9 +43,6 @@ public class FiltersFragment extends BaseFragment implements IFiltersFragmentVie
 
     @BindView(R.id.filterSeekBar)
     DiscreteSeekBar seekBar;
-
-    @BindView(R.id.hideFiltersButton)
-    ImageView hideFiltersButton;
 
     @BindView(R.id.filtersList)
     RecyclerView filtersList;
@@ -75,7 +69,6 @@ public class FiltersFragment extends BaseFragment implements IFiltersFragmentVie
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_filters, container, false);
-        //v.setAlpha(0.8f);
 
         mUnbinder = ButterKnife.bind(this, v);
 
@@ -137,18 +130,5 @@ public class FiltersFragment extends BaseFragment implements IFiltersFragmentVie
 
         filtersList.setLayoutManager(new LinearLayoutManager(null, LinearLayout.HORIZONTAL, false));
         filtersList.setAdapter(filtersAdapter);
-    }
-
-    @OnClick(R.id.hideFiltersButton)
-    public void onClickHideFilters(View view) {
-        if (!mIsHide) {
-            hideFiltersButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_expand_less));
-            filtersList.setVisibility(View.GONE);
-            mIsHide = true;
-        } else {
-            hideFiltersButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_expand));
-            filtersList.setVisibility(View.VISIBLE);
-            mIsHide = false;
-        }
     }
 }

@@ -1,9 +1,12 @@
 package net.iquesoft.iquephoto.model;
 
 import android.support.annotation.DrawableRes;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.v4.app.Fragment;
 
 import net.iquesoft.iquephoto.R;
+import net.iquesoft.iquephoto.view.fragment.BrightnessFragment;
 
 import java.util.Arrays;
 import java.util.List;
@@ -16,22 +19,24 @@ public class Adjust {
     private int mIcon;
 
     private int mValue;
-    private boolean selected;
+
+    private Fragment mFragment;
 
     public static List<Adjust> getAdjustList() {
         return Arrays.asList(adjusts);
     }
 
     private static Adjust[] adjusts = {
-            new Adjust(R.string.brightness, R.drawable.ic_brightness, 0),
-            new Adjust(R.string.contrast, R.drawable.ic_contrast, 0),
-            new Adjust(R.string.saturation, R.drawable.ic_saturation, 0),
-            new Adjust(R.string.warmth, R.drawable.ic_warmth, 0)
+            new Adjust(R.string.brightness, R.drawable.ic_brightness, new BrightnessFragment(), 0),
+            new Adjust(R.string.contrast, R.drawable.ic_contrast, null, 0),
+            new Adjust(R.string.saturation, R.drawable.ic_saturation, null, 0),
+            new Adjust(R.string.warmth, R.drawable.ic_warmth, null, 0)
     };
 
-    private Adjust(@StringRes int title, @DrawableRes int icon, int value) {
+    private Adjust(@StringRes int title, @DrawableRes int icon, @Nullable Fragment fragment, int value) {
         mTitle = title;
         mIcon = icon;
+        mFragment = fragment;
         mValue = value;
     }
 
@@ -51,11 +56,7 @@ public class Adjust {
         mValue = value;
     }
 
-    public boolean isSelected() {
-        return selected;
-    }
-
-    public void setSelected(boolean selected) {
-        this.selected = selected;
+    public Fragment getFragment() {
+        return mFragment;
     }
 }

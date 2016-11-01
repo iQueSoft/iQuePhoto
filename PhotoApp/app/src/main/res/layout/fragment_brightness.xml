@@ -46,7 +46,7 @@
         android:background="@color/colorLine" />
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="10dp">
@@ -57,20 +57,19 @@
             android:src="@drawable/ic_brightness" />
 
         <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
-            android:id="@+id/overlaySeekBar"
+            android:id="@+id/brightnessSeekBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             app:dsb_indicatorColor="@android:color/white"
             app:dsb_indicatorTextAppearance="@android:color/black"
             app:dsb_max="100"
+            app:dsb_min="-100"
             app:dsb_progressColor="@android:color/white"
             app:dsb_rippleColor="@android:color/white"
             app:dsb_trackColor="@android:color/white"
-            app:dsb_value="100" />
+            app:dsb_value="0" />
     </LinearLayout>
-
-
 </LinearLayout>
 
 

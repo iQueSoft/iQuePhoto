@@ -15,8 +15,9 @@ import net.iquesoft.iquephoto.common.BaseFragment;
 import net.iquesoft.iquephoto.core.ImageEditorView;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
 import net.iquesoft.iquephoto.model.Adjust;
-import net.iquesoft.iquephoto.presenter.AdjustmentFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presenter.AdjustFragmentPresenterImpl;
 import net.iquesoft.iquephoto.view.IAdjustmentFragmentView;
+import net.iquesoft.iquephoto.view.IEditorActivityView;
 
 import java.util.List;
 
@@ -26,33 +27,22 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class AdjustmentFragment extends BaseFragment implements IAdjustmentFragmentView {
-
-    private int mAdjustPosition;
+public class AdjustFragment extends BaseFragment implements IAdjustmentFragmentView {
 
     private List<Adjust> mAdjustList = Adjust.getAdjustList();
-
-    private Adjust mCurrentAdjust;
 
     private Unbinder mUnbinder;
 
     private AdjustAdapter mAdapter;
 
-    private ImageEditorView mImageEditorView;
-
     @BindView(R.id.adjustRecyclerView)
     RecyclerView recyclerView;
 
     @Inject
-    AdjustmentFragmentPresenterImpl presenter;
+    IEditorActivityView editorActivityView;
 
-    public static AdjustmentFragment newInstance() {
-        /*Bundle b = new Bundle();
-        b.putString("msg", text);
-        b.putString("color", color);
-        f.setArguments(b);*/
-        return new AdjustmentFragment();
-    }
+    @Inject
+    AdjustFragmentPresenterImpl presenter;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -62,17 +52,16 @@ public class AdjustmentFragment extends BaseFragment implements IAdjustmentFragm
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_adjustment, container, false);
-
-        mImageEditorView = DataHolder.getInstance().getEditorView();
+        View v = inflater.inflate(R.layout.fragment_adjust, container, false);
 
         mUnbinder = ButterKnife.bind(this, v);
 
         mAdapter = new AdjustAdapter(mAdjustList);
 
-        mAdapter.setAdjustListener((adjust, position) -> {
-            mAdjustPosition = position;
-            mCurrentAdjust = adjust;
+        mAdapter.setAdjustListener(adjust -> {
+            editorActivityView.getImageEditorView().setCommand(adjust.getTitle());
+
+            editorActivityView.setupFragment(adjust.getFragment());
         });
 
         recyclerView.setLayoutManager(new LinearLayoutManager(null, LinearLayout.HORIZONTAL, false));

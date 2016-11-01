@@ -1,6 +1,7 @@
 package net.iquesoft.iquephoto.di.modules;
 
-import net.iquesoft.iquephoto.presenter.AdjustmentFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presenter.AdjustFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presenter.BrightnessFragmentPresenterImpl;
 import net.iquesoft.iquephoto.presenter.DrawingFragmentPresenterImpl;
 import net.iquesoft.iquephoto.presenter.EditorActivityPresenterImpl;
 import net.iquesoft.iquephoto.presenter.FiltersFragmentPresenterImpl;
@@ -46,8 +47,8 @@ public class EditorActivityModule {
     }
 
     @Provides
-    AdjustmentFragmentPresenterImpl provideAdjustFragmentPresenterImpl() {
-        return new AdjustmentFragmentPresenterImpl();
+    AdjustFragmentPresenterImpl provideAdjustFragmentPresenterImpl() {
+        return new AdjustFragmentPresenterImpl();
     }
 
     @Provides
@@ -83,6 +84,11 @@ public class EditorActivityModule {
     @Provides
     TiltShiftFragmentPresenterImpl provideTiltShiftFragmentPresenterImpl() {
         return new TiltShiftFragmentPresenterImpl();
+    }
+
+    @Provides
+    BrightnessFragmentPresenterImpl provideBrightnessFragmentPresenterImpl() {
+        return new BrightnessFragmentPresenterImpl();
     }
 
 }

@@ -7,7 +7,7 @@ import android.support.v4.app.Fragment;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.view.fragment.DrawingFragment;
-import net.iquesoft.iquephoto.view.fragment.AdjustmentFragment;
+import net.iquesoft.iquephoto.view.fragment.AdjustFragment;
 import net.iquesoft.iquephoto.view.fragment.FiltersFragment;
 import net.iquesoft.iquephoto.view.fragment.FramesFragment;
 import net.iquesoft.iquephoto.view.fragment.OverlayFragment;
@@ -33,7 +33,7 @@ public class Tool {
 
     private static Tool tools[] = {
             new Tool(R.string.filters, R.drawable.ic_filter, new FiltersFragment()),
-            new Tool(R.string.adjustment, R.drawable.ic_adjust, AdjustmentFragment.newInstance()),
+            new Tool(R.string.adjust, R.drawable.ic_adjust, new AdjustFragment()),
             new Tool(R.string.overlay, R.drawable.ic_overlay, new OverlayFragment()),
             new Tool(R.string.stickers, R.drawable.ic_stiker, StickersFragment.newInstance()),
             new Tool(R.string.frames, R.drawable.ic_frame, new FramesFragment()),

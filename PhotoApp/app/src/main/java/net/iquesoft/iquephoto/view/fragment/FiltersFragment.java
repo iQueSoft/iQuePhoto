@@ -17,7 +17,9 @@ import net.iquesoft.iquephoto.core.ImageEditorView;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
 import net.iquesoft.iquephoto.model.Filter;
 import net.iquesoft.iquephoto.presenter.FiltersFragmentPresenterImpl;
+import net.iquesoft.iquephoto.view.IEditorActivityView;
 import net.iquesoft.iquephoto.view.IFiltersFragmentView;
+import net.iquesoft.iquephoto.view.activity.EditorActivity;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
@@ -30,13 +32,12 @@ import butterknife.Unbinder;
 
 public class FiltersFragment extends BaseFragment implements IFiltersFragmentView {
 
-    private boolean mIsSeekBarHide;
-
     private Unbinder mUnbinder;
 
     private ImageEditorView mImageEditorView;
 
-    private Filter mCurrentFilter;
+    @Inject
+    IEditorActivityView editorActivityView;
 
     @Inject
     FiltersFragmentPresenterImpl presenter;
@@ -111,24 +112,21 @@ public class FiltersFragment extends BaseFragment implements IFiltersFragmentVie
         FiltersAdapter filtersAdapter = new FiltersAdapter(Filter.getFiltersList(), DataHolder.getInstance().getBitmap());
 
         filtersAdapter.setFiltersListener(filter -> {
-            if (mCurrentFilter == filter) {
-                if (!mIsSeekBarHide)
-                    seekBar.setVisibility(View.VISIBLE);
-                else {
-                    seekBar.setVisibility(View.GONE);
-                }
-            } else {
-                seekBar.setVisibility(View.GONE);
-                seekBar.setProgress(100);
-                mImageEditorView.setFilterIntensity(100);
-            }
-
             mImageEditorView.setFilter(filter.getColorMatrix());
-            mCurrentFilter = filter;
         });
-
 
         filtersList.setLayoutManager(new LinearLayoutManager(null, LinearLayout.HORIZONTAL, false));
         filtersList.setAdapter(filtersAdapter);
+    }
+
+    @OnClick(R.id.filterBack)
+    void onClickBack() {
+        editorActivityView.navigateBack();
+    }
+    
+    @OnClick(R.id.filterApply)
+    void onClickApply() {
+        editorActivityView.getImageEditorView().applyFilter();
+        editorActivityView.navigateBack();
     }
 }

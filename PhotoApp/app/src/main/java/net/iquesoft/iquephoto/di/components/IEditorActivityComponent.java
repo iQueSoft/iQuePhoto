@@ -2,7 +2,8 @@ package net.iquesoft.iquephoto.di.components;
 
 import net.iquesoft.iquephoto.di.ActivityScope;
 import net.iquesoft.iquephoto.di.modules.EditorActivityModule;
-import net.iquesoft.iquephoto.view.fragment.AdjustmentFragment;
+import net.iquesoft.iquephoto.view.fragment.AdjustFragment;
+import net.iquesoft.iquephoto.view.fragment.BrightnessFragment;
 import net.iquesoft.iquephoto.view.fragment.DrawingFragment;
 import net.iquesoft.iquephoto.view.fragment.FiltersFragment;
 import net.iquesoft.iquephoto.view.activity.EditorActivity;
@@ -28,7 +29,7 @@ public interface IEditorActivityComponent {
 
     void inject(FiltersFragment filtersFragment);
 
-    void inject(AdjustmentFragment adjustmentFragment);
+    void inject(AdjustFragment adjustFragment);
 
     void inject(TextFragment textFragment);
 
@@ -43,4 +44,6 @@ public interface IEditorActivityComponent {
     void inject(FramesFragment framesFragment);
 
     void inject(TiltShiftFragment tiltShiftFragment);
+
+    void inject(BrightnessFragment brightnessFragment);
 }

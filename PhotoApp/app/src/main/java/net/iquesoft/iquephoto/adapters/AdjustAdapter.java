@@ -20,8 +20,6 @@ import butterknife.ButterKnife;
 
 public class AdjustAdapter extends RecyclerView.Adapter<AdjustAdapter.ViewHolder> {
 
-    private int checkedItem;
-
     private Context mContext;
 
     private List<Adjust> mAdjustList;
@@ -29,7 +27,7 @@ public class AdjustAdapter extends RecyclerView.Adapter<AdjustAdapter.ViewHolder
     private AdjustListener mListener;
 
     public interface AdjustListener {
-        void onClick(Adjust adjust, int position);
+        void onClick(Adjust adjust);
     }
 
     public void setAdjustListener(AdjustListener listener) {
@@ -62,24 +60,8 @@ public class AdjustAdapter extends RecyclerView.Adapter<AdjustAdapter.ViewHolder
 
         holder.adjustValue.setText(String.valueOf(adjust.getValue()));
 
-        if (adjust.isSelected()) {
-            //holder.colorSelected.setVisibility(View.VISIBLE);
-        } else {
-            //holder.colorSelected.setVisibility(View.GONE);
-        }
-
         holder.adjustItem.setOnClickListener(view -> {
-
-            mAdjustList.get(checkedItem).setSelected(false);
-            notifyItemChanged(checkedItem);
-
-            checkedItem = position;
-            mAdjustList.get(position).setSelected(true);
-
-            notifyItemChanged(position);
-
-            mListener.onClick(adjust, position);
-
+            mListener.onClick(adjust);
         });
     }
 

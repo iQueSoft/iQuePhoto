@@ -26,7 +26,7 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     apt 'com.jakewharton:butterknife-compiler:8.3.0'
     apt 'com.google.dagger:dagger-compiler:2.5'
@@ -44,4 +44,5 @@ dependencies {
     compile 'com.isseiaoki:simplecropview:1.1.4'
     compile 'com.afollestad.material-dialogs:core:0.9.0.2'
     compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha9'
 }

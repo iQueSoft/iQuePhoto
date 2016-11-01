@@ -2,6 +2,8 @@ package net.iquesoft.iquephoto.view;
 
 import android.support.v4.app.Fragment;
 
+import net.iquesoft.iquephoto.core.ImageEditorView;
+
 public interface IEditorActivityView {
 
     void showAlertDialog();
@@ -10,5 +12,7 @@ public interface IEditorActivityView {
 
     void showToastMessage(int stringResource);
 
-    void goBack();
+    void navigateBack();
+
+    ImageEditorView getImageEditorView();
 }

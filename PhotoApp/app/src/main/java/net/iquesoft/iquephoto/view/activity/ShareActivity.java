@@ -5,7 +5,9 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.design.widget.TabLayout;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -20,6 +22,8 @@ import net.iquesoft.iquephoto.di.components.IApplicationComponent;
 import net.iquesoft.iquephoto.di.components.IShareActivityComponent;
 import net.iquesoft.iquephoto.di.modules.ShareActivityModule;
 import net.iquesoft.iquephoto.presenter.ShareActivityPresenterImpl;
+import net.iquesoft.iquephoto.utils.BitmapUtil;
+import net.iquesoft.iquephoto.utils.ImageHelper;
 import net.iquesoft.iquephoto.view.IShareActivityView;
 
 import javax.inject.Inject;
@@ -100,31 +104,24 @@ public class ShareActivity extends BaseActivity implements IShareActivityView, I
         super.onBackPressed();
     }
 
-    @OnClick(R.id.save)
-    void onClickSave(View view) {
-        // Todo: Save image.
+    @OnClick(R.id.saveButton)
+    void onClickSave() {
+        BitmapUtil.saveBitmap(mBitmap, this);
     }
 
-    @OnClick(R.id.facebook)
-    void onClickFacebook(View view) {
+    @OnClick(R.id.facebookButton)
+    void onClickFacebook() {
         // Todo: Publish to Facebook.
     }
 
-    @OnClick(R.id.instagram)
-    void onClickInstagram(View view) {
-        // Todo: Publish to Instagram.
-        Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.setType("image/*");
+    @OnClick(R.id.instagramButton)
+    void onClickInstagram() {
+        presenter.shareToInstagram(this, mBitmap);
 
-        //File media = new File(mediaPath);
-        Uri uri;// = Uri.fromFile(media);
-
-        //intent.putExtra(Intent.EXTRA_STREAM, uri);
-        startActivity(Intent.createChooser(intent, "Share to"));
     }
 
-    @OnClick(R.id.more)
-    void onClickMore(View view) {
+    @OnClick(R.id.moreButton)
+    void onClickMore() {
         // Todo: Share more social network.
     }
 
@@ -132,6 +129,45 @@ public class ShareActivity extends BaseActivity implements IShareActivityView, I
     public void initImageSizes(String small, String medium, String original) {
         tabLayout.addTab(tabLayout.newTab().setText(small));
         tabLayout.addTab(tabLayout.newTab().setText(medium));
-        tabLayout.addTab(tabLayout.newTab().setText(original));
+        tabLayout.addTab(tabLayout.newTab().setText(original), true);
+    }
+
+    @Override
+    public void shareToInstagram(Bitmap bitmap) {
+        /*Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("image*//*");
+
+        //File media = new File(mediaPath);
+        Uri uri;// = Uri.fromFile(media);
+
+        //intent.putExtra(Intent.EXTRA_STREAM, uri);
+        startActivity(Intent.createChooser(intent, "Share to"));*/
+    }
+
+    @Override
+    public void shareToFacebook(Bitmap bitmap) {
+
+    }
+
+    @Override
+    public void showAlert(@StringRes int messageBody, String applicationId) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyAlertDialogStyle);
+        builder.setTitle(getString(R.string.application_does_not_exist));
+        builder.setMessage(getString(messageBody));
+
+        builder.setPositiveButton(getString(R.string.install), (dialogInterface, i) -> {
+            try {
+                startActivity(new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("market://details?id=" + applicationId)));
+            } catch (android.content.ActivityNotFoundException anfe) {
+                startActivity(new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("https://play.google.com/store/apps/details?id=" + applicationId)));
+            }
+        });
+
+        builder.setNegativeButton(getString(R.string.dismiss), (dialogInterface, i1) -> {
+            dialogInterface.dismiss();
+        });
+        builder.show();
     }
 }

@@ -26,7 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:src="@drawable/ic_intensity"
+            android:src="@drawable/ic_check"
             android:visibility="gone" />
     </FrameLayout>
 
@@ -41,7 +41,6 @@
             android:layout_gravity="center"
             android:layout_marginBottom="2.5dp"
             android:gravity="center"
-            android:text="@string/filter_original"
             android:textColor="@android:color/white"
             android:textSize="14sp"
             android:textStyle="bold" />

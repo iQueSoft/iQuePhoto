@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/black"
-    android:orientation="vertical"
     tools:context=".view.activity.EditorActivity">
 
     <RelativeLayout
@@ -18,12 +17,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_marginRight="16dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:paddingLeft="5dp"
             android:src="@drawable/ic_arrow_back" />
 
         <Button
+            android:id="@+id/undoButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -31,7 +30,8 @@
             android:drawableLeft="@drawable/ic_undo"
             android:text="1"
             android:textColor="@color/white"
-            android:textSize="22sp" />
+            android:textSize="22sp"
+            android:visibility="gone" />
 
         <ImageButton
             android:id="@+id/buttonShare"
@@ -50,24 +50,18 @@
             android:background="@color/colorLine" />
     </RelativeLayout>
 
-    <FrameLayout
-        android:layout_width="match_parent"
+    <net.iquesoft.iquephoto.core.ImageEditorView
+        android:id="@+id/editorImageView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_weight="1"
-        android:visibility="visible">
-
-        <net.iquesoft.iquephoto.core.ImageEditorView
-            android:id="@+id/editorImageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center" />
-    </FrameLayout>
+        android:layout_above="@+id/toolSettingsContainer"
+        android:layout_below="@+id/editorHeader"
+        android:layout_centerInParent="true" />
 
     <FrameLayout
         android:id="@+id/toolSettingsContainer"
         android:layout_width="match_parent"
-        android:layout_height="175dp"
-        android:layout_gravity="bottom" />
+        android:layout_height="200dp"
+        android:layout_alignParentBottom="true" />
 
-</LinearLayout>
+</RelativeLayout>

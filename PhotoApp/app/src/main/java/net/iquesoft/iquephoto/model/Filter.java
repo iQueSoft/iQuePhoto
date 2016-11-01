@@ -23,18 +23,12 @@ public class Filter {
 
     private static Filter[] filters = {
             new Filter("F01", new ColorMatrix(new float[]{
-                    0.5f, 0, 0, 0, 0,
-                    0, 0.5f, 0, 0, 0,
-                    0, 0, 0.5f, 0, 0,
-                    0, 0, 0, 1, 0})),
-
-            new Filter("F02", new ColorMatrix(new float[]{
                     2, -1, 0, 0, 0,
                     -1, 2, 0, 0, 0,
                     0, -1, 2, 0, 0,
                     0, 0, 0, 1, 0})),
 
-            new Filter("F03", new ColorMatrix(new float[]{
+            new Filter("F02", new ColorMatrix(new float[]{
                     1, 0, 0, 0, 0,
                     0, 1, 0, 0, 0,
                     0.50f, 0, 1, 0, 0,

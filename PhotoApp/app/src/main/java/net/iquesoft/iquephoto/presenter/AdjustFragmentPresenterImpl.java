@@ -4,12 +4,12 @@ import net.iquesoft.iquephoto.view.IAdjustmentFragmentView;
 
 import javax.inject.Inject;
 
-public class AdjustmentFragmentPresenterImpl implements IAdjustmentFragmentPresenter {
+public class AdjustFragmentPresenterImpl implements IAdjustFragmentPresenter {
 
     private IAdjustmentFragmentView view;
 
     @Inject
-    public AdjustmentFragmentPresenterImpl() {
+    public AdjustFragmentPresenterImpl() {
 
     }
 

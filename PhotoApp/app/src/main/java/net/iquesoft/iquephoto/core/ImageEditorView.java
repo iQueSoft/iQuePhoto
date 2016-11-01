@@ -26,6 +26,8 @@ import android.view.MotionEvent;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+
 import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.model.Sticker;
@@ -40,7 +42,6 @@ public class ImageEditorView extends ImageView {
     private float mBrushSize;
 
     private boolean mIsInitialized;
-    private boolean mHasFilter;
 
     private boolean mIsInResize;
     private boolean mIsInSide;
@@ -61,6 +62,7 @@ public class ImageEditorView extends ImageView {
 
     private Paint mImagePaint;
     private Paint mFilterPaint;
+    private Paint mBrightnessPaint;
     private Paint mOverlayPaint;
     private Paint mDrawingPaint;
     private Paint mDrawingCirclePaint;
@@ -83,10 +85,7 @@ public class ImageEditorView extends ImageView {
     private float mBrightnessValue = 0;
     private float mWarmthValue = 0;
 
-    private ColorMatrix mAdjustColorMatrix;
     private ColorMatrix mFilterColorMatrix;
-
-    private ColorMatrixColorFilter mAdjustColorMatrixColorFilter;
 
     private Matrix mMatrix = null;
 
@@ -99,7 +98,7 @@ public class ImageEditorView extends ImageView {
 
     private int mTouchPadding = 0;
 
-    private boolean mIsEnabled = true;
+    private MaterialDialog mProgressDialog;
 
     public ImageEditorView(Context context) {
         this(context, null);
@@ -111,7 +110,6 @@ public class ImageEditorView extends ImageView {
 
     public ImageEditorView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        float density = getDensity();
 
         mContext = context;
 
@@ -121,11 +119,10 @@ public class ImageEditorView extends ImageView {
 
         mImagePaint = new Paint();
         mFilterPaint = new Paint();
+        mBrightnessPaint = new Paint();
         mOverlayPaint = new Paint();
 
         mEditorFrame = new EditorFrame(context);
-
-        mAdjustColorMatrix = new ColorMatrix();
 
         mImagePaint.setFilterBitmap(true);
 
@@ -134,6 +131,7 @@ public class ImageEditorView extends ImageView {
         mScale = 1.0f;
 
         initDrawing();
+        initProgressDialog();
     }
 
     private void initDrawing() {
@@ -160,21 +158,58 @@ public class ImageEditorView extends ImageView {
         mDrawingCirclePaint.setStrokeWidth(10f);
     }
 
+    private void initProgressDialog() {
+        mProgressDialog = new MaterialDialog.Builder(mContext)
+                .content(R.string.processing)
+                .progress(true, 0)
+                .widgetColor(getResources().getColor(android.R.color.black))
+                .contentColor(getResources().getColor(android.R.color.black))
+                .canceledOnTouchOutside(false)
+                .build();
+    }
+
     @Override
     public void onDraw(Canvas canvas) {
         if (mIsInitialized) {
             setMatrix();
-            canvas.drawBitmap(mSourceBitmap, mMatrix, mImagePaint);
+            if (mAlteredBitmap != null)
+                canvas.drawBitmap(mAlteredBitmap, mMatrix, mImagePaint);
+            else
+                canvas.drawBitmap(mSourceBitmap, mMatrix, mImagePaint);
         }
 
-        if (mAlteredBitmap != null) {
-            canvas.drawBitmap(mAlteredBitmap, mMatrix, mImagePaint);
-        } else {
-            canvas.drawBitmap(mSourceBitmap, mMatrix, mFilterPaint);
-        }
+        switch (mCommand) {
+            case R.string.filters:
+                if (mAlteredBitmap != null) {
+                    canvas.drawBitmap(mAlteredBitmap, mMatrix, mImagePaint);
+                } else {
+                    canvas.drawBitmap(mSourceBitmap, mMatrix, mFilterPaint);
+                }
+                break;
+            case R.string.drawing:
+                if (mDrawingList.size() > 0) {
+                    for (Drawing drawing : mDrawingList) {
+                        canvas.drawPath(drawing.getPath(), drawing.getPaint());
+                    }
+                }
+                if (!mDrawingPath.isEmpty())
+                    canvas.drawPath(mDrawingPath, mDrawingPaint);
 
-        if (mOverlayBitmap != null)
-            canvas.drawBitmap(mOverlayBitmap, mMatrix, mOverlayPaint);
+                break;
+            case R.string.brightness:
+                if (mBrightnessValue != 0) {
+                    if (mAlteredBitmap != null) {
+                        canvas.drawBitmap(mAlteredBitmap, mMatrix, mBrightnessPaint);
+                    } else {
+                        canvas.drawBitmap(mSourceBitmap, mMatrix, mBrightnessPaint);
+                    }
+                }
+                break;
+            case R.string.overlay:
+                if (mOverlayBitmap != null)
+                    canvas.drawBitmap(mOverlayBitmap, mMatrix, mOverlayPaint);
+                break;
+        }
 
         if (mFrameBitmap != null)
             canvas.drawBitmap(mFrameBitmap, mMatrix, mImagePaint);
@@ -187,16 +222,6 @@ public class ImageEditorView extends ImageView {
             drawTexts(canvas);
         }
 
-        if (mDrawingList.size() > 0) {
-            for (Drawing drawing : mDrawingList) {
-                canvas.drawPath(drawing.getPath(), drawing.getPaint());
-            }
-        }
-
-        if (!mDrawingPath.isEmpty()) {
-            canvas.drawPath(mDrawingPath, mDrawingPaint);
-        }
-        //canvas.drawBitmap(mSourceBitmap, mMatrix, mFilterPaint);
 
         //canvas.drawBitmap(mSourceBitmap, mMatrix, getAdjustPaint());
     }
@@ -391,6 +416,14 @@ public class ImageEditorView extends ImageView {
         mDrawingPaint.setColor(getResources().getColor(color));
     }
 
+    public void applyFilter() {
+        new ImageProcessingTask().execute();
+    }
+
+    public void applyBrightness() {
+        new ImageProcessingTask().execute();
+    }
+
     public void setBrushSize(float brushSize) {
         mBrushSize = brushSize; //TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, brushSize, mDisplayMetrics);
 
@@ -554,25 +587,8 @@ public class ImageEditorView extends ImageView {
         }
     }
 
-    private Paint getAdjustPaint() {
-        Paint paint = new Paint();
-
-        mAdjustColorMatrix.setConcat(getWarmthColorMatrix(mWarmthValue), getBrightnessColorMatrix(mBrightnessValue));
-
-        paint.setColorFilter(new ColorMatrixColorFilter(mAdjustColorMatrix));
-
-        return paint;
-    }
-
-    public void setFilter(@Nullable ColorMatrix colorMatrix) {
-        mFilterColorMatrix = colorMatrix;
-        if (colorMatrix != null) {
-            mHasFilter = true;
-            mFilterPaint.setColorFilter(new ColorMatrixColorFilter(colorMatrix));
-            new FilerImageTask().execute();
-        } else {
-            mHasFilter = false;
-        }
+    public void setFilter(ColorMatrix colorMatrix) {
+        mFilterPaint.setColorFilter(new ColorMatrixColorFilter(colorMatrix));
     }
 
     public void setFrame(@Nullable Drawable drawable) {
@@ -610,29 +626,37 @@ public class ImageEditorView extends ImageView {
     }
 
     public void setBrightnessValue(float brightnessValue) {
-        mBrightnessValue = brightnessValue;
-        invalidate();
+        if (brightnessValue != 0) {
+            mBrightnessValue = brightnessValue;
+
+            mBrightnessPaint.setColorFilter(getBrightnessColorMatrix(mBrightnessValue));
+
+            invalidate();
+        }
+
     }
 
     public void setWarmthValue(float warmthValue) {
-        mWarmthValue = warmthValue;
-        invalidate();
+        if (warmthValue != 0) {
+            mWarmthValue = warmthValue;
+
+            invalidate();
+        }
     }
 
-    private ColorMatrix getWarmthColorMatrix(float value) {
+    private ColorMatrixColorFilter getWarmthColorMatrix(float value) {
         float temp = value / 220;
 
-        return new ColorMatrix(new float[]
-                {
-                        1, 0, 0, temp, 0,
-                        0, 1, 0, temp / 2, 0,
-                        0, 0, 1, temp / 4, 0,
-                        0, 0, 0, 1, 0
-                });
+        return new ColorMatrixColorFilter(new float[]{
+                1, 0, 0, temp, 0,
+                0, 1, 0, temp / 2, 0,
+                0, 0, 1, temp / 4, 0,
+                0, 0, 0, 1, 0});
     }
 
-    private ColorMatrix getBrightnessColorMatrix(float value) {
-        return new ColorMatrix(new float[]{1, 0, 0, 0, value,
+    private ColorMatrixColorFilter getBrightnessColorMatrix(float value) {
+        return new ColorMatrixColorFilter(new float[]{
+                1, 0, 0, 0, value,
                 0, 1, 0, 0, value,
                 0, 0, 1, 0, value,
                 0, 0, 0, 1, 0});
@@ -818,16 +842,35 @@ public class ImageEditorView extends ImageView {
         OUT_OF_BOUNDS, CENTER, LEFT_TOP, RIGHT_TOP, LEFT_BOTTOM, RIGHT_BOTTOM
     }
 
-    private class FilerImageTask extends AsyncTask<Void, Void, Bitmap> {
+    private class ImageProcessingTask extends AsyncTask<Void, Void, Bitmap> {
         private Canvas mCanvas;
         private Bitmap mBitmap;
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mProgressDialog.show();
+        }
+
+        @Override
         protected Bitmap doInBackground(Void... params) {
-            mBitmap = mSourceBitmap.copy(mSourceBitmap.getConfig(), true);
+
+            if (mAlteredBitmap == null)
+                mBitmap = mSourceBitmap.copy(mSourceBitmap.getConfig(), true);
+            else mBitmap = mAlteredBitmap.copy(mAlteredBitmap.getConfig(), true);
             mCanvas = new Canvas(mBitmap);
 
-            mCanvas.drawBitmap(mSourceBitmap, 0, 0, mFilterPaint);
+            switch (mCommand) {
+                case R.string.filters:
+                    mCanvas.drawBitmap(mBitmap, 0, 0, mFilterPaint);
+                    break;
+                case R.string.overlay:
+                    mCanvas.drawBitmap(mOverlayBitmap, 0, 0, mOverlayPaint);
+                    break;
+                case R.string.brightness:
+                    mCanvas.drawBitmap(mBitmap, 0, 0, mBrightnessPaint);
+            }
+
 
             return mBitmap;
         }
@@ -838,6 +881,7 @@ public class ImageEditorView extends ImageView {
             mAlteredBitmap = bitmap;
 
             invalidate();
+            mProgressDialog.dismiss();
         }
     }
 
@@ -900,7 +944,6 @@ public class ImageEditorView extends ImageView {
             super.onPostExecute(bitmap);
             DataHolder.getInstance().setShareBitmap(bitmap);
             mContext.startActivity(mIntent);
-
         }
     }
 }

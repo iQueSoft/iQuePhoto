@@ -21,7 +21,6 @@ public class Overlay {
     }
 
     private static Overlay[] overlays = {
-            new Overlay("No"),
             new Overlay("C01", R.drawable.overlay_color_1),
             new Overlay("C02", R.drawable.ovarlay_color_02),
             new Overlay("C03", R.drawable.overlay_color_03),
@@ -33,10 +32,6 @@ public class Overlay {
             new Overlay("D02", R.drawable.overlay_dust_03),
             new Overlay("FD01", R.drawable.overlay_fd_01),
             new Overlay("FD02", R.drawable.overlay_fd_02)};
-
-    public Overlay(String title) {
-        mTitle = title;
-    }
 
     public Overlay(String title, @DrawableRes int image) {
         mTitle = title;

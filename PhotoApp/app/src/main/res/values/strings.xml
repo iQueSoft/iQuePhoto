@@ -125,21 +125,6 @@
 
     <!-- START - For filters -->
     <string name="filters">Filters</string>
-    <string name="filter_lime">Lime</string>
-    <string name="filter_sunny">Sunny</string>
-    <string name="filter_darken">Darken</string>
-    <string name="filter_peachy">Peachy</string>
-    <string name="filter_magenta">Magenta</string>
-    <string name="filter_sepia">Sepia</string>
-    <string name="filter_original">Original</string>
-    <string name="filter_morning">Morning</string>
-    <string name="filter_purple">Purple</string>
-    <string name="filter_polaroid">Polaroid</string>
-    <string name="filter_goldie">Goldie</string>
-    <string name="filter_neon">Neon</string>
-    <string name="filter_light_gray">Light Grey</string>
-    <string name="filter_mid_grey">Mid Grey</string>
-    <string name="filter_dark_grey">Dark Grey</string>
     <!-- For filters - END -->
 
     <!-- START - Draw tool. -->
@@ -177,7 +162,7 @@
     <string name="select_font">Select a font</string>
     <!-- Font picker dialog - END. -->
 
-    <string name="adjustment">Adjustment</string>
+    <string name="adjust">Adjust</string>
     <string name="warmth">Warmth</string>
     <string name="saturation">Saturation</string>
 
@@ -191,4 +176,12 @@
     <string name="blur_off">Off</string>
     <string name="blur_radial">Radial</string>
     <string name="blur_linear">Linear</string>
+
+    <string name="image_saved">Image saved!</string>
+
+    <string name="application_does_not_exist">Application does not exist</string>
+    <string name="instagram_alert">For share you need to have Instagram installed.</string>
+    <string name="facebook_alert">For share you need to have Facebook installed.</string>
+    <string name="install">Install</string>
+    <string name="dismiss">Dismiss</string>
 </resources>

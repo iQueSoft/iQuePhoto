@@ -23,7 +23,7 @@
             android:layout_centerInParent="true"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:drawableLeft="@drawable/ic_left"
-            android:text="@string/adjustment"
+            android:text="@string/adjust"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="18sp"

@@ -105,7 +105,11 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
 
     @Override
     public void onBackPressed() {
-        presenter.onBackPressed(mBitmap, mBitmap);
+        if (mFragmentManager.getBackStackEntryCount() == 1) {
+            editorHeader.setVisibility(View.VISIBLE);
+            super.onBackPressed();
+        } else if (mFragmentManager.getBackStackEntryCount() == 0)
+            presenter.onBackPressed(mBitmap, mBitmap);
     }
 
     @Override
@@ -141,8 +145,8 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
-        // TODO: Hide header.
-        //editorHeader.setVisibility(View.GONE);
+
+        editorHeader.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -151,15 +155,22 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
     }
 
     @Override
-    public void goBack() {
-        super.onBackPressed();
+    public void navigateBack() {
+        if (mFragmentManager.getBackStackEntryCount() == 1) {
+            editorHeader.setVisibility(View.VISIBLE);
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public ImageEditorView getImageEditorView() {
+        return imageEditorView;
     }
 
     @OnClick(R.id.buttonShare)
     void onClickShare() {
 
         Log.i(EditorActivity.class.getSimpleName(), "Height " + mBitmap.getHeight() + "\nWidth " + mBitmap.getWidth());
-        //DataHolder.getInstance().setShareBitmap(mEditorImageView.getAlteredBitmap());
 
         Intent intent = new Intent(EditorActivity.this, ShareActivity.class);
         imageEditorView.makeImage(intent);

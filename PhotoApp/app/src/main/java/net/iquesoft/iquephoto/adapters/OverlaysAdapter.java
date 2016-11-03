@@ -1,7 +1,6 @@
 package net.iquesoft.iquephoto.adapters;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,26 +21,26 @@ import butterknife.ButterKnife;
 
 public class OverlaysAdapter extends RecyclerView.Adapter<OverlaysAdapter.ViewHolder> {
 
-    private int mSelectedOverlay = 0;
+    private int mCurrentPosition = 0;
 
     private Context mContext;
 
     private List<Overlay> mOverlayList;
 
-    private OverlayListener listener;
+    private OverlayListener mOverlayListener;
 
     public interface OverlayListener {
         void onClick(Overlay overlay);
     }
 
     public void setOverlayListener(OverlayListener listener) {
-        this.listener = listener;
+        mOverlayListener = listener;
     }
 
     public OverlaysAdapter(List<Overlay> overlayList) {
         mOverlayList = overlayList;
     }
-    
+
     @Override
     public OverlaysAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         mContext = parent.getContext();
@@ -59,37 +58,21 @@ public class OverlaysAdapter extends RecyclerView.Adapter<OverlaysAdapter.ViewHo
 
         holder.title.setText(overlay.getTitle());
 
-        try {
-            Picasso.with(mContext)
-                    .load(overlay.getImage())
-                    .resize(100, 100)
-                    .into(holder.image);
+        Picasso.with(mContext)
+                .load(overlay.getImage())
+                .resize(100, 100)
+                .into(holder.image);
 
-        } catch (Resources.NotFoundException | IllegalArgumentException e) {
-            e.printStackTrace();
-        }
-
-        if (mSelectedOverlay == 0)
-            mOverlayList.get(mSelectedOverlay).setSelected(true);
-
-        if (overlay.isSelected()) {
-            mSelectedOverlay = position;
+        if (mCurrentPosition == position) {
+            mOverlayListener.onClick(overlay);
             holder.overlaySelected.setVisibility(View.VISIBLE);
-        } else {
+        } else
             holder.overlaySelected.setVisibility(View.GONE);
-        }
 
         holder.image.setOnClickListener(view -> {
-
-            mOverlayList.get(mSelectedOverlay).setSelected(false);
-
-            mOverlayList.get(position).setSelected(true);
-
-            notifyItemChanged(mSelectedOverlay);
+            notifyItemChanged(mCurrentPosition);
+            mCurrentPosition = position;
             notifyItemChanged(position);
-
-            listener.onClick(overlay);
-
         });
     }
 

@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import net.iquesoft.iquephoto.DataHolder;
@@ -19,7 +18,6 @@ import net.iquesoft.iquephoto.model.Filter;
 import net.iquesoft.iquephoto.presenter.FiltersFragmentPresenterImpl;
 import net.iquesoft.iquephoto.view.IEditorActivityView;
 import net.iquesoft.iquephoto.view.IFiltersFragmentView;
-import net.iquesoft.iquephoto.view.activity.EditorActivity;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
@@ -109,24 +107,24 @@ public class FiltersFragment extends BaseFragment implements IFiltersFragmentVie
 
     @Override
     public void setFiltersAdapter() {
-        FiltersAdapter filtersAdapter = new FiltersAdapter(Filter.getFiltersList(), DataHolder.getInstance().getBitmap());
+        FiltersAdapter adapter = new FiltersAdapter(Filter.getFiltersList(), DataHolder.getInstance().getBitmap());
 
-        filtersAdapter.setFiltersListener(filter -> {
+        adapter.setFiltersListener(filter -> {
             mImageEditorView.setFilter(filter.getColorMatrix());
         });
 
         filtersList.setLayoutManager(new LinearLayoutManager(null, LinearLayout.HORIZONTAL, false));
-        filtersList.setAdapter(filtersAdapter);
+        filtersList.setAdapter(adapter);
     }
 
     @OnClick(R.id.filterBack)
     void onClickBack() {
         editorActivityView.navigateBack();
     }
-    
+
     @OnClick(R.id.filterApply)
     void onClickApply() {
-        editorActivityView.getImageEditorView().applyFilter();
+        editorActivityView.getImageEditorView().apply(R.string.filters);
         editorActivityView.navigateBack();
     }
 }

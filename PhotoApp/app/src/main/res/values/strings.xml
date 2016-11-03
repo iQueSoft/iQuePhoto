@@ -184,4 +184,7 @@
     <string name="facebook_alert">For share you need to have Facebook installed.</string>
     <string name="install">Install</string>
     <string name="dismiss">Dismiss</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

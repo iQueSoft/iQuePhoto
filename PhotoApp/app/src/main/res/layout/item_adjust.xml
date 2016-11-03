@@ -6,33 +6,16 @@
     android:gravity="center"
     android:orientation="vertical"
     android:padding="10dp">
-
-    <ImageView
-        android:id="@+id/adjustIcon"
-        android:layout_width="wrap_content"
+    
+    <Button
+        android:id="@+id/adjustButton"
+        android:layout_width="70dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:src="@drawable/ic_saturation" />
-
-    <TextView
-        android:id="@+id/adjustValue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_weight="1"
-        android:text="0"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:drawableTop="@drawable/ic_saturation"
+        android:text="@string/warmth"
+        android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="14sp"
-        android:textStyle="normal|bold" />
-
-    <TextView
-        android:id="@+id/adjustTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_weight="1"
-        android:text="Warmth"
-        android:textColor="@color/white"
-        android:textSize="14sp"
-        android:textStyle="normal|bold" />
+        android:textStyle="bold" />
 </LinearLayout>

@@ -1,13 +1,11 @@
 package net.iquesoft.iquephoto.view.fragment;
 
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.R;
@@ -27,7 +25,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.Unbinder;
 
 public class OverlayFragment extends BaseFragment implements IOverlayFragmentView {
@@ -36,7 +33,6 @@ public class OverlayFragment extends BaseFragment implements IOverlayFragmentVie
 
     private ImageEditorView mImageEditorView;
 
-    private Overlay mCurrentOverlay;
     private OverlaysAdapter mAdapter;
     private List<Overlay> mOverlayList = Overlay.getOverlaysList();
 
@@ -78,21 +74,7 @@ public class OverlayFragment extends BaseFragment implements IOverlayFragmentVie
         mAdapter = new OverlaysAdapter(mOverlayList);
 
         mAdapter.setOverlayListener(overlay -> {
-            try {
-                mImageEditorView.setOverlay(getResources().getDrawable(overlay.getImage()));
-
-                if (mCurrentOverlay != overlay) {
-                    seekBar.setVisibility(View.GONE);
-                } else {
-                    seekBar.setVisibility(View.VISIBLE);
-                }
-            } catch (Resources.NotFoundException e) {
-                e.printStackTrace();
-                mImageEditorView.setOverlay(null);
-                seekBar.setVisibility(View.GONE);
-            }
-
-            mCurrentOverlay = overlay;
+            mImageEditorView.setOverlay(getResources().getDrawable(overlay.getImage()));
         });
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));

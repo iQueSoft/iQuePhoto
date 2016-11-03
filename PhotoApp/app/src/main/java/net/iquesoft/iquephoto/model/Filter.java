@@ -13,8 +13,6 @@ public class Filter {
 
     private String mTitle;
 
-    private boolean mIsSelected;
-
     private ColorMatrix mColorMatrix;
 
     public static List<Filter> getFiltersList() {
@@ -83,10 +81,6 @@ public class Filter {
                     0, 0, 0, 1, 0})),
     };
 
-    private Filter() {
-
-    }
-
     private Filter(String title, ColorMatrix colorMatrix) {
         mTitle = title;
         mColorMatrix = colorMatrix;
@@ -100,19 +94,7 @@ public class Filter {
         mTitle = title;
     }
 
-    public boolean isSelected() {
-        return mIsSelected;
-    }
-
-    public void setSelected(boolean selected) {
-        mIsSelected = selected;
-    }
-
     public ColorMatrix getColorMatrix() {
         return mColorMatrix;
-    }
-
-    public void setColorMatrix(ColorMatrix colorMatrix) {
-        this.mColorMatrix = colorMatrix;
     }
 }

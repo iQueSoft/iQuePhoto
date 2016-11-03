@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -52,36 +53,26 @@ public class AdjustAdapter extends RecyclerView.Adapter<AdjustAdapter.ViewHolder
     @Override
     public void onBindViewHolder(AdjustAdapter.ViewHolder holder, int position) {
         final Adjust adjust = mAdjustList.get(position);
-        Drawable drawable = mContext.getResources().getDrawable(adjust.getIcon());
 
-        holder.adjustTitle.setText(mContext.getText(adjust.getTitle()));
+        holder.adjustButton.setText(adjust.getValue() + "\n" + mContext.getText(adjust.getTitle()));
+        holder.adjustButton.setCompoundDrawablesWithIntrinsicBounds(null,
+                mContext.getResources().getDrawable(adjust.getIcon()),
+                null, null);
 
-        holder.adjustIcon.setImageDrawable(drawable);
 
-        holder.adjustValue.setText(String.valueOf(adjust.getValue()));
-
-        holder.adjustItem.setOnClickListener(view -> {
+        holder.adjustButton.setOnClickListener(view -> {
             mListener.onClick(adjust);
         });
     }
-
+    
     @Override
     public int getItemCount() {
         return mAdjustList.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.adjustItem)
-        LinearLayout adjustItem;
-
-        @BindView(R.id.adjustTitle)
-        TextView adjustTitle;
-
-        @BindView(R.id.adjustValue)
-        TextView adjustValue;
-
-        @BindView(R.id.adjustIcon)
-        ImageView adjustIcon;
+        @BindView(R.id.adjustButton)
+        Button adjustButton;
 
         ViewHolder(View itemView) {
             super(itemView);

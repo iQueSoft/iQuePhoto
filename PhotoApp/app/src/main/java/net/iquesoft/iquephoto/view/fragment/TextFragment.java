@@ -41,8 +41,6 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
     private String mText;
     private Typeface mTypeface;
 
-    private boolean isHide = false;
-
     private Unbinder mUnbinder;
 
     private ImageEditorView mImageEditorView;
@@ -58,9 +56,6 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
 
     @BindView(R.id.textOpacitySeekBar)
     DiscreteSeekBar seekBar;
-
-    @BindView(R.id.hideTextSettingsButton)
-    ImageView hideTextSettings;
 
     @BindView(R.id.textSettingsLayout)
     LinearLayout textSettingsLayout;
@@ -126,7 +121,7 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
         mUnbinder.unbind();
     }
 
-    @OnClick(R.id.addTextButton)
+    /*@OnClick(R.id.addTextButton)
     void onClickAddText() {
         mText = editText.getText().toString();
         if (!mText.isEmpty()) {
@@ -136,20 +131,8 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
         } else {
             Toast.makeText(mContext, getResources().getString(R.string.text_is_empty), Toast.LENGTH_SHORT).show();
         }
-    }
+    }*/
 
-    @OnClick(R.id.hideTextSettingsButton)
-    void onClickHide() {
-        if (!isHide) {
-            hideTextSettings.setImageDrawable(getResources().getDrawable(R.drawable.ic_expand_less));
-            textSettingsLayout.setVisibility(View.GONE);
-            isHide = true;
-        } else {
-            hideTextSettings.setImageDrawable(getResources().getDrawable(R.drawable.ic_expand));
-            textSettingsLayout.setVisibility(View.VISIBLE);
-            isHide = false;
-        }
-    }
 
     @OnClick(R.id.textColorButton)
     void onClickTextColorButton() {

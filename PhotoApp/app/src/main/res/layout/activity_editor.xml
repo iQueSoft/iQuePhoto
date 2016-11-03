@@ -28,7 +28,6 @@
             android:layout_centerInParent="true"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:drawableLeft="@drawable/ic_undo"
-            android:text="1"
             android:textColor="@color/white"
             android:textSize="22sp"
             android:visibility="gone" />

@@ -13,8 +13,6 @@ public class Frame {
     @DrawableRes
     private int mImage;
 
-    private boolean mIsSelected;
-
     public static List<Frame> getFramesList() {
         return Arrays.asList(frames);
     }
@@ -36,23 +34,7 @@ public class Frame {
         return mTitle;
     }
 
-    public void setTitle(String title) {
-        mTitle = title;
-    }
-
     public int getImage() {
         return mImage;
-    }
-
-    public void setImage(int image) {
-        mImage = mImage;
-    }
-
-    public boolean isSelected() {
-        return mIsSelected;
-    }
-
-    public void setSelected(boolean isSelected) {
-        mIsSelected = isSelected;
     }
 }

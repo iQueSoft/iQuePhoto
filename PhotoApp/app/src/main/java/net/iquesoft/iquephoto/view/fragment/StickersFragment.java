@@ -6,7 +6,6 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import net.iquesoft.iquephoto.R;
@@ -28,12 +27,10 @@ import butterknife.Unbinder;
 
 public class StickersFragment extends BaseFragment implements IStickersFragmentView {
 
-    private boolean mIsHide = false;
-
     private List<StickersSet> mStickersSetsList = StickersSet.getStickersSetsList();
 
     private Unbinder mUnbinder;
-    
+
     private StickersPagerAdapter mPagerAdapter;
 
     @Inject
@@ -41,9 +38,6 @@ public class StickersFragment extends BaseFragment implements IStickersFragmentV
 
     @BindView(R.id.stickerTabLayout)
     TabLayout tabLayout;
-
-    @BindView(R.id.hideStickersButton)
-    ImageView hideStickersButton;
 
     @BindView(R.id.stickersLayout)
     LinearLayout stickersLayout;
@@ -74,7 +68,6 @@ public class StickersFragment extends BaseFragment implements IStickersFragmentV
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_stickers, container, false);
-        //v.setAlpha(0.85f);
 
         mUnbinder = ButterKnife.bind(this, v);
 
@@ -96,18 +89,5 @@ public class StickersFragment extends BaseFragment implements IStickersFragmentV
     public void onDestroyView() {
         super.onDestroyView();
         mUnbinder.unbind();
-    }
-
-    @OnClick(R.id.hideStickersButton)
-    void onClickHide() {
-        if (!mIsHide) {
-            hideStickersButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_expand_less));
-            stickersLayout.setVisibility(View.GONE);
-            mIsHide = true;
-        } else {
-            hideStickersButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_expand));
-            stickersLayout.setVisibility(View.VISIBLE);
-            mIsHide = false;
-        }
     }
 }

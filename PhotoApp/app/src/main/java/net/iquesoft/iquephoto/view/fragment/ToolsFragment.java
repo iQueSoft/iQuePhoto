@@ -87,6 +87,7 @@ public class ToolsFragment extends BaseFragment implements IToolsFragmentView {
     public void onResume() {
         super.onResume();
         presenter.init(this);
+        view.getImageEditorView().setCommand(0);
     }
 
     @Override

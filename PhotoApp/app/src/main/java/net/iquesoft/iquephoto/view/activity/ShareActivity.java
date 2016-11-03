@@ -134,14 +134,15 @@ public class ShareActivity extends BaseActivity implements IShareActivityView, I
 
     @Override
     public void shareToInstagram(Bitmap bitmap) {
-        /*Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.setType("image*//*");
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("image/*");
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-        //File media = new File(mediaPath);
-        Uri uri;// = Uri.fromFile(media);
+        intent.putExtra(Intent.EXTRA_STREAM,
+                BitmapUtil.getBitmapUri(this, mBitmap));
 
-        //intent.putExtra(Intent.EXTRA_STREAM, uri);
-        startActivity(Intent.createChooser(intent, "Share to"));*/
+        intent.setPackage("com.instagram.android");
+        startActivity(intent);
     }
 
     @Override
@@ -159,7 +160,7 @@ public class ShareActivity extends BaseActivity implements IShareActivityView, I
             try {
                 startActivity(new Intent(Intent.ACTION_VIEW,
                         Uri.parse("market://details?id=" + applicationId)));
-            } catch (android.content.ActivityNotFoundException anfe) {
+            } catch (android.content.ActivityNotFoundException e) {
                 startActivity(new Intent(Intent.ACTION_VIEW,
                         Uri.parse("https://play.google.com/store/apps/details?id=" + applicationId)));
             }

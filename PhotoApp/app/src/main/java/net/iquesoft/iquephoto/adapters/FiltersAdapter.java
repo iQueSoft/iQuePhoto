@@ -3,8 +3,6 @@ package net.iquesoft.iquephoto.adapters;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.ColorMatrixColorFilter;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,8 +11,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mikhaellopez.circularimageview.CircularImageView;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.model.Filter;
@@ -26,7 +22,7 @@ import butterknife.ButterKnife;
 
 public class FiltersAdapter extends RecyclerView.Adapter<FiltersAdapter.ViewHolder> {
 
-    private int mSelectedFilter = 0;
+    private int mCurrentPosition = 0;
 
     private Bitmap mBitmap;
 
@@ -53,7 +49,7 @@ public class FiltersAdapter extends RecyclerView.Adapter<FiltersAdapter.ViewHold
     @Override
     public FiltersAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         mContext = parent.getContext();
-
+        
         LayoutInflater inflater = LayoutInflater.from(mContext);
 
         View view = inflater.inflate(R.layout.item_filter, parent, false);
@@ -67,38 +63,19 @@ public class FiltersAdapter extends RecyclerView.Adapter<FiltersAdapter.ViewHold
 
         holder.filterTitle.setText(filter.getTitle());
 
+        holder.filterIcon.setImageBitmap(mBitmap);
+        holder.filterIcon.setColorFilter(new ColorMatrixColorFilter(filter.getColorMatrix()));
 
-        // TODO: Filtered image.
-        Drawable drawable = new BitmapDrawable(mBitmap);
-
-        if (filter.getColorMatrix() != null) {
-            drawable.setColorFilter(new ColorMatrixColorFilter(filter.getColorMatrix()));
-            holder.filterIcon.setImageDrawable(drawable);
-        } else {
-            holder.filterIcon.setImageDrawable(drawable);
-        }
-
-        if (mSelectedFilter == 0)
-            mFiltersList.get(mSelectedFilter).setSelected(true);
-
-        if (filter.isSelected()) {
-            mSelectedFilter = position;
+        if (mCurrentPosition == position) {
+            mFiltersListener.onClick(filter);
             holder.filterChecked.setVisibility(View.VISIBLE);
-        } else {
+        } else
             holder.filterChecked.setVisibility(View.GONE);
-        }
 
         holder.filterIcon.setOnClickListener(view -> {
-
-            mFiltersList.get(mSelectedFilter).setSelected(false);
-
-            mFiltersList.get(position).setSelected(true);
-
-            notifyItemChanged(mSelectedFilter);
+            notifyItemChanged(mCurrentPosition);
+            mCurrentPosition = position;
             notifyItemChanged(position);
-
-            mFiltersListener.onClick(filter);
-
         });
     }
 

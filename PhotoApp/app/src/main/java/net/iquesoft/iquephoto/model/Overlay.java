@@ -14,8 +14,6 @@ public class Overlay {
     @DrawableRes
     private int mImage;
 
-    private boolean mIsSelected;
-
     public static List<Overlay> getOverlaysList() {
         return Arrays.asList(overlays);
     }
@@ -44,13 +42,5 @@ public class Overlay {
 
     public int getImage() {
         return mImage;
-    }
-
-    public boolean isSelected() {
-        return mIsSelected;
-    }
-
-    public void setSelected(boolean isSelected) {
-        mIsSelected = isSelected;
     }
 }

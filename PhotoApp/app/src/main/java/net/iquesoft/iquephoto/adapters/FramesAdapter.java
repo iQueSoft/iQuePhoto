@@ -1,7 +1,6 @@
 package net.iquesoft.iquephoto.adapters;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,20 +18,20 @@ import butterknife.ButterKnife;
 
 public class FramesAdapter extends RecyclerView.Adapter<FramesAdapter.ViewHolder> {
 
-    private int mSelectedOverlay = 0;
+    private int mCurrentPosition = 0;
 
     private Context mContext;
 
     private List<Frame> mFramesList;
 
-    private FramesListener mListener;
+    private FramesListener mFramesListener;
 
     public interface FramesListener {
         void onClick(Frame frame);
     }
 
     public void setFramesListener(FramesListener listener) {
-        mListener = listener;
+        mFramesListener = listener;
     }
 
     public FramesAdapter(List<Frame> framesList) {
@@ -56,33 +55,19 @@ public class FramesAdapter extends RecyclerView.Adapter<FramesAdapter.ViewHolder
 
         holder.title.setText(frame.getTitle());
 
-        try {
-            holder.image.setImageDrawable(mContext.getResources().getDrawable(frame.getImage()));
-        } catch (Resources.NotFoundException e) {
-            e.printStackTrace();
-        }
+        holder.image.setImageDrawable(mContext.getResources().getDrawable(frame.getImage()));
 
-        if (mSelectedOverlay == 0)
-            mFramesList.get(mSelectedOverlay).setSelected(true);
-
-        if (frame.isSelected()) {
-            mSelectedOverlay = position;
+        if (mCurrentPosition == position) {
+            mFramesListener.onClick(frame);
             holder.frameSelected.setVisibility(View.VISIBLE);
-        } else {
+        } else
             holder.frameSelected.setVisibility(View.GONE);
-        }
+
 
         holder.image.setOnClickListener(view -> {
-
-            mFramesList.get(mSelectedOverlay).setSelected(false);
-
-            mFramesList.get(position).setSelected(true);
-
-            notifyItemChanged(mSelectedOverlay);
+            notifyItemChanged(mCurrentPosition);
+            mCurrentPosition = position;
             notifyItemChanged(position);
-
-            mListener.onClick(frame);
-
         });
     }
 

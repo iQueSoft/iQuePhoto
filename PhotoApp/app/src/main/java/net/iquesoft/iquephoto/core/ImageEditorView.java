@@ -35,6 +35,8 @@ import net.iquesoft.iquephoto.model.Sticker;
 import java.util.ArrayList;
 import java.util.List;
 
+import rx.Observable;
+
 public class ImageEditorView extends ImageView {
 
     private int mCommand;
@@ -46,9 +48,7 @@ public class ImageEditorView extends ImageView {
     private boolean mIsInResize;
     private boolean mIsInSide;
     private boolean mIsInRotate;
-
     private Bitmap mSourceBitmap;
-    private Bitmap mAlteredBitmap;
 
     private Bitmap mOverlayBitmap;
     private Bitmap mFrameBitmap;
@@ -62,6 +62,8 @@ public class ImageEditorView extends ImageView {
 
     private Paint mImagePaint;
     private Paint mFilterPaint;
+    private Paint mContrastPaint;
+    private Paint mWarmthPaint;
     private Paint mBrightnessPaint;
     private Paint mOverlayPaint;
     private Paint mDrawingPaint;
@@ -71,6 +73,7 @@ public class ImageEditorView extends ImageView {
     private Path mOriginalDrawingPath;
     private Path mDrawingCirclePath;
 
+    private List<EditorImage> mImagesList;
     private List<EditorText> mTextsList;
     private List<Drawing> mDrawingList;
     private List<EditorSticker> mStickersList;
@@ -82,10 +85,11 @@ public class ImageEditorView extends ImageView {
     private float mImgWidth = 0.0f;
     private float mImgHeight = 0.0f;
 
+    private float mContrastValue = 0;
     private float mBrightnessValue = 0;
     private float mWarmthValue = 0;
 
-    private ColorMatrix mFilterColorMatrix;
+    private IUndoListener mUndoListener;
 
     private Matrix mMatrix = null;
 
@@ -114,11 +118,13 @@ public class ImageEditorView extends ImageView {
         mContext = context;
 
         mTextsList = new ArrayList<>();
-
+        mImagesList = new ArrayList<>();
         mStickersList = new ArrayList<>();
 
         mImagePaint = new Paint();
         mFilterPaint = new Paint();
+        mWarmthPaint = new Paint();
+        mContrastPaint = new Paint();
         mBrightnessPaint = new Paint();
         mOverlayPaint = new Paint();
 
@@ -172,16 +178,16 @@ public class ImageEditorView extends ImageView {
     public void onDraw(Canvas canvas) {
         if (mIsInitialized) {
             setMatrix();
-            if (mAlteredBitmap != null)
-                canvas.drawBitmap(mAlteredBitmap, mMatrix, mImagePaint);
+            if (mImagesList.size() > 0)
+                canvas.drawBitmap(getAlteredBitmap(), mMatrix, mImagePaint);
             else
                 canvas.drawBitmap(mSourceBitmap, mMatrix, mImagePaint);
         }
 
         switch (mCommand) {
             case R.string.filters:
-                if (mAlteredBitmap != null) {
-                    canvas.drawBitmap(mAlteredBitmap, mMatrix, mImagePaint);
+                if (mImagesList.size() > 0) {
+                    canvas.drawBitmap(getAlteredBitmap(), mMatrix, mImagePaint);
                 } else {
                     canvas.drawBitmap(mSourceBitmap, mMatrix, mFilterPaint);
                 }
@@ -194,12 +200,11 @@ public class ImageEditorView extends ImageView {
                 }
                 if (!mDrawingPath.isEmpty())
                     canvas.drawPath(mDrawingPath, mDrawingPaint);
-
                 break;
             case R.string.brightness:
                 if (mBrightnessValue != 0) {
-                    if (mAlteredBitmap != null) {
-                        canvas.drawBitmap(mAlteredBitmap, mMatrix, mBrightnessPaint);
+                    if (mImagesList.size() > 0) {
+                        canvas.drawBitmap(getAlteredBitmap(), mMatrix, mBrightnessPaint);
                     } else {
                         canvas.drawBitmap(mSourceBitmap, mMatrix, mBrightnessPaint);
                     }
@@ -209,10 +214,21 @@ public class ImageEditorView extends ImageView {
                 if (mOverlayBitmap != null)
                     canvas.drawBitmap(mOverlayBitmap, mMatrix, mOverlayPaint);
                 break;
+            case R.string.contrast:
+                break;
+            case R.string.frames:
+                if (mFrameBitmap != null)
+                    canvas.drawBitmap(mFrameBitmap, mMatrix, mImagePaint);
+                break;
+            case R.string.warmth:
+                if (mWarmthValue != 0) {
+                    if (mImagesList.size() > 0) {
+                        canvas.drawBitmap(getAlteredBitmap(), mMatrix, mWarmthPaint);
+                    } else {
+                        canvas.drawBitmap(mSourceBitmap, mMatrix, mBrightnessPaint);
+                    }
+                }
         }
-
-        if (mFrameBitmap != null)
-            canvas.drawBitmap(mFrameBitmap, mMatrix, mImagePaint);
 
         if (mStickersList.size() > 0) {
             drawStickers(canvas);
@@ -363,7 +379,7 @@ public class ImageEditorView extends ImageView {
     }
 
     public Bitmap getAlteredBitmap() {
-        return mAlteredBitmap;
+        return mImagesList.get(mImagesList.size() - 1).getBitmap();
     }
 
     private void drawingStart(MotionEvent event) {
@@ -416,8 +432,12 @@ public class ImageEditorView extends ImageView {
         mDrawingPaint.setColor(getResources().getColor(color));
     }
 
-    public void applyFilter() {
-        new ImageProcessingTask().execute();
+    public void setUndoListener(IUndoListener undoListener) {
+        mUndoListener = undoListener;
+    }
+
+    public void apply(int command) {
+        new ImageProcessingTask().execute(command);
     }
 
     public void applyBrightness() {
@@ -636,9 +656,21 @@ public class ImageEditorView extends ImageView {
 
     }
 
+    public void undo() {
+        mImagesList.remove(mImagesList.size() - 1);
+        mUndoListener.hasChanged(mImagesList.size());
+        invalidate();
+    }
+
+    public void setContrastValue() {
+
+    }
+
     public void setWarmthValue(float warmthValue) {
         if (warmthValue != 0) {
             mWarmthValue = warmthValue;
+
+            mWarmthPaint.setColorFilter(getWarmthColorMatrix(mWarmthValue));
 
             invalidate();
         }
@@ -842,46 +874,90 @@ public class ImageEditorView extends ImageView {
         OUT_OF_BOUNDS, CENTER, LEFT_TOP, RIGHT_TOP, LEFT_BOTTOM, RIGHT_BOTTOM
     }
 
-    private class ImageProcessingTask extends AsyncTask<Void, Void, Bitmap> {
-        private Canvas mCanvas;
+    private class ImageProcessingTask extends AsyncTask<Integer, Void, Bitmap> {
+        private boolean mHasFilter;
         private Bitmap mBitmap;
+        private Canvas mCanvas = new Canvas();
+        private RedrawImagesTask mRedrawImagesTaskTask = new RedrawImagesTask();
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             mProgressDialog.show();
+
+            if (mImagesList.size() > 0)
+                mBitmap = getAlteredBitmap().copy(getAlteredBitmap().getConfig(), true);
+            else
+                mBitmap = mSourceBitmap.copy(mSourceBitmap.getConfig(), true);
         }
 
         @Override
-        protected Bitmap doInBackground(Void... params) {
+        protected Bitmap doInBackground(Integer... integers) {
+            mCanvas.setBitmap(mBitmap);
 
-            if (mAlteredBitmap == null)
-                mBitmap = mSourceBitmap.copy(mSourceBitmap.getConfig(), true);
-            else mBitmap = mAlteredBitmap.copy(mAlteredBitmap.getConfig(), true);
-            mCanvas = new Canvas(mBitmap);
+            int command = integers[integers.length - 1];
 
-            switch (mCommand) {
+            switch (command) {
                 case R.string.filters:
                     mCanvas.drawBitmap(mBitmap, 0, 0, mFilterPaint);
+                    mHasFilter = true;
                     break;
                 case R.string.overlay:
                     mCanvas.drawBitmap(mOverlayBitmap, 0, 0, mOverlayPaint);
                     break;
                 case R.string.brightness:
                     mCanvas.drawBitmap(mBitmap, 0, 0, mBrightnessPaint);
+                    break;
+                case R.string.contrast:
+                    mCanvas.drawBitmap(mBitmap, 0, 0, mContrastPaint);
             }
-
 
             return mBitmap;
         }
 
         @Override
         protected void onPostExecute(Bitmap bitmap) {
-            super.onPostExecute(bitmap);
-            mAlteredBitmap = bitmap;
+            mImagesList.add(new EditorImage(mCommand, bitmap));
+
+            mUndoListener.hasChanged(mImagesList.size());
 
             invalidate();
             mProgressDialog.dismiss();
+
+            super.onPostExecute(bitmap);
+        }
+    }
+
+    private class RedrawImagesTask extends AsyncTask<Integer, Void, Bitmap> {
+        private Bitmap mBitmap;
+        private Canvas mCanvas = new Canvas();
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            mBitmap = mSourceBitmap.copy(mSourceBitmap.getConfig(), true);
+        }
+
+        @Override
+        protected Bitmap doInBackground(Integer... integers) {
+            mCanvas.setBitmap(mSourceBitmap);
+            for (EditorImage editorImage : mImagesList) {
+                switch (editorImage.getCommand()) {
+                    case R.string.filters:
+                        mCanvas.drawBitmap(mBitmap, 0, 0, mFilterPaint);
+                        break;
+                    case R.string.overlay:
+                        break;
+                }
+            }
+            return mBitmap;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            super.onPostExecute(bitmap);
+
         }
     }
 

@@ -11,6 +11,7 @@ import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseActivity;
+import net.iquesoft.iquephoto.core.IUndoListener;
 import net.iquesoft.iquephoto.core.ImageEditorView;
 import net.iquesoft.iquephoto.di.IHasComponent;
 import net.iquesoft.iquephoto.di.components.IApplicationComponent;
@@ -49,6 +51,9 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
     @Inject
     ToolsFragment toolsFragment;
 
+    @BindView(R.id.undoButton)
+    Button undoButton;
+
     @BindView(R.id.editorHeader)
     RelativeLayout editorHeader;
 
@@ -76,17 +81,28 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
             e.printStackTrace();
         }
 
-        DataHolder.getInstance().setBitmap(mBitmap);
+        DataHolder.getInstance().setBitmap(Bitmap.createScaledBitmap(mBitmap, 120, 120, false));
 
         Log.i(EditorActivity.class.getSimpleName(), "Height " + mBitmap.getHeight() + "\nWidth " + mBitmap.getWidth());
 
         imageEditorView.setImageBitmap(mBitmap);
 
+        imageEditorView.setUndoListener(count -> {
+            if (count != 0) {
+                undoButton.setText(String.valueOf(count));
+                undoButton.setVisibility(View.VISIBLE);
+            } else {
+                undoButton.setVisibility(View.GONE);
+            }
+        });
+
         DataHolder.getInstance().setEditorView(imageEditorView);
 
         mFragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-        fragmentTransaction.replace(fragmentContainer.getId(), toolsFragment).commit();
+        fragmentTransaction.replace(fragmentContainer.getId(), toolsFragment)
+                .addToBackStack(null)
+                .commit();
     }
 
     @Override
@@ -105,11 +121,18 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
 
     @Override
     public void onBackPressed() {
-        if (mFragmentManager.getBackStackEntryCount() == 1) {
-            editorHeader.setVisibility(View.VISIBLE);
-            super.onBackPressed();
-        } else if (mFragmentManager.getBackStackEntryCount() == 0)
-            presenter.onBackPressed(mBitmap, mBitmap);
+        switch (mFragmentManager.getBackStackEntryCount()) {
+            case 0:
+                presenter.onBackPressed(mBitmap, mBitmap);
+                break;
+            case 1:
+                editorHeader.setVisibility(View.VISIBLE);
+                super.onBackPressed();
+                break;
+            default:
+                super.onBackPressed();
+                break;
+        }
     }
 
     @Override
@@ -143,7 +166,6 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
         fragmentTransaction.replace(fragmentContainer.getId(), fragment);
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
 
         editorHeader.setVisibility(View.INVISIBLE);
@@ -176,6 +198,10 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
         imageEditorView.makeImage(intent);
     }
 
+    @OnClick(R.id.undoButton)
+    void onClickUndo() {
+        imageEditorView.undo();
+    }
 
     public IEditorActivityComponent getComponent() {
         return mComponent;

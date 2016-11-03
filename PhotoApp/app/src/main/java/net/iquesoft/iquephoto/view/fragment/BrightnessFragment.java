@@ -85,6 +85,6 @@ public class BrightnessFragment extends BaseFragment implements IBrightnessFragm
 
     @OnClick(R.id.brightnessApply)
     void onClickApply() {
-        editorActivityView.getImageEditorView().applyBrightness();
+        editorActivityView.getImageEditorView().apply(R.string.brightness);
     }
 }

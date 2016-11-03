@@ -19,9 +19,6 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 public class TiltShiftFragment extends BaseFragment implements ITiltShiftFragmentView {
-
-    private boolean mIsHide;
-
     private Unbinder mUnbinder;
 
     private ImageEditorView mImageEditorView;
@@ -65,17 +62,4 @@ public class TiltShiftFragment extends BaseFragment implements ITiltShiftFragmen
         super.onDestroyView();
         mUnbinder.unbind();
     }
-
-    /*@OnClick(R.id.hideAdjust)
-    void onClickHide(View view) {
-        if (!mIsHide) {
-            mIsHide = true;
-            hideAdjust.setImageDrawable(getResources().getDrawable(R.drawable.ic_expand_less));
-            recyclerView.setVisibility(View.GONE);
-        } else {
-            mIsHide = false;
-            hideAdjust.setImageDrawable(getResources().getDrawable(R.drawable.ic_expand));
-            recyclerView.setVisibility(View.VISIBLE);
-        }
-    }*/
 }

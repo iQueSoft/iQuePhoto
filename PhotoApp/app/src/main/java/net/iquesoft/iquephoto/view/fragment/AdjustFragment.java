@@ -25,6 +25,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 public class AdjustFragment extends BaseFragment implements IAdjustmentFragmentView {
@@ -81,5 +82,10 @@ public class AdjustFragment extends BaseFragment implements IAdjustmentFragmentV
     public void onDestroyView() {
         super.onDestroyView();
         mUnbinder.unbind();
+    }
+
+    @OnClick(R.id.adjustBack)
+    public void onClickBack() {
+        editorActivityView.navigateBack(true);
     }
 }

@@ -50,7 +50,7 @@ public class StartActivity extends BaseActivity implements IStartActivityView, I
 
         ButterKnife.bind(this);
 
-        applicationTextView.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/Blacksword.otf"));
+        //applicationTextView.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/Blacksword.otf"));
     }
 
     @Override

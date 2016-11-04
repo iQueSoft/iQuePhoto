@@ -32,7 +32,8 @@
         android:text="@string/gallery"
         android:textAllCaps="false"
         android:textColor="@color/white"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
     <Button
         android:id="@+id/cameraButton"
@@ -47,7 +48,8 @@
         android:text="@string/camera"
         android:textAllCaps="false"
         android:textColor="@color/white"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
     <ImageView
         android:id="@+id/applicationIcon"

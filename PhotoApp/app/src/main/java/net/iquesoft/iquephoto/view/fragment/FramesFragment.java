@@ -16,6 +16,7 @@ import net.iquesoft.iquephoto.core.ImageEditorView;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
 import net.iquesoft.iquephoto.model.Frame;
 import net.iquesoft.iquephoto.presenter.FramesFragmentPresenterImpl;
+import net.iquesoft.iquephoto.view.IEditorActivityView;
 import net.iquesoft.iquephoto.view.IFramesFragmentView;
 
 import java.util.List;
@@ -36,6 +37,9 @@ public class FramesFragment extends BaseFragment implements IFramesFragmentView 
     private FramesAdapter mAdapter;
 
     private ImageEditorView mImageEditorView;
+
+    @Inject
+    IEditorActivityView editorActivityView;
 
     @Inject
     FramesFragmentPresenterImpl presenter;
@@ -74,7 +78,7 @@ public class FramesFragment extends BaseFragment implements IFramesFragmentView 
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         recyclerView.setAdapter(mAdapter);
-
+        
         mImageEditorView = DataHolder.getInstance().getEditorView();
 
         return v;
@@ -90,5 +94,15 @@ public class FramesFragment extends BaseFragment implements IFramesFragmentView 
     public void onDestroyView() {
         super.onDestroyView();
         mUnbinder.unbind();
+    }
+
+    @OnClick(R.id.framesBack)
+    void onClickBack() {
+        editorActivityView.navigateBack(true);
+    }
+
+    @OnClick(R.id.framesApply)
+    void onClickApply() {
+        editorActivityView.getImageEditorView().apply(R.string.frames);
     }
 }

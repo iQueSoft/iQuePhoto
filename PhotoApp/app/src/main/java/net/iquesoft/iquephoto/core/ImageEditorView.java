@@ -187,7 +187,7 @@ public class ImageEditorView extends ImageView {
         switch (mCommand) {
             case R.string.filters:
                 if (mImagesList.size() > 0) {
-                    canvas.drawBitmap(getAlteredBitmap(), mMatrix, mImagePaint);
+                    canvas.drawBitmap(getAlteredBitmap(), mMatrix, mFilterPaint);
                 } else {
                     canvas.drawBitmap(mSourceBitmap, mMatrix, mFilterPaint);
                 }
@@ -379,7 +379,9 @@ public class ImageEditorView extends ImageView {
     }
 
     public Bitmap getAlteredBitmap() {
-        return mImagesList.get(mImagesList.size() - 1).getBitmap();
+        if (!mImagesList.isEmpty())
+            return mImagesList.get(mImagesList.size() - 1).getBitmap();
+        return null;
     }
 
     private void drawingStart(MotionEvent event) {
@@ -438,10 +440,6 @@ public class ImageEditorView extends ImageView {
 
     public void apply(int command) {
         new ImageProcessingTask().execute(command);
-    }
-
-    public void applyBrightness() {
-        new ImageProcessingTask().execute();
     }
 
     public void setBrushSize(float brushSize) {

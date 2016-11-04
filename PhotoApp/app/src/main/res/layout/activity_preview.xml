@@ -132,7 +132,7 @@
 
     <android.support.design.widget.TabLayout
         android:id="@+id/cropTabLayout"
-        style="@style/MyCustomTabLayout"
+        style="@style/TabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         custom:tabIndicatorColor="@color/white"

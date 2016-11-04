@@ -22,14 +22,20 @@
             android:src="@drawable/ic_arrow_back" />
 
         <Button
-            android:id="@+id/undoButton"
+            android:id="@+id/buttonUndo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:drawableLeft="@drawable/ic_undo"
+            android:paddingBottom="5dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="15dp"
+            android:paddingTop="5dp"
+            android:text="1"
             android:textColor="@color/white"
             android:textSize="22sp"
+            android:textStyle="bold"
             android:visibility="gone" />
 
         <ImageButton
@@ -39,7 +45,10 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:background="?attr/selectableItemBackgroundBorderless"
+            android:paddingBottom="5dp"
+            android:paddingLeft="5dp"
             android:paddingRight="5dp"
+            android:paddingTop="5dp"
             android:src="@drawable/ic_share" />
 
         <View

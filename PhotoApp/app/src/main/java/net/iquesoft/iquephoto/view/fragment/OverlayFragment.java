@@ -15,6 +15,7 @@ import net.iquesoft.iquephoto.core.ImageEditorView;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
 import net.iquesoft.iquephoto.model.Overlay;
 import net.iquesoft.iquephoto.presenter.OverlayFragmentPresenterImpl;
+import net.iquesoft.iquephoto.view.IEditorActivityView;
 import net.iquesoft.iquephoto.view.IOverlayFragmentView;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
@@ -25,6 +26,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 public class OverlayFragment extends BaseFragment implements IOverlayFragmentView {
@@ -44,6 +46,9 @@ public class OverlayFragment extends BaseFragment implements IOverlayFragmentVie
 
     @BindView(R.id.overlayRecyclerView)
     RecyclerView recyclerView;
+
+    @Inject
+    IEditorActivityView editorActivityView;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -110,5 +115,16 @@ public class OverlayFragment extends BaseFragment implements IOverlayFragmentVie
     public void onDestroyView() {
         super.onDestroyView();
         mUnbinder.unbind();
+    }
+
+    @OnClick(R.id.overlayCancel)
+    void onClickBack() {
+        editorActivityView.navigateBack(true);
+    }
+
+    @OnClick(R.id.overlayApply)
+    void onClickApply() {
+        editorActivityView.getImageEditorView().apply(R.string.overlay);
+        editorActivityView.navigateBack(true);
     }
 }

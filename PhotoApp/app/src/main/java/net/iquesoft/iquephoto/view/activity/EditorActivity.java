@@ -50,7 +50,7 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
     @Inject
     ToolsFragment toolsFragment;
 
-    @BindView(R.id.undoButton)
+    @BindView(R.id.buttonUndo)
     Button undoButton;
 
     @BindView(R.id.editorHeader)
@@ -99,10 +99,6 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
 
         mFragmentManager = getSupportFragmentManager();
 
-        mFragmentManager.addOnBackStackChangedListener(() -> {
-            Toast.makeText(this, String.valueOf(mFragmentManager.getBackStackEntryCount()), Toast.LENGTH_SHORT).show();
-        });
-
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
         fragmentTransaction.add(fragmentContainer.getId(), toolsFragment)
                 .commit();
@@ -126,7 +122,7 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
     @Override
     public void onBackPressed() {
         if (mFragmentManager.getBackStackEntryCount() == 0) {
-            presenter.onBackPressed(mBitmap, mBitmap);
+            presenter.onBackPressed(mBitmap, imageEditorView.getAlteredBitmap());
         } else if (mFragmentManager.getBackStackEntryCount() != 0) {
             navigateBack(true);
         }
@@ -139,7 +135,7 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
                 .setPositiveButton(getString(R.string.ok), (dialogInterface, i) -> {
                     finish();
                 })
-                .setNegativeButton(getString(R.string.save), ((dialogInterface1, i) -> {
+                .setNeutralButton(getString(R.string.save), ((dialogInterface1, i) -> {
                     new ImageSaveTask(this, imageEditorView.getAlteredBitmap()).execute();
                 }))
                 .setNegativeButton(getString(R.string.cancel), (dialogInterface, i1) -> {
@@ -163,7 +159,7 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
     public void showToastMessage(int stringResource) {
         Toast.makeText(getApplicationContext(), getString(stringResource), Toast.LENGTH_SHORT).show();
     }
-    
+
     @Override
     public void navigateBack(boolean isFragment) {
         if (isFragment) {
@@ -171,9 +167,10 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
                 super.onBackPressed();
             } else if (mFragmentManager.getBackStackEntryCount() == 1) {
                 super.onBackPressed();
+                imageEditorView.setCommand(0);
                 editorHeader.setVisibility(View.VISIBLE);
             } else if (mFragmentManager.getBackStackEntryCount() == 0) {
-                presenter.onBackPressed(mBitmap, mBitmap);
+                presenter.onBackPressed(mBitmap, imageEditorView.getAlteredBitmap());
             }
         } else
             finish();
@@ -184,16 +181,20 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
         return imageEditorView;
     }
 
+    @OnClick(R.id.buttonEditorBack)
+    void onClickBack() {
+        presenter.onBackPressed(mBitmap, imageEditorView.getAlteredBitmap());
+    }
+
     @OnClick(R.id.buttonShare)
     void onClickShare() {
-
         Log.i(EditorActivity.class.getSimpleName(), "Height " + mBitmap.getHeight() + "\nWidth " + mBitmap.getWidth());
 
         Intent intent = new Intent(EditorActivity.this, ShareActivity.class);
         imageEditorView.makeImage(intent);
     }
 
-    @OnClick(R.id.undoButton)
+    @OnClick(R.id.buttonUndo)
     void onClickUndo() {
         imageEditorView.undo();
     }

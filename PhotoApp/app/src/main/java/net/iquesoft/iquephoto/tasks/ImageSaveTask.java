@@ -20,6 +20,8 @@ import java.util.Date;
 
 public class ImageSaveTask extends AsyncTask<Void, Void, Void> {
     private static final String TAG = ImageSaveTask.class.getSimpleName();
+    private final static String IMAGE_STORAGE_PATH = Environment.getExternalStorageDirectory().toString() + "/" +
+            android.os.Environment.DIRECTORY_DCIM + "/iQuePhoto";
 
     private Bitmap mBitmap;
     private Context mContext;
@@ -30,7 +32,7 @@ public class ImageSaveTask extends AsyncTask<Void, Void, Void> {
         mContext = context;
 
         mProgressDialog = new MaterialDialog.Builder(mContext)
-                .content(R.string.processing)
+                .content(R.string.saving)
                 .progress(true, 0)
                 .widgetColor(mContext.getResources().getColor(android.R.color.black))
                 .contentColor(mContext.getResources().getColor(android.R.color.black))
@@ -71,11 +73,11 @@ public class ImageSaveTask extends AsyncTask<Void, Void, Void> {
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
         mProgressDialog.dismiss();
+        Toast.makeText(mContext, R.string.image_saved, Toast.LENGTH_SHORT).show();
     }
 
     private File getOutputMediaFile() {
-        File mediaStorageDir = new File(Environment.getExternalStorageDirectory()
-                + "/Pictures/iQuePhoto");
+        File mediaStorageDir = new File(IMAGE_STORAGE_PATH);
 
         if (!mediaStorageDir.exists()) {
             if (!mediaStorageDir.mkdirs()) {

@@ -30,8 +30,6 @@ public class ToolsFragment extends BaseFragment implements IToolsFragmentView {
 
     private Unbinder mUnbinder;
 
-    private Tool mCurrentTool;
-
     private ToolsAdapter mAdapter;
 
     @BindView(R.id.toolsRecyclerView)
@@ -62,20 +60,10 @@ public class ToolsFragment extends BaseFragment implements IToolsFragmentView {
         mAdapter = new ToolsAdapter(Tool.getToolsList());
 
         mAdapter.setToolsListener(tool -> {
-            if (tool != mCurrentTool) {
-                try {
-                    view.setupFragment(tool.getFragment());
+            view.setupFragment(tool.getFragment());
 
-                    mImageEditorView.setCommand(tool.getTitle());
+            mImageEditorView.setCommand(tool.getTitle());
 
-                } catch (NullPointerException e) {
-                    e.printStackTrace();
-
-                    mImageEditorView.setCommand(0);
-                }
-            } else {
-                mCurrentTool = null;
-            }
         });
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 4));
         recyclerView.setAdapter(mAdapter);
@@ -87,7 +75,6 @@ public class ToolsFragment extends BaseFragment implements IToolsFragmentView {
     public void onResume() {
         super.onResume();
         presenter.init(this);
-        view.getImageEditorView().setCommand(0);
     }
 
     @Override

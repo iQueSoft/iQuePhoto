@@ -55,11 +55,11 @@
         <item name="android:gravity">center_vertical|center_horizontal</item>
     </style>
 
-    <style name="MyCustomTabLayout" parent="Widget.Design.TabLayout">
-        <item name="tabTextAppearance">@style/MyCustomTextAppearance</item>
+    <style name="TabLayout" parent="Widget.Design.TabLayout">
+        <item name="tabTextAppearance">@style/TabLayoutTextAppearance</item>
     </style>
 
-    <style name="MyCustomTextAppearance" parent="TextAppearance.Design.Tab">
+    <style name="TabLayoutTextAppearance" parent="TextAppearance.Design.Tab">
         <item name="textAllCaps">true</item>
         <item name="android:textStyle">bold</item>
         <item name="textSize">22sp</item>

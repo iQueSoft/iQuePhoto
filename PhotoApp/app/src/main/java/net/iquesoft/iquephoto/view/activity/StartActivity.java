@@ -93,7 +93,7 @@ public class StartActivity extends BaseActivity implements IStartActivityView, I
                         Intent intent = new Intent(StartActivity.this, GalleryActivity.class);
                         startActivity(intent);
                     } else {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AlertMaterialDialog)
                                 .setTitle(getString(R.string.permission_denied))
                                 .setMessage(getString(R.string.read_storage_permission))
                                 .setPositiveButton(getString(R.string.go_to_app_settings), (dialogInterface, i) -> {

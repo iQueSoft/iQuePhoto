@@ -12,7 +12,7 @@ public interface IEditorActivityView {
 
     void showToastMessage(int stringResource);
 
-    void navigateBack();
+    void navigateBack(boolean isFragment);
 
     ImageEditorView getImageEditorView();
 }

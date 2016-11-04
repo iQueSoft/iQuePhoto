@@ -51,6 +51,6 @@ public class EditorActivityPresenterImpl implements IEditorActivityPresenter {
     public void onBackPressed(Bitmap bitmap, Bitmap alteredBitmap) {
         if (!bitmap.sameAs(alteredBitmap))
             mView.showAlertDialog();
-        else mView.navigateBack();
+        else mView.navigateBack(false);
     }
 }

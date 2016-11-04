@@ -80,7 +80,7 @@ public class BrightnessFragment extends BaseFragment implements IBrightnessFragm
 
     @OnClick(R.id.brightnessCancel)
     void onClickBack() {
-        editorActivityView.navigateBack();
+        editorActivityView.navigateBack(true);
     }
 
     @OnClick(R.id.brightnessApply)

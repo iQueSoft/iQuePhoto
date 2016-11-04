@@ -119,12 +119,12 @@ public class FiltersFragment extends BaseFragment implements IFiltersFragmentVie
 
     @OnClick(R.id.filterBack)
     void onClickBack() {
-        editorActivityView.navigateBack();
+        editorActivityView.navigateBack(true);
     }
 
     @OnClick(R.id.filterApply)
     void onClickApply() {
         editorActivityView.getImageEditorView().apply(R.string.filters);
-        editorActivityView.navigateBack();
+        editorActivityView.navigateBack(true);
     }
 }

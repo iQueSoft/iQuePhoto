@@ -9,7 +9,6 @@ import android.support.annotation.StringRes;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
-import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
@@ -22,8 +21,8 @@ import net.iquesoft.iquephoto.di.components.IApplicationComponent;
 import net.iquesoft.iquephoto.di.components.IShareActivityComponent;
 import net.iquesoft.iquephoto.di.modules.ShareActivityModule;
 import net.iquesoft.iquephoto.presenter.ShareActivityPresenterImpl;
+import net.iquesoft.iquephoto.tasks.ImageSaveTask;
 import net.iquesoft.iquephoto.utils.BitmapUtil;
-import net.iquesoft.iquephoto.utils.ImageHelper;
 import net.iquesoft.iquephoto.view.IShareActivityView;
 
 import javax.inject.Inject;
@@ -106,7 +105,7 @@ public class ShareActivity extends BaseActivity implements IShareActivityView, I
 
     @OnClick(R.id.saveButton)
     void onClickSave() {
-        BitmapUtil.saveBitmap(mBitmap, this);
+        new ImageSaveTask(this, mBitmap).execute();
     }
 
     @OnClick(R.id.facebookButton)
@@ -152,7 +151,7 @@ public class ShareActivity extends BaseActivity implements IShareActivityView, I
 
     @Override
     public void showAlert(@StringRes int messageBody, String applicationId) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyAlertDialogStyle);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AlertMaterialDialog);
         builder.setTitle(getString(R.string.application_does_not_exist));
         builder.setMessage(getString(messageBody));
 

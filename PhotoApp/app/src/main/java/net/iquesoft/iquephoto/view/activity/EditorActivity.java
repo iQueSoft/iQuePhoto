@@ -19,7 +19,6 @@ import android.widget.Toast;
 import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseActivity;
-import net.iquesoft.iquephoto.core.IUndoListener;
 import net.iquesoft.iquephoto.core.ImageEditorView;
 import net.iquesoft.iquephoto.di.IHasComponent;
 import net.iquesoft.iquephoto.di.components.IApplicationComponent;
@@ -27,7 +26,7 @@ import net.iquesoft.iquephoto.di.components.DaggerIEditorActivityComponent;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
 import net.iquesoft.iquephoto.di.modules.EditorActivityModule;
 import net.iquesoft.iquephoto.presenter.EditorActivityPresenterImpl;
-import net.iquesoft.iquephoto.utils.ImageHelper;
+import net.iquesoft.iquephoto.tasks.ImageSaveTask;
 import net.iquesoft.iquephoto.view.IEditorActivityView;
 import net.iquesoft.iquephoto.view.fragment.ToolsFragment;
 
@@ -99,10 +98,15 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
         DataHolder.getInstance().setEditorView(imageEditorView);
 
         mFragmentManager = getSupportFragmentManager();
+
+        mFragmentManager.addOnBackStackChangedListener(() -> {
+            Toast.makeText(this, String.valueOf(mFragmentManager.getBackStackEntryCount()), Toast.LENGTH_SHORT).show();
+        });
+
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-        fragmentTransaction.replace(fragmentContainer.getId(), toolsFragment)
-                .addToBackStack(null)
+        fragmentTransaction.add(fragmentContainer.getId(), toolsFragment)
                 .commit();
+
     }
 
     @Override
@@ -121,52 +125,36 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
 
     @Override
     public void onBackPressed() {
-        switch (mFragmentManager.getBackStackEntryCount()) {
-            case 0:
-                presenter.onBackPressed(mBitmap, mBitmap);
-                break;
-            case 1:
-                editorHeader.setVisibility(View.VISIBLE);
-                super.onBackPressed();
-                break;
-            default:
-                super.onBackPressed();
-                break;
+        if (mFragmentManager.getBackStackEntryCount() == 0) {
+            presenter.onBackPressed(mBitmap, mBitmap);
+        } else if (mFragmentManager.getBackStackEntryCount() != 0) {
+            navigateBack(true);
         }
     }
 
     @Override
     public void showAlertDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyAlertDialogStyle);
-        builder.setMessage(getString(R.string.on_back_alert));
-
-        builder.setPositiveButton(getString(R.string.ok), (dialogInterface, i) -> {
-            finish();
-        });
-
-        // Todo: Make save button in AlertDialog
-        builder.setNeutralButton(getString(R.string.save), ((dialogInterface1, i) -> {
-            String path = ImageHelper.getPath(getString(R.string.app_name));
-            /*try {
-                photoEditorView.saveImages(path);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }*/
-
-        }));
-
-        builder.setNegativeButton(getString(R.string.cancel), (dialogInterface, i1) -> {
-            dialogInterface.dismiss();
-        });
-        builder.show();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AlertMaterialDialog);
+        builder.setMessage(getString(R.string.on_back_alert))
+                .setPositiveButton(getString(R.string.ok), (dialogInterface, i) -> {
+                    finish();
+                })
+                .setNegativeButton(getString(R.string.save), ((dialogInterface1, i) -> {
+                    new ImageSaveTask(this, imageEditorView.getAlteredBitmap()).execute();
+                }))
+                .setNegativeButton(getString(R.string.cancel), (dialogInterface, i1) -> {
+                    dialogInterface.dismiss();
+                })
+                .show();
     }
 
     @Override
     public void setupFragment(Fragment fragment) {
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-        fragmentTransaction.replace(fragmentContainer.getId(), fragment);
-        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        fragmentTransaction.commit();
+        fragmentTransaction.replace(fragmentContainer.getId(), fragment)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .addToBackStack(null)
+                .commit();
 
         editorHeader.setVisibility(View.INVISIBLE);
     }
@@ -175,13 +163,20 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
     public void showToastMessage(int stringResource) {
         Toast.makeText(getApplicationContext(), getString(stringResource), Toast.LENGTH_SHORT).show();
     }
-
+    
     @Override
-    public void navigateBack() {
-        if (mFragmentManager.getBackStackEntryCount() == 1) {
-            editorHeader.setVisibility(View.VISIBLE);
-            super.onBackPressed();
-        }
+    public void navigateBack(boolean isFragment) {
+        if (isFragment) {
+            if (mFragmentManager.getBackStackEntryCount() > 1) {
+                super.onBackPressed();
+            } else if (mFragmentManager.getBackStackEntryCount() == 1) {
+                super.onBackPressed();
+                editorHeader.setVisibility(View.VISIBLE);
+            } else if (mFragmentManager.getBackStackEntryCount() == 0) {
+                presenter.onBackPressed(mBitmap, mBitmap);
+            }
+        } else
+            finish();
     }
 
     @Override

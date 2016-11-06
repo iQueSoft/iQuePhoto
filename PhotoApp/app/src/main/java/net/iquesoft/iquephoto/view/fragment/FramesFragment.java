@@ -67,9 +67,9 @@ public class FramesFragment extends BaseFragment implements IFramesFragmentView 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_frames, container, false);
+        View view = inflater.inflate(R.layout.fragment_frames, container, false);
 
-        mUnbinder = ButterKnife.bind(this, v);
+        mUnbinder = ButterKnife.bind(this, view);
 
         mAdapter = new FramesAdapter(mFrameList);
         mAdapter.setFramesListener(frame -> {
@@ -78,10 +78,10 @@ public class FramesFragment extends BaseFragment implements IFramesFragmentView 
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         recyclerView.setAdapter(mAdapter);
-        
+
         mImageEditorView = DataHolder.getInstance().getEditorView();
 
-        return v;
+        return view;
     }
 
     @Override
@@ -104,5 +104,6 @@ public class FramesFragment extends BaseFragment implements IFramesFragmentView 
     @OnClick(R.id.framesApply)
     void onClickApply() {
         editorActivityView.getImageEditorView().apply(R.string.frames);
+        onClickBack();
     }
 }

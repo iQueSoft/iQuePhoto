@@ -11,8 +11,8 @@ import net.iquesoft.iquephoto.view.IShareActivityView;
 import javax.inject.Inject;
 
 public class ShareActivityPresenterImpl implements IShareActivityPresenter {
-    private static final String INSTAGRAM_ID = "com.instagram.android";
-    private static final String FACEBOOK_ID = "com.facebook.katana";
+    public static final String INSTAGRAM_ID = "com.instagram.android";
+    public static final String FACEBOOK_ID = "com.facebook.katana";
 
     private IShareActivityView mView;
 
@@ -45,20 +45,18 @@ public class ShareActivityPresenterImpl implements IShareActivityPresenter {
     }
 
     @Override
-    public void shareToInstagram(Context context, Bitmap bitmap) {
-        if (isApplicationExist(context, INSTAGRAM_ID)) {
-            mView.shareToInstagram(bitmap);
+    public void shareTo(Context context, String applicationId, Bitmap bitmap) {
+        if (isApplicationExist(context, applicationId)) {
+            mView.share(bitmap, applicationId);
         } else {
-            mView.showAlert(R.string.instagram_alert, INSTAGRAM_ID);
-        }
-    }
-
-    @Override
-    public void shareToFacebook(Context context, Bitmap bitmap) {
-        if (isApplicationExist(context, FACEBOOK_ID)) {
-            mView.shareToFacebook(bitmap);
-        } else {
-            mView.showAlert(R.string.facebook_alert, FACEBOOK_ID);
+            switch (applicationId) {
+                case INSTAGRAM_ID:
+                    mView.showAlert(R.string.instagram_alert, applicationId);
+                    break;
+                case FACEBOOK_ID:
+                    mView.showAlert(R.string.facebook_alert, applicationId);
+                    break;
+            }
         }
     }
 

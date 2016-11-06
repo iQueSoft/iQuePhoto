@@ -10,7 +10,7 @@
         android:layout_width="fill_parent"
         android:layout_height="1dp"
         android:background="@color/colorLine" />
-    
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -126,20 +126,15 @@
                         android:layout_gravity="center"
                         android:layout_weight="1"
                         android:src="@drawable/ic_font" />
-
                 </LinearLayout>
-
             </LinearLayout>
-
-
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:orientation="horizontal"
-            android:paddingRight="10dp">
+            android:orientation="horizontal">
 
             <EditText
                 android:id="@+id/textField"
@@ -153,6 +148,12 @@
                 android:textColorHint="@android:color/white"
                 android:theme="@style/MyEditText" />
 
+            <ImageButton
+                android:id="@+id/addTextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_add_40" />
 
         </LinearLayout>
 

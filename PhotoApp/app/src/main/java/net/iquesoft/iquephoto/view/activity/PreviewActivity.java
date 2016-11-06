@@ -144,8 +144,7 @@ public class PreviewActivity extends BaseActivity implements IPreviewActivityVie
     void onClickRotateRight() {
         cropImageView.rotateImage(CropImageView.RotateDegrees.ROTATE_90D);
     }
-
-    // FIXME: If picture is large button works when I click it twice.
+    
     @OnClick(R.id.buttonCrop)
     void onClickCrop() {
         presenter.cropImage(createSaveUri(), cropImageView);

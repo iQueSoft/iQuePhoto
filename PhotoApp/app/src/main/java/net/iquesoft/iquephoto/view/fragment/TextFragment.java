@@ -121,7 +121,7 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
         mUnbinder.unbind();
     }
 
-    /*@OnClick(R.id.addTextButton)
+    @OnClick(R.id.addTextButton)
     void onClickAddText() {
         mText = editText.getText().toString();
         if (!mText.isEmpty()) {
@@ -131,7 +131,7 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
         } else {
             Toast.makeText(mContext, getResources().getString(R.string.text_is_empty), Toast.LENGTH_SHORT).show();
         }
-    }*/
+    }
 
 
     @OnClick(R.id.textColorButton)
@@ -157,6 +157,6 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
     }
 
     public void setTypeface(Typeface typeface) {
-        this.mTypeface = typeface;
+        mTypeface = typeface;
     }
 }

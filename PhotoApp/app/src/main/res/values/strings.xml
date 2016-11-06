@@ -176,11 +176,14 @@
 
     <string name="image_saved">Image saved!</string>
 
+
+    <!-- START - Share screen -->
     <string name="application_does_not_exist">Application does not exist</string>
     <string name="instagram_alert">For share you need to have Instagram installed.</string>
     <string name="facebook_alert">For share you need to have Facebook installed.</string>
     <string name="install">Install</string>
     <string name="dismiss">Dismiss</string>
+    <string name="share_more">Share image with:</string>
 
     <!-- START - Progress dialog message -->
     <string name="processing">Processing…</string>

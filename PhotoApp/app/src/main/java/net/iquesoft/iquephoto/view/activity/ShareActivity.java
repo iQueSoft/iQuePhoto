@@ -31,6 +31,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static net.iquesoft.iquephoto.presenter.ShareActivityPresenterImpl.FACEBOOK_ID;
+import static net.iquesoft.iquephoto.presenter.ShareActivityPresenterImpl.INSTAGRAM_ID;
+
 public class ShareActivity extends BaseActivity implements IShareActivityView, IHasComponent<IShareActivityComponent> {
 
     private Bitmap mBitmap;
@@ -98,7 +101,7 @@ public class ShareActivity extends BaseActivity implements IShareActivityView, I
         return mComponent;
     }
 
-    @OnClick(R.id.shareBack)
+    @OnClick(R.id.shareBackButton)
     void onClickBack() {
         super.onBackPressed();
     }
@@ -110,18 +113,24 @@ public class ShareActivity extends BaseActivity implements IShareActivityView, I
 
     @OnClick(R.id.facebookButton)
     void onClickFacebook() {
-        // Todo: Publish to Facebook.
+        presenter.shareTo(this, FACEBOOK_ID, mBitmap);
     }
 
     @OnClick(R.id.instagramButton)
     void onClickInstagram() {
-        presenter.shareToInstagram(this, mBitmap);
-
+        presenter.shareTo(this, INSTAGRAM_ID, mBitmap);
     }
 
     @OnClick(R.id.moreButton)
     void onClickMore() {
-        // Todo: Share more social network.
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("image/*");
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        intent.putExtra(Intent.EXTRA_STREAM,
+                BitmapUtil.getBitmapUri(this, mBitmap));
+
+        startActivity(Intent.createChooser(intent, getString(R.string.share_more)));
     }
 
     @Override
@@ -132,7 +141,7 @@ public class ShareActivity extends BaseActivity implements IShareActivityView, I
     }
 
     @Override
-    public void shareToInstagram(Bitmap bitmap) {
+    public void share(Bitmap bitmap, String applicationId) {
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("image/*");
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -140,13 +149,8 @@ public class ShareActivity extends BaseActivity implements IShareActivityView, I
         intent.putExtra(Intent.EXTRA_STREAM,
                 BitmapUtil.getBitmapUri(this, mBitmap));
 
-        intent.setPackage("com.instagram.android");
+        intent.setPackage(applicationId);
         startActivity(intent);
-    }
-
-    @Override
-    public void shareToFacebook(Bitmap bitmap) {
-
     }
 
     @Override

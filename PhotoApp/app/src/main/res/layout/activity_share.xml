@@ -12,7 +12,7 @@
         android:orientation="horizontal">
 
         <ImageButton
-            android:id="@+id/shareBack"
+            android:id="@+id/shareBackButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -54,20 +54,19 @@
         android:scaleType="fitCenter"
         app:srcCompat="@drawable/buldog" />
 
-
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
+        android:layout_gravity="center"
         android:orientation="horizontal"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="20dp">
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp">
 
         <Button
             android:id="@+id/saveButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:drawableTop="@drawable/ic_download"
             android:text="@string/save"
@@ -80,6 +79,7 @@
             android:id="@+id/instagramButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:drawableTop="@drawable/ic_instagram"
             android:text="@string/instagram"
@@ -87,11 +87,20 @@
             android:textColor="@color/white"
             android:textSize="18sp"
             android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="horizontal"
+        android:paddingTop="5dp">
 
         <Button
             android:id="@+id/facebookButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:drawableTop="@drawable/ic_facebook"
             android:text="@string/facebook"
@@ -104,6 +113,7 @@
             android:id="@+id/moreButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:drawableTop="@drawable/ic_more"
             android:text="@string/more"
@@ -111,7 +121,5 @@
             android:textColor="@color/white"
             android:textSize="18sp"
             android:textStyle="bold" />
-
     </LinearLayout>
-
 </LinearLayout>

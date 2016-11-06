@@ -6,7 +6,5 @@ import android.graphics.Bitmap;
 interface IShareActivityPresenter {
     void calculateSizesForCompressing(Bitmap bitmap);
 
-    void shareToInstagram(Context context, Bitmap bitmap);
-
-    void shareToFacebook(Context context, Bitmap bitmap);
+    void shareTo(Context context, String applicationId, Bitmap bitmap);
 }

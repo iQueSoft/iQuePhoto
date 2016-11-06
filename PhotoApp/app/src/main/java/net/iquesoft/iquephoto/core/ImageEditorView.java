@@ -908,6 +908,11 @@ public class ImageEditorView extends ImageView {
                     break;
                 case R.string.contrast:
                     mCanvas.drawBitmap(mBitmap, 0, 0, mContrastPaint);
+                    break;
+                case R.string.frames:
+                    if (mFrameBitmap != null)
+                        mCanvas.drawBitmap(mBitmap, 0, 0, mImagePaint);
+                    break;
             }
 
             return mBitmap;
@@ -987,10 +992,10 @@ public class ImageEditorView extends ImageView {
             mCanvas = new Canvas(mBitmap);
 
             if (mOverlayBitmap != null)
-                mCanvas.drawBitmap(mOverlayBitmap, mMatrix, mOverlayPaint);
+                mCanvas.drawBitmap(mOverlayBitmap, 0, 0, mOverlayPaint);
 
             if (mFrameBitmap != null)
-                mCanvas.drawBitmap(mFrameBitmap, mMatrix, mImagePaint);
+                mCanvas.drawBitmap(mFrameBitmap, 0, 0, mImagePaint);
 
             if (mStickersList.size() > 0) {
                 drawStickers(mCanvas);

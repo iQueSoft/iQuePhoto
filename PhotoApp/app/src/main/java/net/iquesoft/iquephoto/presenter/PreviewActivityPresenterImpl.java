@@ -39,8 +39,7 @@ public class PreviewActivityPresenterImpl implements IPreviewActivityPresenter {
     private CropCallback cropCallback = new CropCallback() {
         @Override
         public void onSuccess(Bitmap cropped) {
-            mView.dismissProgress();
-            //view.startEditingImage(cropped);
+
         }
 
         @Override
@@ -53,6 +52,7 @@ public class PreviewActivityPresenterImpl implements IPreviewActivityPresenter {
         @Override
         public void onSuccess(Uri outputUri) {
             mView.startEditingImage(outputUri);
+            mView.dismissProgress();
         }
 
         @Override

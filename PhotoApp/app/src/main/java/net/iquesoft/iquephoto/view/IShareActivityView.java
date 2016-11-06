@@ -6,9 +6,7 @@ import android.support.annotation.StringRes;
 public interface IShareActivityView {
     void initImageSizes(String small, String medium, String original);
 
-    void shareToInstagram(Bitmap bitmap);
-
-    void shareToFacebook(Bitmap bitmap);
+    void share(Bitmap bitmap, String applicationId);
 
     void showAlert(@StringRes int messageBody, String applicationId);
 }

@@ -79,7 +79,7 @@ public class OverlayFragment extends BaseFragment implements IOverlayFragmentVie
         mAdapter = new OverlaysAdapter(mOverlayList);
 
         mAdapter.setOverlayListener(overlay -> {
-            mImageEditorView.setOverlay(getResources().getDrawable(overlay.getImage()));
+            mImageEditorView.setOverlay(overlay.getImage());
         });
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));

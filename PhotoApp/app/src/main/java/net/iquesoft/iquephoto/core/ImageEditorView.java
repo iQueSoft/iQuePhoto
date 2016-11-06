@@ -17,6 +17,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.view.MotionEventCompat;
@@ -34,8 +35,6 @@ import net.iquesoft.iquephoto.model.Sticker;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import rx.Observable;
 
 public class ImageEditorView extends ImageView {
 
@@ -237,7 +236,6 @@ public class ImageEditorView extends ImageView {
         if (mTextsList.size() > 0) {
             drawTexts(canvas);
         }
-
 
         //canvas.drawBitmap(mSourceBitmap, mMatrix, getAdjustPaint());
     }
@@ -618,16 +616,16 @@ public class ImageEditorView extends ImageView {
         }
     }
 
-    public void setOverlay(@Nullable Drawable drawable) {
-        // FIXME: OutMemoryException when work with large image.
-        if (drawable != null) {
-            mOverlayBitmap = Bitmap.createScaledBitmap(((BitmapDrawable) drawable).getBitmap(),
-                    mSourceBitmap.getWidth(), mSourceBitmap.getHeight(), false);
-            mOverlayPaint.setAlpha(125);
-        } else {
-            mOverlayBitmap = null;
-        }
+    public void setOverlay(@DrawableRes int drawableRes) {
+        new BitmapScaleTask(mContext, this, R.string.prepare_overlay,
+                mSourceBitmap.getWidth(),
+                mSourceBitmap.getHeight())
+                .execute(drawableRes);
+    }
 
+    protected void setupOverlay(Bitmap bitmap) {
+        mOverlayBitmap = bitmap;
+        mOverlayPaint.setAlpha(125);
         invalidate();
     }
 

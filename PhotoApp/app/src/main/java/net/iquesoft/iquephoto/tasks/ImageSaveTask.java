@@ -1,5 +1,6 @@
 package net.iquesoft.iquephoto.tasks;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -10,6 +11,7 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 
 import net.iquesoft.iquephoto.R;
+import net.iquesoft.iquephoto.view.activity.EditorActivity;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -74,6 +76,13 @@ public class ImageSaveTask extends AsyncTask<Void, Void, Void> {
         super.onPostExecute(aVoid);
         mProgressDialog.dismiss();
         Toast.makeText(mContext, R.string.image_saved, Toast.LENGTH_SHORT).show();
+
+        if (mContext.getClass()
+                .getSimpleName()
+                .equalsIgnoreCase(EditorActivity.class.getSimpleName())) {
+            Activity activity = (Activity) mContext;
+            activity.finish();
+        }
     }
 
     private File getOutputMediaFile() {

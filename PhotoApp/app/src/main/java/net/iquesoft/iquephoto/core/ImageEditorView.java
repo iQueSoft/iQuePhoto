@@ -19,7 +19,6 @@ import android.os.AsyncTask;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
 import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -37,17 +36,19 @@ import net.iquesoft.iquephoto.utils.BitmapUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ImageEditorView extends ImageView {
+import static net.iquesoft.iquephoto.core.EditorCommand.NONE;
 
-    private int mCommand;
+public class ImageEditorView extends ImageView {
 
     private float mBrushSize;
 
     private boolean mIsInitialized;
+    private boolean mIsShowOriginalImage;
 
     private boolean mIsInResize;
     private boolean mIsInSide;
     private boolean mIsInRotate;
+
     private Bitmap mSourceBitmap;
 
     private Bitmap mOverlayBitmap;
@@ -88,6 +89,8 @@ public class ImageEditorView extends ImageView {
     private float mContrastValue = 0;
     private float mBrightnessValue = 0;
     private float mWarmthValue = 0;
+
+    private EditorCommand mCommand = NONE;
 
     private IUndoListener mUndoListener;
 
@@ -178,21 +181,25 @@ public class ImageEditorView extends ImageView {
     public void onDraw(Canvas canvas) {
         if (mIsInitialized) {
             setMatrix();
-            if (mImagesList.size() > 0)
-                canvas.drawBitmap(getAlteredBitmap(), mMatrix, mImagePaint);
-            else
+            if (mIsShowOriginalImage) {
                 canvas.drawBitmap(mSourceBitmap, mMatrix, mImagePaint);
+            } else {
+                if (mImagesList.size() > 0)
+                    canvas.drawBitmap(getAlteredBitmap(), mMatrix, mImagePaint);
+                else
+                    canvas.drawBitmap(mSourceBitmap, mMatrix, mImagePaint);
+            }
         }
 
         switch (mCommand) {
-            case R.string.filters:
+            case FILTERS:
                 if (mImagesList.size() > 0) {
                     canvas.drawBitmap(getAlteredBitmap(), mMatrix, mFilterPaint);
                 } else {
                     canvas.drawBitmap(mSourceBitmap, mMatrix, mFilterPaint);
                 }
                 break;
-            case R.string.drawing:
+            case DRAWING:
                 if (mDrawingList.size() > 0) {
                     for (Drawing drawing : mDrawingList) {
                         canvas.drawPath(drawing.getPath(), drawing.getPaint());
@@ -201,7 +208,7 @@ public class ImageEditorView extends ImageView {
                 if (!mDrawingPath.isEmpty())
                     canvas.drawPath(mDrawingPath, mDrawingPaint);
                 break;
-            case R.string.brightness:
+            case BRIGHTNESS:
                 if (mBrightnessValue != 0) {
                     if (mImagesList.size() > 0) {
                         canvas.drawBitmap(getAlteredBitmap(), mMatrix, mBrightnessPaint);
@@ -210,17 +217,17 @@ public class ImageEditorView extends ImageView {
                     }
                 }
                 break;
-            case R.string.overlay:
+            case OVERLAY:
                 if (mOverlayBitmap != null)
                     canvas.drawBitmap(mOverlayBitmap, mMatrix, mOverlayPaint);
                 break;
-            case R.string.contrast:
+            case CONTRAST:
                 break;
-            case R.string.frames:
+            case FRAMES:
                 if (mFrameBitmap != null)
                     canvas.drawBitmap(mFrameBitmap, mMatrix, mImagePaint);
                 break;
-            case R.string.warmth:
+            case WARMTH:
                 if (mWarmthValue != 0) {
                     if (mImagesList.size() > 0) {
                         canvas.drawBitmap(getAlteredBitmap(), mMatrix, mWarmthPaint);
@@ -291,10 +298,14 @@ public class ImageEditorView extends ImageView {
                 mIsInResize = false;
                 mIsInSide = false;
                 mIsInRotate = false;
-                if (mCommand == R.string.drawing) {
-                    if (isBrushInsideImageHorizontal(event.getX(0))
-                            && isBrushInsideImageVertical(event.getY(0)))
+                switch (mCommand) {
+                    case NONE:
+                        mIsShowOriginalImage = false;
+                        invalidate();
+                        break;
+                    case DRAWING:
                         drawingStop();
+                        break;
                 }
                 break;
             case MotionEvent.ACTION_POINTER_UP:
@@ -306,26 +317,23 @@ public class ImageEditorView extends ImageView {
         return true;
     }
 
-    /**
-     * @param command: 1) filters;
-     *                 2) stickers;
-     *                 3) text;
-     *                 4) drawing;
-     *                 5) tilt shift.
-     */
-    public void setCommand(@StringRes int command) {
+    public void setCommand(EditorCommand command) {
         mCommand = command;
     }
 
     private void actionDown(MotionEvent event) {
         switch (mCommand) {
-            case R.string.stickers:
+            case NONE:
+                mIsShowOriginalImage = true;
+                invalidate();
+                break;
+            case STICKERS:
                 findCheckedSticker(event);
                 break;
-            case R.string.text:
+            case TEXT:
                 findCheckedText(event);
                 break;
-            case R.string.drawing:
+            case DRAWING:
                 drawingStart(event);
                 break;
         }
@@ -333,7 +341,7 @@ public class ImageEditorView extends ImageView {
 
     private void actionMove(MotionEvent event) {
         switch (mCommand) {
-            case R.string.stickers:
+            case STICKERS:
                 if (mCurrentEditorSticker != null) {
                     if (mIsInResize) {
                         float stickerScale = diagonalLength(event, mCurrentEditorSticker.getPoint()) / mCurrentEditorSticker.getLength();
@@ -349,7 +357,7 @@ public class ImageEditorView extends ImageView {
                     }
                 }
                 break;
-            case R.string.text:
+            case TEXT:
                 if (mCurrentEditorText != null) {
                     if (mIsInSide) {
                         float distanceX = event.getX() - mLastX;
@@ -368,7 +376,7 @@ public class ImageEditorView extends ImageView {
                     }
                 }
                 break;
-            case R.string.drawing:
+            case DRAWING:
                 if (isBrushInsideImageHorizontal(event.getX(0))
                         && isBrushInsideImageVertical(event.getY(0)))
                     drawingMove(event);
@@ -437,7 +445,7 @@ public class ImageEditorView extends ImageView {
         mUndoListener = undoListener;
     }
 
-    public void apply(int command) {
+    public void apply(EditorCommand command) {
         new ImageProcessingTask().execute(command);
     }
 
@@ -875,11 +883,10 @@ public class ImageEditorView extends ImageView {
         OUT_OF_BOUNDS, CENTER, LEFT_TOP, RIGHT_TOP, LEFT_BOTTOM, RIGHT_BOTTOM
     }
 
-    private class ImageProcessingTask extends AsyncTask<Integer, Void, Bitmap> {
-        private boolean mHasFilter;
+    private class ImageProcessingTask extends AsyncTask<EditorCommand, Void, Bitmap> {
         private Bitmap mBitmap;
         private Canvas mCanvas = new Canvas();
-        private RedrawImagesTask mRedrawImagesTaskTask = new RedrawImagesTask();
+        //private RedrawImagesTask mRedrawImagesTaskTask = new RedrawImagesTask();
 
         @Override
         protected void onPreExecute() {
@@ -893,28 +900,43 @@ public class ImageEditorView extends ImageView {
         }
 
         @Override
-        protected Bitmap doInBackground(Integer... integers) {
+        protected Bitmap doInBackground(EditorCommand... editorCommands) {
             mCanvas.setBitmap(mBitmap);
-
-            int command = integers[integers.length - 1];
-
-            switch (command) {
-                case R.string.filters:
-                    mCanvas.drawBitmap(mBitmap, 0, 0, mFilterPaint);
-                    mHasFilter = true;
+            
+            switch (editorCommands[0]) {
+                case NONE:
                     break;
-                case R.string.overlay:
+                case FILTERS:
+                    mCanvas.drawBitmap(mBitmap, 0, 0, mFilterPaint);
+                    break;
+                case ADJUST:
+                    break;
+                case OVERLAY:
                     mCanvas.drawBitmap(mOverlayBitmap, 0, 0, mOverlayPaint);
                     break;
-                case R.string.brightness:
+                case BRIGHTNESS:
                     mCanvas.drawBitmap(mBitmap, 0, 0, mBrightnessPaint);
                     break;
-                case R.string.contrast:
+                case CONTRAST:
                     mCanvas.drawBitmap(mBitmap, 0, 0, mContrastPaint);
                     break;
-                case R.string.frames:
+                case STICKERS:
+                    break;
+                case FRAMES:
                     if (mFrameBitmap != null)
                         mCanvas.drawBitmap(mBitmap, 0, 0, mImagePaint);
+                    break;
+                case TEXT:
+                    break;
+                case DRAWING:
+                    break;
+                case TILT_SHIFT:
+                    break;
+                case VIGNETTE:
+                    break;
+                case SATURATION:
+                    break;
+                case WARMTH:
                     break;
             }
 
@@ -923,18 +945,17 @@ public class ImageEditorView extends ImageView {
 
         @Override
         protected void onPostExecute(Bitmap bitmap) {
+            super.onPostExecute(bitmap);
             mImagesList.add(new EditorImage(mCommand, bitmap));
 
             mUndoListener.hasChanged(mImagesList.size());
 
             invalidate();
             mProgressDialog.dismiss();
-
-            super.onPostExecute(bitmap);
         }
     }
 
-    private class RedrawImagesTask extends AsyncTask<Integer, Void, Bitmap> {
+    /*private class RedrawImagesTask extends AsyncTask<Integer, Void, Bitmap> {
         private Bitmap mBitmap;
         private Canvas mCanvas = new Canvas();
 
@@ -965,7 +986,7 @@ public class ImageEditorView extends ImageView {
             super.onPostExecute(bitmap);
 
         }
-    }
+    }*/
 
     private class MakeImage extends AsyncTask<Void, Void, Bitmap> {
         private Canvas mCanvas;

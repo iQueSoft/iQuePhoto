@@ -11,6 +11,7 @@ import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapters.FramesAdapter;
 import net.iquesoft.iquephoto.common.BaseFragment;
+import net.iquesoft.iquephoto.core.EditorCommand;
 import net.iquesoft.iquephoto.core.ImageEditorView;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
 import net.iquesoft.iquephoto.model.Frame;
@@ -102,7 +103,7 @@ public class FramesFragment extends BaseFragment implements IFramesFragmentView 
 
     @OnClick(R.id.framesApply)
     void onClickApply() {
-        editorActivityView.getImageEditorView().apply(R.string.frames);
+        editorActivityView.getImageEditorView().apply(EditorCommand.FRAMES);
         onClickBack();
     }
 }

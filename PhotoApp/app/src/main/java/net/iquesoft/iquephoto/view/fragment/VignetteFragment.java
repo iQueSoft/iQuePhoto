@@ -1,3 +1,4 @@
+/*
 package net.iquesoft.iquephoto.view.fragment;
 
 import android.os.Bundle;
@@ -7,11 +8,11 @@ import android.view.ViewGroup;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseFragment;
-import net.iquesoft.iquephoto.core.EditorCommand;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
 import net.iquesoft.iquephoto.presenter.fragment.BrightnessFragmentPresenterImpl;
 import net.iquesoft.iquephoto.view.activity.interfaces.IEditorActivityView;
 import net.iquesoft.iquephoto.view.fragment.interfaces.IBrightnessFragmentView;
+import net.iquesoft.iquephoto.view.fragment.interfaces.IVignetteFragmentView;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
@@ -22,7 +23,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-public class BrightnessFragment extends BaseFragment implements IBrightnessFragmentView {
+public class VignetteFragment extends BaseFragment implements IVignetteFragmentView {
 
     private Unbinder mUnbinder;
 
@@ -86,6 +87,7 @@ public class BrightnessFragment extends BaseFragment implements IBrightnessFragm
 
     @OnClick(R.id.brightnessApply)
     void onClickApply() {
-        editorActivityView.getImageEditorView().apply(EditorCommand.BRIGHTNESS);
+        editorActivityView.getImageEditorView().apply(R.string.brightness);
     }
 }
+*/

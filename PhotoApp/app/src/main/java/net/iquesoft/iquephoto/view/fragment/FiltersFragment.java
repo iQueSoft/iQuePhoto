@@ -12,6 +12,7 @@ import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapters.FiltersAdapter;
 import net.iquesoft.iquephoto.common.BaseFragment;
+import net.iquesoft.iquephoto.core.EditorCommand;
 import net.iquesoft.iquephoto.core.ImageEditorView;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
 import net.iquesoft.iquephoto.model.Filter;
@@ -27,6 +28,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+
 
 public class FiltersFragment extends BaseFragment implements IFiltersFragmentView {
 
@@ -96,7 +98,6 @@ public class FiltersFragment extends BaseFragment implements IFiltersFragmentVie
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
     }
 
     @Override
@@ -121,10 +122,10 @@ public class FiltersFragment extends BaseFragment implements IFiltersFragmentVie
     void onClickBack() {
         editorActivityView.navigateBack(true);
     }
-
+    
     @OnClick(R.id.filterApply)
     void onClickApply() {
-        editorActivityView.getImageEditorView().apply(R.string.filters);
+        editorActivityView.getImageEditorView().apply(EditorCommand.FILTERS);
         editorActivityView.navigateBack(true);
     }
 }

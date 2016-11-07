@@ -23,6 +23,7 @@ import net.iquesoft.iquephoto.di.components.IApplicationComponent;
 import net.iquesoft.iquephoto.di.components.ICropActivityComponent;
 import net.iquesoft.iquephoto.di.modules.CropActivityModule;
 import net.iquesoft.iquephoto.presenter.activity.PreviewActivityPresenterImpl;
+import net.iquesoft.iquephoto.utils.BitmapUtil;
 import net.iquesoft.iquephoto.view.activity.interfaces.IPreviewActivityView;
 
 import java.io.File;
@@ -60,9 +61,7 @@ public class PreviewActivity extends BaseActivity implements IPreviewActivityVie
 
         mBitmap = BitmapFactory.decodeFile(getIntent().getStringExtra("Image"));
 
-        Log.i(PreviewActivity.class.getSimpleName(), "Height "
-                + mBitmap.getHeight()
-                + "\nWidth " + mBitmap.getWidth());
+        BitmapUtil.logBitmapInfo("Preview", mBitmap);
 
         ButterKnife.bind(this);
 

@@ -19,6 +19,7 @@ import android.widget.Toast;
 import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseActivity;
+import net.iquesoft.iquephoto.core.EditorCommand;
 import net.iquesoft.iquephoto.core.ImageEditorView;
 import net.iquesoft.iquephoto.di.IHasComponent;
 import net.iquesoft.iquephoto.di.components.IApplicationComponent;
@@ -45,7 +46,7 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
     EditorActivityPresenterImpl presenter;
 
     private IEditorActivityComponent mComponent;
-    
+
     private FragmentManager mFragmentManager;
 
     @Inject
@@ -103,7 +104,6 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
         fragmentTransaction.add(fragmentContainer.getId(), toolsFragment)
                 .commit();
-
     }
 
     @Override
@@ -160,7 +160,7 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
     public void showToastMessage(int stringResource) {
         Toast.makeText(getApplicationContext(), getString(stringResource), Toast.LENGTH_SHORT).show();
     }
-
+    
     @Override
     public void navigateBack(boolean isFragment) {
         if (isFragment) {
@@ -168,7 +168,7 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
                 super.onBackPressed();
             } else if (mFragmentManager.getBackStackEntryCount() == 1) {
                 super.onBackPressed();
-                imageEditorView.setCommand(0);
+                imageEditorView.setCommand(EditorCommand.NONE);
                 editorHeader.setVisibility(View.VISIBLE);
             } else if (mFragmentManager.getBackStackEntryCount() == 0) {
                 presenter.onBackPressed(mBitmap, imageEditorView.getAlteredBitmap());

@@ -1,11 +1,13 @@
 package net.iquesoft.iquephoto.model;
 
 import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 
 import net.iquesoft.iquephoto.R;
+import net.iquesoft.iquephoto.core.EditorCommand;
 import net.iquesoft.iquephoto.view.fragment.BrightnessFragment;
 
 import java.util.Arrays;
@@ -18,6 +20,8 @@ public class Adjust {
     @DrawableRes
     private int mIcon;
 
+    private EditorCommand mCommand;
+
     private int mValue;
 
     private Fragment mFragment;
@@ -27,16 +31,22 @@ public class Adjust {
     }
 
     private static Adjust[] adjusts = {
-            new Adjust(R.string.brightness, R.drawable.ic_brightness, new BrightnessFragment(), 0),
-            new Adjust(R.string.contrast, R.drawable.ic_contrast, null, 0),
-            new Adjust(R.string.saturation, R.drawable.ic_saturation, null, 0),
-            new Adjust(R.string.warmth, R.drawable.ic_warmth, null, 0)
+            new Adjust(R.string.brightness, R.drawable.ic_brightness, EditorCommand.BRIGHTNESS,
+                    new BrightnessFragment(), 0),
+            new Adjust(R.string.contrast, R.drawable.ic_contrast, EditorCommand.CONTRAST,
+                    null, 0),
+            new Adjust(R.string.saturation, R.drawable.ic_saturation, EditorCommand.SATURATION,
+                    null, 0),
+            new Adjust(R.string.warmth, R.drawable.ic_warmth, EditorCommand.WARMTH,
+                    null, 0)
     };
 
-    private Adjust(@StringRes int title, @DrawableRes int icon, @Nullable Fragment fragment, int value) {
+    private Adjust(@StringRes int title, @DrawableRes int icon, @NonNull EditorCommand command,
+                   @Nullable Fragment fragment, int value) {
         mTitle = title;
         mIcon = icon;
         mFragment = fragment;
+        mCommand = command;
         mValue = value;
     }
 
@@ -54,6 +64,10 @@ public class Adjust {
 
     public void setValue(int value) {
         mValue = value;
+    }
+
+    public EditorCommand getCommand() {
+        return mCommand;
     }
 
     public Fragment getFragment() {

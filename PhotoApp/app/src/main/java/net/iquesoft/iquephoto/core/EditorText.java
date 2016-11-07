@@ -25,6 +25,8 @@ public class EditorText {
     private int mX = 150;
     private int mY = 150;
 
+    private int mTextRectWidth;
+
     private float mRotateDegree = 0;
 
     private boolean mIsInEdit;
@@ -198,5 +200,9 @@ public class EditorText {
 
     boolean isInEdit() {
         return mIsInEdit;
+    }
+
+    int getTextRectWidth() {
+        return mTextRect.width();
     }
 }

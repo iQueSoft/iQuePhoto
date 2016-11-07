@@ -58,7 +58,7 @@ public class AdjustFragment extends BaseFragment implements IAdjustFragmentView 
         mAdapter = new AdjustAdapter(mAdjustList);
 
         mAdapter.setAdjustListener(adjust -> {
-            editorActivityView.getImageEditorView().setCommand(adjust.getTitle());
+            editorActivityView.getImageEditorView().setCommand(adjust.getCommand());
 
             editorActivityView.setupFragment(adjust.getFragment());
         });

@@ -34,7 +34,7 @@ public class StickersPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return null;//mContext.getString(mStickersSetsList.get(position).getTitle());
+        return null;
     }
 
 

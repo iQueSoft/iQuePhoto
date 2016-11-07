@@ -11,6 +11,7 @@ import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapters.OverlaysAdapter;
 import net.iquesoft.iquephoto.common.BaseFragment;
+import net.iquesoft.iquephoto.core.EditorCommand;
 import net.iquesoft.iquephoto.core.ImageEditorView;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
 import net.iquesoft.iquephoto.model.Overlay;
@@ -124,7 +125,7 @@ public class OverlayFragment extends BaseFragment implements IOverlayFragmentVie
 
     @OnClick(R.id.overlayApply)
     void onClickApply() {
-        editorActivityView.getImageEditorView().apply(R.string.overlay);
+        editorActivityView.getImageEditorView().apply(EditorCommand.OVERLAY);
         editorActivityView.navigateBack(true);
     }
 }

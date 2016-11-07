@@ -1,11 +1,13 @@
 package net.iquesoft.iquephoto.model;
 
 import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 
 import net.iquesoft.iquephoto.R;
+import net.iquesoft.iquephoto.core.EditorCommand;
 import net.iquesoft.iquephoto.view.fragment.DrawingFragment;
 import net.iquesoft.iquephoto.view.fragment.AdjustFragment;
 import net.iquesoft.iquephoto.view.fragment.FiltersFragment;
@@ -25,42 +27,31 @@ public class Tool {
     @DrawableRes
     private int mIcon;
 
-    private Fragment fragment;
+    private EditorCommand mCommand;
+
+    private Fragment mFragment;
 
     public static List<Tool> getToolsList() {
         return Arrays.asList(tools);
     }
 
     private static Tool tools[] = {
-            new Tool(R.string.filters, R.drawable.ic_filter, new FiltersFragment()),
-            new Tool(R.string.adjust, R.drawable.ic_adjust, new AdjustFragment()),
-            new Tool(R.string.overlay, R.drawable.ic_overlay, new OverlayFragment()),
-            new Tool(R.string.stickers, R.drawable.ic_stiker, StickersFragment.newInstance()),
-            new Tool(R.string.frames, R.drawable.ic_frame, new FramesFragment()),
-            new Tool(R.string.tilt_shift, R.drawable.ic_tilt_shift, new TiltShiftFragment()),
-            new Tool(R.string.drawing, R.drawable.ic_brush, DrawingFragment.newInstance()),
-            new Tool(R.string.text, R.drawable.ic_letters, TextFragment.newInstance())
+            new Tool(R.string.filters, R.drawable.ic_filter, EditorCommand.FILTERS, new FiltersFragment()),
+            new Tool(R.string.adjust, R.drawable.ic_adjust, EditorCommand.ADJUST, new AdjustFragment()),
+            new Tool(R.string.overlay, R.drawable.ic_overlay, EditorCommand.OVERLAY, new OverlayFragment()),
+            new Tool(R.string.stickers, R.drawable.ic_stiker, EditorCommand.STICKERS, StickersFragment.newInstance()),
+            new Tool(R.string.frames, R.drawable.ic_frame, EditorCommand.FRAMES, new FramesFragment()),
+            new Tool(R.string.vignette, R.drawable.ic_vignette, EditorCommand.VIGNETTE, null),
+            new Tool(R.string.tilt_shift, R.drawable.ic_tilt_shift, EditorCommand.TILT_SHIFT, new TiltShiftFragment()),
+            new Tool(R.string.drawing, R.drawable.ic_brush, EditorCommand.DRAWING, DrawingFragment.newInstance()),
+            new Tool(R.string.text, R.drawable.ic_letters, EditorCommand.TEXT, TextFragment.newInstance())
     };
 
-    private static Tool tool = new Tool();
-
-    public static Tool getInstance() {
-        return tool;
-    }
-
-    private Tool() {
-
-    }
-
-    private Tool(@StringRes int title, @DrawableRes int icon) {
+    private Tool(@StringRes int title, @DrawableRes int icon, @NonNull EditorCommand command, @Nullable Fragment fragment) {
         mTitle = title;
         mIcon = icon;
-    }
-
-    private Tool(@StringRes int title, @DrawableRes int icon, @Nullable Fragment fragment) {
-        mTitle = title;
-        mIcon = icon;
-        this.fragment = fragment;
+        mCommand = command;
+        mFragment = fragment;
     }
 
     public int getIcon() {
@@ -75,14 +66,15 @@ public class Tool {
         mTitle = title;
     }
 
-    /**
-     * @return fragment of control selected tool;
-     */
     public Fragment getFragment() {
-        return fragment;
+        return mFragment;
     }
 
     public void setFragment(Fragment fragment) {
-        this.fragment = fragment;
+        mFragment = fragment;
+    }
+
+    public EditorCommand getCommand() {
+        return mCommand;
     }
 }

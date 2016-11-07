@@ -6,6 +6,7 @@ import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 
 public class ColorFilterDrawable extends Drawable {
 
@@ -18,7 +19,7 @@ public class ColorFilterDrawable extends Drawable {
     }
 
     @Override
-    public void draw(Canvas canvas) {
+    public void draw(@NonNull Canvas canvas) {
         canvas.drawBitmap(mBitmap, 0, 0, mPaint);
     }
 

@@ -6,6 +6,7 @@ import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 
 public class ColorCircleDrawable extends Drawable {
     private final Paint mPaint;
@@ -17,7 +18,7 @@ public class ColorCircleDrawable extends Drawable {
     }
 
     @Override
-    public void draw(final Canvas canvas) {
+    public void draw(@NonNull final Canvas canvas) {
         final Rect bounds = getBounds();
         canvas.drawCircle(bounds.centerX(), bounds.centerY(), mRadius, mPaint);
     }

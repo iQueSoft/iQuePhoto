@@ -3,15 +3,15 @@ package net.iquesoft.iquephoto.core;
 import android.graphics.Bitmap;
 
 class EditorImage {
-    private int mCommand;
+    private EditorCommand mCommand;
     private Bitmap mBitmap;
 
-    EditorImage(int command, Bitmap bitmap) {
+    EditorImage(EditorCommand command, Bitmap bitmap) {
         mCommand = command;
         mBitmap = bitmap;
     }
 
-    int getCommand() {
+    EditorCommand getCommand() {
         return mCommand;
     }
 

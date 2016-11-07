@@ -176,6 +176,7 @@
 
     <string name="image_saved">Image saved!</string>
 
+    <string name="tools">Tools</string>
 
     <!-- START - Share screen -->
     <string name="application_does_not_exist">Application does not exist</string>

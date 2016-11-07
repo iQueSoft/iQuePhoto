@@ -25,9 +25,10 @@ import net.iquesoft.iquephoto.di.components.IApplicationComponent;
 import net.iquesoft.iquephoto.di.components.DaggerIEditorActivityComponent;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
 import net.iquesoft.iquephoto.di.modules.EditorActivityModule;
-import net.iquesoft.iquephoto.presenter.EditorActivityPresenterImpl;
+import net.iquesoft.iquephoto.presenter.activity.EditorActivityPresenterImpl;
 import net.iquesoft.iquephoto.tasks.ImageSaveTask;
-import net.iquesoft.iquephoto.view.IEditorActivityView;
+import net.iquesoft.iquephoto.utils.BitmapUtil;
+import net.iquesoft.iquephoto.view.activity.interfaces.IEditorActivityView;
 import net.iquesoft.iquephoto.view.fragment.ToolsFragment;
 
 import java.io.IOException;
@@ -44,7 +45,7 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
     EditorActivityPresenterImpl presenter;
 
     private IEditorActivityComponent mComponent;
-
+    
     private FragmentManager mFragmentManager;
 
     @Inject
@@ -82,7 +83,7 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
 
         DataHolder.getInstance().setBitmap(Bitmap.createScaledBitmap(mBitmap, 120, 120, false));
 
-        Log.i(EditorActivity.class.getSimpleName(), "Height " + mBitmap.getHeight() + "\nWidth " + mBitmap.getWidth());
+        BitmapUtil.logBitmapInfo("Cropped Bitmap", mBitmap);
 
         imageEditorView.setImageBitmap(mBitmap);
 

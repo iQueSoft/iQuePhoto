@@ -22,8 +22,8 @@ import net.iquesoft.iquephoto.di.components.DaggerICropActivityComponent;
 import net.iquesoft.iquephoto.di.components.IApplicationComponent;
 import net.iquesoft.iquephoto.di.components.ICropActivityComponent;
 import net.iquesoft.iquephoto.di.modules.CropActivityModule;
-import net.iquesoft.iquephoto.presenter.PreviewActivityPresenterImpl;
-import net.iquesoft.iquephoto.view.IPreviewActivityView;
+import net.iquesoft.iquephoto.presenter.activity.PreviewActivityPresenterImpl;
+import net.iquesoft.iquephoto.view.activity.interfaces.IPreviewActivityView;
 
 import java.io.File;
 
@@ -144,7 +144,7 @@ public class PreviewActivity extends BaseActivity implements IPreviewActivityVie
     void onClickRotateRight() {
         cropImageView.rotateImage(CropImageView.RotateDegrees.ROTATE_90D);
     }
-    
+
     @OnClick(R.id.buttonCrop)
     void onClickCrop() {
         presenter.cropImage(createSaveUri(), cropImageView);

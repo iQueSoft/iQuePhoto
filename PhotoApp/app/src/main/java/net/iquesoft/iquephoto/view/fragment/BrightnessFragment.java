@@ -8,9 +8,9 @@ import android.view.ViewGroup;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseFragment;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
-import net.iquesoft.iquephoto.presenter.BrightnessFragmentPresenterImpl;
-import net.iquesoft.iquephoto.view.IBrightnessFragmentView;
-import net.iquesoft.iquephoto.view.IEditorActivityView;
+import net.iquesoft.iquephoto.presenter.fragment.BrightnessFragmentPresenterImpl;
+import net.iquesoft.iquephoto.view.activity.interfaces.IEditorActivityView;
+import net.iquesoft.iquephoto.view.fragment.interfaces.IBrightnessFragmentView;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 

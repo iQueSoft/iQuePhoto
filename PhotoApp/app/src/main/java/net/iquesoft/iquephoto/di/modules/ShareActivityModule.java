@@ -1,7 +1,7 @@
 package net.iquesoft.iquephoto.di.modules;
 
-import net.iquesoft.iquephoto.presenter.ShareActivityPresenterImpl;
-import net.iquesoft.iquephoto.view.IShareActivityView;
+import net.iquesoft.iquephoto.presenter.activity.ShareActivityPresenterImpl;
+import net.iquesoft.iquephoto.view.activity.interfaces.IShareActivityView;
 
 import dagger.Module;
 import dagger.Provides;

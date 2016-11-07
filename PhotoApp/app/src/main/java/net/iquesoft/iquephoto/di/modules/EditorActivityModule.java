@@ -1,18 +1,18 @@
 package net.iquesoft.iquephoto.di.modules;
 
-import net.iquesoft.iquephoto.presenter.AdjustFragmentPresenterImpl;
-import net.iquesoft.iquephoto.presenter.BrightnessFragmentPresenterImpl;
-import net.iquesoft.iquephoto.presenter.DrawingFragmentPresenterImpl;
-import net.iquesoft.iquephoto.presenter.EditorActivityPresenterImpl;
-import net.iquesoft.iquephoto.presenter.FiltersFragmentPresenterImpl;
-import net.iquesoft.iquephoto.presenter.FramesFragmentPresenterImpl;
-import net.iquesoft.iquephoto.presenter.OverlayFragmentPresenterImpl;
-import net.iquesoft.iquephoto.presenter.ShowStickersFragmentPresenterImpl;
-import net.iquesoft.iquephoto.presenter.StickersFragmentPresenterImpl;
-import net.iquesoft.iquephoto.presenter.TextFragmentPresenterImpl;
-import net.iquesoft.iquephoto.presenter.TiltShiftFragmentPresenterImpl;
-import net.iquesoft.iquephoto.presenter.ToolsFragmentPresenterImpl;
-import net.iquesoft.iquephoto.view.IEditorActivityView;
+import net.iquesoft.iquephoto.presenter.fragment.AdjustFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presenter.fragment.BrightnessFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presenter.fragment.DrawingFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presenter.activity.EditorActivityPresenterImpl;
+import net.iquesoft.iquephoto.presenter.fragment.FiltersFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presenter.fragment.FramesFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presenter.fragment.OverlayFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presenter.fragment.ShowStickersFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presenter.fragment.StickersFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presenter.fragment.TextFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presenter.fragment.TiltShiftFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presenter.fragment.ToolsFragmentPresenterImpl;
+import net.iquesoft.iquephoto.view.activity.interfaces.IEditorActivityView;
 
 import dagger.Module;
 import dagger.Provides;

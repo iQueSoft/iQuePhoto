@@ -32,6 +32,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.model.Sticker;
+import net.iquesoft.iquephoto.utils.BitmapUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -625,7 +626,11 @@ public class ImageEditorView extends ImageView {
 
     protected void setupOverlay(Bitmap bitmap) {
         mOverlayBitmap = bitmap;
+
+        BitmapUtil.logBitmapInfo("Overlay", mOverlayBitmap);
+
         mOverlayPaint.setAlpha(125);
+
         invalidate();
     }
 

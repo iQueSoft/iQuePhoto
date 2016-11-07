@@ -2,12 +2,10 @@ package net.iquesoft.iquephoto.view.fragment;
 
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.R;
@@ -16,9 +14,9 @@ import net.iquesoft.iquephoto.common.BaseFragment;
 import net.iquesoft.iquephoto.core.ImageEditorView;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
 import net.iquesoft.iquephoto.model.Tool;
-import net.iquesoft.iquephoto.presenter.ToolsFragmentPresenterImpl;
-import net.iquesoft.iquephoto.view.IEditorActivityView;
-import net.iquesoft.iquephoto.view.IToolsFragmentView;
+import net.iquesoft.iquephoto.presenter.fragment.ToolsFragmentPresenterImpl;
+import net.iquesoft.iquephoto.view.activity.interfaces.IEditorActivityView;
+import net.iquesoft.iquephoto.view.fragment.interfaces.IToolsFragmentView;
 
 import javax.inject.Inject;
 

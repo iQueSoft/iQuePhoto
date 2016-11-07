@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,8 +19,8 @@ import net.iquesoft.iquephoto.common.BaseFragment;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
 import net.iquesoft.iquephoto.view.dialog.FontPickerDialog;
 import net.iquesoft.iquephoto.view.dialog.RGBColorPickerDialog;
-import net.iquesoft.iquephoto.presenter.TextFragmentPresenterImpl;
-import net.iquesoft.iquephoto.view.ITextFragmentView;
+import net.iquesoft.iquephoto.presenter.fragment.TextFragmentPresenterImpl;
+import net.iquesoft.iquephoto.view.fragment.interfaces.ITextFragmentView;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 

@@ -1,7 +1,7 @@
 package net.iquesoft.iquephoto.di.modules;
 
-import net.iquesoft.iquephoto.presenter.StartActivityPresenterImpl;
-import net.iquesoft.iquephoto.view.IStartActivityView;
+import net.iquesoft.iquephoto.presenter.activity.StartActivityPresenterImpl;
+import net.iquesoft.iquephoto.view.activity.interfaces.IStartActivityView;
 
 import dagger.Module;
 import dagger.Provides;

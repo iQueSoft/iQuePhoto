@@ -13,8 +13,8 @@ import net.iquesoft.iquephoto.adapters.StickersPagerAdapter;
 import net.iquesoft.iquephoto.common.BaseFragment;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
 import net.iquesoft.iquephoto.model.StickersSet;
-import net.iquesoft.iquephoto.presenter.StickersFragmentPresenterImpl;
-import net.iquesoft.iquephoto.view.IStickersFragmentView;
+import net.iquesoft.iquephoto.presenter.fragment.StickersFragmentPresenterImpl;
+import net.iquesoft.iquephoto.view.fragment.interfaces.IStickersFragmentView;
 
 import java.util.List;
 
@@ -22,7 +22,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.Unbinder;
 
 public class StickersFragment extends BaseFragment implements IStickersFragmentView {

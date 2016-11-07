@@ -2,12 +2,11 @@ package net.iquesoft.iquephoto.core;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.annotation.StringRes;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-
-import net.iquesoft.iquephoto.utils.BitmapUtil;
 
 class BitmapScaleTask extends AsyncTask<Integer, Void, Bitmap> {
     private Context mContext;
@@ -21,6 +20,9 @@ class BitmapScaleTask extends AsyncTask<Integer, Void, Bitmap> {
         mReqHeight = reqHeight;
 
         mImageEditorView = imageEditorView;
+
+        mReqHeight = reqHeight;
+        mReqWidth = reqWidth;
 
         mProgressDialog = new MaterialDialog.Builder(mContext)
                 .content(progressContent)
@@ -41,7 +43,10 @@ class BitmapScaleTask extends AsyncTask<Integer, Void, Bitmap> {
     protected Bitmap doInBackground(Integer... integers) {
         int data = integers[0];
 
-        return BitmapUtil.decodeScaledBitmapFromResource(mContext.getResources(), data, mReqWidth, mReqHeight);
+        Bitmap srcBitmap = BitmapFactory.decodeResource(mContext.getResources(), data);
+        // FIXME: BUG!!!
+        return Bitmap.createScaledBitmap(srcBitmap, mReqWidth, mReqHeight, false);
+        //BitmapUtil.decodeScaledBitmapFromResource(mContext.getResources(), data, mReqWidth, mReqHeight);
     }
 
     @Override

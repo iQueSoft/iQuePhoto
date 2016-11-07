@@ -16,8 +16,8 @@ import net.iquesoft.iquephoto.core.ImageEditorView;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
 import net.iquesoft.iquephoto.model.Sticker;
 import net.iquesoft.iquephoto.model.StickersSet;
-import net.iquesoft.iquephoto.presenter.ShowStickersFragmentPresenterImpl;
-import net.iquesoft.iquephoto.view.IShowStickersFragmentView;
+import net.iquesoft.iquephoto.presenter.fragment.ShowStickersFragmentPresenterImpl;
+import net.iquesoft.iquephoto.view.fragment.interfaces.IShowStickersFragmentView;
 
 import java.util.List;
 

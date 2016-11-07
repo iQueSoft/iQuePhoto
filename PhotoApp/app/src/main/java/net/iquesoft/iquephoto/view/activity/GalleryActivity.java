@@ -14,9 +14,9 @@ import net.iquesoft.iquephoto.di.components.DaggerIGalleryActivityComponent;
 import net.iquesoft.iquephoto.di.components.IApplicationComponent;
 import net.iquesoft.iquephoto.di.components.IGalleryActivityComponent;
 import net.iquesoft.iquephoto.di.modules.GalleryActivityModule;
-import net.iquesoft.iquephoto.presenter.GalleryActivityPresenterImpl;
+import net.iquesoft.iquephoto.presenter.activity.GalleryActivityPresenterImpl;
 import net.iquesoft.iquephoto.utils.ImageScanner;
-import net.iquesoft.iquephoto.view.IGalleryActivityView;
+import net.iquesoft.iquephoto.view.activity.interfaces.IGalleryActivityView;
 
 import javax.inject.Inject;
 

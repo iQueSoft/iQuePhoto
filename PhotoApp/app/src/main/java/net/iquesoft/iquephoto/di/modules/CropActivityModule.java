@@ -1,7 +1,7 @@
 package net.iquesoft.iquephoto.di.modules;
 
-import net.iquesoft.iquephoto.presenter.PreviewActivityPresenterImpl;
-import net.iquesoft.iquephoto.view.IPreviewActivityView;
+import net.iquesoft.iquephoto.presenter.activity.PreviewActivityPresenterImpl;
+import net.iquesoft.iquephoto.view.activity.interfaces.IPreviewActivityView;
 
 import dagger.Module;
 import dagger.Provides;

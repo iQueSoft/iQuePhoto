@@ -12,8 +12,8 @@ public class ColorCircleDrawable extends Drawable {
     private int mRadius = 70;
 
     public ColorCircleDrawable(final int color) {
-        this.mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        this.mPaint.setColor(color);
+        mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mPaint.setColor(color);
     }
 
     @Override

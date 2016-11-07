@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import net.iquesoft.iquephoto.DataHolder;
@@ -12,10 +11,10 @@ import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseFragment;
 import net.iquesoft.iquephoto.core.ImageEditorView;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
-import net.iquesoft.iquephoto.presenter.DrawingFragmentPresenterImpl;
-import net.iquesoft.iquephoto.view.IDrawingFragmentView;
+import net.iquesoft.iquephoto.presenter.fragment.DrawingFragmentPresenterImpl;
 import net.iquesoft.iquephoto.view.dialog.ColorPickerDialog;
 import net.iquesoft.iquephoto.view.dialog.RGBColorPickerDialog;
+import net.iquesoft.iquephoto.view.fragment.interfaces.IDrawingFragmentView;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
@@ -40,8 +39,6 @@ public class DrawingFragment extends BaseFragment implements IDrawingFragmentVie
     private ColorPickerDialog mColorPickerDialog;
 
     private ImageEditorView mImageEditorView;
-
-    private boolean mIsHide;
 
     private Unbinder mUnbinder;
 

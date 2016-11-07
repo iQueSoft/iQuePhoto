@@ -14,9 +14,9 @@ import net.iquesoft.iquephoto.common.BaseFragment;
 import net.iquesoft.iquephoto.core.ImageEditorView;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
 import net.iquesoft.iquephoto.model.Overlay;
-import net.iquesoft.iquephoto.presenter.OverlayFragmentPresenterImpl;
-import net.iquesoft.iquephoto.view.IEditorActivityView;
-import net.iquesoft.iquephoto.view.IOverlayFragmentView;
+import net.iquesoft.iquephoto.presenter.fragment.OverlayFragmentPresenterImpl;
+import net.iquesoft.iquephoto.view.activity.interfaces.IEditorActivityView;
+import net.iquesoft.iquephoto.view.fragment.interfaces.IOverlayFragmentView;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 

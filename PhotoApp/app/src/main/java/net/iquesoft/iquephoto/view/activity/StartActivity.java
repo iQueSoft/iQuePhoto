@@ -2,7 +2,6 @@ package net.iquesoft.iquephoto.view.activity;
 
 import android.Manifest;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -20,8 +19,8 @@ import net.iquesoft.iquephoto.di.components.IApplicationComponent;
 import net.iquesoft.iquephoto.di.components.DaggerIStartActivityComponent;
 import net.iquesoft.iquephoto.di.components.IStartActivityComponent;
 import net.iquesoft.iquephoto.di.modules.StartActivityModule;
-import net.iquesoft.iquephoto.presenter.StartActivityPresenterImpl;
-import net.iquesoft.iquephoto.view.IStartActivityView;
+import net.iquesoft.iquephoto.presenter.activity.StartActivityPresenterImpl;
+import net.iquesoft.iquephoto.view.activity.interfaces.IStartActivityView;
 
 import javax.inject.Inject;
 

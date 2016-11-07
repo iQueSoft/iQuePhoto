@@ -1,7 +1,7 @@
 package net.iquesoft.iquephoto.di.modules;
 
-import net.iquesoft.iquephoto.presenter.GalleryActivityPresenterImpl;
-import net.iquesoft.iquephoto.view.IGalleryActivityView;
+import net.iquesoft.iquephoto.presenter.activity.GalleryActivityPresenterImpl;
+import net.iquesoft.iquephoto.view.activity.interfaces.IGalleryActivityView;
 
 import dagger.Module;
 import dagger.Provides;

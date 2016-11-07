@@ -10,8 +10,8 @@ import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseFragment;
 import net.iquesoft.iquephoto.core.ImageEditorView;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
-import net.iquesoft.iquephoto.presenter.TiltShiftFragmentPresenterImpl;
-import net.iquesoft.iquephoto.view.ITiltShiftFragmentView;
+import net.iquesoft.iquephoto.presenter.fragment.TiltShiftFragmentPresenterImpl;
+import net.iquesoft.iquephoto.view.fragment.interfaces.ITiltShiftFragmentView;
 
 import javax.inject.Inject;
 

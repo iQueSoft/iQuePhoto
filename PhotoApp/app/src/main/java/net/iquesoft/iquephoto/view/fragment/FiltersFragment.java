@@ -15,9 +15,9 @@ import net.iquesoft.iquephoto.common.BaseFragment;
 import net.iquesoft.iquephoto.core.ImageEditorView;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
 import net.iquesoft.iquephoto.model.Filter;
-import net.iquesoft.iquephoto.presenter.FiltersFragmentPresenterImpl;
-import net.iquesoft.iquephoto.view.IEditorActivityView;
-import net.iquesoft.iquephoto.view.IFiltersFragmentView;
+import net.iquesoft.iquephoto.presenter.fragment.FiltersFragmentPresenterImpl;
+import net.iquesoft.iquephoto.view.activity.interfaces.IEditorActivityView;
+import net.iquesoft.iquephoto.view.fragment.interfaces.IFiltersFragmentView;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 

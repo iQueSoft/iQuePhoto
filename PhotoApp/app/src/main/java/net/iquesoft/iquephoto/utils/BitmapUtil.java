@@ -6,7 +6,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.DisplayMetrics;
 import android.util.Log;
+
+import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
 import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
@@ -61,5 +64,10 @@ public class BitmapUtil {
     public static void logBitmapInfo(String bitmapName, Bitmap bitmap) {
         Log.i("Bitmap: " + bitmapName, "Height = " + String.valueOf(bitmap.getHeight()) +
                 "\nWidth = " + String.valueOf(bitmap.getWidth()) + ".");
+    }
+
+    public static float dp2px(Context context, float dp) {
+        final DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        return displayMetrics.density * dp;
     }
 }

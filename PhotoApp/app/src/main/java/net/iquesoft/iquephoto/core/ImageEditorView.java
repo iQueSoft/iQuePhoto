@@ -91,12 +91,13 @@ public class ImageEditorView extends ImageView {
     private float mWarmthValue = 0;
 
     private EditorCommand mCommand = NONE;
+    private EditorVignette mEditorVignette;
 
-    private IUndoListener mUndoListener;
+    private UndoListener mUndoListener;
 
     private Matrix mMatrix = null;
 
-    private RectF mImageRect;
+    private RectF mBitmapRect;
     private PointF mCenter = new PointF();
 
     private float mLastX, mLastY;
@@ -132,6 +133,7 @@ public class ImageEditorView extends ImageView {
         mOverlayPaint = new Paint();
 
         mEditorFrame = new EditorFrame(context);
+        mEditorVignette = new EditorVignette(context);
 
         mImagePaint.setFilterBitmap(true);
 
@@ -190,6 +192,8 @@ public class ImageEditorView extends ImageView {
                     canvas.drawBitmap(mSourceBitmap, mMatrix, mImagePaint);
             }
         }
+
+        mEditorVignette.draw(canvas, mBitmapRect, mImagePaint);
 
         switch (mCommand) {
             case FILTERS:
@@ -441,7 +445,7 @@ public class ImageEditorView extends ImageView {
         mDrawingPaint.setColor(getResources().getColor(color));
     }
 
-    public void setUndoListener(IUndoListener undoListener) {
+    public void setUndoListener(UndoListener undoListener) {
         mUndoListener = undoListener;
     }
 
@@ -778,7 +782,7 @@ public class ImageEditorView extends ImageView {
         setCenter(new PointF(getPaddingLeft() + viewW * 0.5f, getPaddingTop() + viewH * 0.5f));
         setScale(calcScale(viewW, viewH, mAngle));
         setMatrix();
-        mImageRect = calcImageRect(new RectF(0f, 0f, mImgWidth, mImgHeight), mMatrix);
+        mBitmapRect = calcImageRect(new RectF(0f, 0f, mImgWidth, mImgHeight), mMatrix);
         mIsInitialized = true;
         invalidate();
     }
@@ -809,21 +813,21 @@ public class ImageEditorView extends ImageView {
     }
 
     private boolean isBrushInsideImageHorizontal(float x) {
-        return mImageRect.left + mBrushSize <= x && mImageRect.right + mBrushSize >= x;
+        return mBitmapRect.left + mBrushSize <= x && mBitmapRect.right + mBrushSize >= x;
     }
 
     private boolean isBrushInsideImageVertical(float y) {
-        return mImageRect.top + mBrushSize <= y && mImageRect.bottom + mBrushSize >= y;
+        return mBitmapRect.top + mBrushSize <= y && mBitmapRect.bottom + mBrushSize >= y;
     }
 
     private boolean isStickerInsideImageHorizontal(float x, EditorSticker sticker) {
-        return (mImageRect.left + sticker.getStickerWight()) <= x
-                && (mImageRect.right + sticker.getStickerWight()) >= x;
+        return (mBitmapRect.left + sticker.getStickerWight()) <= x
+                && (mBitmapRect.right + sticker.getStickerWight()) >= x;
     }
 
     private boolean isStickerInsideImageVertical(float y, EditorSticker sticker) {
-        return (mImageRect.top + (sticker.getStickerHeight() / 2)) <= y
-                && (mImageRect.bottom + (sticker.getStickerHeight() / 2)) >= y;
+        return (mBitmapRect.top + (sticker.getStickerHeight() / 2)) <= y
+                && (mBitmapRect.bottom + (sticker.getStickerHeight() / 2)) >= y;
     }
 
     private float getDensity() {
@@ -831,6 +835,10 @@ public class ImageEditorView extends ImageView {
         ((WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay()
                 .getMetrics(displayMetrics);
         return displayMetrics.density;
+    }
+
+    public float dp2px(float dp) {
+        return getDensity() * dp;
     }
 
     private Bitmap getBitmap() {
@@ -902,7 +910,7 @@ public class ImageEditorView extends ImageView {
         @Override
         protected Bitmap doInBackground(EditorCommand... editorCommands) {
             mCanvas.setBitmap(mBitmap);
-            
+
             switch (editorCommands[0]) {
                 case NONE:
                     break;

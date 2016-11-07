@@ -160,7 +160,7 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
     public void showToastMessage(int stringResource) {
         Toast.makeText(getApplicationContext(), getString(stringResource), Toast.LENGTH_SHORT).show();
     }
-    
+
     @Override
     public void navigateBack(boolean isFragment) {
         if (isFragment) {

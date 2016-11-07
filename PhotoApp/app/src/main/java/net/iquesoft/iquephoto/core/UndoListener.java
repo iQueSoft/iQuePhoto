@@ -1,5 +1,5 @@
 package net.iquesoft.iquephoto.core;
 
-public interface IUndoListener {
+public interface UndoListener {
     void hasChanged(int count);
 }

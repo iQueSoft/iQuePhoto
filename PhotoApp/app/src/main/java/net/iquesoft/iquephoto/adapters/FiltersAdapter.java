@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mikhaellopez.circularimageview.CircularImageView;
+import com.squareup.picasso.Picasso;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.model.Filter;
@@ -49,7 +50,7 @@ public class FiltersAdapter extends RecyclerView.Adapter<FiltersAdapter.ViewHold
     @Override
     public FiltersAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         mContext = parent.getContext();
-        
+
         LayoutInflater inflater = LayoutInflater.from(mContext);
 
         View view = inflater.inflate(R.layout.item_filter, parent, false);
@@ -64,6 +65,7 @@ public class FiltersAdapter extends RecyclerView.Adapter<FiltersAdapter.ViewHold
         holder.filterTitle.setText(filter.getTitle());
 
         holder.filterIcon.setImageBitmap(mBitmap);
+
         holder.filterIcon.setColorFilter(new ColorMatrixColorFilter(filter.getColorMatrix()));
 
         if (mCurrentPosition == position) {

@@ -59,7 +59,7 @@ public class FiltersFragment extends BaseFragment implements IFiltersFragmentVie
         super.onCreate(savedInstanceState);
 
     }
-
+    
     @Override
     public void onResume() {
         super.onResume();
@@ -122,7 +122,7 @@ public class FiltersFragment extends BaseFragment implements IFiltersFragmentVie
     void onClickBack() {
         editorActivityView.navigateBack(true);
     }
-    
+
     @OnClick(R.id.filterApply)
     void onClickApply() {
         editorActivityView.getImageEditorView().apply(EditorCommand.FILTERS);

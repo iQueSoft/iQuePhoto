@@ -112,7 +112,7 @@ public class ImageEditorView extends ImageView {
     private int mTouchPadding = 0;
 
     private MaterialDialog mProgressDialog;
-
+    
     // VIGNETTE
     private float mFeather = 0.7f;
 

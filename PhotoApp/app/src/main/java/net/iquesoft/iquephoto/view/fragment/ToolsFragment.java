@@ -35,7 +35,7 @@ public class ToolsFragment extends BaseFragment implements IToolsFragmentView {
     RecyclerView recyclerView;
 
     private ImageEditorView mImageEditorView;
-    
+
     @Inject
     IEditorActivityView view;
 
@@ -66,7 +66,7 @@ public class ToolsFragment extends BaseFragment implements IToolsFragmentView {
         });
 
         recyclerView.setLayoutManager(
-                new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false)
+                new GridLayoutManager(getContext(), 2, LinearLayoutManager.HORIZONTAL, false)
         );
 
         recyclerView.setAdapter(mAdapter);

@@ -12,6 +12,7 @@ import net.iquesoft.iquephoto.presenter.fragment.StickersFragmentPresenterImpl;
 import net.iquesoft.iquephoto.presenter.fragment.TextFragmentPresenterImpl;
 import net.iquesoft.iquephoto.presenter.fragment.TiltShiftFragmentPresenterImpl;
 import net.iquesoft.iquephoto.presenter.fragment.ToolsFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presenter.fragment.VignetteFragmentPresenterImpl;
 import net.iquesoft.iquephoto.view.activity.interfaces.IEditorActivityView;
 
 import dagger.Module;
@@ -91,4 +92,8 @@ public class EditorActivityModule {
         return new BrightnessFragmentPresenterImpl();
     }
 
+    @Provides
+    VignetteFragmentPresenterImpl provideVignetteFragmentPresenterImpl() {
+        return new VignetteFragmentPresenterImpl();
+    }
 }

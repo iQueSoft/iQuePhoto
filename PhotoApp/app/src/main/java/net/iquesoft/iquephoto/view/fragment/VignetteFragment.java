@@ -1,4 +1,3 @@
-/*
 package net.iquesoft.iquephoto.view.fragment;
 
 import android.os.Bundle;
@@ -8,8 +7,10 @@ import android.view.ViewGroup;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseFragment;
+import net.iquesoft.iquephoto.core.EditorCommand;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
 import net.iquesoft.iquephoto.presenter.fragment.BrightnessFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presenter.fragment.VignetteFragmentPresenterImpl;
 import net.iquesoft.iquephoto.view.activity.interfaces.IEditorActivityView;
 import net.iquesoft.iquephoto.view.fragment.interfaces.IBrightnessFragmentView;
 import net.iquesoft.iquephoto.view.fragment.interfaces.IVignetteFragmentView;
@@ -23,6 +24,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
+import static net.iquesoft.iquephoto.core.EditorCommand.VIGNETTE;
+
 public class VignetteFragment extends BaseFragment implements IVignetteFragmentView {
 
     private Unbinder mUnbinder;
@@ -31,9 +34,9 @@ public class VignetteFragment extends BaseFragment implements IVignetteFragmentV
     IEditorActivityView editorActivityView;
 
     @Inject
-    BrightnessFragmentPresenterImpl presenter;
+    VignetteFragmentPresenterImpl presenter;
 
-    @BindView(R.id.brightnessSeekBar)
+    @BindView(R.id.vignetteSeekBar)
     DiscreteSeekBar seekBar;
 
     @Override
@@ -44,7 +47,7 @@ public class VignetteFragment extends BaseFragment implements IVignetteFragmentV
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_brightness, container, false);
+        View v = inflater.inflate(R.layout.fragment_vignette, container, false);
 
         mUnbinder = ButterKnife.bind(this, v);
 
@@ -80,14 +83,13 @@ public class VignetteFragment extends BaseFragment implements IVignetteFragmentV
         mUnbinder.unbind();
     }
 
-    @OnClick(R.id.brightnessCancel)
+    @OnClick(R.id.vignetteCancel)
     void onClickBack() {
         editorActivityView.navigateBack(true);
     }
 
-    @OnClick(R.id.brightnessApply)
+    @OnClick(R.id.vignetteApply)
     void onClickApply() {
-        editorActivityView.getImageEditorView().apply(R.string.brightness);
+        editorActivityView.getImageEditorView().apply(VIGNETTE);
     }
 }
-*/

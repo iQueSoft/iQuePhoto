@@ -14,6 +14,7 @@ import net.iquesoft.iquephoto.view.fragment.StickersFragment;
 import net.iquesoft.iquephoto.view.fragment.TextFragment;
 import net.iquesoft.iquephoto.view.fragment.TiltShiftFragment;
 import net.iquesoft.iquephoto.view.fragment.ToolsFragment;
+import net.iquesoft.iquephoto.view.fragment.VignetteFragment;
 
 import dagger.Component;
 
@@ -46,4 +47,6 @@ public interface IEditorActivityComponent {
     void inject(TiltShiftFragment tiltShiftFragment);
 
     void inject(BrightnessFragment brightnessFragment);
+
+    void inject(VignetteFragment vignetteFragment);
 }

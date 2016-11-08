@@ -16,9 +16,12 @@ import net.iquesoft.iquephoto.view.fragment.OverlayFragment;
 import net.iquesoft.iquephoto.view.fragment.StickersFragment;
 import net.iquesoft.iquephoto.view.fragment.TextFragment;
 import net.iquesoft.iquephoto.view.fragment.TiltShiftFragment;
+import net.iquesoft.iquephoto.view.fragment.VignetteFragment;
 
 import java.util.Arrays;
 import java.util.List;
+
+import static net.iquesoft.iquephoto.core.EditorCommand.*;
 
 public class Tool {
     @StringRes
@@ -36,15 +39,15 @@ public class Tool {
     }
 
     private static Tool tools[] = {
-            new Tool(R.string.filters, R.drawable.ic_filter, EditorCommand.FILTERS, new FiltersFragment()),
-            new Tool(R.string.adjust, R.drawable.ic_adjust, EditorCommand.ADJUST, new AdjustFragment()),
-            new Tool(R.string.overlay, R.drawable.ic_overlay, EditorCommand.OVERLAY, new OverlayFragment()),
-            new Tool(R.string.stickers, R.drawable.ic_stiker, EditorCommand.STICKERS, StickersFragment.newInstance()),
-            new Tool(R.string.frames, R.drawable.ic_frame, EditorCommand.FRAMES, new FramesFragment()),
-            new Tool(R.string.vignette, R.drawable.ic_vignette, EditorCommand.VIGNETTE, null),
-            new Tool(R.string.tilt_shift, R.drawable.ic_tilt_shift, EditorCommand.TILT_SHIFT, new TiltShiftFragment()),
-            new Tool(R.string.drawing, R.drawable.ic_brush, EditorCommand.DRAWING, DrawingFragment.newInstance()),
-            new Tool(R.string.text, R.drawable.ic_letters, EditorCommand.TEXT, TextFragment.newInstance())
+            new Tool(R.string.filters, R.drawable.ic_filter, FILTERS, new FiltersFragment()),
+            new Tool(R.string.adjust, R.drawable.ic_adjust, ADJUST, new AdjustFragment()),
+            new Tool(R.string.overlay, R.drawable.ic_overlay, OVERLAY, new OverlayFragment()),
+            new Tool(R.string.stickers, R.drawable.ic_stiker, STICKERS, StickersFragment.newInstance()),
+            new Tool(R.string.frames, R.drawable.ic_frame, FRAMES, new FramesFragment()),
+            new Tool(R.string.vignette, R.drawable.ic_vignette, VIGNETTE, new VignetteFragment()),
+            new Tool(R.string.tilt_shift, R.drawable.ic_tilt_shift, TILT_SHIFT, new TiltShiftFragment()),
+            new Tool(R.string.drawing, R.drawable.ic_brush, DRAWING, DrawingFragment.newInstance()),
+            new Tool(R.string.text, R.drawable.ic_letters, TEXT, TextFragment.newInstance())
     };
 
     private Tool(@StringRes int title, @DrawableRes int icon, @NonNull EditorCommand command, @Nullable Fragment fragment) {

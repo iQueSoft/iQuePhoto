@@ -4,18 +4,24 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.RadialGradient;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.Shader;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
@@ -91,7 +97,6 @@ public class ImageEditorView extends ImageView {
     private float mWarmthValue = 0;
 
     private EditorCommand mCommand = NONE;
-    private EditorVignette mEditorVignette;
 
     private UndoListener mUndoListener;
 
@@ -107,6 +112,30 @@ public class ImageEditorView extends ImageView {
     private int mTouchPadding = 0;
 
     private MaterialDialog mProgressDialog;
+
+    // VIGNETTE
+    private float mFeather = 0.7f;
+
+    private static final int FADEOUT_DELAY = 3000;
+
+    private float sControlPointTolerance = 20;
+    private float sGradientInset = 100;
+
+    private final RectF pBitmapRect = new RectF();
+
+    private Paint mVignetteControlPaint;
+    private Paint mBlackPaint;
+    private final Paint mPaint = new Paint();
+
+    private RectF mVignetteRect;
+
+    final RectF tempRect = new RectF();
+    final RectF tempRect2 = new RectF();
+
+    private RadialGradient mGradientShader;
+    private Paint mPaintShader;
+    private Matrix mGradientMatrix;
+    // VIGNETTE
 
     public ImageEditorView(Context context) {
         this(context, null);
@@ -133,7 +162,6 @@ public class ImageEditorView extends ImageView {
         mOverlayPaint = new Paint();
 
         mEditorFrame = new EditorFrame(context);
-        mEditorVignette = new EditorVignette(context);
 
         mImagePaint.setFilterBitmap(true);
 
@@ -141,11 +169,12 @@ public class ImageEditorView extends ImageView {
 
         mScale = 1.0f;
 
-        initDrawing();
-        initProgressDialog();
+        initializeDrawing();
+        initializeProgressDialog();
+        initializeVignette();
     }
 
-    private void initDrawing() {
+    private void initializeDrawing() {
         mDrawingList = new ArrayList<>();
 
         mDrawingPaint = new Paint();
@@ -169,7 +198,7 @@ public class ImageEditorView extends ImageView {
         mDrawingCirclePaint.setStrokeWidth(10f);
     }
 
-    private void initProgressDialog() {
+    private void initializeProgressDialog() {
         mProgressDialog = new MaterialDialog.Builder(mContext)
                 .content(R.string.processing)
                 .progress(true, 0)
@@ -178,6 +207,147 @@ public class ImageEditorView extends ImageView {
                 .canceledOnTouchOutside(false)
                 .build();
     }
+
+    // START - VIGNETTE
+    private void initializeVignette() {
+        final DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+
+        mVignetteControlPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mVignetteControlPaint.setColor(Color.WHITE);
+        mVignetteControlPaint.setStrokeWidth(dp2px(metrics.density, 2.5f));
+        mVignetteControlPaint.setStyle(Paint.Style.STROKE);
+        mVignetteControlPaint.setAlpha(125);
+        mVignetteControlPaint.setDither(true);
+
+        mBlackPaint = new Paint();
+        mBlackPaint.setAntiAlias(true);
+        mBlackPaint.setFilterBitmap(false);
+        mBlackPaint.setDither(true);
+
+        mGradientMatrix = new Matrix();
+        mVignetteRect = new RectF();
+
+        updateBackgroundMask(55);
+
+        mPaintShader = new Paint();
+        mPaintShader.setAntiAlias(true);
+        mPaintShader.setFilterBitmap(false);
+        mPaintShader.setDither(true);
+        mPaintShader.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OUT));
+
+        updateGradientShader(0.7f, mPaintShader);
+
+        sControlPointTolerance = sControlPointTolerance * 1.5f;
+
+        sGradientInset = dp2px(metrics.density, 0);
+
+        setHardwareAccelerated(true);
+    }
+
+    public void setHardwareAccelerated(boolean accelerated) {
+        if (accelerated) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                if (isHardwareAccelerated()) {
+                    Paint hardwarePaint = new Paint();
+                    hardwarePaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.OVERLAY));
+                    setLayerType(LAYER_TYPE_HARDWARE, hardwarePaint);
+                } else {
+                    setLayerType(LAYER_TYPE_SOFTWARE, null);
+                }
+            } else {
+                setDrawingCacheEnabled(true);
+            }
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                setLayerType(LAYER_TYPE_SOFTWARE, null);
+            } else {
+                setDrawingCacheEnabled(true);
+            }
+        }
+    }
+
+    private void updateBackgroundMask(int value) {
+        if (value >= 0) {
+            mBlackPaint.setColor(Color.BLACK);
+        } else {
+            mBlackPaint.setColor(Color.WHITE);
+        }
+
+        value = Math.max(Math.min(Math.abs(value), 100), 0);
+        value *= 2.55;
+
+        mBlackPaint.setAlpha(value);
+    }
+
+    private void updateGradientShader(float value, final Paint paint) {
+
+        mFeather = value;
+        final int[] colors = new int[]{0xff000000, 0xff000000, 0};
+        final float[] anchors = new float[]{0, mFeather, 1};
+
+        mGradientShader = new android.graphics.RadialGradient(
+                0, 0, 1, colors, anchors, Shader.TileMode.CLAMP
+        );
+        paint.setShader(mGradientShader);
+        updateGradientMatrix(mVignetteRect);
+    }
+
+    private void updateGradientMatrix(RectF rect) {
+        mGradientMatrix.reset();
+        mGradientMatrix.postTranslate(rect.centerX(), rect.centerY());
+        mGradientMatrix.postScale(rect.width() / 2, rect.height() / 2, rect.centerX(), rect.centerY());
+        mGradientShader.setLocalMatrix(mGradientMatrix);
+    }
+
+    private void updateBitmapRect() {
+        RectF rect = mBitmapRect;
+        final boolean rect_changed = !pBitmapRect.equals(rect);
+
+        if (null != rect) {
+            if (rect_changed) {
+                if (!pBitmapRect.isEmpty()) {
+                    float old_left = pBitmapRect.left;
+                    float old_top = pBitmapRect.top;
+                    float old_width = pBitmapRect.width();
+                    float old_height = pBitmapRect.height();
+
+                    mVignetteRect.inset(-(rect.width() - old_width) / 2, -(rect.height() - old_height) / 2);
+                    mVignetteRect.offset(rect.left - old_left, rect.top - old_top);
+                    mVignetteRect.offset((rect.width() - old_width) / 2, (rect.height() - old_height) / 2);
+                } else {
+                    mVignetteRect.set(rect);
+                    mVignetteRect.inset(sControlPointTolerance, sControlPointTolerance);
+                }
+            }
+            pBitmapRect.set(rect);
+        } else {
+            // rect is null
+            pBitmapRect.setEmpty();
+            mVignetteRect.setEmpty();
+        }
+
+        updateGradientMatrix(mVignetteRect);
+    }
+
+    private void drawVignette(Canvas canvas) {
+        updateBitmapRect();
+
+        if (!mVignetteRect.isEmpty()) {
+            canvas.saveLayer(pBitmapRect, mPaint, Canvas.ALL_SAVE_FLAG);
+
+            tempRect2.set(mVignetteRect);
+            tempRect2.inset(-sGradientInset, -sGradientInset);
+
+            canvas.drawRect(pBitmapRect, mBlackPaint);
+            canvas.drawOval(tempRect2, mPaintShader);
+            canvas.restore();
+
+            tempRect2.set(mVignetteRect);
+
+            canvas.drawOval(mVignetteRect, mVignetteControlPaint);
+        }
+    }
+    // END - VIGNETTE
 
     @Override
     public void onDraw(Canvas canvas) {
@@ -192,8 +362,6 @@ public class ImageEditorView extends ImageView {
                     canvas.drawBitmap(mSourceBitmap, mMatrix, mImagePaint);
             }
         }
-
-        mEditorVignette.draw(canvas, mBitmapRect, mImagePaint);
 
         switch (mCommand) {
             case FILTERS:
@@ -220,6 +388,9 @@ public class ImageEditorView extends ImageView {
                         canvas.drawBitmap(mSourceBitmap, mMatrix, mBrightnessPaint);
                     }
                 }
+                break;
+            case VIGNETTE:
+                drawVignette(canvas);
                 break;
             case OVERLAY:
                 if (mOverlayBitmap != null)
@@ -761,7 +932,6 @@ public class ImageEditorView extends ImageView {
                     return;
                 }
             }
-
         }
         mCurrentEditorSticker = null;
     }
@@ -837,8 +1007,8 @@ public class ImageEditorView extends ImageView {
         return displayMetrics.density;
     }
 
-    public float dp2px(float dp) {
-        return getDensity() * dp;
+    public float dp2px(final float density, float dp) {
+        return density * dp;
     }
 
     private Bitmap getBitmap() {

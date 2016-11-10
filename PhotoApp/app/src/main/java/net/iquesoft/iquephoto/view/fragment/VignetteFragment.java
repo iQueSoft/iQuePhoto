@@ -54,7 +54,7 @@ public class VignetteFragment extends BaseFragment implements IVignetteFragmentV
         seekBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
             @Override
             public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
-                editorActivityView.getImageEditorView().setBrightnessValue(value);
+                editorActivityView.getImageEditorView().setVignetteIntensity(value);
             }
 
             @Override

@@ -97,6 +97,6 @@ public class ShowStickersFragment extends BaseFragment implements IShowStickersF
     }
 
     public void setPosition(int position) {
-        this.mPosition = position;
+        mPosition = position;
     }
 }

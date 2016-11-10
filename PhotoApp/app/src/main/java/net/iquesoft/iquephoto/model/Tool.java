@@ -13,10 +13,11 @@ import net.iquesoft.iquephoto.view.fragment.AdjustFragment;
 import net.iquesoft.iquephoto.view.fragment.FiltersFragment;
 import net.iquesoft.iquephoto.view.fragment.FramesFragment;
 import net.iquesoft.iquephoto.view.fragment.OverlayFragment;
+import net.iquesoft.iquephoto.view.fragment.SliderControlFragment;
 import net.iquesoft.iquephoto.view.fragment.StickersFragment;
 import net.iquesoft.iquephoto.view.fragment.TextFragment;
 import net.iquesoft.iquephoto.view.fragment.TiltShiftFragment;
-import net.iquesoft.iquephoto.view.fragment.VignetteFragment;
+import net.iquesoft.iquephoto.view.fragment.TransformFragment;
 
 import java.util.Arrays;
 import java.util.List;
@@ -44,7 +45,8 @@ public class Tool {
             new Tool(R.string.overlay, R.drawable.ic_overlay, OVERLAY, new OverlayFragment()),
             new Tool(R.string.stickers, R.drawable.ic_stiker, STICKERS, StickersFragment.newInstance()),
             new Tool(R.string.frames, R.drawable.ic_frame, FRAMES, new FramesFragment()),
-            new Tool(R.string.vignette, R.drawable.ic_vignette, VIGNETTE, new VignetteFragment()),
+            new Tool(R.string.transform, R.drawable.ic_frame, TRANSFORM, new TransformFragment()),
+            new Tool(R.string.vignette, R.drawable.ic_vignette, VIGNETTE, SliderControlFragment.newInstance(VIGNETTE)),
             new Tool(R.string.tilt_shift, R.drawable.ic_tilt_shift, TILT_SHIFT, new TiltShiftFragment()),
             new Tool(R.string.drawing, R.drawable.ic_brush, DRAWING, DrawingFragment.newInstance()),
             new Tool(R.string.text, R.drawable.ic_letters, TEXT, TextFragment.newInstance())

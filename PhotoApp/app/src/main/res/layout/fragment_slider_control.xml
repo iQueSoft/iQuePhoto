@@ -17,21 +17,21 @@
         android:paddingRight="5dp">
 
         <Button
-            android:id="@+id/vignetteCancel"
+            android:id="@+id/toolCancelButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerInParent="true"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:drawableLeft="@drawable/ic_left"
-            android:text="@string/vignette"
+            android:text="@string/brightness"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="18sp"
             android:textStyle="bold" />
 
         <ImageButton
-            android:id="@+id/vignetteApply"
+            android:id="@+id/toolApplyButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -52,7 +52,7 @@
         android:padding="10dp">
 
         <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
-            android:id="@+id/vignetteSeekBar"
+            android:id="@+id/toolSeekBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

@@ -69,7 +69,7 @@ public class EditorVignette {
         mGradientMatrix = new Matrix();
         mVignetteRect = new RectF();
 
-        updateBackgroundMask(55);
+        updateMask(55);
 
         mShaderPaint = new Paint();
         mShaderPaint.setAntiAlias(true);
@@ -84,7 +84,7 @@ public class EditorVignette {
         mGradientInset = dp2px(metrics.density, 0);
     }
 
-    public void updateBackgroundMask(int value) {
+    public void updateMask(int value) {
         if (value >= 0) {
             mVignetteControlPaint.setColor(Color.WHITE);
             mVignettePaint.setColor(Color.BLACK);
@@ -167,14 +167,32 @@ public class EditorVignette {
         }
     }
 
-    public void actionDown(MotionEvent motionEvent) {
-        mFingersCount = motionEvent.getPointerCount();
+    public void drawOnImage(Canvas canvas) {
+        if (!mVignetteRect.isEmpty()) {
+            canvas.saveLayer(0, 0, canvas.getHeight(), canvas.getWidth(), mPaint, Canvas.ALL_SAVE_FLAG);
+            
+            mVignetteControlRect.set(mVignetteRect);
+            mVignetteControlRect.inset(-mGradientInset, -mGradientInset);
 
-        if (mFingersCount == 1) {
+            canvas.drawRect(mBitmapRect, mVignettePaint);
+            canvas.drawOval(mVignetteControlRect, mShaderPaint);
+            canvas.restore();
+
+            mVignetteControlRect.set(mVignetteRect);
+
+            canvas.drawOval(mVignetteRect, mVignetteControlPaint);
+        }
+    }
+
+    public void actionDown(MotionEvent motionEvent) {
+        if (motionEvent.getPointerCount() == 1) {
+            mFingersCount = motionEvent.getPointerCount();
+
             mPreX = motionEvent.getX();
             mPreY = motionEvent.getY();
+        } else if (motionEvent.getPointerCount() == 2) {
+            mFingersCount = motionEvent.getPointerCount();
         }
-
     }
 
     public void actionMove(MotionEvent motionEvent) {
@@ -204,7 +222,7 @@ public class EditorVignette {
         }
 
         updateGradientMatrix(mVignetteRect);
-        
+
         mImageEditorView.invalidate();
     }
 

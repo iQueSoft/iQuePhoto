@@ -17,27 +17,18 @@
         android:paddingRight="5dp">
 
         <Button
-            android:id="@+id/tiltShiftCancelButton"
+            android:id="@+id/transformBackButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerInParent="true"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:drawableLeft="@drawable/ic_left"
-            android:text="@string/tilt_shift"
+            android:text="@string/transform"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="18sp"
             android:textStyle="bold" />
-
-        <ImageButton
-            android:id="@+id/tiltShiftApplyButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerInParent="true"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_apply_40" />
     </RelativeLayout>
 
     <View
@@ -52,34 +43,46 @@
         android:padding="10dp">
 
         <Button
-            android:id="@+id/tiltShiftRadialButton"
+            android:id="@+id/transformVerticalButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:drawableTop="@drawable/ic_blur_radial"
-            android:text="@string/tilt_shift_radial"
+            android:drawableTop="@drawable/ic_blur_off"
+            android:text="@string/transform_vertical"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="bold" />
 
         <Button
-            android:id="@+id/tiltShiftLinearButton"
+            android:id="@+id/transformStraightenButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:drawableTop="@drawable/ic_blur_radial"
+            android:text="@string/transform_straighten"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/transformHorizontalButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:drawableTop="@drawable/ic_blur_linear"
-            android:text="@string/tilt_shift_linear"
+            android:text="@string/transform_horizontal"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="bold" />
     </RelativeLayout>
-
-
 </LinearLayout>
 
 

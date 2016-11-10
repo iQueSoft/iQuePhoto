@@ -11,28 +11,23 @@ import net.iquesoft.iquephoto.common.BaseFragment;
 import net.iquesoft.iquephoto.core.ImageEditorView;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
 import net.iquesoft.iquephoto.presenter.fragment.TiltShiftFragmentPresenterImpl;
+import net.iquesoft.iquephoto.view.activity.interfaces.IEditorActivityView;
 import net.iquesoft.iquephoto.view.fragment.interfaces.ITiltShiftFragmentView;
 
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 public class TiltShiftFragment extends BaseFragment implements ITiltShiftFragmentView {
     private Unbinder mUnbinder;
 
-    private ImageEditorView mImageEditorView;
+    @Inject
+    IEditorActivityView editorActivityView;
 
     @Inject
     TiltShiftFragmentPresenterImpl presenter;
-
-    public static TiltShiftFragment newInstance() {
-        /*Bundle b = new Bundle();
-        b.putString("msg", text);
-        b.putString("color", color);
-        f.setArguments(b);*/
-        return new TiltShiftFragment();
-    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -43,8 +38,6 @@ public class TiltShiftFragment extends BaseFragment implements ITiltShiftFragmen
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_tilt_shift, container, false);
-
-        mImageEditorView = DataHolder.getInstance().getEditorView();
 
         mUnbinder = ButterKnife.bind(this, v);
 
@@ -61,5 +54,25 @@ public class TiltShiftFragment extends BaseFragment implements ITiltShiftFragmen
     public void onDestroyView() {
         super.onDestroyView();
         mUnbinder.unbind();
+    }
+
+    @OnClick(R.id.tiltShiftCancelButton)
+    void onClickCancel() {
+        editorActivityView.navigateBack(true);
+    }
+
+    @OnClick(R.id.tiltShiftApplyButton)
+    void onClickApply() {
+        //TODO: Apply Tilt Shift.
+        editorActivityView.navigateBack(true);
+    }
+
+    @OnClick(R.id.tiltShiftLinearButton)
+    void onClickLinear() {
+        //TODO: Switch to Linear Tilt Shift.
+    }
+
+    void onClickRadial() {
+        //TODO: Switch to Radial Tilt Shift.
     }
 }

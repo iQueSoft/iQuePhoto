@@ -170,13 +170,19 @@
     <string name="overlay">Overlay</string>
 
     <string name="tilt_shift">Tilt Shift</string>
-    <string name="blur_off">Off</string>
-    <string name="blur_radial">Radial</string>
-    <string name="blur_linear">Linear</string>
+    <string name="tilt_shift_radial">Radial</string>
+    <string name="tilt_shift_linear">Linear</string>
 
     <string name="image_saved">Image saved!</string>
 
     <string name="tools">Tools</string>
+
+    <!-- START - Transform -->
+    <string name="transform">Transform</string>
+    <string name="transform_straighten">Straighten</string>
+    <string name="transform_horizontal">Horizontal</string>
+    <string name="transform_vertical">Vertical</string>
+    <!-- Transform - END. -->
 
     <!-- START - Share screen -->
     <string name="application_does_not_exist">Application does not exist</string>

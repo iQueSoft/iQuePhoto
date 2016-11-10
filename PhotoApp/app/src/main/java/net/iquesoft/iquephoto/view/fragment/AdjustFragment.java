@@ -60,7 +60,7 @@ public class AdjustFragment extends BaseFragment implements IAdjustFragmentView 
         mAdapter.setAdjustListener(adjust -> {
             editorActivityView.getImageEditorView().setCommand(adjust.getCommand());
 
-            editorActivityView.setupFragment(adjust.getFragment());
+            editorActivityView.setupFragment(SliderControlFragment.newInstance(adjust.getCommand()));
         });
 
         recyclerView.setLayoutManager(new LinearLayoutManager(null, LinearLayout.HORIZONTAL, false));

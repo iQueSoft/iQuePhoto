@@ -1,18 +1,18 @@
 package net.iquesoft.iquephoto.di.modules;
 
 import net.iquesoft.iquephoto.presenter.fragment.AdjustFragmentPresenterImpl;
-import net.iquesoft.iquephoto.presenter.fragment.BrightnessFragmentPresenterImpl;
 import net.iquesoft.iquephoto.presenter.fragment.DrawingFragmentPresenterImpl;
 import net.iquesoft.iquephoto.presenter.activity.EditorActivityPresenterImpl;
 import net.iquesoft.iquephoto.presenter.fragment.FiltersFragmentPresenterImpl;
 import net.iquesoft.iquephoto.presenter.fragment.FramesFragmentPresenterImpl;
 import net.iquesoft.iquephoto.presenter.fragment.OverlayFragmentPresenterImpl;
 import net.iquesoft.iquephoto.presenter.fragment.ShowStickersFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presenter.fragment.SliderControlFragmentPresenterImpl;
 import net.iquesoft.iquephoto.presenter.fragment.StickersFragmentPresenterImpl;
 import net.iquesoft.iquephoto.presenter.fragment.TextFragmentPresenterImpl;
 import net.iquesoft.iquephoto.presenter.fragment.TiltShiftFragmentPresenterImpl;
 import net.iquesoft.iquephoto.presenter.fragment.ToolsFragmentPresenterImpl;
-import net.iquesoft.iquephoto.presenter.fragment.VignetteFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presenter.fragment.TransformFragmentPresenterImpl;
 import net.iquesoft.iquephoto.view.activity.interfaces.IEditorActivityView;
 
 import dagger.Module;
@@ -88,12 +88,12 @@ public class EditorActivityModule {
     }
 
     @Provides
-    BrightnessFragmentPresenterImpl provideBrightnessFragmentPresenterImpl() {
-        return new BrightnessFragmentPresenterImpl();
+    TransformFragmentPresenterImpl provideTransformFragmentPresenterImpl() {
+        return new TransformFragmentPresenterImpl();
     }
 
     @Provides
-    VignetteFragmentPresenterImpl provideVignetteFragmentPresenterImpl() {
-        return new VignetteFragmentPresenterImpl();
+    SliderControlFragmentPresenterImpl provideSliderControlFragmentPresenterImpl() {
+        return new SliderControlFragmentPresenterImpl();
     }
 }

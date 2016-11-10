@@ -65,9 +65,7 @@ public class ToolsFragment extends BaseFragment implements IToolsFragmentView {
 
         });
 
-        recyclerView.setLayoutManager(
-                new GridLayoutManager(getContext(), 2, LinearLayoutManager.HORIZONTAL, false)
-        );
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 4));
 
         recyclerView.setAdapter(mAdapter);
 

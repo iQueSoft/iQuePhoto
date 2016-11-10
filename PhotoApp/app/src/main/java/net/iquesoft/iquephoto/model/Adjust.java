@@ -8,10 +8,12 @@ import android.support.v4.app.Fragment;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.core.EditorCommand;
-import net.iquesoft.iquephoto.view.fragment.BrightnessFragment;
+import net.iquesoft.iquephoto.view.fragment.SliderControlFragment;
 
 import java.util.Arrays;
 import java.util.List;
+
+import static net.iquesoft.iquephoto.core.EditorCommand.*;
 
 public class Adjust {
     @StringRes
@@ -24,28 +26,25 @@ public class Adjust {
 
     private int mValue;
 
-    private Fragment mFragment;
-
     public static List<Adjust> getAdjustList() {
         return Arrays.asList(adjusts);
     }
 
     private static Adjust[] adjusts = {
-            new Adjust(R.string.brightness, R.drawable.ic_brightness, EditorCommand.BRIGHTNESS,
-                    new BrightnessFragment(), 0),
-            new Adjust(R.string.contrast, R.drawable.ic_contrast, EditorCommand.CONTRAST,
-                    null, 0),
-            new Adjust(R.string.saturation, R.drawable.ic_saturation, EditorCommand.SATURATION,
-                    null, 0),
-            new Adjust(R.string.warmth, R.drawable.ic_warmth, EditorCommand.WARMTH,
-                    null, 0)
+            new Adjust(R.string.brightness, R.drawable.ic_brightness, BRIGHTNESS,
+                    0),
+            new Adjust(R.string.contrast, R.drawable.ic_contrast, CONTRAST,
+                    0),
+            new Adjust(R.string.saturation, R.drawable.ic_saturation, SATURATION,
+                    0),
+            new Adjust(R.string.warmth, R.drawable.ic_warmth, WARMTH,
+                    0)
     };
 
     private Adjust(@StringRes int title, @DrawableRes int icon, @NonNull EditorCommand command,
-                   @Nullable Fragment fragment, int value) {
+                   int value) {
         mTitle = title;
         mIcon = icon;
-        mFragment = fragment;
         mCommand = command;
         mValue = value;
     }
@@ -68,9 +67,5 @@ public class Adjust {
 
     public EditorCommand getCommand() {
         return mCommand;
-    }
-
-    public Fragment getFragment() {
-        return mFragment;
     }
 }

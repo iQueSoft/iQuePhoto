@@ -4,9 +4,9 @@ import android.graphics.RectF;
 
 public class RectUtil {
 
-    public static void scaleRect(RectF rect, float scale) {
-        float w = rect.width();
-        float h = rect.height();
+    public static void scaleRect(RectF rectF, float scale) {
+        float w = rectF.width();
+        float h = rectF.height();
 
         float newW = scale * w;
         float newH = scale * h;
@@ -14,24 +14,24 @@ public class RectUtil {
         float dx = (newW - w) / 2;
         float dy = (newH - h) / 2;
 
-        rect.left -= dx;
-        rect.top -= dy;
-        rect.right += dx;
-        rect.bottom += dy;
+        rectF.left -= dx;
+        rectF.top -= dy;
+        rectF.right += dx;
+        rectF.bottom += dy;
     }
 
-    public static void rotateRect(RectF rect, float center_x, float center_y,
+    public static void rotateRect(RectF rectF, float centerX, float centerY,
                                   float rotateAngle) {
-        float x = rect.centerX();
-        float y = rect.centerY();
+        float x = rectF.centerX();
+        float y = rectF.centerY();
         float sinA = (float) Math.sin(Math.toRadians(rotateAngle));
         float cosA = (float) Math.cos(Math.toRadians(rotateAngle));
-        float newX = center_x + (x - center_x) * cosA - (y - center_y) * sinA;
-        float newY = center_y + (y - center_y) * cosA + (x - center_x) * sinA;
+        float newX = centerX + (x - centerX) * cosA - (y - centerY) * sinA;
+        float newY = centerY + (y - centerY) * cosA + (x - centerX) * sinA;
 
         float dx = newX - x;
         float dy = newY - y;
 
-        rect.offset(dx, dy);
+        rectF.offset(dx, dy);
     }
 }

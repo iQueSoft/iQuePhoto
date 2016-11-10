@@ -58,7 +58,6 @@ public class ImageEditorView extends ImageView {
 
     private EditorFrame mEditorFrame;
     private EditorVignette mEditorVignette;
-
     private EditorText mCurrentEditorText;
     private EditorSticker mCurrentEditorSticker;
 
@@ -199,25 +198,22 @@ public class ImageEditorView extends ImageView {
 
     @Override
     public void onDraw(Canvas canvas) {
+        Bitmap bitmap = mSourceBitmap;
+
         if (mIsInitialized) {
             setMatrix();
             if (mIsShowOriginalImage) {
                 canvas.drawBitmap(mSourceBitmap, mMatrix, mImagePaint);
             } else {
                 if (mImagesList.size() > 0)
-                    canvas.drawBitmap(getAlteredBitmap(), mMatrix, mImagePaint);
-                else
-                    canvas.drawBitmap(mSourceBitmap, mMatrix, mImagePaint);
+                    bitmap = getAlteredBitmap();
+                canvas.drawBitmap(bitmap, mMatrix, mImagePaint);
             }
         }
 
         switch (mCommand) {
             case FILTERS:
-                if (mImagesList.size() > 0) {
-                    canvas.drawBitmap(getAlteredBitmap(), mMatrix, mFilterPaint);
-                } else {
-                    canvas.drawBitmap(mSourceBitmap, mMatrix, mFilterPaint);
-                }
+                canvas.drawBitmap(bitmap, mMatrix, mFilterPaint);
                 break;
             case DRAWING:
                 if (mDrawingList.size() > 0) {
@@ -230,11 +226,7 @@ public class ImageEditorView extends ImageView {
                 break;
             case BRIGHTNESS:
                 if (mBrightnessValue != 0) {
-                    if (mImagesList.size() > 0) {
-                        canvas.drawBitmap(getAlteredBitmap(), mMatrix, mBrightnessPaint);
-                    } else {
-                        canvas.drawBitmap(mSourceBitmap, mMatrix, mBrightnessPaint);
-                    }
+                    canvas.drawBitmap(bitmap, mMatrix, mBrightnessPaint);
                 }
                 break;
             case VIGNETTE:
@@ -252,22 +244,14 @@ public class ImageEditorView extends ImageView {
                 break;
             case WARMTH:
                 if (mWarmthValue != 0) {
-                    if (mImagesList.size() > 0) {
-                        canvas.drawBitmap(getAlteredBitmap(), mMatrix, mWarmthPaint);
-                    } else {
-                        canvas.drawBitmap(mSourceBitmap, mMatrix, mBrightnessPaint);
-                    }
+                    canvas.drawBitmap(bitmap, mMatrix, mWarmthPaint);
                 }
                 break;
             case TRANSFORM:
                 drawGuidelines(canvas);
                 break;
             case TRANSFORM_STRAIGHTEN:
-                if (mImagesList.size() > 0)
-                    canvas.drawBitmap(getAlteredBitmap(), mTransformMatrix, mImagePaint);
-                else
-                    canvas.drawBitmap(mSourceBitmap, mTransformMatrix, mImagePaint);
-
+                canvas.drawBitmap(bitmap, mTransformMatrix, mImagePaint);
                 drawGuidelines(canvas);
                 break;
         }
@@ -787,9 +771,9 @@ public class ImageEditorView extends ImageView {
 
     }
 
-    public void setWarmthValue(float warmthValue) {
-        if (warmthValue != 0) {
-            mWarmthValue = warmthValue;
+    public void setWarmthValue(int value) {
+        if (value != 0) {
+            mWarmthValue = value;
 
             mWarmthPaint.setColorFilter(getWarmthColorMatrix(mWarmthValue));
 
@@ -1059,6 +1043,7 @@ public class ImageEditorView extends ImageView {
                 case SATURATION:
                     break;
                 case WARMTH:
+                    mCanvas.drawBitmap(mBitmap, 0, 0, mWarmthPaint);
                     break;
                 case TRANSFORM_STRAIGHTEN:
                     mCanvas.drawBitmap(mBitmap, getTransformStraightenMatrix(), mImagePaint);

@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseFragment;
@@ -40,6 +41,15 @@ public class SliderControlFragment extends BaseFragment implements ISliderContro
     @Inject
     SliderControlFragmentPresenterImpl presenter;
 
+    @BindView(R.id.minValueTextView)
+    TextView minValueTextView;
+
+    @BindView(R.id.currentValueTextView)
+    TextView currentValueTextView;
+
+    @BindView(R.id.maxValueTextView)
+    TextView maxValueTextView;
+
     @BindView(R.id.toolCancelButton)
     Button toolCancelButton;
 
@@ -69,12 +79,17 @@ public class SliderControlFragment extends BaseFragment implements ISliderContro
         toolSeekBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
             @Override
             public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
+                currentValueTextView.setText(String.valueOf(value));
+
                 switch (mCommand) {
                     case VIGNETTE:
                         editorActivityView.getImageEditorView().setVignetteIntensity(value);
                         break;
                     case BRIGHTNESS:
                         editorActivityView.getImageEditorView().setBrightnessValue(value);
+                        break;
+                    case WARMTH:
+                        editorActivityView.getImageEditorView().setWarmthValue(value);
                         break;
                     case TRANSFORM_STRAIGHTEN:
                         editorActivityView.getImageEditorView().setStraightenValue(value);
@@ -119,8 +134,13 @@ public class SliderControlFragment extends BaseFragment implements ISliderContro
     @Override
     public void initializeSlider(int minValue, int maxValue, int value) {
         toolSeekBar.setMin(minValue);
-        toolSeekBar.setMax(maxValue);
+        minValueTextView.setText(String.valueOf(minValue));
+
         toolSeekBar.setProgress(value);
+        currentValueTextView.setText(String.valueOf(value));
+
+        toolSeekBar.setMax(maxValue);
+        maxValueTextView.setText(String.valueOf(maxValue));
     }
 
     @OnClick(R.id.toolCancelButton)

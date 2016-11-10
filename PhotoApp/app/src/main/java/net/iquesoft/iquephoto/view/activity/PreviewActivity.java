@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.TabLayout;
-import android.util.Log;
 import android.view.WindowManager;
 
 import com.afollestad.materialdialogs.MaterialDialog;

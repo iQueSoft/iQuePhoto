@@ -48,7 +48,7 @@ public class TransformFragment extends BaseFragment implements ITransformFragmen
 
         return v;
     }
-
+    
     @Override
     public void onResume() {
         super.onResume();

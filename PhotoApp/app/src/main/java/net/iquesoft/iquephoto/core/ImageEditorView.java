@@ -26,6 +26,7 @@ import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 
@@ -65,9 +66,12 @@ public class ImageEditorView extends ImageView {
 
     private Paint mImagePaint;
     private Paint mFilterPaint;
+
     private Paint mContrastPaint;
     private Paint mWarmthPaint;
     private Paint mBrightnessPaint;
+    private Paint mSaturationPaint;
+
     private Paint mOverlayPaint;
     private Paint mDrawingPaint;
     private Paint mDrawingCirclePaint;
@@ -93,6 +97,7 @@ public class ImageEditorView extends ImageView {
 
     private float mContrastValue = 0;
     private float mBrightnessValue = 0;
+    private float mSaturationValue = 0;
     private float mWarmthValue = 0;
 
     private EditorCommand mCommand = NONE;
@@ -114,7 +119,6 @@ public class ImageEditorView extends ImageView {
 
     private MaterialDialog mProgressDialog;
 
-
     public ImageEditorView(Context context) {
         this(context, null);
     }
@@ -134,9 +138,12 @@ public class ImageEditorView extends ImageView {
 
         mImagePaint = new Paint();
         mFilterPaint = new Paint();
+
         mWarmthPaint = new Paint();
         mContrastPaint = new Paint();
         mBrightnessPaint = new Paint();
+        mSaturationPaint = new Paint();
+
         mOverlayPaint = new Paint();
 
         mGuidelinesPaint = new Paint();
@@ -148,7 +155,7 @@ public class ImageEditorView extends ImageView {
         mGuidelinesPaint.setAlpha(125);
 
         mEditorFrame = new EditorFrame(context);
-        mEditorVignette = new EditorVignette(context, this);
+        mEditorVignette = new EditorVignette(this);
 
         mImagePaint.setFilterBitmap(true);
 
@@ -159,7 +166,6 @@ public class ImageEditorView extends ImageView {
 
         initializeDrawing();
         initializeProgressDialog();
-
     }
 
     private void initializeDrawing() {
@@ -225,9 +231,8 @@ public class ImageEditorView extends ImageView {
                     canvas.drawPath(mDrawingPath, mDrawingPaint);
                 break;
             case BRIGHTNESS:
-                if (mBrightnessValue != 0) {
+                if (mBrightnessValue != 0)
                     canvas.drawBitmap(bitmap, mMatrix, mBrightnessPaint);
-                }
                 break;
             case VIGNETTE:
                 mEditorVignette.draw(canvas);
@@ -237,15 +242,20 @@ public class ImageEditorView extends ImageView {
                     canvas.drawBitmap(mOverlayBitmap, mMatrix, mOverlayPaint);
                 break;
             case CONTRAST:
+                if (mContrastValue != 0)
+                    canvas.drawBitmap(bitmap, mMatrix, mContrastPaint);
                 break;
             case FRAMES:
                 if (mFrameBitmap != null)
                     canvas.drawBitmap(mFrameBitmap, mMatrix, mImagePaint);
                 break;
             case WARMTH:
-                if (mWarmthValue != 0) {
+                if (mWarmthValue != 0)
                     canvas.drawBitmap(bitmap, mMatrix, mWarmthPaint);
-                }
+                break;
+            case SATURATION:
+                if (mSaturationValue != 0)
+                    canvas.drawBitmap(bitmap, mMatrix, mSaturationPaint);
                 break;
             case TRANSFORM:
                 drawGuidelines(canvas);
@@ -341,6 +351,10 @@ public class ImageEditorView extends ImageView {
                 mIsInSide = false;
                 mIsInRotate = false;
                 mIsInResize = false;
+
+                if (mCommand == VIGNETTE)
+                    mEditorVignette.actionPointerDown(event);
+
                 break;
             case MotionEvent.ACTION_MOVE:
                 actionMove(event);
@@ -751,52 +765,93 @@ public class ImageEditorView extends ImageView {
         invalidate();
     }
 
-    public void setBrightnessValue(float value) {
-        if (value != 0) {
-            mBrightnessValue = value;
-
-            mBrightnessPaint.setColorFilter(getBrightnessColorMatrix(mBrightnessValue));
-
-            invalidate();
-        }
-    }
-
     public void undo() {
         mImagesList.remove(mImagesList.size() - 1);
         mUndoListener.hasChanged(mImagesList.size());
         invalidate();
     }
 
-    public void setContrastValue() {
+    public void setBrightnessValue(float value) {
+        if (value != 0) {
+            mBrightnessValue = value;
 
+            mBrightnessPaint.setColorFilter(getBrightnessColorFilter(mBrightnessValue));
+
+            invalidate();
+        }
+    }
+
+    public void setContrastValue(int value) {
+        if (value != 0) {
+            mContrastValue = value / 2;
+
+            mContrastPaint.setColorFilter(getContrastColorFilter(mContrastValue));
+
+            invalidate();
+        }
     }
 
     public void setWarmthValue(int value) {
         if (value != 0) {
             mWarmthValue = value;
 
-            mWarmthPaint.setColorFilter(getWarmthColorMatrix(mWarmthValue));
+            mWarmthPaint.setColorFilter(getWarmthColorFilter(mWarmthValue));
 
             invalidate();
         }
     }
 
-    private ColorMatrixColorFilter getWarmthColorMatrix(float value) {
-        float temp = value / 220;
+    public void setSaturationValue(int value) {
+        if (value != 0) {
+            mSaturationValue = value;
+
+            mSaturationPaint.setColorFilter(getSaturationColorFilter(mSaturationValue));
+
+            invalidate();
+        }
+    }
+
+    private ColorMatrixColorFilter getWarmthColorFilter(float value) {
+        float warmth = (value / 220) / 2;
 
         return new ColorMatrixColorFilter(new float[]{
-                1, 0, 0, temp, 0,
-                0, 1, 0, temp / 2, 0,
-                0, 0, 1, temp / 4, 0,
+                1, 0, 0, warmth, 0,
+                0, 1, 0, warmth / 2, 0,
+                0, 0, 1, warmth / 4, 0,
                 0, 0, 0, 1, 0});
     }
 
-    private ColorMatrixColorFilter getBrightnessColorMatrix(float value) {
+    private ColorMatrixColorFilter getBrightnessColorFilter(float value) {
+        float brightness = value / 2;
+
         return new ColorMatrixColorFilter(new float[]{
-                1, 0, 0, 0, value,
-                0, 1, 0, 0, value,
-                0, 0, 1, 0, value,
+                1, 0, 0, 0, brightness,
+                0, 1, 0, 0, brightness,
+                0, 0, 1, 0, brightness,
                 0, 0, 0, 1, 0});
+    }
+
+    private ColorMatrixColorFilter getContrastColorFilter(float value) {
+
+        float input = value / 100;
+        float scale = input + 1f;
+        float contrast = (-0.5f * scale + 0.5f) * 255f;
+
+        return new ColorMatrixColorFilter(new float[]{
+                scale, 0, 0, 0, contrast,
+                0, scale, 0, 0, contrast,
+                0, 0, scale, 0, contrast,
+                0, 0, 0, 1, 0});
+    }
+
+    private ColorMatrixColorFilter getSaturationColorFilter(float value) {
+        ColorMatrix colorMatrix = new ColorMatrix();
+
+        float saturation = (value + 100) / 100f;
+
+        colorMatrix.setSaturation(saturation);
+
+        return new ColorMatrixColorFilter(colorMatrix);
     }
 
     private void findCheckedText(MotionEvent event) {
@@ -1041,6 +1096,7 @@ public class ImageEditorView extends ImageView {
                     mEditorVignette.draw(mCanvas);
                     break;
                 case SATURATION:
+                    mCanvas.drawBitmap(mBitmap, 0, 0, mSaturationPaint);
                     break;
                 case WARMTH:
                     mCanvas.drawBitmap(mBitmap, 0, 0, mWarmthPaint);

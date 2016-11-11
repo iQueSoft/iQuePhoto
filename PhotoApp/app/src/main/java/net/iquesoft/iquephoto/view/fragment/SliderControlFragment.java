@@ -80,16 +80,22 @@ public class SliderControlFragment extends BaseFragment implements ISliderContro
             @Override
             public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
                 currentValueTextView.setText(String.valueOf(value));
-
+                
                 switch (mCommand) {
                     case VIGNETTE:
                         editorActivityView.getImageEditorView().setVignetteIntensity(value);
+                        break;
+                    case CONTRAST:
+                        editorActivityView.getImageEditorView().setContrastValue(value);
                         break;
                     case BRIGHTNESS:
                         editorActivityView.getImageEditorView().setBrightnessValue(value);
                         break;
                     case WARMTH:
                         editorActivityView.getImageEditorView().setWarmthValue(value);
+                        break;
+                    case SATURATION:
+                        editorActivityView.getImageEditorView().setSaturationValue(value);
                         break;
                     case TRANSFORM_STRAIGHTEN:
                         editorActivityView.getImageEditorView().setStraightenValue(value);

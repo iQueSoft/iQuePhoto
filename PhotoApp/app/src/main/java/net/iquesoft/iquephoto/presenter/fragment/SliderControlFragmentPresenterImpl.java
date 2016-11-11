@@ -50,10 +50,19 @@ public class SliderControlFragmentPresenterImpl implements ISliderControlFragmen
                 mView.initializeCancelButton(R.string.vignette);
                 mView.initializeSlider(-100, 100, 70);
                 break;
+            case TRANSFORM_HORIZONTAL:
+                mView.initializeCancelButton(R.string.transform_horizontal);
+                mView.initializeSlider(-30, 30, 0);
+                break;
             case TRANSFORM_STRAIGHTEN:
                 mView.initializeCancelButton(R.string.transform_straighten);
                 mView.initializeSlider(-30, 30, 0);
                 break;
+            case TRANSFORM_VERTICAL:
+                mView.initializeCancelButton(R.string.transform_vertical);
+                mView.initializeSlider(-30, 30, 0);
+                break;
+
         }
     }
 }

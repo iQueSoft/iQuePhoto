@@ -46,9 +46,10 @@ public class EditorVignette {
 
     private ImageEditorView mImageEditorView;
 
-    public EditorVignette(Context context, ImageEditorView imageEditorView) {
+    public EditorVignette(ImageEditorView imageEditorView) {
         mImageEditorView = imageEditorView;
-        initializeVignette(context);
+
+        initializeVignette(imageEditorView.getContext());
     }
 
     private void initializeVignette(Context context) {
@@ -152,7 +153,7 @@ public class EditorVignette {
 
     public void draw(Canvas canvas) {
         if (!mVignetteRect.isEmpty()) {
-            canvas.saveLayer(mBitmapRect, mPaint, Canvas.ALL_SAVE_FLAG);
+            canvas.saveLayer(mBitmapRect, mPaint, Canvas.CLIP_TO_LAYER_SAVE_FLAG);
 
             mVignetteControlRect.set(mVignetteRect);
             mVignetteControlRect.inset(-mGradientInset, -mGradientInset);
@@ -170,7 +171,7 @@ public class EditorVignette {
     public void drawOnImage(Canvas canvas) {
         if (!mVignetteRect.isEmpty()) {
             canvas.saveLayer(0, 0, canvas.getHeight(), canvas.getWidth(), mPaint, Canvas.ALL_SAVE_FLAG);
-            
+
             mVignetteControlRect.set(mVignetteRect);
             mVignetteControlRect.inset(-mGradientInset, -mGradientInset);
 
@@ -185,14 +186,14 @@ public class EditorVignette {
     }
 
     public void actionDown(MotionEvent motionEvent) {
-        if (motionEvent.getPointerCount() == 1) {
-            mFingersCount = motionEvent.getPointerCount();
+        mPreX = motionEvent.getX();
+        mPreY = motionEvent.getY();
 
-            mPreX = motionEvent.getX();
-            mPreY = motionEvent.getY();
-        } else if (motionEvent.getPointerCount() == 2) {
-            mFingersCount = motionEvent.getPointerCount();
-        }
+        mFingersCount = motionEvent.getPointerCount();
+    }
+
+    public void actionPointerDown(MotionEvent motionEvent) {
+        mFingersCount = motionEvent.getPointerCount();
     }
 
     public void actionMove(MotionEvent motionEvent) {
@@ -202,13 +203,10 @@ public class EditorVignette {
             float distanceX = motionEvent.getX() - mPreX;
             float distanceY = motionEvent.getY() - mPreY;
 
-            //float x = mTempVignetteRect.centerX() + distanceX;
-            //float y = mTempVignetteRect.centerY() + distanceY;
-
             mTempVignetteRect.offset(distanceX, distanceY);
 
         } else if (mFingersCount == 2) {
-            float max = distanceBetweenFingers(motionEvent);
+            float max = motionEvent.getAxisValue(1); //distanceBetweenFingers(motionEvent);
             mTempVignetteRect.inset(max, max);
             //if (getFingersAngle(motionEvent) == 0 && getFingersAngle(motionEvent))
         }

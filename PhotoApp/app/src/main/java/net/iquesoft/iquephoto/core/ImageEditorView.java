@@ -26,7 +26,6 @@ import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 
@@ -93,7 +92,9 @@ public class ImageEditorView extends ImageView {
     private float mImgWidth = 0.0f;
     private float mImgHeight = 0.0f;
 
-    private float mTransformStraightenValue = 0;
+    private float mHorizontalTransformValue = 0;
+    private float mStraightenTransformValue = 0;
+    private float mVerticalTransformValue = 0;
 
     private float mContrastValue = 0;
     private float mBrightnessValue = 0;
@@ -217,6 +218,8 @@ public class ImageEditorView extends ImageView {
             }
         }
 
+        canvas.clipRect(mBitmapRect);
+        
         switch (mCommand) {
             case FILTERS:
                 canvas.drawBitmap(bitmap, mMatrix, mFilterPaint);
@@ -261,6 +264,14 @@ public class ImageEditorView extends ImageView {
                 drawGuidelines(canvas);
                 break;
             case TRANSFORM_STRAIGHTEN:
+                canvas.drawBitmap(
+                        bitmap,
+                        getStraightenTransformMatrix(mStraightenTransformValue),
+                        mImagePaint
+                );
+                drawGuidelines(canvas);
+                break;
+            case TRANSFORM_HORIZONTAL:
                 canvas.drawBitmap(bitmap, mTransformMatrix, mImagePaint);
                 drawGuidelines(canvas);
                 break;
@@ -276,37 +287,56 @@ public class ImageEditorView extends ImageView {
         //canvas.drawBitmap(mSourceBitmap, mMatrix, getAdjustPaint());
     }
 
-    public void setStraightenValue(int value) {
-        mTransformStraightenValue = value;
-
-        float angle = (value);
-
-        float width = mBitmapRect.width();
-        float height = mBitmapRect.height();
-
-        if (width > height) {
-            width = mBitmapRect.height();
-            height = mBitmapRect.width();
-        }
-
-        float a = (float) Math.atan(height / width);
-
-        // the length from the center to the corner of the green
-        float len1 = (width / 2) / (float) Math.cos(a - Math.abs(Math.toRadians(angle)));
-        // the length from the center to the corner of the black
-        float len2 = (float) Math.sqrt(Math.pow(width / 2, 2) + Math.pow(height / 2, 2));
-        // compute the scaling factor
-        float scale = len2 / len1;
-
+    public void setHorizontalTransformValue(int value) {
         mTransformMatrix.set(mMatrix);
-
-        float newX = (mBitmapRect.width() / 2) * (1 - scale);
-        float newY = (mBitmapRect.height() / 2) * (1 - scale);
-        mTransformMatrix.postScale(scale, scale);
-        mTransformMatrix.postTranslate(newX, newY);
-        mTransformMatrix.postRotate(angle, mBitmapRect.width() / 2, mBitmapRect.height() / 2);
+        float[] srcPoints = {0, 0, 0, 200, 200, 200, 200, 0};
+        float[] destPoints = {value, value / 2f, value, 200 - value / 2f, 200 - value, 200, 200 - value, 0};
+        mTransformMatrix.setPolyToPoly(srcPoints, 0, destPoints, 0, 4);
 
         invalidate();
+    }
+
+    public void setStraightenValue(int value) {
+        mStraightenTransformValue = value;
+
+        invalidate();
+    }
+
+    private Matrix getStraightenTransformMatrix(float value) {
+        Matrix matrix;
+
+        if (value == 0) return mMatrix;
+        else {
+            matrix = new Matrix(mMatrix);
+
+            float width = mImgWidth;
+            float height = mImgHeight;
+
+            if (width >= height) {
+                width = mImgHeight;
+                height = mImgWidth;
+            }
+
+            float a = (float) Math.atan(height / width);
+
+            // the length from the center to the corner of the green
+            float len1 = (width / 2) / (float) Math.cos(a - Math.abs(Math.toRadians(value)));
+            // the length from the center to the corner of the black
+            float len2 = (float) Math.sqrt(Math.pow(width / 2, 2) + Math.pow(height / 2, 2));
+            // compute the scaling factor
+            float scale = len2 / len1;
+
+            float dX = mCenter.x * (1 - scale);
+            float dY = mCenter.y * (1 - scale);
+            /*matrix.postScale(scale, scale);
+            matrix.postTranslate(newX, newY);*/
+
+            matrix.postScale(scale, scale);
+            matrix.postTranslate(dX, dY);
+            matrix.postRotate(value, mCenter.x, mCenter.y);
+        }
+
+        return matrix;
     }
 
     @Override
@@ -921,7 +951,10 @@ public class ImageEditorView extends ImageView {
         mMatrix.setTranslate(mCenter.x - mImgWidth * 0.5f, mCenter.y - mImgHeight * 0.5f);
         mMatrix.postScale(mScale, mScale, mCenter.x, mCenter.y);
         mMatrix.postRotate(mAngle, mCenter.x, mCenter.y);
+
+        //mTransformMatrix.set(mMatrix);
     }
+
 
     private void setupLayout(int viewW, int viewH) {
         if (viewW == 0 || viewH == 0) return;
@@ -1123,7 +1156,7 @@ public class ImageEditorView extends ImageView {
         private Matrix getTransformStraightenMatrix() {
             Matrix matrix = new Matrix();
 
-            float angle = mTransformStraightenValue;
+            float angle = mStraightenTransformValue;
 
             float width = mBitmap.getWidth();
             float height = mBitmap.getHeight();

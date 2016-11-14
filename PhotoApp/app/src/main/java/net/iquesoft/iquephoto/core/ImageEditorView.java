@@ -23,6 +23,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -33,6 +34,7 @@ import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.model.Sticker;
 import net.iquesoft.iquephoto.utils.BitmapUtil;
+import net.iquesoft.iquephoto.utils.LoggerUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -219,7 +221,7 @@ public class ImageEditorView extends ImageView {
         }
 
         canvas.clipRect(mBitmapRect);
-        
+
         switch (mCommand) {
             case FILTERS:
                 canvas.drawBitmap(bitmap, mMatrix, mFilterPaint);
@@ -305,7 +307,8 @@ public class ImageEditorView extends ImageView {
     private Matrix getStraightenTransformMatrix(float value) {
         Matrix matrix;
 
-        if (value == 0) return mMatrix;
+        if (value == 0)
+            return mMatrix;
         else {
             matrix = new Matrix(mMatrix);
 
@@ -319,17 +322,14 @@ public class ImageEditorView extends ImageView {
 
             float a = (float) Math.atan(height / width);
 
-            // the length from the center to the corner of the green
-            float len1 = (width / 2) / (float) Math.cos(a - Math.abs(Math.toRadians(value)));
-            // the length from the center to the corner of the black
-            float len2 = (float) Math.sqrt(Math.pow(width / 2, 2) + Math.pow(height / 2, 2));
-            // compute the scaling factor
-            float scale = len2 / len1;
+            float length1 = (width / 2) / (float) Math.cos(a - Math.abs(Math.toRadians(value)));
+
+            float length2 = (float) Math.sqrt(Math.pow(width / 2, 2) + Math.pow(height / 2, 2));
+
+            float scale = length2 / length1;
 
             float dX = mCenter.x * (1 - scale);
             float dY = mCenter.y * (1 - scale);
-            /*matrix.postScale(scale, scale);
-            matrix.postTranslate(newX, newY);*/
 
             matrix.postScale(scale, scale);
             matrix.postTranslate(dX, dY);
@@ -381,7 +381,6 @@ public class ImageEditorView extends ImageView {
                 mIsInSide = false;
                 mIsInRotate = false;
                 mIsInResize = false;
-
                 if (mCommand == VIGNETTE)
                     mEditorVignette.actionPointerDown(event);
 
@@ -407,7 +406,9 @@ public class ImageEditorView extends ImageView {
         if (mCommand == VIGNETTE)
             mEditorVignette.updateRect(mBitmapRect);
 
-        //invalidate();
+        Log.i(ImageEditorView.class.getSimpleName(), "Command = " + command.name());
+
+        invalidate();
     }
 
     private void actionDown(MotionEvent event) {
@@ -739,7 +740,11 @@ public class ImageEditorView extends ImageView {
     }
 
     public void addText(String text, Typeface typeface, int color, int opacity) {
-        mTextsList.add(new EditorText(text, typeface, color, opacity, mEditorFrame));
+        EditorText editorText = new EditorText(text, typeface, color, opacity, mEditorFrame);
+        editorText.setX((int) mCenter.x);
+        editorText.setY((int) mCenter.y);
+
+        mTextsList.add(editorText);
         invalidate();
     }
 
@@ -1074,6 +1079,9 @@ public class ImageEditorView extends ImageView {
     }
 
     private class ImageProcessingTask extends AsyncTask<EditorCommand, Void, Bitmap> {
+        private int mImageHeight;
+        private int mImageWidth;
+
         private Bitmap mBitmap;
         private Canvas mCanvas;
         //private RedrawImagesTask mRedrawImagesTaskTask = new RedrawImagesTask();
@@ -1088,12 +1096,18 @@ public class ImageEditorView extends ImageView {
             else
                 mBitmap = mSourceBitmap.copy(mSourceBitmap.getConfig(), true);
 
-            mCanvas = new Canvas();
+
         }
 
         @Override
         protected Bitmap doInBackground(EditorCommand... editorCommands) {
-            mCanvas.setBitmap(mBitmap);
+            mCanvas = new Canvas(mBitmap);
+
+
+            mImageHeight = mBitmap.getHeight();
+            mImageWidth = mBitmap.getWidth();
+
+            LoggerUtil.applyInfo(editorCommands[0]);
 
             switch (editorCommands[0]) {
                 case NONE:
@@ -1135,7 +1149,12 @@ public class ImageEditorView extends ImageView {
                     mCanvas.drawBitmap(mBitmap, 0, 0, mWarmthPaint);
                     break;
                 case TRANSFORM_STRAIGHTEN:
-                    mCanvas.drawBitmap(mBitmap, getTransformStraightenMatrix(), mImagePaint);
+                    mCanvas.save(Canvas.CLIP_SAVE_FLAG);
+                    mCanvas.setMatrix(getTransformStraightenMatrix(mStraightenTransformValue));
+                    mCanvas.drawBitmap(mBitmap, 0, 0,
+//                            getTransformStraightenMatrix(mStraightenTransformValue),
+                            mImagePaint);
+                    mCanvas.restore();
                     break;
             }
 
@@ -1153,38 +1172,78 @@ public class ImageEditorView extends ImageView {
             mProgressDialog.dismiss();
         }
 
-        private Matrix getTransformStraightenMatrix() {
+        private Matrix getTransformStraightenMatrix(float value) {
+
             Matrix matrix = new Matrix();
 
-            float angle = mStraightenTransformValue;
+            if (value == 0) return matrix;
+            else {
+                float width = mImageWidth;
+                float height = mImageHeight;
 
-            float width = mBitmap.getWidth();
-            float height = mBitmap.getHeight();
+                if (width >= height) {
+                    width = mImageHeight;
+                    height = mImageWidth;
+                }
 
-            if (width > height) {
-                width = mBitmap.getHeight();
-                height = mBitmap.getWidth();
+                float centerX = width / 2;
+                float centerY = height / 2;
+
+                float a = (float) Math.atan(height / width);
+
+                float length1 = (width / 2) / (float) Math.cos(a - Math.abs(Math.toRadians(value)));
+
+                float length2 = (float) Math.sqrt(Math.pow(width / 2, 2) + Math.pow(height / 2, 2));
+
+                float scale = length2 / length1;
+
+                float dX = mImageWidth / 2 * (1 - scale);
+                float dY = mImageHeight / 2 * (1 - scale);
+
+                //matrix.postTranslate(0, 0);
+                matrix.postScale(scale, scale, centerX, centerY);
+                matrix.postRotate(value, centerX, centerY);
+
+                //matrix.postTranslate(centerX, centerY);
+                //matrix.postTranslate(centerX, centerY);
+
             }
-
-            float a = (float) Math.atan(height / width);
-
-            // the length from the center to the corner of the green
-            float len1 = (width / 2) / (float) Math.cos(a - Math.abs(Math.toRadians(angle)));
-            // the length from the center to the corner of the black
-            float len2 = (float) Math.sqrt(Math.pow(width / 2, 2) + Math.pow(height / 2, 2));
-            // compute the scaling factor
-            float scale = len2 / len1;
-
-            float newX = (mCanvas.getWidth() / 2) * (1 - scale);
-            float newY = (mCanvas.getHeight() / 2) * (1 - scale);
-            matrix.postScale(scale, scale);
-            matrix.postTranslate(newX, newY);
-            matrix.postRotate(angle, mCanvas.getWidth() / 2, mCanvas.getHeight() / 2);
 
             return matrix;
         }
     }
+    /*Matrix matrix;
 
+    if (value == 0)
+            return mMatrix;
+    else {
+        matrix = new Matrix(mMatrix);
+
+        float width = mImgWidth;
+        float height = mImgHeight;
+
+        if (width >= height) {
+            width = mImgHeight;
+            height = mImgWidth;
+        }
+
+        float a = (float) Math.atan(height / width);
+
+        float length1 = (width / 2) / (float) Math.cos(a - Math.abs(Math.toRadians(value)));
+
+        float length2 = (float) Math.sqrt(Math.pow(width / 2, 2) + Math.pow(height / 2, 2));
+
+        float scale = length2 / length1;
+
+        float dX = mCenter.x * (1 - scale);
+        float dY = mCenter.y * (1 - scale);
+
+        matrix.postScale(scale, scale);
+        matrix.postTranslate(dX, dY);
+        matrix.postRotate(value, mCenter.x, mCenter.y);
+    }
+
+    return matrix;*/
     /*private class RedrawImagesTask extends AsyncTask<Integer, Void, Bitmap> {
         private Bitmap mBitmap;
         private Canvas mCanvas = new Canvas();
@@ -1235,6 +1294,8 @@ public class ImageEditorView extends ImageView {
 
         private void drawTexts(Canvas canvas) {
             for (EditorText editorText : mTextsList) {
+                /* TODO: FOR REAL IMAGE!!! editorText.setX((int) (mCenter.x * mScale));
+                editorText.setY((int) (mCenter.y * mScale));*/
                 editorText.drawText(canvas);
             }
         }
@@ -1259,11 +1320,10 @@ public class ImageEditorView extends ImageView {
                 drawTexts(mCanvas);
             }
 
-            if (mDrawingList.size() > 0) {
-                for (Drawing drawing : mDrawingList) {
+            if (mDrawingList.size() > 0)
+                for (Drawing drawing : mDrawingList)
                     mCanvas.drawPath(drawing.getOriginalPath(), drawing.getPaint());
-                }
-            }
+
 
             if (!mDrawingPath.isEmpty()) {
                 mCanvas.drawPath(mDrawingPath, mDrawingPaint);

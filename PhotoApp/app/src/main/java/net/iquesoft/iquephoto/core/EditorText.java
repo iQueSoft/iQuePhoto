@@ -22,8 +22,8 @@ public class EditorText {
     private int mColor;
     private int mOpacity;
 
-    private int mX = 150;
-    private int mY = 150;
+    private int mX;
+    private int mY;
 
     private int mTextRectWidth;
 
@@ -113,10 +113,10 @@ public class EditorText {
 
         int offsetValue = ((int) mDeleteHandleDstRect.width()) >> 1;
 
-        mDeleteHandleDstRect.offset(mFrameRect.left - offsetValue, mFrameRect.top - offsetValue);
-        mResizeHandleDstRect.offset(mFrameRect.right - offsetValue, mFrameRect.bottom - offsetValue);
-        mRotateHandleDstRect.offset(mFrameRect.right - offsetValue, mFrameRect.top - offsetValue);
-        mFrontHandleDstRect.offset(mFrameRect.left - offsetValue, mFrameRect.bottom - offsetValue);
+        mDeleteHandleDstRect.offsetTo(mFrameRect.left - offsetValue, mFrameRect.top - offsetValue);
+        mResizeHandleDstRect.offsetTo(mFrameRect.right - offsetValue, mFrameRect.bottom - offsetValue);
+        mRotateHandleDstRect.offsetTo(mFrameRect.right - offsetValue, mFrameRect.top - offsetValue);
+        mFrontHandleDstRect.offsetTo(mFrameRect.left - offsetValue, mFrameRect.bottom - offsetValue);
 
         RectUtil.rotateRect(mDeleteHandleDstRect, mFrameRect.centerX(),
                 mFrameRect.centerY(), mRotateDegree);

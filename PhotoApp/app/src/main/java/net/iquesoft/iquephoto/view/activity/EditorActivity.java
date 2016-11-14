@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -189,8 +188,6 @@ public class EditorActivity extends BaseActivity implements IEditorActivityView,
 
     @OnClick(R.id.buttonShare)
     void onClickShare() {
-        Log.i(EditorActivity.class.getSimpleName(), "Height " + mBitmap.getHeight() + "\nWidth " + mBitmap.getWidth());
-
         Intent intent = new Intent(EditorActivity.this, ShareActivity.class);
         imageEditorView.makeImage(intent);
     }

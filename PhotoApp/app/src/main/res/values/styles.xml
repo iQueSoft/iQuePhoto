@@ -23,6 +23,11 @@
         <item name="colorControlHighlight">@color/white</item>
     </style>
 
+    <style name="RaisedButton" parent="Theme.AppCompat.Light">
+        <item name="colorControlHighlight">@color/white</item>
+        <item name="colorButtonNormal">@color/white</item>
+    </style>
+
     <style name="AlertMaterialDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
         <!-- Used for the buttons -->
         <item name="colorAccent">#FFFFFF</item>

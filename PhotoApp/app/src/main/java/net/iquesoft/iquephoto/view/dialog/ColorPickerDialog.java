@@ -44,7 +44,7 @@ public class ColorPickerDialog extends Dialog {
 
         mAdapter = new ColorAdapter(EditorColor.getColorsList());
 
-        mAdapter.setColorListener(editorColor -> {
+        mAdapter.setOnColorClickListener(editorColor -> {
             mColor = editorColor.getColor();
         });
 

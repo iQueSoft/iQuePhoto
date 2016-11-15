@@ -24,14 +24,14 @@ public class ColorAdapter extends RecyclerView.Adapter<ColorAdapter.ViewHolder> 
 
     private List<EditorColor> mEditorColorsList;
 
-    private ColorListener mColorListener;
+    private OnColorClickListener mOnColorClickListener;
 
-    public interface ColorListener {
+    public interface OnColorClickListener {
         void onClick(EditorColor editorColor);
     }
 
-    public void setColorListener(ColorListener colorListener) {
-        mColorListener = colorListener;
+    public void setOnColorClickListener(OnColorClickListener onColorClickListener) {
+        mOnColorClickListener = onColorClickListener;
     }
 
     public ColorAdapter(List<EditorColor> editorColors) {
@@ -71,7 +71,7 @@ public class ColorAdapter extends RecyclerView.Adapter<ColorAdapter.ViewHolder> 
 
             notifyItemChanged(position);
 
-            mColorListener.onClick(color);
+            mOnColorClickListener.onClick(color);
 
         });
     }

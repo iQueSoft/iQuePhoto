@@ -12,7 +12,7 @@ import android.text.TextPaint;
 import net.iquesoft.iquephoto.utils.RectUtil;
 
 // TODO: MAKE ROTATE AND RESIZE.
-public class EditorText {
+public class EditorStickerItem {
     static final int EDITOR_FRAME_PADDING = 25;
     static final int DEFAULT_COLOR = Color.BLACK;
     static final int DEFAULT_OPACITY = 255;
@@ -49,7 +49,7 @@ public class EditorText {
 
     private EditorFrame mEditorFrame;
 
-    EditorText(String text, @Nullable Typeface typeface, int color, int opacity, EditorFrame editorFrame) {
+    EditorStickerItem(String text, @Nullable Typeface typeface, int color, int opacity, EditorFrame editorFrame) {
         mText = text;
 
         if (typeface != null)

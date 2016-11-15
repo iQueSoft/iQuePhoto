@@ -4,19 +4,26 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.adapters.GalleryImageAdapter;
+import net.iquesoft.iquephoto.adapters.ImageFoldersAdapter;
+import net.iquesoft.iquephoto.adapters.ImagesAdapter;
 import net.iquesoft.iquephoto.common.BaseActivity;
 import net.iquesoft.iquephoto.di.IHasComponent;
 import net.iquesoft.iquephoto.di.components.DaggerIGalleryActivityComponent;
 import net.iquesoft.iquephoto.di.components.IApplicationComponent;
 import net.iquesoft.iquephoto.di.components.IGalleryActivityComponent;
 import net.iquesoft.iquephoto.di.modules.GalleryActivityModule;
+import net.iquesoft.iquephoto.model.Image;
+import net.iquesoft.iquephoto.model.ImageFolder;
 import net.iquesoft.iquephoto.presenter.activity.GalleryActivityPresenterImpl;
-import net.iquesoft.iquephoto.utils.ImageScanner;
 import net.iquesoft.iquephoto.view.activity.interfaces.IGalleryActivityView;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -31,10 +38,16 @@ public class GalleryActivity extends BaseActivity implements IGalleryActivityVie
 
     private IGalleryActivityComponent mComponent;
 
-    private GalleryImageAdapter mAdapter;
+    private ImageFoldersAdapter mImageFoldersAdapter;
+
+    @BindView(R.id.galleryHeaderTextView)
+    TextView headerTextView;
 
     @BindView(R.id.galleryRecyclerView)
-    RecyclerView mRecyclerView;
+    RecyclerView recyclerView;
+
+    @BindView(R.id.galleryNoImagesLinearLayout)
+    LinearLayout noImagesLinearLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,22 +57,16 @@ public class GalleryActivity extends BaseActivity implements IGalleryActivityVie
 
         setContentView(R.layout.activity_gallery);
 
-        ImageScanner galleryImageLoader = new ImageScanner(this);
-        galleryImageLoader.execute();
-
-        galleryImageLoader.setListener(imageGalleryList -> {
-            mAdapter = new GalleryImageAdapter(imageGalleryList);
-            mAdapter.setListener(galleryImage -> {
-                Intent intent = new Intent(GalleryActivity.this, PreviewActivity.class);
-                intent.putExtra("Image", galleryImage.getPath());
-                startActivity(intent);
-                finish();
-            });
-            mRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
-            mRecyclerView.setAdapter(mAdapter);
-        });
-
         ButterKnife.bind(this);
+
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+
+        presenter.fetchImages(this);
+    }
+
+    @Override
+    public void onBackPressed() {
+        presenter.onBackPressed(recyclerView);
     }
 
     @Override
@@ -73,11 +80,59 @@ public class GalleryActivity extends BaseActivity implements IGalleryActivityVie
 
     @OnClick(R.id.buttonGalleryBack)
     void onClickBack() {
-        super.onBackPressed();
+        onBackPressed();
     }
 
     @Override
     public IGalleryActivityComponent getComponent() {
         return mComponent;
+    }
+
+    @Override
+    public void setupFoldersAdapter(List<ImageFolder> imageFolders) {
+        mImageFoldersAdapter = new ImageFoldersAdapter(imageFolders);
+        mImageFoldersAdapter.setOnFolderClickListener(imageFolder -> {
+            presenter.folderClicked(imageFolder);
+        });
+
+        recyclerView.setAdapter(mImageFoldersAdapter);
+    }
+
+    @Override
+    public void showImages(String folderName, List<Image> images) {
+        ImagesAdapter imagesAdapter = new ImagesAdapter(images);
+
+        imagesAdapter.setOnImageClickListener(image -> {
+            Intent intent = new Intent(GalleryActivity.this, PreviewActivity.class);
+            intent.putExtra("Image", image.getPath());
+            startActivity(intent);
+            finish();
+        });
+
+        recyclerView.setAdapter(imagesAdapter);
+
+        headerTextView.setText(folderName);
+    }
+
+    @Override
+    public void showHaveNoImages() {
+        recyclerView.setVisibility(View.GONE);
+        noImagesLinearLayout.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showFolders() {
+        headerTextView.setText(R.string.gallery);
+        recyclerView.setAdapter(mImageFoldersAdapter);
+    }
+
+    @Override
+    public void navigateBack() {
+        super.onBackPressed();
+    }
+
+    @OnClick(R.id.takePhotoButton)
+    void OnClickTakePhotoButton() {
+        // TODO: Take photo from application custom camera.
     }
 }

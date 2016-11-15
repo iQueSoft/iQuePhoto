@@ -46,6 +46,10 @@ public class SliderControlFragmentPresenterImpl implements ISliderControlFragmen
                 mView.initializeCancelButton(R.string.warmth);
                 mView.initializeSlider(-100, 100, 0);
                 break;
+            case EXPOSURE:
+                mView.initializeCancelButton(R.string.exposure);
+                mView.initializeSlider(-100, 100, 0);
+                break;
             case VIGNETTE:
                 mView.initializeCancelButton(R.string.vignette);
                 mView.initializeSlider(-100, 100, 70);

@@ -36,7 +36,6 @@
     <string name="sepia">Sepia</string>
     <string name="sharpen">Sharpen</string>
     <string name="temperature">Temperature</string>
-    <string name="tint">Tint</string>
     <string name="vignette">Vignette</string>
 
     <string name="select_color">Select a color</string>
@@ -152,6 +151,8 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="text_delete_alert">Do you want to delete it?</string>
+    <string name="no_photos">You have no photos</string>
+    <string name="no_photos_tip">Take one with your camera to get started.</string>
     <!-- For alerts. - END -->
 
     <!-- START - Font picker dialog. -->
@@ -160,9 +161,17 @@
     <string name="select_font">Select a font</string>
     <!-- Font picker dialog - END. -->
 
+    <!-- START - ADJUST. -->
     <string name="adjust">Adjust</string>
     <string name="warmth">Warmth</string>
     <string name="saturation">Saturation</string>
+    <string name="exposure">Exposure</string>
+    <string name="fade">Fade</string>
+    <string name="tint">Tint</string>
+    <string name="vibrance">Vibrance</string>
+    <string name="shadows">Shadows</string>
+    <string name="highlights">Highlights</string>
+    <!-- ADJUST - END. -->
 
     <string name="preview">Preview</string>
 

@@ -38,7 +38,11 @@ public class Adjust {
             new Adjust(R.string.saturation, R.drawable.ic_saturation, SATURATION,
                     0),
             new Adjust(R.string.warmth, R.drawable.ic_warmth, WARMTH,
-                    0)
+                    0),
+            new Adjust(R.string.exposure, R.drawable.ic_exposure, EXPOSURE,
+                    0),
+            new Adjust(R.string.fade, R.drawable.ic_fade, FADE, 0)
+
     };
 
     private Adjust(@StringRes int title, @DrawableRes int icon, @NonNull EditorCommand command,

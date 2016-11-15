@@ -2,9 +2,7 @@ package net.iquesoft.iquephoto.view.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -65,7 +63,7 @@ public class FontPickerDialog extends Dialog {
     public void initFontsList() {
         FontsAdapter fontsAdapter = new FontsAdapter(Font.getFontsList());
         fontsList.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        fontsAdapter.setFontsListener(font -> {
+        fontsAdapter.setOnFontClickListener(font -> {
             mTypeface = Typeface.createFromAsset(getContext().getAssets(), font.getTypeface());
         });
         fontsList.setAdapter(fontsAdapter);

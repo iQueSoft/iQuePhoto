@@ -97,6 +97,9 @@ public class SliderControlFragment extends BaseFragment implements ISliderContro
                     case SATURATION:
                         editorActivityView.getImageEditorView().setSaturationValue(value);
                         break;
+                    case EXPOSURE:
+                        editorActivityView.getImageEditorView().setExposureValue(value);
+                        break;
                     case TRANSFORM_STRAIGHTEN:
                         editorActivityView.getImageEditorView().setStraightenValue(value);
                         break;

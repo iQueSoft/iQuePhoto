@@ -1,15 +1,11 @@
 package net.iquesoft.iquephoto.adapters;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.model.Adjust;
@@ -25,13 +21,13 @@ public class AdjustAdapter extends RecyclerView.Adapter<AdjustAdapter.ViewHolder
 
     private List<Adjust> mAdjustList;
 
-    private AdjustListener mListener;
+    private OnAdjustClickListener mListener;
 
-    public interface AdjustListener {
-        void onClick(Adjust adjust);
+    public interface OnAdjustClickListener {
+        void onAdjustClick(Adjust adjust);
     }
 
-    public void setAdjustListener(AdjustListener listener) {
+    public void setOnAdjustClickListener(OnAdjustClickListener listener) {
         mListener = listener;
     }
 
@@ -59,12 +55,11 @@ public class AdjustAdapter extends RecyclerView.Adapter<AdjustAdapter.ViewHolder
                 mContext.getResources().getDrawable(adjust.getIcon()),
                 null, null);
 
-
         holder.adjustButton.setOnClickListener(view -> {
-            mListener.onClick(adjust);
+            mListener.onAdjustClick(adjust);
         });
     }
-    
+
     @Override
     public int getItemCount() {
         return mAdjustList.size();

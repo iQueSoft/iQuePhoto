@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ColorFilter;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Matrix;
@@ -32,13 +33,16 @@ import com.afollestad.materialdialogs.MaterialDialog;
 
 import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.R;
+import net.iquesoft.iquephoto.model.Adjust;
 import net.iquesoft.iquephoto.model.Sticker;
+import net.iquesoft.iquephoto.utils.AdjustUtil;
 import net.iquesoft.iquephoto.utils.BitmapUtil;
 import net.iquesoft.iquephoto.utils.LoggerUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Enum.valueOf;
 import static net.iquesoft.iquephoto.core.EditorCommand.NONE;
 import static net.iquesoft.iquephoto.core.EditorCommand.VIGNETTE;
 
@@ -72,6 +76,8 @@ public class ImageEditorView extends ImageView {
     private Paint mWarmthPaint;
     private Paint mBrightnessPaint;
     private Paint mSaturationPaint;
+    private Paint mExposurePaint;
+    private Paint mTintPaint;
 
     private Paint mOverlayPaint;
     private Paint mDrawingPaint;
@@ -100,8 +106,10 @@ public class ImageEditorView extends ImageView {
 
     private float mContrastValue = 0;
     private float mBrightnessValue = 0;
-    private float mSaturationValue = 0;
+    private int mSaturationValue = 0;
     private float mWarmthValue = 0;
+    private int mExposureValue = 0;
+    private int mTintValue = 0;
 
     private EditorCommand mCommand = NONE;
 
@@ -146,6 +154,8 @@ public class ImageEditorView extends ImageView {
         mContrastPaint = new Paint();
         mBrightnessPaint = new Paint();
         mSaturationPaint = new Paint();
+        mExposurePaint = new Paint();
+        mTintPaint = new Paint();
 
         mOverlayPaint = new Paint();
 
@@ -262,6 +272,14 @@ public class ImageEditorView extends ImageView {
                 if (mSaturationValue != 0)
                     canvas.drawBitmap(bitmap, mMatrix, mSaturationPaint);
                 break;
+            case EXPOSURE:
+                if (mExposureValue != 0)
+                    canvas.drawBitmap(bitmap, mMatrix, mExposurePaint);
+                break;
+            case TINT:
+                if (mTintValue != 0) {
+                    canvas.drawBitmap(bitmap, mMatrix, mTintPaint);
+                }
             case TRANSFORM:
                 drawGuidelines(canvas);
                 break;
@@ -826,6 +844,25 @@ public class ImageEditorView extends ImageView {
         }
     }
 
+    public void setTintValue(int value) {
+        if (value != 0) {
+            mTintValue = value;
+
+            mTintPaint.setColorFilter(getTintColorFilter(value));
+
+            invalidate();
+        }
+    }
+
+    public void setExposureValue(int value) {
+        if (value != 0) {
+            mExposureValue = value;
+
+            mExposurePaint.setColorFilter(getExposureColorFilter(mExposureValue));
+            invalidate();
+        }
+    }
+
     public void setWarmthValue(int value) {
         if (value != 0) {
             mWarmthValue = value;
@@ -887,6 +924,51 @@ public class ImageEditorView extends ImageView {
         colorMatrix.setSaturation(saturation);
 
         return new ColorMatrixColorFilter(colorMatrix);
+    }
+
+    private ColorMatrixColorFilter getTintColorFilter(float value) {
+        float destinationColor = ((value + 100) / 2) * 2.5f;
+
+        float lr = 0.2126f;
+        float lg = 0.7152f;
+        float lb = 0.0722f;
+
+        ColorMatrix grayscaleMatrix = new ColorMatrix(new float[]{
+                lr, lg, lb, 0, 0,
+                lr, lg, lb, 0, 0,
+                lr, lg, lb, 0, 0,
+                0, 0, 0, 0, 255,
+        });
+
+        int dr = Color.red((int) destinationColor);
+        int dg = Color.green((int) destinationColor);
+        int db = Color.blue((int) destinationColor);
+
+        float drf = dr / 255f;
+        float dgf = dg / 255f;
+        float dbf = db / 255f;
+
+        ColorMatrix tintMatrix = new ColorMatrix(new float[]{
+                drf, 0, 0, 0, 0,
+                0, dgf, 0, 0, 0,
+                0, 0, dbf, 0, 0,
+                0, 0, 0, 1, 0,
+        });
+        tintMatrix.preConcat(grayscaleMatrix);
+
+        return new ColorMatrixColorFilter(tintMatrix);
+    }
+
+    private ColorMatrixColorFilter getExposureColorFilter(float value) {
+        float exposure = (float) Math.pow(2, value / 100);
+
+        return new ColorMatrixColorFilter(new float[]
+                {
+                        exposure, 0, 0, 0, 0,
+                        0, exposure, 0, 0, 0,
+                        0, 0, exposure, 0, 0,
+                        0, 0, 0, 1, 0
+                });
     }
 
     private void findCheckedText(MotionEvent event) {
@@ -1147,6 +1229,9 @@ public class ImageEditorView extends ImageView {
                     break;
                 case WARMTH:
                     mCanvas.drawBitmap(mBitmap, 0, 0, mWarmthPaint);
+                    break;
+                case EXPOSURE:
+                    mCanvas.drawBitmap(mBitmap, 0, 0, AdjustUtil.getExposurePaint(mExposureValue));
                     break;
                 case TRANSFORM_STRAIGHTEN:
                     mCanvas.save(Canvas.CLIP_SAVE_FLAG);

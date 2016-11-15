@@ -16,12 +16,12 @@ public class GalleryActivityModule {
     }
 
     @Provides
-    GalleryActivityPresenterImpl provideGalleryActivityPresenterImpl(IGalleryActivityView view) {
-        return new GalleryActivityPresenterImpl(mView);
+    IGalleryActivityView provideGalleryActivityView() {
+        return mView;
     }
 
     @Provides
-    IGalleryActivityView provideGalleryActivityView() {
-        return mView;
+    GalleryActivityPresenterImpl provideGalleryActivityPresenterImpl(IGalleryActivityView view) {
+        return new GalleryActivityPresenterImpl(mView);
     }
 }

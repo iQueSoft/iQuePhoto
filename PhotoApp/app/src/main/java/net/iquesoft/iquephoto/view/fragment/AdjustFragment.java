@@ -57,7 +57,7 @@ public class AdjustFragment extends BaseFragment implements IAdjustFragmentView 
 
         mAdapter = new AdjustAdapter(mAdjustList);
 
-        mAdapter.setAdjustListener(adjust -> {
+        mAdapter.setOnAdjustClickListener(adjust -> {
             editorActivityView.getImageEditorView().setCommand(adjust.getCommand());
 
             editorActivityView.setupFragment(SliderControlFragment.newInstance(adjust.getCommand()));

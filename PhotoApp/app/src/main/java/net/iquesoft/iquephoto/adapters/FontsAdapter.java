@@ -24,13 +24,13 @@ public class FontsAdapter extends RecyclerView.Adapter<FontsAdapter.ViewHolder> 
 
     private List<Font> mFontsList;
 
-    private FontsListener mListener;
+    private OnFontClickListener mListener;
 
-    public interface FontsListener {
+    public interface OnFontClickListener {
         void onClick(Font font);
     }
 
-    public void setFontsListener(FontsListener listener) {
+    public void setOnFontClickListener(OnFontClickListener listener) {
         mListener = listener;
     }
 
@@ -41,6 +41,7 @@ public class FontsAdapter extends RecyclerView.Adapter<FontsAdapter.ViewHolder> 
     @Override
     public FontsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         mContext = parent.getContext();
+
         LayoutInflater inflater = LayoutInflater.from(mContext);
 
         View toolItem = inflater.inflate(R.layout.item_font, parent, false);

@@ -25,7 +25,7 @@ public class EditorText {
     private int mX;
     private int mY;
 
-    private float mScale;
+    private float mScale = 1;
     private float mRotateAngle = 0;
 
     private boolean mIsInEdit;
@@ -86,7 +86,7 @@ public class EditorText {
         mFrontHandleDstRect = new RectF(0, 0, handleHalfSize << 1, handleHalfSize << 1);
         mRotateHandleDstRect = new RectF(0, 0, handleHalfSize << 1, handleHalfSize << 1);
     }
-    
+
     private void initTextPaint() {
         mTextPaint = new TextPaint();
 
@@ -107,8 +107,10 @@ public class EditorText {
 
         mFrameRect.set(mTextRect.left - EDITOR_FRAME_PADDING, mTextRect.top - EDITOR_FRAME_PADDING,
                 mTextRect.right + EDITOR_FRAME_PADDING, mTextRect.bottom + EDITOR_FRAME_PADDING);
+        RectUtil.scaleRect(mFrameRect, mScale);
 
         canvas.save();
+        canvas.scale(mScale, mScale, mFrameRect.centerX(), mFrameRect.centerY());
         canvas.rotate(mRotateAngle, mFrameRect.centerX(), mFrameRect.centerY());
         canvas.drawText(mText, mX, mY, mTextPaint);
         canvas.restore();

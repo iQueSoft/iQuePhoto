@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.ColorFilter;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Matrix;
@@ -33,7 +32,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 
 import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.model.Adjust;
 import net.iquesoft.iquephoto.model.Sticker;
 import net.iquesoft.iquephoto.utils.AdjustUtil;
 import net.iquesoft.iquephoto.utils.BitmapUtil;
@@ -42,7 +40,6 @@ import net.iquesoft.iquephoto.utils.LoggerUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.lang.Enum.valueOf;
 import static net.iquesoft.iquephoto.core.EditorCommand.NONE;
 import static net.iquesoft.iquephoto.core.EditorCommand.VIGNETTE;
 
@@ -52,10 +49,6 @@ public class ImageEditorView extends ImageView {
 
     private boolean mIsInitialized;
     private boolean mIsShowOriginalImage;
-
-    private boolean mIsInResize;
-    private boolean mIsInSide;
-    private boolean mIsInRotate;
 
     private Bitmap mSourceBitmap;
 
@@ -111,6 +104,7 @@ public class ImageEditorView extends ImageView {
     private int mExposureValue = 0;
     private int mTintValue = 0;
 
+    private EditorMode mMode = EditorMode.NONE;
     private EditorCommand mCommand = NONE;
 
     private UndoListener mUndoListener;
@@ -396,9 +390,7 @@ public class ImageEditorView extends ImageView {
                 actionDown(event);
                 break;
             case MotionEvent.ACTION_POINTER_DOWN:
-                mIsInSide = false;
-                mIsInRotate = false;
-                mIsInResize = false;
+                mMode = EditorMode.NONE;
                 if (mCommand == VIGNETTE)
                     mEditorVignette.actionPointerDown(event);
 
@@ -461,35 +453,50 @@ public class ImageEditorView extends ImageView {
         switch (mCommand) {
             case STICKERS:
                 if (mCurrentEditorSticker != null) {
-                    if (mIsInResize) {
-                        float stickerScale = diagonalLength(event, mCurrentEditorSticker.getPoint()) / mCurrentEditorSticker.getLength();
-                        mCurrentEditorSticker.getMatrix()
-                                .postScale(stickerScale, stickerScale, mCurrentEditorSticker.getPoint().x, mCurrentEditorSticker.getPoint().y);
+                    switch (mMode) {
+                        case MOVE:
+                            moveSticker(event);
+                            break;
+                        case RESIZE:
+                            float stickerScale = diagonalLength(event, mCurrentEditorSticker.getPoint()) / mCurrentEditorSticker.getLength();
+                            mCurrentEditorSticker.getMatrix()
+                                    .postScale(stickerScale, stickerScale, mCurrentEditorSticker.getPoint().x, mCurrentEditorSticker.getPoint().y);
 
-                        invalidate();
-                    } else if (mIsInSide) {
-                        moveSticker(event);
-                    } else if (mIsInRotate) {
-                        Matrix matrix = mCurrentEditorSticker.getMatrix();
-                        mCurrentEditorSticker.getMatrix().postRotate((rotationToStartPoint(event, matrix) - mCurrentEditorSticker.getRotateDegree()) * 2, mCurrentEditorSticker.getPoint().x, mCurrentEditorSticker.getPoint().y);
-                        mCurrentEditorSticker.setRotateDegree(rotationToStartPoint(event, matrix));
+                            invalidate();
+                            break;
+                        case ROTATE:
+                            Matrix matrix = mCurrentEditorSticker.getMatrix();
+                            mCurrentEditorSticker.getMatrix().postRotate((rotationToStartPoint(event, matrix) - mCurrentEditorSticker.getRotateDegree()) * 2, mCurrentEditorSticker.getPoint().x, mCurrentEditorSticker.getPoint().y);
+                            mCurrentEditorSticker.setRotateDegree(rotationToStartPoint(event, matrix));
+                            break;
                     }
                 }
                 break;
             case TEXT:
                 if (mCurrentEditorText != null) {
-                    if (mIsInSide) {
-                        moveText(event);
-                    } else if (mIsInRotate) {
-                        float distanceX = event.getX() - mLastX;
-                        float distanceY = event.getY() - mLastY;
+                    float distanceX = event.getX() - mLastX;
+                    float distanceY = event.getY() - mLastY;
 
-                        mCurrentEditorText.rotateText(distanceX, distanceY);
+                    switch (mMode) {
+                        case MOVE:
+                            moveText(event);
+                            break;
+                        case RESIZE:
+                            mCurrentEditorText.scaleText(distanceX, distanceY);
 
-                        invalidate();
+                            invalidate();
 
-                        mLastX = event.getX();
-                        mLastY = event.getY();
+                            mLastX = event.getX();
+                            mLastY = event.getY();
+                            break;
+                        case ROTATE:
+                            mCurrentEditorText.rotateText(distanceX, distanceY);
+
+                            invalidate();
+
+                            mLastX = event.getX();
+                            mLastY = event.getY();
+                            break;
                     }
                 }
                 break;
@@ -522,9 +529,8 @@ public class ImageEditorView extends ImageView {
     }
 
     private void actionUp() {
-        mIsInResize = false;
-        mIsInSide = false;
-        mIsInRotate = false;
+        mMode = EditorMode.NONE;
+
         switch (mCommand) {
             case NONE:
                 mIsShowOriginalImage = false;
@@ -987,7 +993,7 @@ public class ImageEditorView extends ImageView {
 
             if (editorText.getFrameRect().contains(event.getX(), event.getY())) {
                 mCurrentEditorText = editorText;
-                mIsInSide = true;
+                mMode = EditorMode.MOVE;
 
                 mLastX = event.getX();
                 mLastY = event.getY();
@@ -995,6 +1001,8 @@ public class ImageEditorView extends ImageView {
                 return;
             } else if (editorText.getDeleteHandleDstRect().contains(event.getX(), event.getY())) {
                 mCurrentEditorText = null;
+                mMode = EditorMode.NONE;
+
                 mTextsList.remove(i);
                 invalidate();
                 return;
@@ -1004,15 +1012,20 @@ public class ImageEditorView extends ImageView {
                 mLastX = editorText.getRotateHandleDstRect().centerX();
                 mLastY = editorText.getRotateHandleDstRect().centerY();
 
-                mIsInRotate = true;
+                mMode = EditorMode.ROTATE;
                 return;
             } else if (editorText.getResizeHandleDstRect().contains(event.getX(), event.getY())) {
                 mCurrentEditorText = editorText;
-                mIsInResize = true;
+
+                mLastX = editorText.getResizeHandleDstRect().centerX();
+                mLastY = editorText.getResizeHandleDstRect().centerY();
+
+                mMode = EditorMode.RESIZE;
                 return;
             }
         }
         mCurrentEditorText = null;
+        mMode = EditorMode.NONE;
     }
 
     private void findCheckedSticker(MotionEvent event) {
@@ -1020,8 +1033,9 @@ public class ImageEditorView extends ImageView {
             EditorSticker editorSticker = mStickersList.get(i);
 
             if (isInStickerBitmap(event, editorSticker)) {
-                mIsInSide = true;
                 mCurrentEditorSticker = editorSticker;
+
+                mMode = EditorMode.MOVE;
 
                 mLastX = event.getX(0);
                 mLastY = event.getY(0);
@@ -1029,15 +1043,18 @@ public class ImageEditorView extends ImageView {
             } else if (editorSticker.isInEdit()) {
                 if (isInButton(event, editorSticker.getDeleteHandleRect())) {
                     mCurrentEditorSticker = null;
+
+                    mMode = EditorMode.NONE;
+
                     mStickersList.remove(i);
                     invalidate();
                     return;
                 } else if (isInButton(event, editorSticker.getRotateHandleRect())) {
-                    mIsInRotate = true;
+                    mMode = EditorMode.ROTATE;
                     mCurrentEditorSticker = null;
                     return;
                 } else if (isInButton(event, editorSticker.getResizeHandleRect())) {
-                    mIsInResize = true;
+                    mMode = EditorMode.RESIZE;
                     midPointToStartPoint(event, editorSticker);
                     editorSticker.setLength(diagonalLength(event, editorSticker.getPoint()));
                     return;
@@ -1045,6 +1062,7 @@ public class ImageEditorView extends ImageView {
             }
         }
         mCurrentEditorSticker = null;
+        mMode = EditorMode.NONE;
     }
 
     private float diagonalLength(MotionEvent event, PointF pointF) {

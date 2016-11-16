@@ -41,7 +41,7 @@ public class GalleryActivityPresenterImpl implements IGalleryActivityPresenter {
     @Override
     public void onBackPressed(RecyclerView recyclerView) {
         Object object = recyclerView.getAdapter();
-        
+
         if (object != null) {
             String classSimpleName = object.getClass().getSimpleName();
             if (classSimpleName.equalsIgnoreCase(ImageFoldersAdapter.class.getSimpleName()))

@@ -18,9 +18,9 @@ import butterknife.OnClick;
 public class ColorPickerDialog extends Dialog {
     private int mColor;
     private Context mContext;
-    private ColorListener mListener;
+    private OnColorClickListener mListener;
 
-    public interface ColorListener {
+    public interface OnColorClickListener {
         void onClick(int color);
     }
 
@@ -63,7 +63,7 @@ public class ColorPickerDialog extends Dialog {
         dismiss();
     }
 
-    public void setListener(ColorListener listener) {
-        this.mListener = listener;
+    public void setOnColorClickListener(OnColorClickListener listener) {
+        mListener = listener;
     }
 }

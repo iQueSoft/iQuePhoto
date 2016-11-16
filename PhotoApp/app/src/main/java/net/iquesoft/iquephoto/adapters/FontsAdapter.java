@@ -55,7 +55,7 @@ public class FontsAdapter extends RecyclerView.Adapter<FontsAdapter.ViewHolder> 
 
         holder.fontTitle.setText(font.getTitle());
 
-        holder.previewText.setTypeface(getTypeface(font.getTypeface()));
+        holder.fontPreviewTextView.setTypeface(getTypeface(font.getTypeface()));
 
         holder.fontTitle.setOnClickListener(view -> mListener.onClick(font));
     }
@@ -70,8 +70,8 @@ public class FontsAdapter extends RecyclerView.Adapter<FontsAdapter.ViewHolder> 
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.previewText)
-        TextView previewText;
+        @BindView(R.id.fontPreviewTextView)
+        TextView fontPreviewTextView;
 
         @BindView(R.id.fontTitle)
         TextView fontTitle;

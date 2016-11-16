@@ -15,6 +15,14 @@
     <string name="more">More</string>
     <!-- Share screen - END. -->
 
+    <!-- START - Share screen -->
+    <string name="application_does_not_exist">Application does not exist</string>
+    <string name="instagram_alert">For share you need to have Instagram installed.</string>
+    <string name="facebook_alert">For share you need to have Facebook installed.</string>
+    <string name="install">Install</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="share_more">Share image with:</string>
+
     <string name="none">None</string>
     <string name="autofix">Autofix</string>
     <string name="bw">Min/Max Color Intensity</string>
@@ -159,6 +167,7 @@
     <string name="font">Font</string>
     <string name="start_typing">Start typing…</string>
     <string name="select_font">Select a font</string>
+    <string name="preview_text">AaBbCcDdEeFf</string>
     <!-- Font picker dialog - END. -->
 
     <!-- START - ADJUST. -->
@@ -192,14 +201,6 @@
     <string name="transform_horizontal">Horizontal</string>
     <string name="transform_vertical">Vertical</string>
     <!-- Transform - END. -->
-
-    <!-- START - Share screen -->
-    <string name="application_does_not_exist">Application does not exist</string>
-    <string name="instagram_alert">For share you need to have Instagram installed.</string>
-    <string name="facebook_alert">For share you need to have Facebook installed.</string>
-    <string name="install">Install</string>
-    <string name="dismiss">Dismiss</string>
-    <string name="share_more">Share image with:</string>
 
     <!-- START - Progress dialog message -->
     <string name="processing">Processing…</string>

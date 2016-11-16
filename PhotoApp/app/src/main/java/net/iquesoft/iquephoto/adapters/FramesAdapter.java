@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.model.Frame;
 
@@ -24,14 +26,14 @@ public class FramesAdapter extends RecyclerView.Adapter<FramesAdapter.ViewHolder
 
     private List<Frame> mFramesList;
 
-    private FramesListener mFramesListener;
+    private OnFrameClickListener mOnFrameClickListener;
 
-    public interface FramesListener {
+    public interface OnFrameClickListener {
         void onClick(Frame frame);
     }
 
-    public void setFramesListener(FramesListener listener) {
-        mFramesListener = listener;
+    public void setFramesListener(OnFrameClickListener onFrameClickListener) {
+        mOnFrameClickListener = onFrameClickListener;
     }
 
     public FramesAdapter(List<Frame> framesList) {
@@ -42,9 +44,7 @@ public class FramesAdapter extends RecyclerView.Adapter<FramesAdapter.ViewHolder
     public FramesAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         mContext = parent.getContext();
 
-        LayoutInflater inflater = LayoutInflater.from(mContext);
-
-        View view = inflater.inflate(R.layout.item_frame, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_frame, parent, false);
 
         return new ViewHolder(view);
     }
@@ -55,10 +55,13 @@ public class FramesAdapter extends RecyclerView.Adapter<FramesAdapter.ViewHolder
 
         holder.title.setText(frame.getTitle());
 
-        holder.image.setImageDrawable(mContext.getResources().getDrawable(frame.getImage()));
-
+        Picasso.with(mContext)
+                .load(frame.getImage())
+                .into(holder.image);
+        
         if (mCurrentPosition == position) {
-            mFramesListener.onClick(frame);
+            if (mOnFrameClickListener != null)
+                mOnFrameClickListener.onClick(frame);
             holder.frameSelected.setVisibility(View.VISIBLE);
         } else
             holder.frameSelected.setVisibility(View.GONE);

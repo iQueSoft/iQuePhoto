@@ -1,6 +1,7 @@
 package net.iquesoft.iquephoto.adapters;
 
 import android.content.Context;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,14 +22,14 @@ public class AdjustAdapter extends RecyclerView.Adapter<AdjustAdapter.ViewHolder
 
     private List<Adjust> mAdjustList;
 
-    private OnAdjustClickListener mListener;
+    private OnAdjustClickListener mOnAdjustClickListener;
 
     public interface OnAdjustClickListener {
         void onAdjustClick(Adjust adjust);
     }
 
-    public void setOnAdjustClickListener(OnAdjustClickListener listener) {
-        mListener = listener;
+    public void setOnAdjustClickListener(OnAdjustClickListener onAdjustClickListener) {
+        mOnAdjustClickListener = onAdjustClickListener;
     }
 
     public AdjustAdapter(List<Adjust> adjustList) {
@@ -39,9 +40,7 @@ public class AdjustAdapter extends RecyclerView.Adapter<AdjustAdapter.ViewHolder
     public AdjustAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         mContext = parent.getContext();
 
-        LayoutInflater inflater = LayoutInflater.from(mContext);
-
-        View view = inflater.inflate(R.layout.item_adjust, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_adjust, parent, false);
 
         return new AdjustAdapter.ViewHolder(view);
     }
@@ -52,11 +51,11 @@ public class AdjustAdapter extends RecyclerView.Adapter<AdjustAdapter.ViewHolder
 
         holder.adjustButton.setText(adjust.getValue() + "\n" + mContext.getText(adjust.getTitle()));
         holder.adjustButton.setCompoundDrawablesWithIntrinsicBounds(null,
-                mContext.getResources().getDrawable(adjust.getIcon()),
+                ResourcesCompat.getDrawable(mContext.getResources(), adjust.getIcon(), null),
                 null, null);
 
         holder.adjustButton.setOnClickListener(view -> {
-            mListener.onAdjustClick(adjust);
+            mOnAdjustClickListener.onAdjustClick(adjust);
         });
     }
 

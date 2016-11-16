@@ -11,7 +11,6 @@ import android.text.TextPaint;
 
 import net.iquesoft.iquephoto.utils.RectUtil;
 
-// TODO: MAKE ROTATE AND RESIZE.
 public class EditorText {
     static final int EDITOR_FRAME_PADDING = 25;
     static final int DEFAULT_COLOR = Color.BLACK;
@@ -26,6 +25,7 @@ public class EditorText {
     private int mX;
     private int mY;
 
+    private float mScale;
     private float mRotateAngle = 0;
 
     private boolean mIsInEdit;
@@ -86,7 +86,7 @@ public class EditorText {
         mFrontHandleDstRect = new RectF(0, 0, handleHalfSize << 1, handleHalfSize << 1);
         mRotateHandleDstRect = new RectF(0, 0, handleHalfSize << 1, handleHalfSize << 1);
     }
-
+    
     private void initTextPaint() {
         mTextPaint = new TextPaint();
 
@@ -108,7 +108,10 @@ public class EditorText {
         mFrameRect.set(mTextRect.left - EDITOR_FRAME_PADDING, mTextRect.top - EDITOR_FRAME_PADDING,
                 mTextRect.right + EDITOR_FRAME_PADDING, mTextRect.bottom + EDITOR_FRAME_PADDING);
 
+        canvas.save();
+        canvas.rotate(mRotateAngle, mFrameRect.centerX(), mFrameRect.centerY());
         canvas.drawText(mText, mX, mY, mTextPaint);
+        canvas.restore();
 
         // TODO: DOESN'T DRAW HELP FRAME ON ORIGINAL IMAGE.
         int offsetValue = ((int) mDeleteHandleDstRect.width()) >> 1;
@@ -130,7 +133,10 @@ public class EditorText {
         RectUtil.rotateRect(mFrontHandleDstRect, mFrameRect.centerX(),
                 mFrameRect.centerY(), mRotateAngle);
 
+        canvas.save();
+        canvas.rotate(mRotateAngle, mFrameRect.centerX(), mFrameRect.centerY());
         canvas.drawRect(mFrameRect, mEditorFrame.getPaint());
+        canvas.restore();
 
         canvas.drawBitmap(mEditorFrame.getDeleteHandleBitmap(),
                 mDeleteHandleSrcRect, mDeleteHandleDstRect, null);
@@ -170,6 +176,10 @@ public class EditorText {
         return mRotateHandleDstRect;
     }
 
+    RectF getResizeHandleDstRect() {
+        return mResizeHandleDstRect;
+    }
+
     Rect getDeleteHandleRect() {
         return mDeleteHandleSrcRect;
     }
@@ -204,5 +214,65 @@ public class EditorText {
 
     int getTextRectWidth() {
         return mTextRect.width();
+    }
+
+    void rotateText(float distanceX, float distanceY) {
+        float frameX = mFrameRect.centerX();
+        float frameY = mFrameRect.centerY();
+
+        float rotateX = mResizeHandleDstRect.centerX();
+        float rotateY = mResizeHandleDstRect.centerY();
+
+        float newX = rotateX + distanceX;
+        float newY = rotateY + distanceY;
+
+        float x = rotateX - frameX;
+        float y = rotateY - frameY;
+        float x1 = newX - frameX;
+        float y1 = newY - frameY;
+
+        float sourceLength = (float) Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+        float currentLength = (float) Math.sqrt(Math.pow(x1, 2) + Math.pow(y1, 2));
+
+        double cos = (x * x1 + y * y1) / (sourceLength * currentLength);
+        if (cos > 1 || cos < -1)
+            return;
+
+        float angle = (float) Math.toDegrees(Math.acos(cos));
+        float calMatrix = x * y1 - x1 * y;
+
+        int flag = calMatrix > 0 ? 1 : -1;
+        angle = flag * angle;
+
+        mRotateAngle += angle;
+    }
+
+    void scaleText(float distanceX, float distanceY) {
+        float frameX = mFrameRect.centerX();
+        float frameY = mFrameRect.centerY();
+
+        float resizeX = mResizeHandleDstRect.centerX();
+        float resizeY = mResizeHandleDstRect.centerY();
+
+        float newX = resizeX + distanceX;
+        float newY = resizeY + distanceY;
+
+        float x = resizeX - frameX;
+        float y = resizeY - frameY;
+        float x1 = newX - frameX;
+        float y1 = newY - frameY;
+
+        float sourceLength = (float) Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+        float currentLength = (float) Math.sqrt(Math.pow(x1, 2) + Math.pow(y1, 2));
+
+        float scale = currentLength / sourceLength;
+
+        mScale *= scale;
+
+        float newWidth = mFrameRect.width() * mScale;
+
+        if (newWidth < 70) {
+            mScale /= scale;
+        }
     }
 }

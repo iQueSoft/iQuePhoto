@@ -11,8 +11,6 @@ public class EditorColor {
     @ColorRes
     private int mColor;
 
-    private boolean mIsSelected;
-
     public static List<EditorColor> getColorsList() {
         return Arrays.asList(editorColors);
     }
@@ -45,20 +43,7 @@ public class EditorColor {
         mColor = color;
     }
 
-    public EditorColor(@ColorRes int color, boolean isSelected) {
-        mColor = color;
-        mIsSelected = isSelected;
-    }
-
     public int getColor() {
         return mColor;
-    }
-
-    public void setSelected(boolean isSelected) {
-        mIsSelected = isSelected;
-    }
-
-    public boolean isSelected() {
-        return mIsSelected;
     }
 }

@@ -13,9 +13,9 @@ public class Font {
     }
 
     private static Font fonts[] = {
-            new Font("Black sword", "Blacksword.otf"),
+            new Font("Black Sword", "Blacksword.otf"),
             new Font("Summer Hearts", "SummerHearts-Regular.otf"),
-            new Font("Cigarettes &amp Coffee", "CigarettesAndCoffee.ttf"),
+            new Font("Cigarettes & Coffee", "CigarettesAndCoffee.ttf"),
             new Font("Abys", "Abys-Regular.otf"),
             new Font("Reis", "REIS-Regular.ttf"),
     };
@@ -24,7 +24,7 @@ public class Font {
         mTitle = title;
         mTypeface = typeface;
     }
-
+    
     public String getTitle() {
         return mTitle;
     }

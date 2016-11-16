@@ -79,7 +79,7 @@ public class OverlayFragment extends BaseFragment implements IOverlayFragmentVie
 
         mAdapter = new OverlaysAdapter(mOverlayList);
 
-        mAdapter.setOverlayListener(overlay -> {
+        mAdapter.setOnOverlayClickListener(overlay -> {
             mImageEditorView.setOverlay(overlay.getImage());
         });
 

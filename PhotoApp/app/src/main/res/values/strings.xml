@@ -168,6 +168,12 @@
     <string name="start_typing">Start typing…</string>
     <string name="select_font">Select a font</string>
     <string name="preview_text">AaBbCcDdEeFf</string>
+    <string-array name="formats_array">
+        <item>Normal</item>
+        <item>Bold</item>
+        <item>Italic</item>
+        <item>Underlined</item>
+    </string-array>
     <!-- Font picker dialog - END. -->
 
     <!-- START - ADJUST. -->
@@ -208,4 +214,5 @@
     <string name="prepare_frame">Prepare frame…</string>
     <string name="prepare_overlay">Prepare overlay…</string>
     <!-- Progress dialog message - END. -->
+
 </resources>

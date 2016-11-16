@@ -1,6 +1,8 @@
 package net.iquesoft.iquephoto.adapters;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,14 +23,14 @@ public class ToolsAdapter extends RecyclerView.Adapter<ToolsAdapter.ViewHolder> 
 
     private List<Tool> mToolsList;
 
-    private ToolsListener mToolsListener;
+    private OnToolsClickListener mOnToolsClickListener;
 
-    public interface ToolsListener {
+    public interface OnToolsClickListener {
         void onClick(Tool tool);
     }
 
-    public void setToolsListener(ToolsListener toolsListener) {
-        mToolsListener = toolsListener;
+    public void setOnToolsClickListener(OnToolsClickListener onToolsClickListener) {
+        mOnToolsClickListener = onToolsClickListener;
     }
 
     public ToolsAdapter(List<Tool> tools) {
@@ -53,10 +55,10 @@ public class ToolsAdapter extends RecyclerView.Adapter<ToolsAdapter.ViewHolder> 
         holder.toolButton.setText(mContext.getResources().getString(tool.getTitle()));
 
         holder.toolButton.setCompoundDrawablesWithIntrinsicBounds(null,
-                mContext.getResources().getDrawable(tool.getIcon()),
+                ResourcesCompat.getDrawable(mContext.getResources(), tool.getIcon(), null),
                 null, null);
 
-        holder.toolButton.setOnClickListener(view -> mToolsListener.onClick(tool));
+        holder.toolButton.setOnClickListener(view -> mOnToolsClickListener.onClick(tool));
     }
 
     @Override

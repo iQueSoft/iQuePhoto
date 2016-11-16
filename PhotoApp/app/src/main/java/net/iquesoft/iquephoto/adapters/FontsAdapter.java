@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import net.iquesoft.iquephoto.R;
@@ -18,20 +19,22 @@ import butterknife.ButterKnife;
 
 public class FontsAdapter extends RecyclerView.Adapter<FontsAdapter.ViewHolder> {
 
+    private int mSelectedFontPosition = 0;
+
     private Context mContext;
 
     private String mText;
 
     private List<Font> mFontsList;
 
-    private OnFontClickListener mListener;
+    private OnFontClickListener mOnFontClickListener;
 
     public interface OnFontClickListener {
         void onClick(Font font);
     }
 
-    public void setOnFontClickListener(OnFontClickListener listener) {
-        mListener = listener;
+    public void setOnFontClickListener(OnFontClickListener onFontClickListener) {
+        mOnFontClickListener = onFontClickListener;
     }
 
     public FontsAdapter(List<Font> fonts) {
@@ -42,22 +45,35 @@ public class FontsAdapter extends RecyclerView.Adapter<FontsAdapter.ViewHolder> 
     public FontsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         mContext = parent.getContext();
 
-        LayoutInflater inflater = LayoutInflater.from(mContext);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_font, parent, false);
 
-        View toolItem = inflater.inflate(R.layout.item_font, parent, false);
-
-        return new ViewHolder(toolItem);
+        return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(FontsAdapter.ViewHolder holder, int position) {
         final Font font = mFontsList.get(position);
 
-        holder.fontTitle.setText(font.getTitle());
+        holder.fontFamilyTextView.setText(font.getTitle());
 
         holder.fontPreviewTextView.setTypeface(getTypeface(font.getTypeface()));
 
-        holder.fontTitle.setOnClickListener(view -> mListener.onClick(font));
+        holder.itemView.setOnClickListener(view -> {
+            notifyItemChanged(mSelectedFontPosition);
+            mSelectedFontPosition = position;
+            notifyItemChanged(position);
+        });
+
+        if (mSelectedFontPosition == position) {
+            mOnFontClickListener.onClick(font);
+            holder.itemView.setAlpha(1f);
+            holder.fontSelectedImageView.setVisibility(View.GONE);
+            //holder.fontSelectedImageView.setVisibility(View.VISIBLE);
+        } else {
+            holder.itemView.setAlpha(0.5f);
+            holder.fontSelectedImageView.setVisibility(View.GONE);
+        }
+
     }
 
     @Override
@@ -73,8 +89,11 @@ public class FontsAdapter extends RecyclerView.Adapter<FontsAdapter.ViewHolder> 
         @BindView(R.id.fontPreviewTextView)
         TextView fontPreviewTextView;
 
-        @BindView(R.id.fontTitle)
-        TextView fontTitle;
+        @BindView(R.id.fontFamilyTextView)
+        TextView fontFamilyTextView;
+
+        @BindView(R.id.fontSelectedImageView)
+        ImageView fontSelectedImageView;
 
         public ViewHolder(View itemView) {
             super(itemView);

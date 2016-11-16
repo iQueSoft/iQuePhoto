@@ -13,10 +13,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import net.iquesoft.iquephoto.DataHolder;
+import net.iquesoft.iquephoto.core.EditorCommand;
 import net.iquesoft.iquephoto.core.ImageEditorView;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseFragment;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
+import net.iquesoft.iquephoto.view.activity.interfaces.IEditorActivityView;
 import net.iquesoft.iquephoto.view.dialog.FontPickerDialog;
 import net.iquesoft.iquephoto.view.dialog.RGBColorPickerDialog;
 import net.iquesoft.iquephoto.presenter.fragment.TextFragmentPresenterImpl;
@@ -30,6 +32,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+
+import static net.iquesoft.iquephoto.core.EditorCommand.TEXT;
 
 public class TextFragment extends BaseFragment implements ITextFragmentView {
 
@@ -46,6 +50,9 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
 
     private FontPickerDialog fontPickerDialog;
     private RGBColorPickerDialog RGBColorPickerDialog;
+
+    @Inject
+    IEditorActivityView editorActivityView;
 
     @Inject
     TextFragmentPresenterImpl presenter;
@@ -132,7 +139,6 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
         }
     }
 
-
     @OnClick(R.id.textColorButton)
     void onClickTextColorButton() {
         RGBColorPickerDialog.show();
@@ -140,11 +146,17 @@ public class TextFragment extends BaseFragment implements ITextFragmentView {
 
     @OnClick(R.id.textButton)
     void onClickTextButton() {
-        mText = editText.getText().toString();
-        mColor = RGBColorPickerDialog.getColor();
-        if (mText.length() > 0) {
-            fontPickerDialog.showDialog(mText, mColor);
-        }
+        fontPickerDialog.show();
+    }
+
+    @OnClick(R.id.textBackButton)
+    void onClickBack() {
+        editorActivityView.navigateBack(true);
+    }
+
+    @OnClick(R.id.textApplyButton)
+    void onClickApply() {
+        editorActivityView.getImageEditorView().apply(TEXT);
     }
 
     public int getColor() {

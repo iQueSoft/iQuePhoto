@@ -18,7 +18,6 @@ import butterknife.OnClick;
 
 public class FontPickerDialog extends Dialog {
 
-    private int mColor;
     private String mText;
     private Context mContext;
 
@@ -70,18 +69,8 @@ public class FontPickerDialog extends Dialog {
 
     }
 
-    public void showDialog(String text, int color) {
-        mText = text;
-        mColor = color;
-        show();
-    }
-
     public Typeface getTypeface() {
         return mTypeface;
-    }
-
-    public int getColor() {
-        return 0;
     }
 
     public boolean isItalic() {
@@ -98,10 +87,6 @@ public class FontPickerDialog extends Dialog {
 
     public void setBold(boolean bold) {
         mBold = bold;
-    }
-
-    public void setColor(int color) {
-        mColor = color;
     }
 
     public String getText() {

@@ -17,11 +17,10 @@
         android:paddingRight="5dp">
 
         <Button
-            android:id="@+id/textCancel"
+            android:id="@+id/textBackButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:drawableLeft="@drawable/ic_left"
             android:text="@string/text"
@@ -31,7 +30,7 @@
             android:textStyle="bold" />
 
         <ImageButton
-            android:id="@+id/textApply"
+            android:id="@+id/textApplyButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"

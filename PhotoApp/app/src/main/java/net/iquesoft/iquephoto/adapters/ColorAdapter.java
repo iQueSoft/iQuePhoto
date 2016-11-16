@@ -1,6 +1,7 @@
 package net.iquesoft.iquephoto.adapters;
 
 import android.content.Context;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +19,7 @@ import butterknife.ButterKnife;
 
 public class ColorAdapter extends RecyclerView.Adapter<ColorAdapter.ViewHolder> {
 
-    private int checkedItem;
+    private int mSelectedColorPosition = 0;
 
     private Context mContext;
 
@@ -42,9 +43,7 @@ public class ColorAdapter extends RecyclerView.Adapter<ColorAdapter.ViewHolder> 
     public ColorAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         mContext = parent.getContext();
 
-        LayoutInflater inflater = LayoutInflater.from(mContext);
-
-        View view = inflater.inflate(R.layout.item_color, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_color, parent, false);
 
         return new ViewHolder(view);
     }
@@ -53,29 +52,24 @@ public class ColorAdapter extends RecyclerView.Adapter<ColorAdapter.ViewHolder> 
     public void onBindViewHolder(ColorAdapter.ViewHolder holder, int position) {
         final EditorColor color = mEditorColorsList.get(position);
 
-        holder.colorView.setImageDrawable(new ColorCircleDrawable(mContext.getResources().getColor(color.getColor())));
+        holder.colorView.setImageDrawable(new ColorCircleDrawable(
+                ResourcesCompat.getColor(mContext.getResources(), color.getColor(), null))
+        );
 
-        if (color.isSelected()) {
+        if (mSelectedColorPosition == holder.getAdapterPosition()) {
+            mOnColorClickListener.onClick(color);
             holder.colorSelected.setVisibility(View.VISIBLE);
         } else {
             holder.colorSelected.setVisibility(View.GONE);
         }
 
         holder.colorView.setOnClickListener(view -> {
-
-            mEditorColorsList.get(checkedItem).setSelected(false);
-            notifyItemChanged(checkedItem);
-
-            checkedItem = position;
-            mEditorColorsList.get(position).setSelected(true);
-
-            notifyItemChanged(position);
-
-            mOnColorClickListener.onClick(color);
+            notifyItemChanged(mSelectedColorPosition);
+            mSelectedColorPosition = holder.getAdapterPosition();
+            notifyItemChanged(holder.getAdapterPosition());
 
         });
     }
-
 
     @Override
     public int getItemCount() {

@@ -27,14 +27,14 @@ public class OverlaysAdapter extends RecyclerView.Adapter<OverlaysAdapter.ViewHo
 
     private List<Overlay> mOverlayList;
 
-    private OverlayListener mOverlayListener;
+    private OnOverlayClickListener mOnOverlayClickListener;
 
-    public interface OverlayListener {
+    public interface OnOverlayClickListener {
         void onClick(Overlay overlay);
     }
 
-    public void setOverlayListener(OverlayListener listener) {
-        mOverlayListener = listener;
+    public void setOnOverlayClickListener(OnOverlayClickListener onOverlayClickListener) {
+        mOnOverlayClickListener = onOverlayClickListener;
     }
 
     public OverlaysAdapter(List<Overlay> overlayList) {
@@ -45,9 +45,7 @@ public class OverlaysAdapter extends RecyclerView.Adapter<OverlaysAdapter.ViewHo
     public OverlaysAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         mContext = parent.getContext();
 
-        LayoutInflater inflater = LayoutInflater.from(mContext);
-
-        View view = inflater.inflate(R.layout.item_overlay, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_overlay, parent, false);
 
         return new ViewHolder(view);
     }
@@ -64,7 +62,7 @@ public class OverlaysAdapter extends RecyclerView.Adapter<OverlaysAdapter.ViewHo
                 .into(holder.image);
 
         if (mCurrentPosition == position) {
-            mOverlayListener.onClick(overlay);
+            mOnOverlayClickListener.onClick(overlay);
             holder.overlaySelected.setVisibility(View.VISIBLE);
         } else
             holder.overlaySelected.setVisibility(View.GONE);

@@ -75,7 +75,7 @@ public class ShowStickersFragment extends BaseFragment implements IShowStickersF
         mImageEditorView = DataHolder.getInstance().getEditorView();
 
         StickersAdapter adapter = new StickersAdapter(getStickers(mPosition));
-        adapter.setStickersListener(sticker -> {
+        adapter.setOnStickerClickListener(sticker -> {
             //editorView.addSticker(sticker);
             mImageEditorView.addSticker(sticker);
         });

@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mikhaellopez.circularimageview.CircularImageView;
-import com.squareup.picasso.Picasso;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.model.Filter;
@@ -31,14 +30,14 @@ public class FiltersAdapter extends RecyclerView.Adapter<FiltersAdapter.ViewHold
 
     private List<Filter> mFiltersList;
 
-    private FiltersListener mFiltersListener;
+    private OnFilterClickListener mOnFilterClickListener;
 
-    public interface FiltersListener {
+    public interface OnFilterClickListener {
         void onClick(Filter filter);
     }
 
-    public void setFiltersListener(FiltersListener filtersListener) {
-        mFiltersListener = filtersListener;
+    public void setFiltersListener(OnFilterClickListener onFilterClickListener) {
+        mOnFilterClickListener = onFilterClickListener;
     }
 
     public FiltersAdapter(List<Filter> filters, Bitmap bitmap) {
@@ -51,9 +50,7 @@ public class FiltersAdapter extends RecyclerView.Adapter<FiltersAdapter.ViewHold
     public FiltersAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         mContext = parent.getContext();
 
-        LayoutInflater inflater = LayoutInflater.from(mContext);
-
-        View view = inflater.inflate(R.layout.item_filter, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_filter, parent, false);
 
         return new ViewHolder(view);
     }
@@ -69,7 +66,7 @@ public class FiltersAdapter extends RecyclerView.Adapter<FiltersAdapter.ViewHold
         holder.filterIcon.setColorFilter(new ColorMatrixColorFilter(filter.getColorMatrix()));
 
         if (mCurrentPosition == position) {
-            mFiltersListener.onClick(filter);
+            mOnFilterClickListener.onClick(filter);
             holder.filterChecked.setVisibility(View.VISIBLE);
         } else
             holder.filterChecked.setVisibility(View.GONE);

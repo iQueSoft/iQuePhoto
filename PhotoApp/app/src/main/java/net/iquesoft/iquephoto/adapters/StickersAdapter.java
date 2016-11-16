@@ -1,6 +1,7 @@
 package net.iquesoft.iquephoto.adapters;
 
 import android.content.Context;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,14 +23,14 @@ public class StickersAdapter extends RecyclerView.Adapter<StickersAdapter.ViewHo
 
     private List<Sticker> mStickersList;
 
-    private StickersListener mListener;
+    private OnStickerClickListener mListener;
 
-    public interface StickersListener {
+    public interface OnStickerClickListener {
         void onClick(Sticker sticker);
     }
 
-    public void setStickersListener(StickersListener listener) {
-        this.mListener = listener;
+    public void setOnStickerClickListener(OnStickerClickListener listener) {
+        mListener = listener;
     }
 
     public StickersAdapter(List<Sticker> stickers) {
@@ -39,9 +40,8 @@ public class StickersAdapter extends RecyclerView.Adapter<StickersAdapter.ViewHo
     @Override
     public StickersAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         mContext = parent.getContext();
-        LayoutInflater inflater = LayoutInflater.from(mContext);
 
-        View view = inflater.inflate(R.layout.item_sticker, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_sticker, parent, false);
 
         return new ViewHolder(view);
     }
@@ -51,7 +51,10 @@ public class StickersAdapter extends RecyclerView.Adapter<StickersAdapter.ViewHo
         final Sticker sticker = mStickersList.get(position);
 
         holder.stickerTitle.setText(mContext.getResources().getString(sticker.getTitle()));
-        holder.stickerImage.setImageDrawable(mContext.getResources().getDrawable(sticker.getImage()));
+
+        holder.stickerImage.setImageDrawable(
+                ResourcesCompat.getDrawable(mContext.getResources(), sticker.getImage(), null)
+        );
 
         holder.stickerImage.setOnClickListener(view -> mListener.onClick(sticker));
     }

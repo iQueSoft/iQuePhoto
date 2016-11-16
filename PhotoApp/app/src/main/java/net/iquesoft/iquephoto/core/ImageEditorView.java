@@ -480,6 +480,16 @@ public class ImageEditorView extends ImageView {
                 if (mCurrentEditorText != null) {
                     if (mIsInSide) {
                         moveText(event);
+                    } else if (mIsInRotate) {
+                        float distanceX = event.getX() - mLastX;
+                        float distanceY = event.getY() - mLastY;
+
+                        mCurrentEditorText.rotateText(distanceX, distanceY);
+
+                        invalidate();
+
+                        mLastX = event.getX();
+                        mLastY = event.getY();
                     }
                 }
                 break;
@@ -990,7 +1000,15 @@ public class ImageEditorView extends ImageView {
                 return;
             } else if (editorText.getRotateHandleDstRect().contains(event.getX(), event.getY())) {
                 mCurrentEditorText = editorText;
+
+                mLastX = editorText.getRotateHandleDstRect().centerX();
+                mLastY = editorText.getRotateHandleDstRect().centerY();
+
                 mIsInRotate = true;
+                return;
+            } else if (editorText.getResizeHandleDstRect().contains(event.getX(), event.getY())) {
+                mCurrentEditorText = editorText;
+                mIsInResize = true;
                 return;
             }
         }

@@ -1,27 +1,19 @@
 package net.iquesoft.iquephoto.core;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
+import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.graphics.Typeface;
-import android.support.annotation.Nullable;
 import android.text.TextPaint;
+import android.view.MotionEvent;
 
 import net.iquesoft.iquephoto.utils.RectUtil;
 
-// TODO: MAKE ROTATE AND RESIZE.
+// TODO: Stickers like as EditorText.
+// TODO: Make front handle button for stickers.
 public class EditorStickerItem {
-    static final int EDITOR_FRAME_PADDING = 25;
-    static final int DEFAULT_COLOR = Color.BLACK;
-    static final int DEFAULT_OPACITY = 255;
-    static final float DEFAULT_SIZE = 80;
-
-    private String mText;
-
-    private int mColor;
-    private int mOpacity;
+    private Bitmap mBitmap;
 
     private int mX;
     private int mY;
@@ -30,45 +22,37 @@ public class EditorStickerItem {
 
     private boolean mIsInEdit;
 
-    private Typeface mTypeface;
-
-    private TextPaint mTextPaint;
-
-    private Rect mTextRect;
+    private Rect mStickerSrcRect;
+    private RectF mStickerDstRect;
 
     private Rect mRotateHandleSrcRect;
     private Rect mResizeHandleSrcRect;
     private Rect mDeleteHandleSrcRect;
     private Rect mFrontHandleSrcRect;
 
-    private RectF mFrameRect;
+    private Rect mFrameRect;
     private RectF mDeleteHandleDstRect;
     private RectF mRotateHandleDstRect;
     private RectF mResizeHandleDstRect;
     private RectF mFrontHandleDstRect;
 
+    private Matrix mMatrix;
+
     private EditorFrame mEditorFrame;
 
-    EditorStickerItem(String text, @Nullable Typeface typeface, int color, int opacity, EditorFrame editorFrame) {
-        mText = text;
-
-        if (typeface != null)
-            mTypeface = typeface;
-        else
-            mTypeface = Typeface.DEFAULT;
-
-        mColor = color;
-        mOpacity = 255;
-
+    EditorStickerItem(Bitmap bitmap, EditorFrame editorFrame) {
+        mBitmap = bitmap;
         mEditorFrame = editorFrame;
 
-        initTextPaint();
-        initEditorText();
+        initialize();
     }
 
-    private void initEditorText() {
-        mTextRect = new Rect();
-        mFrameRect = new RectF();
+    private void initialize() {
+        mStickerSrcRect = new Rect(0, 0, mBitmap.getWidth(), mBitmap.getHeight());
+        mStickerDstRect = new RectF();
+        mFrameRect = new Rect();
+
+        mMatrix = new Matrix();
 
         mRotateHandleSrcRect = new Rect(0, 0, mEditorFrame.getDeleteHandleBitmap().getWidth(),
                 mEditorFrame.getDeleteHandleBitmap().getHeight());
@@ -87,30 +71,11 @@ public class EditorStickerItem {
         mRotateHandleDstRect = new RectF(0, 0, handleHalfSize << 1, handleHalfSize << 1);
     }
 
-    private void initTextPaint() {
-        mTextPaint = new TextPaint();
+    void draw(Canvas canvas) {
+        //mMatrix.postTranslate(mStickerDstRect)
 
-        mTextPaint.setAntiAlias(true);
-        mTextPaint.setColor(mColor);
-        mTextPaint.setAlpha(mOpacity);
+        canvas.drawBitmap(mBitmap, mMatrix, null);
 
-        mTextPaint.setTextSize(DEFAULT_SIZE);
-        mTextPaint.setTypeface(mTypeface);
-        mTextPaint.setTextAlign(Paint.Align.CENTER);
-    }
-
-    void drawText(Canvas canvas) {
-
-        mTextPaint.getTextBounds(mText, 0, mText.length(), mTextRect);
-
-        mTextRect.offset(mX - (mTextRect.width() >> 1), mY);
-
-        mFrameRect.set(mTextRect.left - EDITOR_FRAME_PADDING, mTextRect.top - EDITOR_FRAME_PADDING,
-                mTextRect.right + EDITOR_FRAME_PADDING, mTextRect.bottom + EDITOR_FRAME_PADDING);
-
-        canvas.drawText(mText, mX, mY, mTextPaint);
-
-        // TODO: DOESN'T DRAW HELP FRAME ON ORIGINAL IMAGE.
         int offsetValue = ((int) mDeleteHandleDstRect.width()) >> 1;
 
         mDeleteHandleDstRect.offsetTo(mFrameRect.left - offsetValue, mFrameRect.top - offsetValue);
@@ -130,7 +95,11 @@ public class EditorStickerItem {
         RectUtil.rotateRect(mFrontHandleDstRect, mFrameRect.centerX(),
                 mFrameRect.centerY(), mRotateAngle);
 
+        // TODO: Doesn't draw sticker frame.
+        canvas.save();
+        canvas.rotate(mRotateAngle, mFrameRect.centerX(), mFrameRect.centerY());
         canvas.drawRect(mFrameRect, mEditorFrame.getPaint());
+        canvas.restore();
 
         canvas.drawBitmap(mEditorFrame.getDeleteHandleBitmap(),
                 mDeleteHandleSrcRect, mDeleteHandleDstRect, null);
@@ -140,6 +109,18 @@ public class EditorStickerItem {
                 mResizeHandleSrcRect, mResizeHandleDstRect, null);
         canvas.drawBitmap(mEditorFrame.getFrontHandleBitmap(),
                 mFrontHandleSrcRect, mFrontHandleDstRect, null);
+    }
+
+    void actionMove(MotionEvent event) {
+        float dx = 0;
+        float dy = 0;
+
+        mMatrix.postTranslate(dx, dy);
+
+        mStickerDstRect.offset(dx, dy);
+
+        mDeleteHandleDstRect.offset(dx, dy);
+
     }
 
     void setX(int x) {
@@ -158,7 +139,7 @@ public class EditorStickerItem {
         return mY;
     }
 
-    RectF getFrameRect() {
+    Rect getFrameRect() {
         return mFrameRect;
     }
 
@@ -200,9 +181,5 @@ public class EditorStickerItem {
 
     boolean isInEdit() {
         return mIsInEdit;
-    }
-
-    int getTextRectWidth() {
-        return mTextRect.width();
     }
 }

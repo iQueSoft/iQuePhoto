@@ -2,19 +2,19 @@ package net.iquesoft.iquephoto.di.components;
 
 import net.iquesoft.iquephoto.di.ActivityScope;
 import net.iquesoft.iquephoto.di.modules.EditorActivityModule;
-import net.iquesoft.iquephoto.view.fragment.AdjustFragment;
-import net.iquesoft.iquephoto.view.fragment.DrawingFragment;
-import net.iquesoft.iquephoto.view.fragment.FiltersFragment;
-import net.iquesoft.iquephoto.view.activity.EditorActivity;
-import net.iquesoft.iquephoto.view.fragment.FramesFragment;
-import net.iquesoft.iquephoto.view.fragment.OverlayFragment;
-import net.iquesoft.iquephoto.view.fragment.ShowStickersFragment;
-import net.iquesoft.iquephoto.view.fragment.SliderControlFragment;
-import net.iquesoft.iquephoto.view.fragment.StickersFragment;
-import net.iquesoft.iquephoto.view.fragment.TextFragment;
-import net.iquesoft.iquephoto.view.fragment.TiltShiftFragment;
-import net.iquesoft.iquephoto.view.fragment.ToolsFragment;
-import net.iquesoft.iquephoto.view.fragment.TransformFragment;
+import net.iquesoft.iquephoto.ui.fragment.AdjustFragment;
+import net.iquesoft.iquephoto.ui.fragment.DrawingFragment;
+import net.iquesoft.iquephoto.ui.fragment.FiltersFragment;
+import net.iquesoft.iquephoto.ui.activity.EditorActivity;
+import net.iquesoft.iquephoto.ui.fragment.FramesFragment;
+import net.iquesoft.iquephoto.ui.fragment.OverlayFragment;
+import net.iquesoft.iquephoto.ui.fragment.ShowStickersFragment;
+import net.iquesoft.iquephoto.ui.fragment.SliderControlFragment;
+import net.iquesoft.iquephoto.ui.fragment.StickersFragment;
+import net.iquesoft.iquephoto.ui.fragment.TextFragment;
+import net.iquesoft.iquephoto.ui.fragment.TiltShiftFragment;
+import net.iquesoft.iquephoto.ui.fragment.ToolsFragment;
+import net.iquesoft.iquephoto.ui.fragment.TransformFragment;
 
 import dagger.Component;
 

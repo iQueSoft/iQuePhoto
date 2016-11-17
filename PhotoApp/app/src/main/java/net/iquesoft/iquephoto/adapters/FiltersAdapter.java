@@ -61,6 +61,7 @@ public class FiltersAdapter extends RecyclerView.Adapter<FiltersAdapter.ViewHold
 
         holder.filterTitle.setText(filter.getTitle());
 
+        // TODO: Show images with filters.
         holder.filterIcon.setImageBitmap(mBitmap);
 
         holder.filterIcon.setColorFilter(new ColorMatrixColorFilter(filter.getColorMatrix()));

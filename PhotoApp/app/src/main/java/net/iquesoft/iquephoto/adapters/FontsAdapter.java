@@ -17,13 +17,15 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+// TODO: Add default font and select it.
 public class FontsAdapter extends RecyclerView.Adapter<FontsAdapter.ViewHolder> {
 
     private int mSelectedFontPosition = 0;
 
     private Context mContext;
 
-    private String mText;
+    // TODO: Show fonts with user text.
+    private String mText = null;
 
     private List<Font> mFontsList;
 
@@ -56,7 +58,7 @@ public class FontsAdapter extends RecyclerView.Adapter<FontsAdapter.ViewHolder> 
 
         holder.fontFamilyTextView.setText(font.getTitle());
 
-        holder.fontPreviewTextView.setTypeface(getTypeface(font.getTypeface()));
+        holder.fontPreviewTextView.setTypeface(getTypeface(font.getPath()));
 
         holder.itemView.setOnClickListener(view -> {
             notifyItemChanged(mSelectedFontPosition);
@@ -66,11 +68,8 @@ public class FontsAdapter extends RecyclerView.Adapter<FontsAdapter.ViewHolder> 
 
         if (mSelectedFontPosition == position) {
             mOnFontClickListener.onClick(font);
-            //holder.itemView.setAlpha(1f);
-            //holder.fontSelectedImageView.setVisibility(View.GONE);
             holder.fontSelectedImageView.setVisibility(View.VISIBLE);
         } else {
-            //holder.itemView.setAlpha(0.5f);
             holder.fontSelectedImageView.setVisibility(View.GONE);
         }
 

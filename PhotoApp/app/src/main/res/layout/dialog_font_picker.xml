@@ -22,7 +22,7 @@
             android:textSize="18sp"
             android:textStyle="bold" />
     </LinearLayout>
-    
+
     <!--<LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -52,7 +52,7 @@
     </LinearLayout>-->
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/fontsList"
+        android:id="@+id/fontsRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="300dp"
         android:layout_marginTop="10dp" />
@@ -72,7 +72,7 @@
             android:theme="@style/FlatButtonControlWhite" />
 
         <Button
-            android:id="@+id/applyTextStyle"
+            android:id="@+id/applyFontButton"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import net.iquesoft.iquephoto.model.StickersSet;
-import net.iquesoft.iquephoto.view.fragment.ShowStickersFragment;
+import net.iquesoft.iquephoto.ui.fragment.ShowStickersFragment;
 
 import java.util.List;
 

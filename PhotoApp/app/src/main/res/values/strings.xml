@@ -142,6 +142,8 @@
     <string name="frames">Frames</string>
 
     <!-- For color picker. -->
+    <string name="rgb">RGB</string>
+    <string name="rgba">RGBA</string>
     <string name="cancel">Cancel</string>
     <string name="apply">Apply</string>
     <string name="RGB_R">R</string>

@@ -1,7 +1,7 @@
 package net.iquesoft.iquephoto.di.modules;
 
-import net.iquesoft.iquephoto.presenter.activity.PreviewActivityPresenterImpl;
-import net.iquesoft.iquephoto.view.activity.interfaces.IPreviewActivityView;
+import net.iquesoft.iquephoto.presentation.presenter.preview.PreviewActivityPresenterImpl;
+import net.iquesoft.iquephoto.presentation.view.preview.PreviewView;
 
 import dagger.Module;
 import dagger.Provides;
@@ -9,14 +9,14 @@ import dagger.Provides;
 @Module
 public class CropActivityModule {
 
-    private IPreviewActivityView mView;
+    private PreviewView mView;
 
-    public CropActivityModule(IPreviewActivityView view) {
+    public CropActivityModule(PreviewView view) {
         mView = view;
     }
 
     @Provides
-    IPreviewActivityView provideView() {
+    PreviewView provideView() {
         return mView;
     }
 

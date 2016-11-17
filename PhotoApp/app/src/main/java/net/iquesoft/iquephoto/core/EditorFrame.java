@@ -9,6 +9,7 @@ import android.graphics.drawable.BitmapDrawable;
 import net.iquesoft.iquephoto.R;
 
 class EditorFrame {
+    static final int EDITOR_FRAME_PADDING = 25;
 
     private Paint mPaint;
 

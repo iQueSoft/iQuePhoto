@@ -2,7 +2,7 @@ package net.iquesoft.iquephoto.di.components;
 
 import net.iquesoft.iquephoto.PhotoApplication;
 import net.iquesoft.iquephoto.di.modules.ApplicationModule;
-import net.iquesoft.iquephoto.view.fragment.ToolsFragment;
+import net.iquesoft.iquephoto.ui.fragment.ToolsFragment;
 
 import javax.inject.Singleton;
 

@@ -3,7 +3,7 @@ package net.iquesoft.iquephoto.di.modules;
 import android.app.Application;
 
 import net.iquesoft.iquephoto.PhotoApplication;
-import net.iquesoft.iquephoto.view.fragment.ToolsFragment;
+import net.iquesoft.iquephoto.ui.fragment.ToolsFragment;
 
 import javax.inject.Singleton;
 

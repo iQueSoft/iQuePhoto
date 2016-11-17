@@ -11,7 +11,7 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.view.activity.EditorActivity;
+import net.iquesoft.iquephoto.ui.activity.EditorActivity;
 
 import java.io.File;
 import java.io.FileNotFoundException;

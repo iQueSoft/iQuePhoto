@@ -1,19 +1,19 @@
 package net.iquesoft.iquephoto.di.modules;
 
-import net.iquesoft.iquephoto.presenter.fragment.AdjustFragmentPresenterImpl;
-import net.iquesoft.iquephoto.presenter.fragment.DrawingFragmentPresenterImpl;
-import net.iquesoft.iquephoto.presenter.activity.EditorActivityPresenterImpl;
-import net.iquesoft.iquephoto.presenter.fragment.FiltersFragmentPresenterImpl;
-import net.iquesoft.iquephoto.presenter.fragment.FramesFragmentPresenterImpl;
-import net.iquesoft.iquephoto.presenter.fragment.OverlayFragmentPresenterImpl;
-import net.iquesoft.iquephoto.presenter.fragment.ShowStickersFragmentPresenterImpl;
-import net.iquesoft.iquephoto.presenter.fragment.SliderControlFragmentPresenterImpl;
-import net.iquesoft.iquephoto.presenter.fragment.StickersFragmentPresenterImpl;
-import net.iquesoft.iquephoto.presenter.fragment.TextFragmentPresenterImpl;
-import net.iquesoft.iquephoto.presenter.fragment.TiltShiftFragmentPresenterImpl;
-import net.iquesoft.iquephoto.presenter.fragment.ToolsFragmentPresenterImpl;
-import net.iquesoft.iquephoto.presenter.fragment.TransformFragmentPresenterImpl;
-import net.iquesoft.iquephoto.view.activity.interfaces.IEditorActivityView;
+import net.iquesoft.iquephoto.presentation.presenter.editor.tools.AdjustFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presentation.presenter.editor.tools.DrawingFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presentation.presenter.editor.EditorActivityPresenterImpl;
+import net.iquesoft.iquephoto.presentation.presenter.editor.tools.FiltersFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presentation.presenter.editor.tools.FramesFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presentation.presenter.editor.tools.OverlayFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presentation.presenter.editor.tools.ShowStickersFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presentation.presenter.editor.tools.SliderControlFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presentation.presenter.editor.tools.StickersFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presentation.presenter.editor.tools.TextFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presentation.presenter.editor.tools.TiltShiftFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presentation.presenter.editor.tools.ToolsFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presentation.presenter.editor.tools.TransformFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presentation.view.editor.EditorView;
 
 import dagger.Module;
 import dagger.Provides;
@@ -21,19 +21,19 @@ import dagger.Provides;
 @Module
 public class EditorActivityModule {
 
-    private IEditorActivityView mView;
+    private EditorView mView;
 
-    public EditorActivityModule(IEditorActivityView view) {
+    public EditorActivityModule(EditorView view) {
         mView = view;
     }
 
     @Provides
-    EditorActivityPresenterImpl provideEditorActivityPresenterImpl(IEditorActivityView view) {
+    EditorActivityPresenterImpl provideEditorActivityPresenterImpl(EditorView view) {
         return new EditorActivityPresenterImpl(view);
     }
 
     @Provides
-    IEditorActivityView provideView() {
+    EditorView provideView() {
         return mView;
     }
 
@@ -54,7 +54,7 @@ public class EditorActivityModule {
 
     @Provides
     TextFragmentPresenterImpl provideTextFragmentPresenterImpl() {
-        return new TextFragmentPresenterImpl();
+        return new TextFragmentPresenterImpl(mView);
     }
 
     @Provides

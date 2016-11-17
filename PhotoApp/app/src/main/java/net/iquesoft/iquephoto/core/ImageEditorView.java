@@ -33,6 +33,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.model.Sticker;
+import net.iquesoft.iquephoto.model.Text;
 import net.iquesoft.iquephoto.utils.AdjustUtil;
 import net.iquesoft.iquephoto.utils.BitmapUtil;
 import net.iquesoft.iquephoto.utils.LoggerUtil;
@@ -118,9 +119,11 @@ public class ImageEditorView extends ImageView {
     private float mLastX;
     private float mLastY;
 
-    private TouchArea mTouchArea = TouchArea.OUT_OF_BOUNDS;
-
-    private int mTouchPadding = 0;
+    // TODO: Get image padding for move something on image with original size.
+    private float topPadding;
+    private float bottomPadding;
+    private float leftPadding;
+    private float rightPadding;
 
     private MaterialDialog mProgressDialog;
 
@@ -773,8 +776,8 @@ public class ImageEditorView extends ImageView {
 
     }
 
-    public void addText(String text, Typeface typeface, int color, int opacity) {
-        EditorText editorText = new EditorText(text, typeface, color, opacity, mEditorFrame);
+    public void addText(Text text) {
+        EditorText editorText = new EditorText(text, mEditorFrame);
         editorText.setX((int) mCenter.x);
         editorText.setY((int) mCenter.y);
 
@@ -784,7 +787,7 @@ public class ImageEditorView extends ImageView {
 
     private void drawTexts(Canvas canvas) {
         for (EditorText text : mTextsList) {
-            text.drawText(canvas);
+            text.draw(canvas);
         }
     }
 
@@ -1022,6 +1025,9 @@ public class ImageEditorView extends ImageView {
 
                 mMode = EditorMode.RESIZE;
                 return;
+            } else if (editorText.getFrontHandleDstRect().contains(event.getX(), event.getY())) {
+                EditorText temp = mTextsList.remove(i);
+                mTextsList.add(temp);
             }
         }
         mCurrentEditorText = null;
@@ -1077,7 +1083,6 @@ public class ImageEditorView extends ImageView {
 
         //mTransformMatrix.set(mMatrix);
     }
-
 
     private void setupLayout(int viewW, int viewH) {
         if (viewW == 0 || viewH == 0) return;
@@ -1192,10 +1197,6 @@ public class ImageEditorView extends ImageView {
         new MakeImage(intent).execute();
     }
 
-    private enum TouchArea {
-        OUT_OF_BOUNDS, CENTER, LEFT_TOP, RIGHT_TOP, LEFT_BOTTOM, RIGHT_BOTTOM
-    }
-
     private class ImageProcessingTask extends AsyncTask<EditorCommand, Void, Bitmap> {
         private int mImageHeight;
         private int mImageWidth;
@@ -1213,14 +1214,11 @@ public class ImageEditorView extends ImageView {
                 mBitmap = getAlteredBitmap().copy(getAlteredBitmap().getConfig(), true);
             else
                 mBitmap = mSourceBitmap.copy(mSourceBitmap.getConfig(), true);
-
-
         }
 
         @Override
         protected Bitmap doInBackground(EditorCommand... editorCommands) {
             mCanvas = new Canvas(mBitmap);
-
 
             mImageHeight = mBitmap.getHeight();
             mImageWidth = mBitmap.getWidth();
@@ -1417,7 +1415,7 @@ public class ImageEditorView extends ImageView {
             for (EditorText editorText : mTextsList) {
                 /* TODO: FOR REAL IMAGE!!! editorText.setX((int) (mCenter.x * mScale));
                 editorText.setY((int) (mCenter.y * mScale));*/
-                editorText.drawText(canvas);
+                editorText.draw(canvas);
             }
         }
 

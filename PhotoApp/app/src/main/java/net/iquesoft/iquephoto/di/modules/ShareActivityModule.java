@@ -1,7 +1,7 @@
 package net.iquesoft.iquephoto.di.modules;
 
-import net.iquesoft.iquephoto.presenter.activity.ShareActivityPresenterImpl;
-import net.iquesoft.iquephoto.view.activity.interfaces.IShareActivityView;
+import net.iquesoft.iquephoto.presentation.presenter.share.ShareActivityPresenterImpl;
+import net.iquesoft.iquephoto.presentation.view.share.ShareView;
 
 import dagger.Module;
 import dagger.Provides;
@@ -9,14 +9,14 @@ import dagger.Provides;
 @Module
 public class ShareActivityModule {
 
-    private IShareActivityView mView;
+    private ShareView mView;
 
-    public ShareActivityModule(IShareActivityView view) {
+    public ShareActivityModule(ShareView view) {
         mView = view;
     }
 
     @Provides
-    IShareActivityView provideView() {
+    ShareView provideView() {
         return mView;
     }
 

@@ -6,16 +6,17 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
-import android.support.annotation.Nullable;
 import android.text.TextPaint;
 
+import net.iquesoft.iquephoto.model.Text;
 import net.iquesoft.iquephoto.utils.RectUtil;
 
+import static net.iquesoft.iquephoto.core.EditorFrame.EDITOR_FRAME_PADDING;
+
 public class EditorText {
-    static final int EDITOR_FRAME_PADDING = 25;
+
     static final int DEFAULT_COLOR = Color.BLACK;
-    static final int DEFAULT_OPACITY = 255;
-    static final float DEFAULT_SIZE = 80;
+    private static final float DEFAULT_TEXT_SIZE = 80;
 
     private String mText;
 
@@ -49,16 +50,14 @@ public class EditorText {
 
     private EditorFrame mEditorFrame;
 
-    EditorText(String text, @Nullable Typeface typeface, int color, int opacity, EditorFrame editorFrame) {
-        mText = text;
+    // TODO: Make text model and change constructor.
+    EditorText(Text text, EditorFrame editorFrame) {
+        mText = text.getText();
 
-        if (typeface != null)
-            mTypeface = typeface;
-        else
-            mTypeface = Typeface.DEFAULT;
+        mTypeface = text.getTypeface();
 
-        mColor = color;
-        mOpacity = 255;
+        mColor = text.getColor();
+        mOpacity = text.getOpacity();
 
         mEditorFrame = editorFrame;
 
@@ -94,15 +93,16 @@ public class EditorText {
         mTextPaint.setColor(mColor);
         mTextPaint.setAlpha(mOpacity);
 
-        mTextPaint.setTextSize(DEFAULT_SIZE);
+        mTextPaint.setTextSize(DEFAULT_TEXT_SIZE);
         mTextPaint.setTypeface(mTypeface);
         mTextPaint.setTextAlign(Paint.Align.CENTER);
     }
 
-    void drawText(Canvas canvas) {
+    void draw(Canvas canvas) {
 
         mTextPaint.getTextBounds(mText, 0, mText.length(), mTextRect);
 
+        // TODO: Check if can change this method to offsetTo() method.
         mTextRect.offset(mX - (mTextRect.width() >> 1), mY);
 
         mFrameRect.set(mTextRect.left - EDITOR_FRAME_PADDING, mTextRect.top - EDITOR_FRAME_PADDING,
@@ -115,7 +115,7 @@ public class EditorText {
         canvas.drawText(mText, mX, mY, mTextPaint);
         canvas.restore();
 
-        // TODO: DOESN'T DRAW HELP FRAME ON ORIGINAL IMAGE.
+        // TODO: Doesn't draw EditorFrame if text does'n touched.
         int offsetValue = ((int) mDeleteHandleDstRect.width()) >> 1;
 
         mDeleteHandleDstRect.offsetTo(mFrameRect.left - offsetValue, mFrameRect.top - offsetValue);
@@ -182,28 +182,12 @@ public class EditorText {
         return mResizeHandleDstRect;
     }
 
-    Rect getDeleteHandleRect() {
-        return mDeleteHandleSrcRect;
-    }
-
-    Rect getResizeHandleRect() {
-        return mResizeHandleSrcRect;
-    }
-
-    Rect getRotateHandleRect() {
-        return mRotateHandleSrcRect;
-    }
-
-    Rect getFrontHandleRect() {
-        return mFrontHandleSrcRect;
+    RectF getFrontHandleDstRect() {
+        return mFrontHandleDstRect;
     }
 
     void setIsInEdit(boolean isInEdit) {
         mIsInEdit = isInEdit;
-    }
-
-    void setRotateDegree(float rotateDegree) {
-        mRotateAngle = rotateDegree;
     }
 
     float getRotateDegree() {
@@ -212,10 +196,6 @@ public class EditorText {
 
     boolean isInEdit() {
         return mIsInEdit;
-    }
-
-    int getTextRectWidth() {
-        return mTextRect.width();
     }
 
     void rotateText(float distanceX, float distanceY) {

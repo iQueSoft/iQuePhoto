@@ -5,7 +5,7 @@
     android:padding="1dp">
 
     <ImageView
-        android:id="@+id/folderImage"
+        android:id="@+id/albumImageView"
         android:layout_width="125dp"
         android:layout_height="125dp"
         android:scaleType="fitXY"
@@ -20,7 +20,7 @@
         android:padding="5dp">
 
         <TextView
-            android:id="@+id/folderName"
+            android:id="@+id/albumTitleTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Gallery"
@@ -29,7 +29,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/folderImagesCount"
+            android:id="@+id/albumImagesCountTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="102"

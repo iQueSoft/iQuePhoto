@@ -8,9 +8,9 @@ import android.view.ViewGroup;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseFragment;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
-import net.iquesoft.iquephoto.presentation.presenter.editor.tools.TransformFragmentPresenterImpl;
-import net.iquesoft.iquephoto.presentation.view.editor.EditorView;
-import net.iquesoft.iquephoto.presentation.view.editor.tools.TransformView;
+import net.iquesoft.iquephoto.presentation.presenter.fragment.TransformFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presentation.view.activity.EditorView;
+import net.iquesoft.iquephoto.presentation.view.fragment.TransformView;
 
 import javax.inject.Inject;
 

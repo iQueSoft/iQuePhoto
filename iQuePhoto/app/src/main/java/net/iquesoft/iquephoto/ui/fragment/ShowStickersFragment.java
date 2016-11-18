@@ -10,14 +10,14 @@ import android.view.ViewGroup;
 
 import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.adapters.StickersAdapter;
+import net.iquesoft.iquephoto.adapter.StickersAdapter;
 import net.iquesoft.iquephoto.common.BaseFragment;
 import net.iquesoft.iquephoto.core.ImageEditorView;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
 import net.iquesoft.iquephoto.model.Sticker;
 import net.iquesoft.iquephoto.model.StickersSet;
-import net.iquesoft.iquephoto.presentation.presenter.editor.tools.ShowStickersFragmentPresenterImpl;
-import net.iquesoft.iquephoto.presentation.view.editor.tools.ShowStickersView;
+import net.iquesoft.iquephoto.presentation.presenter.fragment.ShowStickersFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presentation.view.fragment.ShowStickersView;
 
 import java.util.List;
 

@@ -19,8 +19,8 @@ import net.iquesoft.iquephoto.di.components.IApplicationComponent;
 import net.iquesoft.iquephoto.di.components.DaggerIMainActivityComponent;
 import net.iquesoft.iquephoto.di.components.IMainActivityComponent;
 import net.iquesoft.iquephoto.di.modules.MainActivityModule;
-import net.iquesoft.iquephoto.presentation.view.main.MainView;
-import net.iquesoft.iquephoto.presentation.presenter.main.MainActivityPresenterImpl;
+import net.iquesoft.iquephoto.presentation.view.activity.MainView;
+import net.iquesoft.iquephoto.presentation.presenter.activity.MainActivityPresenterImpl;
 
 import javax.inject.Inject;
 

@@ -13,7 +13,7 @@
         android:background="@android:color/black">
 
         <ImageButton
-            android:id="@+id/buttonEditorBack"
+            android:id="@+id/editorBackButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -22,7 +22,7 @@
             android:src="@drawable/ic_arrow_back" />
 
         <Button
-            android:id="@+id/buttonUndo"
+            android:id="@+id/undoButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -39,7 +39,7 @@
             android:visibility="gone" />
 
         <ImageButton
-            android:id="@+id/buttonShare"
+            android:id="@+id/shareButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -62,12 +62,12 @@
         android:id="@+id/editorImageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/toolSettingsContainer"
+        android:layout_above="@+id/fragmentContainer"
         android:layout_below="@+id/editorHeader"
         android:layout_centerInParent="true" />
 
     <FrameLayout
-        android:id="@+id/toolSettingsContainer"
+        android:id="@+id/fragmentContainer"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_alignParentBottom="true" />

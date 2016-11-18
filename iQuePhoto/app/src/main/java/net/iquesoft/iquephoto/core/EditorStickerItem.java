@@ -5,10 +5,9 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.text.TextPaint;
 import android.view.MotionEvent;
 
-import net.iquesoft.iquephoto.utils.RectUtil;
+import net.iquesoft.iquephoto.util.RectUtil;
 
 // TODO: Stickers like as EditorText.
 // TODO: Make front handle button for stickers.

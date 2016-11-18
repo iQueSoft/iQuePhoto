@@ -13,9 +13,9 @@ import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseFragment;
 import net.iquesoft.iquephoto.core.EditorCommand;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
-import net.iquesoft.iquephoto.presentation.presenter.editor.tools.SliderControlFragmentPresenterImpl;
-import net.iquesoft.iquephoto.presentation.view.editor.EditorView;
-import net.iquesoft.iquephoto.presentation.view.editor.tools.SliderControlView;
+import net.iquesoft.iquephoto.presentation.presenter.fragment.SliderControlFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presentation.view.activity.EditorView;
+import net.iquesoft.iquephoto.presentation.view.fragment.SliderControlView;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
@@ -70,9 +70,9 @@ public class SliderControlFragment extends BaseFragment implements SliderControl
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_slider_control, container, false);
+        View view = inflater.inflate(R.layout.fragment_slider_control, container, false);
 
-        mUnbinder = ButterKnife.bind(this, v);
+        mUnbinder = ButterKnife.bind(this, view);
 
         toolSeekBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
             @Override
@@ -98,6 +98,9 @@ public class SliderControlFragment extends BaseFragment implements SliderControl
                     case EXPOSURE:
                         editorActivityView.getImageEditorView().setExposureValue(value);
                         break;
+                    case TINT:
+                        editorActivityView.getImageEditorView().setTintValue(value);
+                        break;
                     case TRANSFORM_STRAIGHTEN:
                         editorActivityView.getImageEditorView().setStraightenValue(value);
                         break;
@@ -118,7 +121,7 @@ public class SliderControlFragment extends BaseFragment implements SliderControl
             }
         });
 
-        return v;
+        return view;
     }
 
     @Override

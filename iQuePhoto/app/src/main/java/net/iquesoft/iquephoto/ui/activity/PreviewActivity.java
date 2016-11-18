@@ -22,9 +22,9 @@ import net.iquesoft.iquephoto.di.components.DaggerICropActivityComponent;
 import net.iquesoft.iquephoto.di.components.IApplicationComponent;
 import net.iquesoft.iquephoto.di.components.ICropActivityComponent;
 import net.iquesoft.iquephoto.di.modules.CropActivityModule;
-import net.iquesoft.iquephoto.presentation.presenter.preview.PreviewActivityPresenterImpl;
-import net.iquesoft.iquephoto.presentation.view.preview.PreviewView;
-import net.iquesoft.iquephoto.utils.BitmapUtil;
+import net.iquesoft.iquephoto.presentation.presenter.activity.PreviewActivityPresenterImpl;
+import net.iquesoft.iquephoto.presentation.view.activity.PreviewView;
+import net.iquesoft.iquephoto.util.BitmapUtil;
 
 import java.io.File;
 

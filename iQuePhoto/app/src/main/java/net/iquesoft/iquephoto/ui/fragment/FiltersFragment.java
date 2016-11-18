@@ -10,15 +10,15 @@ import android.widget.LinearLayout;
 
 import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.adapters.FiltersAdapter;
+import net.iquesoft.iquephoto.adapter.FiltersAdapter;
 import net.iquesoft.iquephoto.common.BaseFragment;
 import net.iquesoft.iquephoto.core.EditorCommand;
 import net.iquesoft.iquephoto.core.ImageEditorView;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
 import net.iquesoft.iquephoto.model.Filter;
-import net.iquesoft.iquephoto.presentation.presenter.editor.tools.FiltersFragmentPresenterImpl;
-import net.iquesoft.iquephoto.presentation.view.editor.EditorView;
-import net.iquesoft.iquephoto.presentation.view.editor.tools.FiltersView;
+import net.iquesoft.iquephoto.presentation.presenter.fragment.FiltersFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presentation.view.activity.EditorView;
+import net.iquesoft.iquephoto.presentation.view.fragment.FiltersView;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 

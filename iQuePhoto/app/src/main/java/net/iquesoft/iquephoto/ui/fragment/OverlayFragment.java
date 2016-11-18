@@ -9,15 +9,15 @@ import android.view.ViewGroup;
 
 import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.adapters.OverlaysAdapter;
+import net.iquesoft.iquephoto.adapter.OverlaysAdapter;
 import net.iquesoft.iquephoto.common.BaseFragment;
 import net.iquesoft.iquephoto.core.EditorCommand;
 import net.iquesoft.iquephoto.core.ImageEditorView;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
 import net.iquesoft.iquephoto.model.Overlay;
-import net.iquesoft.iquephoto.presentation.presenter.editor.tools.OverlayFragmentPresenterImpl;
-import net.iquesoft.iquephoto.presentation.view.editor.EditorView;
-import net.iquesoft.iquephoto.presentation.view.editor.tools.OverlayView;
+import net.iquesoft.iquephoto.presentation.presenter.fragment.OverlayFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presentation.view.activity.EditorView;
+import net.iquesoft.iquephoto.presentation.view.fragment.OverlayView;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 

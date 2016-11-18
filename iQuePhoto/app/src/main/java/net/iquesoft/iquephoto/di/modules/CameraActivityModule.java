@@ -1,6 +1,6 @@
 package net.iquesoft.iquephoto.di.modules;
 
-import net.iquesoft.iquephoto.presentation.view.camera.ICameraActivityView;
+import net.iquesoft.iquephoto.presentation.view.activity.CameraView;
 
 import dagger.Module;
 import dagger.Provides;
@@ -8,14 +8,14 @@ import dagger.Provides;
 @Module
 public class CameraActivityModule {
 
-    private ICameraActivityView mView;
+    private CameraView mView;
 
-    public CameraActivityModule(ICameraActivityView view) {
+    public CameraActivityModule(CameraView view) {
         mView = view;
     }
 
     @Provides
-    ICameraActivityView provideCameraActivityView() {
+    CameraView provideCameraActivityView() {
         return mView;
     }
 }

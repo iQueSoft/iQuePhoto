@@ -10,8 +10,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.adapters.ImageFoldersAdapter;
-import net.iquesoft.iquephoto.adapters.ImagesAdapter;
+import net.iquesoft.iquephoto.adapter.ImageAlbumsAdapter;
+import net.iquesoft.iquephoto.adapter.ImagesAdapter;
 import net.iquesoft.iquephoto.common.BaseActivity;
 import net.iquesoft.iquephoto.di.IHasComponent;
 import net.iquesoft.iquephoto.di.components.DaggerIGalleryActivityComponent;
@@ -19,9 +19,11 @@ import net.iquesoft.iquephoto.di.components.IApplicationComponent;
 import net.iquesoft.iquephoto.di.components.IGalleryActivityComponent;
 import net.iquesoft.iquephoto.di.modules.GalleryActivityModule;
 import net.iquesoft.iquephoto.model.Image;
-import net.iquesoft.iquephoto.model.ImageFolder;
-import net.iquesoft.iquephoto.presentation.view.gallery.GalleryView;
-import net.iquesoft.iquephoto.presentation.presenter.gallery.GalleryActivityPresenterImpl;
+import net.iquesoft.iquephoto.model.ImageAlbum;
+import net.iquesoft.iquephoto.presentation.view.activity.GalleryView;
+import net.iquesoft.iquephoto.presentation.presenter.activity.GalleryActivityPresenterImpl;
+import net.iquesoft.iquephoto.ui.fragment.GalleryAlbumsFragment;
+import net.iquesoft.iquephoto.ui.fragment.GalleryImagesFragment;
 
 import java.util.List;
 
@@ -34,12 +36,9 @@ import butterknife.OnClick;
 // TODO: Check image orientation.
 public class GalleryActivity extends BaseActivity implements GalleryView, IHasComponent<IGalleryActivityComponent> {
 
-    @Inject
-    GalleryActivityPresenterImpl presenter;
-
     private IGalleryActivityComponent mComponent;
 
-    private ImageFoldersAdapter mImageFoldersAdapter;
+    private ImageAlbumsAdapter mImageAlbumsAdapter;
 
     @BindView(R.id.galleryHeaderTextView)
     TextView headerTextView;
@@ -49,6 +48,15 @@ public class GalleryActivity extends BaseActivity implements GalleryView, IHasCo
 
     @BindView(R.id.galleryNoImagesLinearLayout)
     LinearLayout noImagesLinearLayout;
+
+    @Inject
+    GalleryActivityPresenterImpl presenter;
+
+    /*@Inject
+    GalleryImagesFragment galleryImagesFragment;
+
+    @Inject
+    GalleryAlbumsFragment galleryAlbumsFragment;*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,13 +98,13 @@ public class GalleryActivity extends BaseActivity implements GalleryView, IHasCo
     }
 
     @Override
-    public void setupFoldersAdapter(List<ImageFolder> imageFolders) {
-        mImageFoldersAdapter = new ImageFoldersAdapter(imageFolders);
-        mImageFoldersAdapter.setOnFolderClickListener(imageFolder -> {
+    public void setupFoldersAdapter(List<ImageAlbum> imageAlba) {
+        mImageAlbumsAdapter = new ImageAlbumsAdapter(imageAlba);
+        mImageAlbumsAdapter.setOnAlbumClickListener(imageFolder -> {
             presenter.folderClicked(imageFolder);
         });
 
-        recyclerView.setAdapter(mImageFoldersAdapter);
+        recyclerView.setAdapter(mImageAlbumsAdapter);
     }
 
     @Override
@@ -124,7 +132,7 @@ public class GalleryActivity extends BaseActivity implements GalleryView, IHasCo
     @Override
     public void showFolders() {
         headerTextView.setText(R.string.gallery);
-        recyclerView.setAdapter(mImageFoldersAdapter);
+        recyclerView.setAdapter(mImageAlbumsAdapter);
     }
 
     @Override

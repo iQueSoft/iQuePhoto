@@ -1,7 +1,9 @@
 package net.iquesoft.iquephoto.di.modules;
 
-import net.iquesoft.iquephoto.presentation.presenter.gallery.GalleryActivityPresenterImpl;
-import net.iquesoft.iquephoto.presentation.view.gallery.GalleryView;
+import net.iquesoft.iquephoto.presentation.presenter.activity.GalleryActivityPresenterImpl;
+import net.iquesoft.iquephoto.presentation.presenter.fragment.GalleryAlbumsPresenterImpl;
+import net.iquesoft.iquephoto.presentation.presenter.fragment.GalleryImagesPresenterImpl;
+import net.iquesoft.iquephoto.presentation.view.activity.GalleryView;
 
 import dagger.Module;
 import dagger.Provides;
@@ -21,7 +23,17 @@ public class GalleryActivityModule {
     }
 
     @Provides
-    GalleryActivityPresenterImpl provideGalleryActivityPresenterImpl(GalleryView view) {
+    GalleryActivityPresenterImpl provideGalleryActivityPresenterImpl() {
         return new GalleryActivityPresenterImpl(mView);
+    }
+
+    @Provides
+    GalleryImagesPresenterImpl provideGalleryImagesPresenterImpl() {
+        return new GalleryImagesPresenterImpl(mView);
+    }
+
+    @Provides
+    GalleryAlbumsPresenterImpl provideGalleryAlbumsPresenterImpl() {
+        return new GalleryAlbumsPresenterImpl(mView);
     }
 }

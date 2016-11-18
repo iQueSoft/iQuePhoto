@@ -47,7 +47,7 @@
         android:background="@color/colorLine" />
 
     <ImageView
-        android:id="@+id/shareImage"
+        android:id="@+id/shareImageView"
         android:layout_width="match_parent"
         android:layout_height="300dp"
         android:layout_marginTop="10dp"

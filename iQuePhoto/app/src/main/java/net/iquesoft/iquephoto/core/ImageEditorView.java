@@ -13,7 +13,6 @@ import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -34,9 +33,9 @@ import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.model.Sticker;
 import net.iquesoft.iquephoto.model.Text;
-import net.iquesoft.iquephoto.utils.AdjustUtil;
-import net.iquesoft.iquephoto.utils.BitmapUtil;
-import net.iquesoft.iquephoto.utils.LoggerUtil;
+import net.iquesoft.iquephoto.util.AdjustUtil;
+import net.iquesoft.iquephoto.util.BitmapUtil;
+import net.iquesoft.iquephoto.util.LoggerUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -277,6 +276,7 @@ public class ImageEditorView extends ImageView {
                 if (mTintValue != 0) {
                     canvas.drawBitmap(bitmap, mMatrix, mTintPaint);
                 }
+                break;
             case TRANSFORM:
                 drawGuidelines(canvas);
                 break;
@@ -946,36 +946,39 @@ public class ImageEditorView extends ImageView {
     }
 
     private ColorMatrixColorFilter getTintColorFilter(float value) {
-        float destinationColor = ((value + 100) / 2) * 2.5f;
+        int color = Color.WHITE;
+        float amount = value;
 
-        float lr = 0.2126f;
-        float lg = 0.7152f;
-        float lb = 0.0722f;
+        if (value < 0) {
+            amount = (amount * -1) / 100;
 
-        ColorMatrix grayscaleMatrix = new ColorMatrix(new float[]{
-                lr, lg, lb, 0, 0,
-                lr, lg, lb, 0, 0,
-                lr, lg, lb, 0, 0,
-                0, 0, 0, 0, 255,
-        });
+            color = Color.parseColor("#A5FFB9");
+        } else if (value > 0) {
+            amount /= 100;
 
-        int dr = Color.red((int) destinationColor);
-        int dg = Color.green((int) destinationColor);
-        int db = Color.blue((int) destinationColor);
+            color = Color.parseColor("#FFB4FF");
+        }
 
-        float drf = dr / 255f;
-        float dgf = dg / 255f;
-        float dbf = db / 255f;
+        amount /= 2;
 
-        ColorMatrix tintMatrix = new ColorMatrix(new float[]{
-                drf, 0, 0, 0, 0,
-                0, dgf, 0, 0, 0,
-                0, 0, dbf, 0, 0,
-                0, 0, 0, 1, 0,
-        });
-        tintMatrix.preConcat(grayscaleMatrix);
+        float r = Color.red(color) / 255;
+        float g = Color.green(color) / 255;
+        float b = Color.blue(color) / 255;
+        float q = 1 - amount;
 
-        return new ColorMatrixColorFilter(tintMatrix);
+        float rA = amount * r;
+        float gA = amount * g;
+        float bA = amount * b;
+
+        Log.i("Tint", String.valueOf(amount));
+
+        return new ColorMatrixColorFilter(new ColorMatrix(new float[]
+                {
+                        q + rA * 0.299f, rA * 0.587f, rA * 0.114f, 0, 0,
+                        gA * 0.299f, q + gA * 0.587f, gA * 0.114f, 0, 0,
+                        bA * 0.299f, bA * 0.587f, q + bA * 0.114f, 0, 0,
+                        0, 0, 0, 1, 0,
+                }));
     }
 
     private ColorMatrixColorFilter getExposureColorFilter(float value) {

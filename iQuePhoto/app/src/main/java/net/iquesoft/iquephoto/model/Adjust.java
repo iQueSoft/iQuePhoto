@@ -36,6 +36,8 @@ public class Adjust {
                     0),
             new Adjust(R.string.warmth, R.drawable.ic_warmth, WARMTH,
                     0),
+            new Adjust(R.string.tint, R.drawable.ic_fade, TINT, 0),
+
             new Adjust(R.string.exposure, R.drawable.ic_exposure, EXPOSURE,
                     0),
             new Adjust(R.string.fade, R.drawable.ic_fade, FADE, 0)

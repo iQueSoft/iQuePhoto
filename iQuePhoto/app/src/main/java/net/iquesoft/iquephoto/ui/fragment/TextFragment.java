@@ -15,12 +15,12 @@ import android.widget.Toast;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseFragment;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
-import net.iquesoft.iquephoto.presentation.view.editor.EditorView;
+import net.iquesoft.iquephoto.presentation.view.activity.EditorView;
 import net.iquesoft.iquephoto.ui.dialog.ColorPickerDialog;
 import net.iquesoft.iquephoto.ui.dialog.FontPickerDialog;
 import net.iquesoft.iquephoto.ui.dialog.RGBColorPickerDialog;
-import net.iquesoft.iquephoto.presentation.presenter.editor.tools.TextFragmentPresenterImpl;
-import net.iquesoft.iquephoto.presentation.view.editor.tools.TextView;
+import net.iquesoft.iquephoto.presentation.presenter.fragment.TextFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presentation.view.fragment.TextView;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 

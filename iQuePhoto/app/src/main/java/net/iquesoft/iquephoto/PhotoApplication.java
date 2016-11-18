@@ -9,7 +9,6 @@ import net.iquesoft.iquephoto.di.modules.ApplicationModule;
 
 // FIXME: Fix all lint issues.
 // TODO: Refactor all code.
-// TODO: Change application structure like as https://habrahabr.ru/company/redmadrobot/blog/305798/.
 public class PhotoApplication extends Application {
 
     private IApplicationComponent mComponent;

@@ -9,7 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Window;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.adapters.FontsAdapter;
+import net.iquesoft.iquephoto.adapter.FontsAdapter;
 import net.iquesoft.iquephoto.model.Font;
 
 import butterknife.BindView;

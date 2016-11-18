@@ -26,10 +26,10 @@ import net.iquesoft.iquephoto.di.components.DaggerIEditorActivityComponent;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
 import net.iquesoft.iquephoto.di.modules.EditorActivityModule;
 import net.iquesoft.iquephoto.model.Text;
-import net.iquesoft.iquephoto.presentation.presenter.editor.EditorActivityPresenterImpl;
-import net.iquesoft.iquephoto.tasks.ImageSaveTask;
-import net.iquesoft.iquephoto.utils.BitmapUtil;
-import net.iquesoft.iquephoto.presentation.view.editor.EditorView;
+import net.iquesoft.iquephoto.presentation.presenter.activity.EditorActivityPresenterImpl;
+import net.iquesoft.iquephoto.task.ImageSaveTask;
+import net.iquesoft.iquephoto.util.BitmapUtil;
+import net.iquesoft.iquephoto.presentation.view.activity.EditorView;
 import net.iquesoft.iquephoto.ui.fragment.ToolsFragment;
 
 import java.io.IOException;
@@ -52,7 +52,7 @@ public class EditorActivity extends BaseActivity implements EditorView, IHasComp
     @Inject
     ToolsFragment toolsFragment;
 
-    @BindView(R.id.buttonUndo)
+    @BindView(R.id.undoButton)
     Button undoButton;
 
     @BindView(R.id.editorHeader)
@@ -61,7 +61,7 @@ public class EditorActivity extends BaseActivity implements EditorView, IHasComp
     @BindView(R.id.editorImageView)
     ImageEditorView imageEditorView;
 
-    @BindView(R.id.toolSettingsContainer)
+    @BindView(R.id.fragmentContainer)
     FrameLayout fragmentContainer;
 
     private Bitmap mBitmap;
@@ -187,18 +187,18 @@ public class EditorActivity extends BaseActivity implements EditorView, IHasComp
         return imageEditorView;
     }
 
-    @OnClick(R.id.buttonEditorBack)
+    @OnClick(R.id.editorBackButton)
     void onClickBack() {
         presenter.onBackPressed(mBitmap, imageEditorView.getAlteredBitmap());
     }
 
-    @OnClick(R.id.buttonShare)
+    @OnClick(R.id.shareButton)
     void onClickShare() {
         Intent intent = new Intent(EditorActivity.this, ShareActivity.class);
         imageEditorView.makeImage(intent);
     }
 
-    @OnClick(R.id.buttonUndo)
+    @OnClick(R.id.undoButton)
     void onClickUndo() {
         imageEditorView.undo();
     }

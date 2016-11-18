@@ -9,14 +9,14 @@ import android.view.ViewGroup;
 
 import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.adapters.ToolsAdapter;
+import net.iquesoft.iquephoto.adapter.ToolsAdapter;
 import net.iquesoft.iquephoto.common.BaseFragment;
 import net.iquesoft.iquephoto.core.ImageEditorView;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
 import net.iquesoft.iquephoto.model.Tool;
-import net.iquesoft.iquephoto.presentation.presenter.editor.tools.ToolsFragmentPresenterImpl;
-import net.iquesoft.iquephoto.presentation.view.editor.EditorView;
-import net.iquesoft.iquephoto.presentation.view.editor.tools.ToolsView;
+import net.iquesoft.iquephoto.presentation.presenter.fragment.ToolsFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presentation.view.activity.EditorView;
+import net.iquesoft.iquephoto.presentation.view.fragment.ToolsView;
 
 import javax.inject.Inject;
 

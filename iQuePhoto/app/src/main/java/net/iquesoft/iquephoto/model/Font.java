@@ -18,7 +18,6 @@ public class Font {
             new Font("Cigarettes & Coffee", "CigarettesAndCoffee.ttf"),
             new Font("Abys", "Abys-Regular.otf"),
             new Font("Reis", "REIS-Regular.ttf"),
-
     };
 
     public Font(String title, String path) {

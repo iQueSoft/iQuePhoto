@@ -9,15 +9,15 @@ import android.view.ViewGroup;
 
 import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.adapters.FramesAdapter;
+import net.iquesoft.iquephoto.adapter.FramesAdapter;
 import net.iquesoft.iquephoto.common.BaseFragment;
 import net.iquesoft.iquephoto.core.EditorCommand;
 import net.iquesoft.iquephoto.core.ImageEditorView;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
 import net.iquesoft.iquephoto.model.Frame;
-import net.iquesoft.iquephoto.presentation.presenter.editor.tools.FramesFragmentPresenterImpl;
-import net.iquesoft.iquephoto.presentation.view.editor.EditorView;
-import net.iquesoft.iquephoto.presentation.view.editor.tools.FramesView;
+import net.iquesoft.iquephoto.presentation.presenter.fragment.FramesFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presentation.view.activity.EditorView;
+import net.iquesoft.iquephoto.presentation.view.fragment.FramesView;
 
 import java.util.List;
 

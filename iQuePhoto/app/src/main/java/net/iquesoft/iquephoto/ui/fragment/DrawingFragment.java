@@ -11,10 +11,10 @@ import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseFragment;
 import net.iquesoft.iquephoto.core.ImageEditorView;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
-import net.iquesoft.iquephoto.presentation.presenter.editor.tools.DrawingFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presentation.presenter.fragment.DrawingFragmentPresenterImpl;
 import net.iquesoft.iquephoto.ui.dialog.ColorPickerDialog;
 import net.iquesoft.iquephoto.ui.dialog.RGBColorPickerDialog;
-import net.iquesoft.iquephoto.presentation.view.editor.tools.DrawingView;
+import net.iquesoft.iquephoto.presentation.view.fragment.DrawingView;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
@@ -66,19 +66,19 @@ public class DrawingFragment extends BaseFragment implements DrawingView {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_drawing, container, false);
+        View view = inflater.inflate(R.layout.fragment_drawing, container, false);
 
-        mUnbinder = ButterKnife.bind(this, v);
+        mUnbinder = ButterKnife.bind(this, view);
 
         mImageEditorView = DataHolder.getInstance().getEditorView();
 
-        mColorPickerDialog = new ColorPickerDialog(v.getContext());
+        mColorPickerDialog = new ColorPickerDialog(view.getContext());
 
         mColorPickerDialog.setOnColorClickListener(color -> {
             mImageEditorView.setBrushColor(color);
         });
 
-        RGBColorPickerDialog = new RGBColorPickerDialog(v.getContext());
+        RGBColorPickerDialog = new RGBColorPickerDialog(view.getContext());
 
         brashSizeSeekBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
             @Override
@@ -97,7 +97,7 @@ public class DrawingFragment extends BaseFragment implements DrawingView {
             }
         });
 
-        return v;
+        return view;
     }
 
     @Override

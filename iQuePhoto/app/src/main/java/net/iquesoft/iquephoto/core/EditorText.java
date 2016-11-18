@@ -9,7 +9,7 @@ import android.graphics.Typeface;
 import android.text.TextPaint;
 
 import net.iquesoft.iquephoto.model.Text;
-import net.iquesoft.iquephoto.utils.RectUtil;
+import net.iquesoft.iquephoto.util.RectUtil;
 
 import static net.iquesoft.iquephoto.core.EditorFrame.EDITOR_FRAME_PADDING;
 

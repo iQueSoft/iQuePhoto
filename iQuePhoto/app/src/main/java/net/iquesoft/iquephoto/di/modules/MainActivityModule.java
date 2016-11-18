@@ -1,7 +1,7 @@
 package net.iquesoft.iquephoto.di.modules;
 
-import net.iquesoft.iquephoto.presentation.view.main.MainView;
-import net.iquesoft.iquephoto.presentation.presenter.main.MainActivityPresenterImpl;
+import net.iquesoft.iquephoto.presentation.view.activity.MainView;
+import net.iquesoft.iquephoto.presentation.presenter.activity.MainActivityPresenterImpl;
 
 import dagger.Module;
 import dagger.Provides;

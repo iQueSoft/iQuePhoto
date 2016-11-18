@@ -8,14 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import net.iquesoft.iquephoto.adapters.AdjustAdapter;
+import net.iquesoft.iquephoto.adapter.AdjustAdapter;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseFragment;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
 import net.iquesoft.iquephoto.model.Adjust;
-import net.iquesoft.iquephoto.presentation.presenter.editor.tools.AdjustFragmentPresenterImpl;
-import net.iquesoft.iquephoto.presentation.view.editor.EditorView;
-import net.iquesoft.iquephoto.presentation.view.editor.tools.AdjustView;
+import net.iquesoft.iquephoto.presentation.presenter.fragment.AdjustPresenterImpl;
+import net.iquesoft.iquephoto.presentation.view.activity.EditorView;
+import net.iquesoft.iquephoto.presentation.view.fragment.AdjustView;
 
 import java.util.List;
 
@@ -41,7 +41,7 @@ public class AdjustFragment extends BaseFragment implements AdjustView {
     EditorView editorActivityView;
 
     @Inject
-    AdjustFragmentPresenterImpl presenter;
+    AdjustPresenterImpl presenter;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -51,9 +51,9 @@ public class AdjustFragment extends BaseFragment implements AdjustView {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_adjust, container, false);
+        View view = inflater.inflate(R.layout.fragment_adjust, container, false);
 
-        mUnbinder = ButterKnife.bind(this, v);
+        mUnbinder = ButterKnife.bind(this, view);
 
         mAdapter = new AdjustAdapter(mAdjustList);
 
@@ -67,7 +67,7 @@ public class AdjustFragment extends BaseFragment implements AdjustView {
 
         recyclerView.setAdapter(mAdapter);
 
-        return v;
+        return view;
     }
 
     @Override

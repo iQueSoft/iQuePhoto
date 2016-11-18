@@ -9,12 +9,12 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.adapters.StickersPagerAdapter;
+import net.iquesoft.iquephoto.adapter.StickersPagerAdapter;
 import net.iquesoft.iquephoto.common.BaseFragment;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
 import net.iquesoft.iquephoto.model.StickersSet;
-import net.iquesoft.iquephoto.presentation.presenter.editor.tools.StickersFragmentPresenterImpl;
-import net.iquesoft.iquephoto.presentation.view.editor.tools.StickersView;
+import net.iquesoft.iquephoto.presentation.presenter.fragment.StickersFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presentation.view.fragment.StickersView;
 
 import java.util.List;
 

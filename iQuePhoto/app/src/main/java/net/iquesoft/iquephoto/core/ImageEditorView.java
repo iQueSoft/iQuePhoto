@@ -11,7 +11,6 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
-import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -84,7 +83,7 @@ public class ImageEditorView extends ImageView {
     private List<EditorImage> mImagesList;
     private List<EditorText> mTextsList;
     private List<Drawing> mDrawingList;
-    private List<EditorStickerItem> mStickersList;
+    private List<EditorSticker> mStickersList;
 
     private int mViewWidth = 0;
     private int mViewHeight = 0;
@@ -534,19 +533,29 @@ public class ImageEditorView extends ImageView {
                 if (mCurrentEditorSticker != null) {
                     switch (mMode) {
                         case MOVE:
-                            moveSticker(event);
+                            float distanceX = event.getX() - mLastX;
+                            float distanceY = event.getY() - mLastY;
+
+                            mCurrentEditorSticker.actionMove(distanceX, distanceY);
+
+                            mLastX = event.getX();
+                            mLastY = event.getY();
+
+                            invalidate();
                             break;
                         case RESIZE:
-                            float stickerScale = diagonalLength(event, mCurrentEditorSticker.getPoint()) / mCurrentEditorSticker.getLength();
+                            /*float stickerScale = diagonalLength(event, mCurrentEditorSticker.getPoint()) / mCurrentEditorSticker.getLength();
                             mCurrentEditorSticker.getMatrix()
-                                    .postScale(stickerScale, stickerScale, mCurrentEditorSticker.getPoint().x, mCurrentEditorSticker.getPoint().y);
+                                    .postScale(stickerScale, stickerScale, mCurrentEditorSticker.getPoint().x, mCurrentEditorSticker.getPoint().y);*/
+                            // TODO; Resize sticker.
 
                             invalidate();
                             break;
                         case ROTATE:
-                            Matrix matrix = mCurrentEditorSticker.getMatrix();
+                            /*Matrix matrix = mCurrentEditorSticker.getMatrix();
                             mCurrentEditorSticker.getMatrix().postRotate((rotationToStartPoint(event, matrix) - mCurrentEditorSticker.getRotateDegree()) * 2, mCurrentEditorSticker.getPoint().x, mCurrentEditorSticker.getPoint().y);
-                            mCurrentEditorSticker.setRotateDegree(rotationToStartPoint(event, matrix));
+                            mCurrentEditorSticker.setRotateDegree(rotationToStartPoint(event, matrix));*/
+                            // TODO: Rotate sticker.
                             break;
                     }
                 }
@@ -708,31 +717,12 @@ public class ImageEditorView extends ImageView {
 
     private void moveSticker(MotionEvent event) {
         //if (isStickerInsideImageHorizontal(event.getX(0), mCurrentEditorSticker) && isStickerInsideImageVertical(event.getY(0), mCurrentEditorSticker)) {
-        mCurrentEditorSticker.getMatrix().postTranslate(event.getX(0) - mLastX, event.getY(0) - mLastY);
+        //mCurrentEditorSticker.getMatrix().postTranslate(event.getX(0) - mLastX, event.getY(0) - mLastY);
 
         mLastX = event.getX(0);
         mLastY = event.getY(0);
         invalidate();
         //}
-    }
-
-    private float rotationToStartPoint(MotionEvent event, Matrix matrix) {
-        float[] arrayOfFloat = new float[9];
-        matrix.getValues(arrayOfFloat);
-        float x = 0.0f * arrayOfFloat[0] + 0.0f * arrayOfFloat[1] + arrayOfFloat[2];
-        float y = 0.0f * arrayOfFloat[3] + 0.0f * arrayOfFloat[4] + arrayOfFloat[5];
-        double arc = Math.atan2(event.getY(0) - y, event.getX(0) - x);
-        return (float) Math.toDegrees(arc);
-    }
-
-    private void midPointToStartPoint(MotionEvent event, EditorSticker sticker) {
-        float[] arrayOfFloat = new float[9];
-        sticker.getMatrix().getValues(arrayOfFloat);
-        float f1 = 0.0f * arrayOfFloat[0] + 0.0f * arrayOfFloat[1] + arrayOfFloat[2];
-        float f2 = 0.0f * arrayOfFloat[3] + 0.0f * arrayOfFloat[4] + arrayOfFloat[5];
-        float f3 = f1 + event.getX(0);
-        float f4 = f2 + event.getY(0);
-        sticker.getPoint().set(f3 / 2, f4 / 2);
     }
 
     private float distance(float x0, float x1, float y0, float y1) {
@@ -750,75 +740,17 @@ public class ImageEditorView extends ImageView {
     public void addSticker(Sticker sticker) {
         sticker.setBitmap(((BitmapDrawable) mContext.getResources().getDrawable(sticker.getImage())).getBitmap());
 
-        EditorStickerItem editorStickerItem = new EditorStickerItem(sticker.getBitmap(), mBitmapRect, mEditorFrame);
+        EditorSticker editorSticker = new EditorSticker(sticker.getBitmap(), mBitmapRect, mEditorFrame);
 
-        mStickersList.add(editorStickerItem);
+        mStickersList.add(editorSticker);
 
         invalidate();
     }
 
-    private boolean isInResize(MotionEvent event, Rect resizeHandleRect) {
-        int left = -20 + resizeHandleRect.left;
-        int top = -20 + resizeHandleRect.top;
-        int right = 20 + resizeHandleRect.right;
-        int bottom = 20 + resizeHandleRect.bottom;
-        return event.getX(0) >= left && event.getX(0) <= right && event.getY(0) >= top && event.getY(0) <= bottom;
-    }
-
-    private void midDiagonalPoint(PointF pointF, EditorSticker editorSticker) {
-        float[] arrayOfFloat = new float[9];
-        editorSticker.getMatrix().getValues(arrayOfFloat);
-        float f1 = 0.0F * arrayOfFloat[0] + 0.0F * arrayOfFloat[1] + arrayOfFloat[2];
-        float f2 = 0.0F * arrayOfFloat[3] + 0.0F * arrayOfFloat[4] + arrayOfFloat[5];
-        float f3 = arrayOfFloat[0] * editorSticker.getBitmap().getWidth() + arrayOfFloat[1] * editorSticker.getBitmap().getHeight() + arrayOfFloat[2];
-        float f4 = arrayOfFloat[3] * editorSticker.getBitmap().getWidth() + arrayOfFloat[4] * editorSticker.getBitmap().getHeight() + arrayOfFloat[5];
-        float f5 = f1 + f3;
-        float f6 = f2 + f4;
-        pointF.set(f5 / 2.0F, f6 / 2.0F);
-    }
-
     private void drawStickers(Canvas canvas) {
-        for (EditorStickerItem sticker : mStickersList) {
+        for (EditorSticker sticker : mStickersList) {
             sticker.draw(canvas);
         }
-    }
-
-    private boolean isInButton(MotionEvent event, Rect rect) {
-        int left = rect.left;
-        int right = rect.right;
-        int top = rect.top;
-        int bottom = rect.bottom;
-        return event.getX(0) >= left && event.getX(0) <= right && event.getY(0) >= top && event.getY(0) <= bottom;
-    }
-
-
-    private boolean pointInRect(float[] xRange, float[] yRange, float x, float y) {
-
-        double a1 = Math.hypot(xRange[0] - xRange[1], yRange[0] - yRange[1]);
-        double a2 = Math.hypot(xRange[1] - xRange[2], yRange[1] - yRange[2]);
-        double a3 = Math.hypot(xRange[3] - xRange[2], yRange[3] - yRange[2]);
-        double a4 = Math.hypot(xRange[0] - xRange[3], yRange[0] - yRange[3]);
-
-        double b1 = Math.hypot(x - xRange[0], y - yRange[0]);
-        double b2 = Math.hypot(x - xRange[1], y - yRange[1]);
-        double b3 = Math.hypot(x - xRange[2], y - yRange[2]);
-        double b4 = Math.hypot(x - xRange[3], y - yRange[3]);
-
-        double u1 = (a1 + b1 + b2) / 2;
-        double u2 = (a2 + b2 + b3) / 2;
-        double u3 = (a3 + b3 + b4) / 2;
-        double u4 = (a4 + b4 + b1) / 2;
-
-
-        double s = a1 * a2;
-
-        double ss = Math.sqrt(u1 * (u1 - a1) * (u1 - b1) * (u1 - b2))
-                + Math.sqrt(u2 * (u2 - a2) * (u2 - b2) * (u2 - b3))
-                + Math.sqrt(u3 * (u3 - a3) * (u3 - b3) * (u3 - b4))
-                + Math.sqrt(u4 * (u4 - a4) * (u4 - b4) * (u4 - b1));
-        return Math.abs(s - ss) < 0.5;
-
-
     }
 
     public void addText(Text text) {
@@ -1034,7 +966,6 @@ public class ImageEditorView extends ImageView {
 
         Log.i("Tint", String.valueOf(amount));
 
-
         return new ColorMatrixColorFilter(new ColorMatrix(new float[]
                 {
                         q + rA * 0.299f, rA * 0.587f, rA * 0.114f, 0, 0,
@@ -1101,10 +1032,10 @@ public class ImageEditorView extends ImageView {
     }
 
     private void findCheckedSticker(MotionEvent event) {
-        /*for (int i = mStickersList.size() - 1; i >= 0; i--) {
-            /*//*//*EditorSticker editorSticker = mStickersList.get(i);
+        for (int i = mStickersList.size() - 1; i >= 0; i--) {
+            EditorSticker editorSticker = mStickersList.get(i);
 
-            if (isInStickerBitmap(event, editorSticker)) {
+            /*if (isInStickerBitmap(event, editorSticker)) {
                 mCurrentEditorSticker = editorSticker;
 
                 mMode = EditorMode.MOVE;
@@ -1112,29 +1043,40 @@ public class ImageEditorView extends ImageView {
                 mLastX = event.getX(0);
                 mLastY = event.getY(0);
                 return;
-            } else if (editorSticker.isInEdit()) {
-                if (isInButton(event, editorSticker.getDeleteHandleRect())) {
-                    mCurrentEditorSticker = null;
+            }*/
+            //} else if (editorSticker.isInEdit()) {
+            if (editorSticker.getDstRect().contains(event.getX(), event.getY())) {
+                mCurrentEditorSticker = mStickersList.get(i);
+                mMode = EditorMode.MOVE;
 
-                    mMode = EditorMode.NONE;
+                mLastX = event.getX();
+                mLastY = event.getY();
 
-                    mStickersList.remove(i);
-                    invalidate();
-                    return;
-                } else if (isInButton(event, editorSticker.getRotateHandleRect())) {
-                    mMode = EditorMode.ROTATE;
-                    mCurrentEditorSticker = null;
-                    return;
-                } else if (isInButton(event, editorSticker.getResizeHandleRect())) {
-                    mMode = EditorMode.RESIZE;
-                    midPointToStartPoint(event, editorSticker);
-                    editorSticker.setLength(diagonalLength(event, editorSticker.getPoint()));
-                    return;
-                }
-            }*//*
+                return;
+            } else if (editorSticker.getDeleteHandleDstRect().contains(event.getX(), event.getY())) {
+                mCurrentEditorSticker = null;
+
+                mMode = EditorMode.NONE;
+
+                mStickersList.remove(i);
+                invalidate();
+                return;
+            /*} else if (isInButton(event, editorSticker.getRotateHandleRect())) {
+                mMode = EditorMode.ROTATE;
+                mCurrentEditorSticker = null;
+                return;*/
+            } else if (editorSticker.getResizeHandleDstRect().contains(event.getX(), event.getY())) {
+                mMode = EditorMode.RESIZE;
+                /*midPointToStartPoint(event, editorSticker);
+                editorSticker.setLength(diagonalLength(event, editorSticker.getPoint()));*/
+                // TODO: Resize sticker.
+                return;
+            }
+            // }
         }
+
         mCurrentEditorSticker = null;
-        mMode = EditorMode.NONE;*/
+        mMode = EditorMode.NONE;
     }
 
     private float diagonalLength(MotionEvent event, PointF pointF) {
@@ -1194,16 +1136,6 @@ public class ImageEditorView extends ImageView {
 
     private boolean isBrushInsideImageVertical(float y) {
         return mBitmapRect.top + mBrushSize <= y && mBitmapRect.bottom + mBrushSize >= y;
-    }
-
-    private boolean isStickerInsideImageHorizontal(float x, EditorSticker sticker) {
-        return (mBitmapRect.left + sticker.getStickerWight()) <= x
-                && (mBitmapRect.right + sticker.getStickerWight()) >= x;
-    }
-
-    private boolean isStickerInsideImageVertical(float y, EditorSticker sticker) {
-        return (mBitmapRect.top + (sticker.getStickerHeight() / 2)) <= y
-                && (mBitmapRect.bottom + (sticker.getStickerHeight() / 2)) >= y;
     }
 
     private float getDensity() {

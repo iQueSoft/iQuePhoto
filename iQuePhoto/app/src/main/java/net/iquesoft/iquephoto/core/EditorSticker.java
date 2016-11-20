@@ -3,183 +3,201 @@ package net.iquesoft.iquephoto.core;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.PointF;
 import android.graphics.Rect;
+import android.graphics.RectF;
 
-import net.iquesoft.iquephoto.model.Sticker;
+import net.iquesoft.iquephoto.util.RectUtil;
 
-class EditorSticker {
-    private float mMinScale = 0.5f;
-    private float mMaxScale = 1.2f;
+// TODO: Make front handle button for stickers.
+public class EditorSticker {
+    private static final float MIN_SCALE = 0.15f;
+    private static final int HELP_BOX_PAD = 25;
+    private static final int BUTTON_WIDTH = 30;
 
-    private double mHalfDiagonalLength;
+    private float mX;
+    private float mY;
 
-    private boolean mIsInEdit;
+    public Bitmap mBitmap;
 
-    private float mLength;
-    private float mRotateDegree;
+    private RectF mImageRect;
 
-    private Sticker mSticker;
+    private Rect mSrcRect;
+    private RectF mDstRect;
+
+    private RectF mFrameRect;
+    private Rect mFrameHandlesRect;
+
+    private RectF mDeleteHandleRect;
+    private RectF mResizeHandleRect;
+
+    private RectF mDeleteHandleDstRect;
+    private RectF mRotateHandleDstRect;
+    private RectF mResizeHandleDstRect;
+    private RectF mFrontHandleDstRect;
+
     private Matrix mMatrix;
+    private float mRotateAngle = 0;
+    boolean isDrawHelpTool = false;
 
-    private PointF mPoint;
-
-    private float mStickerHeight;
-    private float mStickerWight;
-
-    private Rect mRotateHandleRect;
-    private Rect mResizeHandleRect;
-    private Rect mDeleteHandleRect;
-    private Rect mFrontHandleRect;
+    private float initWidth;
 
     private EditorFrame mEditorFrame;
 
-    EditorSticker(Sticker sticker, EditorFrame editorFrame) {
-        mSticker = sticker;
+    public EditorSticker(Bitmap bitmap, RectF imageRect, EditorFrame editorFrame) {
+        mBitmap = bitmap;
 
+        mImageRect = imageRect;
         mEditorFrame = editorFrame;
 
+        initialize();
+    }
+
+    public void initialize() {
+        mSrcRect = new Rect(0, 0, mBitmap.getWidth(), mBitmap.getHeight());
+
+        int stickerWidth = Math.min(mBitmap.getWidth(), (int) mImageRect.width() >> 1);
+        int stickerHeight = (int) stickerWidth * mBitmap.getHeight() / mBitmap.getWidth();
+
+        float left = mImageRect.centerX() - (stickerWidth / 2);
+        float top = mImageRect.centerY() - (stickerHeight / 2);
+
+        mDstRect = new RectF(left, top, left + stickerWidth, top + stickerHeight);
+
         mMatrix = new Matrix();
+        mMatrix.postTranslate(mDstRect.left, mDstRect.top);
+        mMatrix.postScale((float) stickerWidth / mBitmap.getWidth(),
+                (float) stickerHeight / mBitmap.getHeight(), mDstRect.left,
+                mDstRect.top);
 
-        mRotateHandleRect = new Rect();
-        mResizeHandleRect = new Rect();
-        mDeleteHandleRect = new Rect();
-        mFrontHandleRect = new Rect();
+        initWidth = mDstRect.width();
 
-        mPoint = new PointF();
+        isDrawHelpTool = true;
 
-        mStickerHeight = getBitmap().getHeight();
-        mStickerWight = getBitmap().getWidth();
+        mFrameRect = new RectF(mDstRect);
+        updateFrameRect();
 
-        int width = getBitmap().getWidth();
-        int height = getBitmap().getHeight();
+        mFrameHandlesRect = new Rect(0, 0, mEditorFrame.getDeleteHandleBitmap().getWidth(),
+                mEditorFrame.getDeleteHandleBitmap().getHeight());
 
-        float scale = (mMinScale + mMaxScale) / 2;
+        mDeleteHandleRect = new RectF(mFrameRect.left - BUTTON_WIDTH, mFrameRect.top
+                - BUTTON_WIDTH, mFrameRect.left + BUTTON_WIDTH, mFrameRect.top
+                + BUTTON_WIDTH);
+        mResizeHandleRect = new RectF(mFrameRect.right - BUTTON_WIDTH, mFrameRect.bottom
+                - BUTTON_WIDTH, mFrameRect.right + BUTTON_WIDTH, mFrameRect.bottom
+                + BUTTON_WIDTH);
 
-        mMatrix.postScale(scale, scale, width / 2, height / 2);
-
-        mHalfDiagonalLength = Math.hypot(getBitmap().getWidth(), getBitmap().getHeight());
+        mResizeHandleDstRect = new RectF(mResizeHandleRect);
+        mDeleteHandleDstRect = new RectF(mDeleteHandleRect);
     }
 
-
-    public Bitmap getBitmap() {
-        return mSticker.getBitmap();
+    private void updateFrameRect() {
+        mFrameRect.left -= HELP_BOX_PAD;
+        mFrameRect.right += HELP_BOX_PAD;
+        mFrameRect.top -= HELP_BOX_PAD;
+        mFrameRect.bottom += HELP_BOX_PAD;
     }
 
-    Matrix getMatrix() {
-        return mMatrix;
+    public void actionMove(float dx, float dy) {
+        mMatrix.postTranslate(dx, dy);
+
+        mDstRect.offset(dx, dy);
+
+        mFrameRect.offset(dx, dy);
+        mDeleteHandleRect.offset(dx, dy);
+        mResizeHandleRect.offset(dx, dy);
+
+        mResizeHandleDstRect.offset(dx, dy);
+        mDeleteHandleDstRect.offset(dx, dy);
     }
 
-    void drawSticker(Canvas canvas) {
-        float[] arrayOfFloat = new float[9];
-        mMatrix.getValues(arrayOfFloat);
+    public void updateRotateAndScale(final float oldx, final float oldy,
+                                     final float dx, final float dy) {
+        float c_x = mDstRect.centerX();
+        float c_y = mDstRect.centerY();
 
-        float f1 = 0.0F * arrayOfFloat[0] + 0.0F * arrayOfFloat[1] + arrayOfFloat[2];
-        float f2 = 0.0F * arrayOfFloat[3] + 0.0F * arrayOfFloat[4] + arrayOfFloat[5];
-        float f3 = arrayOfFloat[0] * getBitmap().getWidth() + 0.0F * arrayOfFloat[1] + arrayOfFloat[2];
-        float f4 = arrayOfFloat[3] * getBitmap().getWidth() + 0.0F * arrayOfFloat[4] + arrayOfFloat[5];
-        float f5 = 0.0F * arrayOfFloat[0] + arrayOfFloat[1] * getBitmap().getHeight() + arrayOfFloat[2];
-        float f6 = 0.0F * arrayOfFloat[3] + arrayOfFloat[4] * getBitmap().getHeight() + arrayOfFloat[5];
-        float f7 = arrayOfFloat[0] * getBitmap().getWidth() + arrayOfFloat[1] * getBitmap().getHeight() + arrayOfFloat[2];
-        float f8 = arrayOfFloat[3] * getBitmap().getWidth() + arrayOfFloat[4] * getBitmap().getHeight() + arrayOfFloat[5];
+        float x = mResizeHandleDstRect.centerX();
+        float y = mResizeHandleDstRect.centerY();
 
-        canvas.drawBitmap(getBitmap(), mMatrix, null);
+        float n_x = x + dx;
+        float n_y = y + dy;
 
-        mDeleteHandleRect.left = (int) (f1 - mEditorFrame.getDeleteHandleBitmap().getWidth() / 2);
-        mDeleteHandleRect.right = (int) (f1 + mEditorFrame.getDeleteHandleBitmap().getWidth() / 2);
-        mDeleteHandleRect.top = (int) (f2 - mEditorFrame.getDeleteHandleBitmap().getHeight() / 2);
-        mDeleteHandleRect.bottom = (int) (f2 + mEditorFrame.getDeleteHandleBitmap().getHeight() / 2);
+        float xa = x - c_x;
+        float ya = y - c_y;
 
-        mRotateHandleRect.left = (int) (f3 - mEditorFrame.getRotateHandleBitmap().getWidth() / 2);
-        mRotateHandleRect.right = (int) (f3 + mEditorFrame.getRotateHandleBitmap().getWidth() / 2);
-        mRotateHandleRect.top = (int) (f4 - mEditorFrame.getRotateHandleBitmap().getHeight() / 2);
-        mRotateHandleRect.bottom = (int) (f4 + mEditorFrame.getRotateHandleBitmap().getHeight() / 2);
+        float xb = n_x - c_x;
+        float yb = n_y - c_y;
 
-        mFrontHandleRect.left = (int) (f5 - mEditorFrame.getFrontHandleBitmap().getWidth() / 2);
-        mFrontHandleRect.right = (int) (f5 + mEditorFrame.getFrontHandleBitmap().getWidth() / 2);
-        mFrontHandleRect.top = (int) (f6 - mEditorFrame.getFrontHandleBitmap().getHeight() / 2);
-        mFrontHandleRect.bottom = (int) (f6 + mEditorFrame.getFrontHandleBitmap().getHeight() / 2);
+        float srcLen = (float) Math.sqrt(xa * xa + ya * ya);
+        float curLen = (float) Math.sqrt(xb * xb + yb * yb);
 
-        mResizeHandleRect.left = (int) (f7 - mEditorFrame.getResizeHandleBitmap().getWidth() / 2);
-        mResizeHandleRect.right = (int) (f7 + mEditorFrame.getResizeHandleBitmap().getWidth() / 2);
-        mResizeHandleRect.top = (int) (f8 - mEditorFrame.getResizeHandleBitmap().getHeight() / 2);
-        mResizeHandleRect.bottom = (int) (f8 + mEditorFrame.getResizeHandleBitmap().getHeight() / 2);
+        float scale = curLen / srcLen;
 
-        if (mIsInEdit) {
-            canvas.drawLine(f1, f2, f3, f4, mEditorFrame.getPaint());
-            canvas.drawLine(f3, f4, f7, f8, mEditorFrame.getPaint());
-            canvas.drawLine(f5, f6, f7, f8, mEditorFrame.getPaint());
-            canvas.drawLine(f5, f6, f1, f2, mEditorFrame.getPaint());
+        float newWidth = mDstRect.width() * scale;
+        if (newWidth / initWidth < MIN_SCALE) {
+            return;
+        }
 
-            canvas.drawBitmap(mEditorFrame.getDeleteHandleBitmap(), null, mDeleteHandleRect, null);
-            canvas.drawBitmap(mEditorFrame.getResizeHandleBitmap(), null, mResizeHandleRect, null);
-            canvas.drawBitmap(mEditorFrame.getFrontHandleBitmap(), null, mFrontHandleRect, null);
-            canvas.drawBitmap(mEditorFrame.getRotateHandleBitmap(), null, mRotateHandleRect, null);
+        mMatrix.postScale(scale, scale, mDstRect.centerX(),
+                mDstRect.centerY());
+
+        RectUtil.scaleRect(mDstRect, scale);
+
+        mFrameRect.set(mDstRect);
+        updateFrameRect();
+        mResizeHandleRect.offsetTo(mFrameRect.right - BUTTON_WIDTH, mFrameRect.bottom
+                - BUTTON_WIDTH);
+        mDeleteHandleRect.offsetTo(mFrameRect.left - BUTTON_WIDTH, mFrameRect.top
+                - BUTTON_WIDTH);
+
+        mResizeHandleDstRect.offsetTo(mFrameRect.right - BUTTON_WIDTH, mFrameRect.bottom
+                - BUTTON_WIDTH);
+        mDeleteHandleDstRect.offsetTo(mFrameRect.left - BUTTON_WIDTH, mFrameRect.top
+                - BUTTON_WIDTH);
+
+        double cos = (xa * xb + ya * yb) / (srcLen * curLen);
+        if (cos > 1 || cos < -1)
+            return;
+        float angle = (float) Math.toDegrees(Math.acos(cos));
+
+        float calMatrix = xa * yb - xb * ya;
+
+        int flag = calMatrix > 0 ? 1 : -1;
+        angle = flag * angle;
+
+        mRotateAngle += angle;
+        mMatrix.postRotate(angle, mDstRect.centerX(),
+                mDstRect.centerY());
+
+        RectUtil.rotateRect(mResizeHandleDstRect, mDstRect.centerX(),
+                mDstRect.centerY(), mRotateAngle);
+        RectUtil.rotateRect(mDeleteHandleDstRect, mDstRect.centerX(),
+                mDstRect.centerY(), mRotateAngle);
+
+    }
+
+    public void draw(Canvas canvas) {
+        canvas.drawBitmap(mBitmap, mMatrix, null);
+
+        if (isDrawHelpTool) {
+            canvas.save();
+            canvas.rotate(mRotateAngle, mFrameRect.centerX(), mFrameRect.centerY());
+            canvas.drawRect(mFrameRect, mEditorFrame.getPaint());
+
+            canvas.drawBitmap(mEditorFrame.getDeleteHandleBitmap(), mFrameHandlesRect, mDeleteHandleRect, null);
+            canvas.drawBitmap(mEditorFrame.getResizeHandleBitmap(), mFrameHandlesRect, mResizeHandleRect, null);
+            canvas.restore();
         }
     }
 
-    Rect getDeleteHandleRect() {
-        return mDeleteHandleRect;
+    public RectF getDstRect() {
+        return mDstRect;
     }
 
-    Rect getResizeHandleRect() {
-        return mResizeHandleRect;
+    public RectF getDeleteHandleDstRect() {
+        return mDeleteHandleDstRect;
     }
 
-    Rect getRotateHandleRect() {
-        return mRotateHandleRect;
-    }
-
-    Rect getFrontHandleRect() {
-        return mFrontHandleRect;
-    }
-
-    void setLength(float length) {
-        mLength = length;
-    }
-
-    void setRotateDegree(float rotateDegree) {
-        mRotateDegree = rotateDegree;
-    }
-
-    float getRotateDegree() {
-        return mRotateDegree;
-    }
-
-    double getHalfDiagonalLength() {
-        return mHalfDiagonalLength;
-    }
-
-    float getLength() {
-        return mLength;
-    }
-
-    PointF getPoint() {
-        return mPoint;
-    }
-
-    public float getMinScale() {
-        return mMinScale;
-    }
-
-    public float getMaxScale() {
-        return mMaxScale;
-    }
-
-    boolean isInEdit() {
-        return mIsInEdit;
-    }
-
-    void setInEdit(boolean inEdit) {
-        mIsInEdit = inEdit;
-    }
-
-    float getStickerHeight() {
-        return mStickerHeight;
-    }
-
-    float getStickerWight() {
-        return mStickerWight;
+    public RectF getResizeHandleDstRect() {
+        return mResizeHandleDstRect;
     }
 }

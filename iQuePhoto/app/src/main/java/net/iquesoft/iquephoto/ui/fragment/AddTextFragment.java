@@ -19,8 +19,8 @@ import net.iquesoft.iquephoto.presentation.view.activity.EditorView;
 import net.iquesoft.iquephoto.ui.dialog.ColorPickerDialog;
 import net.iquesoft.iquephoto.ui.dialog.FontPickerDialog;
 import net.iquesoft.iquephoto.ui.dialog.RGBColorPickerDialog;
-import net.iquesoft.iquephoto.presentation.presenter.fragment.TextFragmentPresenterImpl;
-import net.iquesoft.iquephoto.presentation.view.fragment.TextView;
+import net.iquesoft.iquephoto.presentation.presenter.fragment.AddTextFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presentation.view.fragment.AddTextView;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
@@ -33,7 +33,7 @@ import butterknife.Unbinder;
 
 import static net.iquesoft.iquephoto.core.EditorCommand.TEXT;
 
-public class TextFragment extends BaseFragment implements TextView {
+public class AddTextFragment extends BaseFragment implements AddTextView {
 
     private Context mContext;
 
@@ -51,7 +51,7 @@ public class TextFragment extends BaseFragment implements TextView {
     EditorView editorActivityView;
 
     @Inject
-    TextFragmentPresenterImpl presenter;
+    AddTextFragmentPresenterImpl presenter;
 
     @BindView(R.id.textOpacityValue)
     android.widget.TextView opacityValueTextView;
@@ -65,8 +65,8 @@ public class TextFragment extends BaseFragment implements TextView {
     @BindView(R.id.textField)
     EditText editText;
 
-    public static TextFragment newInstance() {
-        return new TextFragment();
+    public static AddTextFragment newInstance() {
+        return new AddTextFragment();
     }
 
     @Override

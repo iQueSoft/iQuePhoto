@@ -1,6 +1,5 @@
 package net.iquesoft.iquephoto.ui.fragment;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.view.LayoutInflater;
@@ -26,7 +25,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-@SuppressLint("ValidFragment")
 public class SliderControlFragment extends BaseFragment implements SliderControlView {
 
     private Unbinder mUnbinder;
@@ -53,14 +51,6 @@ public class SliderControlFragment extends BaseFragment implements SliderControl
 
     @BindView(R.id.toolSeekBar)
     DiscreteSeekBar toolSeekBar;
-
-    public static SliderControlFragment newInstance(EditorCommand command) {
-        return new SliderControlFragment(command);
-    }
-
-    private SliderControlFragment(EditorCommand command) {
-        mCommand = command;
-    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -102,7 +92,7 @@ public class SliderControlFragment extends BaseFragment implements SliderControl
                         editorActivityView.getImageEditorView().setTintValue(value);
                         break;
                     case TRANSFORM_STRAIGHTEN:
-                        editorActivityView.getImageEditorView().setStraightenValue(value);
+                        //
                         break;
                     case TRANSFORM_HORIZONTAL:
                         editorActivityView.getImageEditorView().setHorizontalTransformValue(value);
@@ -128,7 +118,6 @@ public class SliderControlFragment extends BaseFragment implements SliderControl
     public void onResume() {
         super.onResume();
         presenter.init(this);
-        presenter.setCommand(mCommand);
 
         editorActivityView.getImageEditorView().setCommand(mCommand);
     }

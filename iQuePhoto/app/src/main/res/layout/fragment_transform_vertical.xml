@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="bottom"
@@ -17,18 +18,27 @@
         android:paddingRight="5dp">
 
         <Button
-            android:id="@+id/transformBackButton"
+            android:id="@+id/transformVerticalBackButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerInParent="true"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:drawableLeft="@drawable/ic_left"
-            android:text="@string/transform"
+            android:text="@string/transform_vertical"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="18sp"
             android:textStyle="bold" />
+
+        <ImageButton
+            android:id="@+id/transformVerticalApplyButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerInParent="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_apply_40" />
     </RelativeLayout>
 
     <View
@@ -37,49 +47,55 @@
         android:background="@color/colorLine" />
 
     <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:padding="10dp">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="20dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="20dp">
 
-        <Button
-            android:id="@+id/transformVerticalButton"
+        <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
+            android:id="@+id/transformVerticalSeekBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:drawableTop="@drawable/ic_perspective_vertical"
-            android:text="@string/vertical"
-            android:textAllCaps="false"
+            android:layout_gravity="center"
+            app:dsb_indicatorColor="@android:color/white"
+            app:dsb_indicatorTextAppearance="@android:color/black"
+            app:dsb_max="30"
+            app:dsb_min="-30"
+            app:dsb_progressColor="@android:color/white"
+            app:dsb_rippleColor="@android:color/white"
+            app:dsb_trackColor="@android:color/white"
+            app:dsb_value="0" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/transformVerticalSeekBar"
+            android:text="-30"
             android:textColor="@color/white"
-            android:textSize="16sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/transformStraightenButton"
+        <TextView
+            android:id="@+id/transformVerticalValueTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/transformVerticalSeekBar"
             android:layout_centerInParent="true"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:drawableTop="@drawable/ic_straighten"
-            android:text="@string/transform_straighten"
-            android:textAllCaps="false"
+            android:text="0"
             android:textColor="@color/white"
-            android:textSize="16sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/transformHorizontalButton"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:drawableTop="@drawable/ic_perspective_horizontal"
-            android:text="@string/horizontal"
-            android:textAllCaps="false"
+            android:layout_below="@id/transformVerticalSeekBar"
+            android:text="30"
             android:textColor="@color/white"
-            android:textSize="16sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
     </RelativeLayout>
 </LinearLayout>

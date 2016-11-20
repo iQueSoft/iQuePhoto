@@ -2,8 +2,8 @@ package net.iquesoft.iquephoto.presentation.presenter.fragment;
 
 import net.iquesoft.iquephoto.common.BaseFragmentPresenter;
 import net.iquesoft.iquephoto.core.EditorCommand;
-import net.iquesoft.iquephoto.presentation.view.fragment.TransformView;
+import net.iquesoft.iquephoto.presentation.view.fragment.TransformVerticalView;
 
-public interface TransformPresenter extends BaseFragmentPresenter<TransformView> {
+public interface TransformVerticalPresenter extends BaseFragmentPresenter<TransformVerticalView> {
     void setupTransform(EditorCommand editorCommand);
 }

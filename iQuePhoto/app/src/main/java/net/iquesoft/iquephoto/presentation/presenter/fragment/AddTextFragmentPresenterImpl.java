@@ -5,23 +5,26 @@ import android.graphics.Typeface;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.model.Text;
 import net.iquesoft.iquephoto.presentation.view.activity.EditorView;
-import net.iquesoft.iquephoto.presentation.view.fragment.TextView;
+import net.iquesoft.iquephoto.presentation.view.fragment.AddTextView;
 
 import javax.inject.Inject;
 
-public class TextFragmentPresenterImpl implements TextPresenter {
+import static net.iquesoft.iquephoto.core.EditorCommand.TEXT;
 
-    private TextView mView;
-    private EditorView mEditorActivityView;
+public class AddTextFragmentPresenterImpl implements AddTextPresenter {
+
+    private AddTextView mView;
+    private EditorView mEditorView;
 
     @Inject
-    public TextFragmentPresenterImpl(EditorView editorActivityView) {
-        mEditorActivityView = editorActivityView;
+    public AddTextFragmentPresenterImpl(EditorView editorView) {
+        mEditorView = editorView;
     }
 
     @Override
-    public void init(TextView view) {
+    public void init(AddTextView view) {
         mView = view;
+        mEditorView.setEditorCommand(TEXT);
     }
 
     @Override
@@ -29,7 +32,7 @@ public class TextFragmentPresenterImpl implements TextPresenter {
         if (!text.isEmpty()) {
             int opacityValue = opacity * (int) 2.5f;
             Text texts = new Text(text, typeface, color, opacityValue);
-            mEditorActivityView.addTextToEditor(texts);
+            mEditorView.addTextToEditor(texts);
         } else
             mView.showToastMessage(R.string.text_is_empty);
     }

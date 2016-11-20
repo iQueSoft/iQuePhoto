@@ -3,6 +3,7 @@ package net.iquesoft.iquephoto.adapter;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.ColorMatrixColorFilter;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,8 +11,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.mikhaellopez.circularimageview.CircularImageView;
+import com.squareup.picasso.Picasso;
 
+import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.model.Filter;
 
@@ -24,7 +26,6 @@ public class FiltersAdapter extends RecyclerView.Adapter<FiltersAdapter.ViewHold
 
     private int mCurrentPosition = 0;
 
-    private Bitmap mBitmap;
 
     private Context mContext;
 
@@ -40,9 +41,8 @@ public class FiltersAdapter extends RecyclerView.Adapter<FiltersAdapter.ViewHold
         mOnFilterClickListener = onFilterClickListener;
     }
 
-    public FiltersAdapter(List<Filter> filters, Bitmap bitmap) {
+    public FiltersAdapter(List<Filter> filters) {
         mFiltersList = filters;
-        mBitmap = bitmap;
 
     }
 
@@ -61,10 +61,14 @@ public class FiltersAdapter extends RecyclerView.Adapter<FiltersAdapter.ViewHold
 
         holder.filterTitle.setText(filter.getTitle());
 
-        // TODO: Show images with filters.
-        holder.filterIcon.setImageBitmap(mBitmap);
+        Picasso.with(mContext)
+                .load(DataHolder.getInstance().getImageUri())
+                .fit()
+                .centerCrop()
+                .noPlaceholder()
+                .into(holder.filterImageView);
 
-        holder.filterIcon.setColorFilter(new ColorMatrixColorFilter(filter.getColorMatrix()));
+        holder.filterImageView.setColorFilter(new ColorMatrixColorFilter(filter.getColorMatrix()));
 
         if (mCurrentPosition == position) {
             mOnFilterClickListener.onClick(filter);
@@ -72,7 +76,7 @@ public class FiltersAdapter extends RecyclerView.Adapter<FiltersAdapter.ViewHold
         } else
             holder.filterChecked.setVisibility(View.GONE);
 
-        holder.filterIcon.setOnClickListener(view -> {
+        holder.filterImageView.setOnClickListener(view -> {
             notifyItemChanged(mCurrentPosition);
             mCurrentPosition = position;
             notifyItemChanged(position);
@@ -88,8 +92,8 @@ public class FiltersAdapter extends RecyclerView.Adapter<FiltersAdapter.ViewHold
         @BindView(R.id.filterTitle)
         TextView filterTitle;
 
-        @BindView(R.id.filterImage)
-        CircularImageView filterIcon;
+        @BindView(R.id.filterImageView)
+        ImageView filterImageView;
 
         @BindView(R.id.filterChecked)
         ImageView filterChecked;

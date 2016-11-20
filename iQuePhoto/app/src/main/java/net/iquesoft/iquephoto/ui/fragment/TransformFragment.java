@@ -40,13 +40,13 @@ public class TransformFragment extends BaseFragment implements TransformView {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_transform, container, false);
+        View view = inflater.inflate(R.layout.fragment_transform, container, false);
 
-        mUnbinder = ButterKnife.bind(this, v);
+        mUnbinder = ButterKnife.bind(this, view);
 
-        return v;
+        return view;
     }
-    
+
     @Override
     public void onResume() {
         super.onResume();
@@ -66,16 +66,16 @@ public class TransformFragment extends BaseFragment implements TransformView {
 
     @OnClick(R.id.transformHorizontalButton)
     void onClickTransformHorizontal() {
-        editorActivityView.setupFragment(SliderControlFragment.newInstance(TRANSFORM_HORIZONTAL));
+        presenter.setupTransform(TRANSFORM_HORIZONTAL);
     }
 
     @OnClick(R.id.transformStraightenButton)
     void onClickTransformStraighten() {
-        editorActivityView.setupFragment(SliderControlFragment.newInstance(TRANSFORM_STRAIGHTEN));
+        presenter.setupTransform(TRANSFORM_STRAIGHTEN);
     }
 
     @OnClick(R.id.transformVerticalButton)
     void onClickTransformVertical() {
-        editorActivityView.setupFragment(SliderControlFragment.newInstance(TRANSFORM_VERTICAL));
+        presenter.setupTransform(TRANSFORM_VERTICAL);
     }
 }

@@ -1,21 +1,26 @@
 package net.iquesoft.iquephoto.presentation.presenter.fragment;
 
+import net.iquesoft.iquephoto.presentation.view.activity.EditorView;
 import net.iquesoft.iquephoto.presentation.view.fragment.FiltersView;
 
 import javax.inject.Inject;
 
+import static net.iquesoft.iquephoto.core.EditorCommand.FILTERS;
+
 public class FiltersFragmentPresenterImpl implements FiltersPresenter {
 
     private FiltersView mView;
+    private EditorView mEditorView;
 
     @Inject
-    public FiltersFragmentPresenterImpl() {
-
+    public FiltersFragmentPresenterImpl(EditorView editorView) {
+        mEditorView = editorView;
     }
 
     @Override
     public void init(FiltersView view) {
         mView = view;
+        mEditorView.setEditorCommand(FILTERS);
     }
 
     @Override

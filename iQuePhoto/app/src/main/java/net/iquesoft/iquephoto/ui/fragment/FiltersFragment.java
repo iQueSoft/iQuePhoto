@@ -59,7 +59,7 @@ public class FiltersFragment extends BaseFragment implements FiltersView {
         super.onCreate(savedInstanceState);
 
     }
-    
+
     @Override
     public void onResume() {
         super.onResume();
@@ -108,7 +108,7 @@ public class FiltersFragment extends BaseFragment implements FiltersView {
 
     @Override
     public void setFiltersAdapter() {
-        FiltersAdapter adapter = new FiltersAdapter(Filter.getFiltersList(), DataHolder.getInstance().getBitmap());
+        FiltersAdapter adapter = new FiltersAdapter(Filter.getFiltersList());
 
         adapter.setFiltersListener(filter -> {
             mImageEditorView.setFilter(filter.getColorMatrix());

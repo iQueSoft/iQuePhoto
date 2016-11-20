@@ -7,11 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapter.ToolsAdapter;
 import net.iquesoft.iquephoto.common.BaseFragment;
-import net.iquesoft.iquephoto.core.ImageEditorView;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
 import net.iquesoft.iquephoto.model.Tool;
 import net.iquesoft.iquephoto.presentation.presenter.fragment.ToolsFragmentPresenterImpl;
@@ -33,11 +31,6 @@ public class ToolsFragment extends BaseFragment implements ToolsView {
     @BindView(R.id.toolsRecyclerView)
     RecyclerView recyclerView;
 
-    private ImageEditorView mImageEditorView;
-
-    @Inject
-    EditorView view;
-
     @Inject
     ToolsFragmentPresenterImpl presenter;
 
@@ -49,26 +42,21 @@ public class ToolsFragment extends BaseFragment implements ToolsView {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_tools, container, false);
+        View view = inflater.inflate(R.layout.fragment_tools, container, false);
 
-        mImageEditorView = DataHolder.getInstance().getEditorView();
-
-        mUnbinder = ButterKnife.bind(this, v);
+        mUnbinder = ButterKnife.bind(this, view);
 
         mAdapter = new ToolsAdapter(Tool.getToolsList());
 
         mAdapter.setOnToolsClickListener(tool -> {
-            view.setupFragment(tool.getFragment());
-
-            mImageEditorView.setCommand(tool.getCommand());
-
+            presenter.setupTool(tool);
         });
 
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 4));
 
         recyclerView.setAdapter(mAdapter);
 
-        return v;
+        return view;
     }
 
     @Override

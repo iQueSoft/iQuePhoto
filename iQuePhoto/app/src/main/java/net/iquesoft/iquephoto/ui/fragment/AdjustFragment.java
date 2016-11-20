@@ -14,6 +14,7 @@ import net.iquesoft.iquephoto.common.BaseFragment;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
 import net.iquesoft.iquephoto.model.Adjust;
 import net.iquesoft.iquephoto.presentation.presenter.fragment.AdjustPresenterImpl;
+import net.iquesoft.iquephoto.presentation.presenter.fragment.SliderControlFragmentPresenterImpl;
 import net.iquesoft.iquephoto.presentation.view.activity.EditorView;
 import net.iquesoft.iquephoto.presentation.view.fragment.AdjustView;
 
@@ -43,6 +44,9 @@ public class AdjustFragment extends BaseFragment implements AdjustView {
     @Inject
     AdjustPresenterImpl presenter;
 
+    @Inject
+    SliderControlFragmentPresenterImpl sliderControlFragmentPresenter;
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -58,9 +62,8 @@ public class AdjustFragment extends BaseFragment implements AdjustView {
         mAdapter = new AdjustAdapter(mAdjustList);
 
         mAdapter.setOnAdjustClickListener(adjust -> {
-            editorActivityView.getImageEditorView().setCommand(adjust.getCommand());
-
-            editorActivityView.setupFragment(SliderControlFragment.newInstance(adjust.getCommand()));
+            sliderControlFragmentPresenter.setCommand(adjust.getCommand());
+            //editorActivityView.setupFragment(SliderControlFragment.newInstance(adjust.getCommand()));
         });
 
         recyclerView.setLayoutManager(new LinearLayoutManager(null, LinearLayout.HORIZONTAL, false));

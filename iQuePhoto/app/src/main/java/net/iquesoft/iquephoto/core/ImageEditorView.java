@@ -84,7 +84,7 @@ public class ImageEditorView extends ImageView {
     private List<EditorImage> mImagesList;
     private List<EditorText> mTextsList;
     private List<Drawing> mDrawingList;
-    private List<EditorSticker> mStickersList;
+    private List<EditorStickerItem> mStickersList;
 
     private int mViewWidth = 0;
     private int mViewHeight = 0;
@@ -94,8 +94,8 @@ public class ImageEditorView extends ImageView {
     private float mImgHeight = 0.0f;
 
     private float mHorizontalTransformValue = 0;
-    private float mStraightenTransformValue = 0;
-    private float mVerticalTransformValue = 0;
+    private float mTransformStraightenValue = 0;
+    private int mVerticalTransformValue = 0;
 
     private float mContrastValue = 0;
     private float mBrightnessValue = 0;
@@ -283,13 +283,18 @@ public class ImageEditorView extends ImageView {
             case TRANSFORM_STRAIGHTEN:
                 canvas.drawBitmap(
                         bitmap,
-                        getStraightenTransformMatrix(mStraightenTransformValue),
+                        getStraightenTransformMatrix(mTransformStraightenValue),
                         mImagePaint
                 );
+                // TODO: Off guidelines when click on this view.
                 drawGuidelines(canvas);
                 break;
             case TRANSFORM_HORIZONTAL:
                 canvas.drawBitmap(bitmap, mTransformMatrix, mImagePaint);
+                drawGuidelines(canvas);
+                break;
+            case TRANSFORM_VERTICAL:
+                canvas.drawBitmap(bitmap, getTransformVerticalMatrix(mVerticalTransformValue), mImagePaint);
                 drawGuidelines(canvas);
                 break;
         }
@@ -304,20 +309,91 @@ public class ImageEditorView extends ImageView {
         //canvas.drawBitmap(mSourceBitmap, mMatrix, getAdjustPaint());
     }
 
+    // TODO: Transform vertical mMatrix.
+    private Matrix getTransformVerticalMatrix(int value) {
+        Matrix matrix;
+
+        if (value == 0)
+            return mMatrix;
+        else {
+            matrix = new Matrix(mMatrix);
+
+            float width = mBitmapRect.width();
+            float height = mBitmapRect.height();
+            RectF src = new RectF(0, 0, width, height);
+            RectF dst = new RectF(src);
+            //mMatrix.setRectToRect(src, dst, Matrix.ScaleToFit.CENTER);
+
+            float[] pts = {0, 0, 0, height, width, height, width, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+            int dX = value;
+
+            if (value < 0) {
+                dX *= -1;
+
+                matrix.mapPoints(pts, 8, pts, 0, 4);
+
+
+                pts[8] += dX;
+                pts[14] -= dX;
+            } else {
+
+                matrix.mapPoints(pts, 8, pts, 4, 8);
+
+                pts[8] -= dX;
+                pts[14] += dX;
+            }
+            /*float a = (float) Math.atan(height / width);
+
+            float length1 = (width / 2) / (float) Math.cos(a - Math.abs(Math.toRadians(value)));
+
+            float length2 = (float) Math.sqrt(Math.pow(width / 2, 2) + Math.pow(height / 2, 2));
+
+            float scale = length2 / length1;
+
+            float dX = mCenter.x * (1 - scale);
+            float dY = mCenter.y * (1 - scale);
+
+            mMatrix.postScale(scale, scale);*/
+
+            matrix.setPolyToPoly(pts, 0, pts, 8, 4);
+
+            /*float[] matrixValue = new float[9];
+            mMatrix.getValues(matrixValue);
+            float oldX = mMatrix.getValues();
+            float oldY =*/
+            //mMatrix.postTranslate(dX, dY);
+        }
+
+        return matrix;
+    }
+
+    // TODO: Transform horizontal mMatrix.
     public void setHorizontalTransformValue(int value) {
         mTransformMatrix.set(mMatrix);
-        float[] srcPoints = {0, 0, 0, 200, 200, 200, 200, 0};
-        float[] destPoints = {value, value / 2f, value, 200 - value / 2f, 200 - value, 200, 200 - value, 0};
+
+        float bh = mBitmapRect.height();
+        float bw = mBitmapRect.width();
+
+        float[] srcPoints = {0, 0, 0, bh, bw, bh, bw, 0};
+        float[] destPoints = {value, value / 2f, value, bh - value / 2f, bw - value, bh, bw - value, 0};
         mTransformMatrix.setPolyToPoly(srcPoints, 0, destPoints, 0, 4);
 
         invalidate();
     }
 
-    public void setStraightenValue(int value) {
-        mStraightenTransformValue = value;
+    public void setTransformStraightenValue(int value) {
+        mTransformStraightenValue = value;
 
         invalidate();
     }
+
+    public void setTransformVerticalValue(int value) {
+        mVerticalTransformValue = value;
+
+        invalidate();
+    }
+
 
     private Matrix getStraightenTransformMatrix(float value) {
         Matrix matrix;
@@ -674,10 +750,9 @@ public class ImageEditorView extends ImageView {
     public void addSticker(Sticker sticker) {
         sticker.setBitmap(((BitmapDrawable) mContext.getResources().getDrawable(sticker.getImage())).getBitmap());
 
-        EditorSticker editorSticker = new EditorSticker(sticker, mEditorFrame);
-        editorSticker.setInEdit(true);
+        EditorStickerItem editorStickerItem = new EditorStickerItem(sticker.getBitmap(), mBitmapRect, mEditorFrame);
 
-        mStickersList.add(editorSticker);
+        mStickersList.add(editorStickerItem);
 
         invalidate();
     }
@@ -703,8 +778,8 @@ public class ImageEditorView extends ImageView {
     }
 
     private void drawStickers(Canvas canvas) {
-        for (EditorSticker sticker : mStickersList) {
-            sticker.drawSticker(canvas);
+        for (EditorStickerItem sticker : mStickersList) {
+            sticker.draw(canvas);
         }
     }
 
@@ -716,36 +791,6 @@ public class ImageEditorView extends ImageView {
         return event.getX(0) >= left && event.getX(0) <= right && event.getY(0) >= top && event.getY(0) <= bottom;
     }
 
-    private boolean isInStickerBitmap(MotionEvent event, EditorSticker sticker) {
-        float[] arrayOfFloat1 = new float[9];
-        sticker.getMatrix().getValues(arrayOfFloat1);
-
-        float f1 = 0.0F * arrayOfFloat1[0] + 0.0F * arrayOfFloat1[1] + arrayOfFloat1[2];
-        float f2 = 0.0F * arrayOfFloat1[3] + 0.0F * arrayOfFloat1[4] + arrayOfFloat1[5];
-
-        float f3 = arrayOfFloat1[0] * sticker.getBitmap().getWidth() + 0.0F * arrayOfFloat1[1] + arrayOfFloat1[2];
-        float f4 = arrayOfFloat1[3] * sticker.getBitmap().getWidth() + 0.0F * arrayOfFloat1[4] + arrayOfFloat1[5];
-
-        float f5 = 0.0F * arrayOfFloat1[0] + arrayOfFloat1[1] * sticker.getBitmap().getHeight() + arrayOfFloat1[2];
-        float f6 = 0.0F * arrayOfFloat1[3] + arrayOfFloat1[4] * sticker.getBitmap().getHeight() + arrayOfFloat1[5];
-
-        float f7 = arrayOfFloat1[0] * mStickersList.get(0).getBitmap().getWidth() + arrayOfFloat1[1] * sticker.getBitmap().getHeight() + arrayOfFloat1[2];
-        float f8 = arrayOfFloat1[3] * mStickersList.get(0).getBitmap().getWidth() + arrayOfFloat1[4] * sticker.getBitmap().getHeight() + arrayOfFloat1[5];
-
-        float[] arrayOfFloat2 = new float[4];
-        float[] arrayOfFloat3 = new float[4];
-
-        arrayOfFloat2[0] = f1;
-        arrayOfFloat2[1] = f3;
-        arrayOfFloat2[2] = f7;
-        arrayOfFloat2[3] = f5;
-
-        arrayOfFloat3[0] = f2;
-        arrayOfFloat3[1] = f4;
-        arrayOfFloat3[2] = f8;
-        arrayOfFloat3[3] = f6;
-        return pointInRect(arrayOfFloat2, arrayOfFloat3, event.getX(0), event.getY(0));
-    }
 
     private boolean pointInRect(float[] xRange, float[] yRange, float x, float y) {
 
@@ -892,6 +937,10 @@ public class ImageEditorView extends ImageView {
         }
     }
 
+    public void setVibranceValue(int value) {
+
+    }
+
     public void setSaturationValue(int value) {
         if (value != 0) {
             mSaturationValue = value;
@@ -924,6 +973,19 @@ public class ImageEditorView extends ImageView {
 
     private ColorMatrixColorFilter getContrastColorFilter(float value) {
 
+        float input = value / 100;
+        float scale = input + 1f;
+        float contrast = (-0.5f * scale + 0.5f) * 255f;
+
+        return new ColorMatrixColorFilter(new float[]{
+                scale, 0, 0, 0, contrast,
+                0, scale, 0, 0, contrast,
+                0, 0, scale, 0, contrast,
+                0, 0, 0, 1, 0});
+    }
+
+    // TODO: Vibrance mMatrix
+    private ColorMatrixColorFilter getVibranceColorFilter(float value) {
         float input = value / 100;
         float scale = input + 1f;
         float contrast = (-0.5f * scale + 0.5f) * 255f;
@@ -972,6 +1034,7 @@ public class ImageEditorView extends ImageView {
 
         Log.i("Tint", String.valueOf(amount));
 
+
         return new ColorMatrixColorFilter(new ColorMatrix(new float[]
                 {
                         q + rA * 0.299f, rA * 0.587f, rA * 0.114f, 0, 0,
@@ -982,7 +1045,7 @@ public class ImageEditorView extends ImageView {
     }
 
     private ColorMatrixColorFilter getExposureColorFilter(float value) {
-        float exposure = (float) Math.pow(2, value / 100);
+        float exposure = (float) Math.pow(2, value / 10);
 
         return new ColorMatrixColorFilter(new float[]
                 {
@@ -1038,8 +1101,8 @@ public class ImageEditorView extends ImageView {
     }
 
     private void findCheckedSticker(MotionEvent event) {
-        for (int i = mStickersList.size() - 1; i >= 0; i--) {
-            EditorSticker editorSticker = mStickersList.get(i);
+        /*for (int i = mStickersList.size() - 1; i >= 0; i--) {
+            /*//*//*EditorSticker editorSticker = mStickersList.get(i);
 
             if (isInStickerBitmap(event, editorSticker)) {
                 mCurrentEditorSticker = editorSticker;
@@ -1068,10 +1131,10 @@ public class ImageEditorView extends ImageView {
                     editorSticker.setLength(diagonalLength(event, editorSticker.getPoint()));
                     return;
                 }
-            }
+            }*//*
         }
         mCurrentEditorSticker = null;
-        mMode = EditorMode.NONE;
+        mMode = EditorMode.NONE;*/
     }
 
     private float diagonalLength(MotionEvent event, PointF pointF) {
@@ -1272,9 +1335,9 @@ public class ImageEditorView extends ImageView {
                     break;
                 case TRANSFORM_STRAIGHTEN:
                     mCanvas.save(Canvas.CLIP_SAVE_FLAG);
-                    mCanvas.setMatrix(getTransformStraightenMatrix(mStraightenTransformValue));
+                    mCanvas.setMatrix(getTransformStraightenMatrix(mTransformStraightenValue));
                     mCanvas.drawBitmap(mBitmap, 0, 0,
-//                            getTransformStraightenMatrix(mStraightenTransformValue),
+//                            getTransformStraightenMatrix(mTransformStraightenValue),
                             mImagePaint);
                     mCanvas.restore();
                     break;
@@ -1322,24 +1385,24 @@ public class ImageEditorView extends ImageView {
                 float dX = mImageWidth / 2 * (1 - scale);
                 float dY = mImageHeight / 2 * (1 - scale);
 
-                //matrix.postTranslate(0, 0);
+                //mMatrix.postTranslate(0, 0);
                 matrix.postScale(scale, scale, centerX, centerY);
                 matrix.postRotate(value, centerX, centerY);
 
-                //matrix.postTranslate(centerX, centerY);
-                //matrix.postTranslate(centerX, centerY);
+                //mMatrix.postTranslate(centerX, centerY);
+                //mMatrix.postTranslate(centerX, centerY);
 
             }
 
             return matrix;
         }
     }
-    /*Matrix matrix;
+    /*Matrix mMatrix;
 
     if (value == 0)
             return mMatrix;
     else {
-        matrix = new Matrix(mMatrix);
+        mMatrix = new Matrix(mMatrix);
 
         float width = mImgWidth;
         float height = mImgHeight;
@@ -1360,12 +1423,12 @@ public class ImageEditorView extends ImageView {
         float dX = mCenter.x * (1 - scale);
         float dY = mCenter.y * (1 - scale);
 
-        matrix.postScale(scale, scale);
-        matrix.postTranslate(dX, dY);
-        matrix.postRotate(value, mCenter.x, mCenter.y);
+        mMatrix.postScale(scale, scale);
+        mMatrix.postTranslate(dX, dY);
+        mMatrix.postRotate(value, mCenter.x, mCenter.y);
     }
 
-    return matrix;*/
+    return mMatrix;*/
     /*private class RedrawImagesTask extends AsyncTask<Integer, Void, Bitmap> {
         private Bitmap mBitmap;
         private Canvas mCanvas = new Canvas();
@@ -1393,8 +1456,8 @@ public class ImageEditorView extends ImageView {
         }
 
         @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            super.onPostExecute(bitmap);
+        protected void onPostExecute(Bitmap mBitmap) {
+            super.onPostExecute(mBitmap);
 
         }
     }*/
@@ -1408,11 +1471,11 @@ public class ImageEditorView extends ImageView {
             mIntent = intent;
         }
 
-        private void drawStickers(Canvas canvas) {
+        /*private void drawStickers(Canvas canvas) {
             for (EditorSticker editorSticker : mStickersList) {
                 editorSticker.drawSticker(canvas);
             }
-        }
+        }*/
 
         private void drawTexts(Canvas canvas) {
             for (EditorText editorText : mTextsList) {
@@ -1435,7 +1498,7 @@ public class ImageEditorView extends ImageView {
                 mCanvas.drawBitmap(mFrameBitmap, 0, 0, mImagePaint);
 
             if (mStickersList.size() > 0) {
-                drawStickers(mCanvas);
+                //drawStickers(mCanvas);
             }
 
             if (mTextsList.size() > 0) {

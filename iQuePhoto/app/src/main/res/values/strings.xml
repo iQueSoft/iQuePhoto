@@ -206,8 +206,10 @@
     <!-- START - Transform -->
     <string name="transform">Transform</string>
     <string name="transform_straighten">Straighten</string>
-    <string name="transform_horizontal">Horizontal</string>
-    <string name="transform_vertical">Vertical</string>
+    <string name="vertical">Vertical</string>
+    <string name="horizontal">Horizontal</string>
+    <string name="transform_horizontal">Transform Horizontal</string>
+    <string name="transform_vertical">Transform Vertical</string>
     <!-- Transform - END. -->
 
     <!-- START - Progress dialog message -->

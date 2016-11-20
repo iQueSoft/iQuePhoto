@@ -27,7 +27,21 @@ import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
 import net.iquesoft.iquephoto.di.modules.EditorActivityModule;
 import net.iquesoft.iquephoto.model.Text;
 import net.iquesoft.iquephoto.presentation.presenter.activity.EditorActivityPresenterImpl;
+import net.iquesoft.iquephoto.presentation.presenter.fragment.SliderControlFragmentPresenterImpl;
 import net.iquesoft.iquephoto.task.ImageSaveTask;
+import net.iquesoft.iquephoto.ui.fragment.AddTextFragment;
+import net.iquesoft.iquephoto.ui.fragment.AdjustFragment;
+import net.iquesoft.iquephoto.ui.fragment.DrawingFragment;
+import net.iquesoft.iquephoto.ui.fragment.FiltersFragment;
+import net.iquesoft.iquephoto.ui.fragment.FramesFragment;
+import net.iquesoft.iquephoto.ui.fragment.OverlayFragment;
+import net.iquesoft.iquephoto.ui.fragment.SliderControlFragment;
+import net.iquesoft.iquephoto.ui.fragment.StickersFragment;
+import net.iquesoft.iquephoto.ui.fragment.TiltShiftFragment;
+import net.iquesoft.iquephoto.ui.fragment.TransformFragment;
+import net.iquesoft.iquephoto.ui.fragment.TransformHorizontalFragment;
+import net.iquesoft.iquephoto.ui.fragment.TransformStraightenFragment;
+import net.iquesoft.iquephoto.ui.fragment.TransformVerticalFragment;
 import net.iquesoft.iquephoto.util.BitmapUtil;
 import net.iquesoft.iquephoto.presentation.view.activity.EditorView;
 import net.iquesoft.iquephoto.ui.fragment.ToolsFragment;
@@ -42,15 +56,57 @@ import butterknife.OnClick;
 
 public class EditorActivity extends BaseActivity implements EditorView, IHasComponent<IEditorActivityComponent> {
 
+    private Bitmap mBitmap;
+    private FragmentManager mFragmentManager;
+    private IEditorActivityComponent mComponent;
+
     @Inject
     EditorActivityPresenterImpl presenter;
 
-    private IEditorActivityComponent mComponent;
-
-    private FragmentManager mFragmentManager;
-
     @Inject
     ToolsFragment toolsFragment;
+
+    @Inject
+    FiltersFragment filtersFragment;
+
+    @Inject
+    AdjustFragment adjustFragment;
+
+    @Inject
+    OverlayFragment overlayFragment;
+
+    @Inject
+    StickersFragment stickersFragment;
+
+    @Inject
+    FramesFragment framesFragment;
+
+    @Inject
+    TransformFragment transformFragment;
+
+    @Inject
+    TransformHorizontalFragment transformHorizontalFragment;
+
+    @Inject
+    TransformStraightenFragment transformStraightenFragment;
+
+    @Inject
+    TransformVerticalFragment transformVerticalFragment;
+
+    @Inject
+    TiltShiftFragment tiltShiftFragment;
+
+    @Inject
+    DrawingFragment drawingFragment;
+
+    @Inject
+    AddTextFragment addTextFragment;
+
+    @Inject
+    SliderControlFragment sliderControlFragment;
+
+    @Inject
+    SliderControlFragmentPresenterImpl sliderControlFragmentPresenter;
 
     @BindView(R.id.undoButton)
     Button undoButton;
@@ -63,8 +119,6 @@ public class EditorActivity extends BaseActivity implements EditorView, IHasComp
 
     @BindView(R.id.fragmentContainer)
     FrameLayout fragmentContainer;
-
-    private Bitmap mBitmap;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -82,7 +136,7 @@ public class EditorActivity extends BaseActivity implements EditorView, IHasComp
             e.printStackTrace();
         }
 
-        DataHolder.getInstance().setBitmap(Bitmap.createScaledBitmap(mBitmap, 120, 120, false));
+        DataHolder.getInstance().setImageUri(getIntent().getData());
 
         BitmapUtil.logBitmapInfo("Cropped Bitmap", mBitmap);
 
@@ -146,7 +200,54 @@ public class EditorActivity extends BaseActivity implements EditorView, IHasComp
     }
 
     @Override
-    public void setupFragment(Fragment fragment) {
+    public void setupToolFragment(EditorCommand editorCommand) {
+        Fragment fragment = null;
+
+        switch (editorCommand) {
+            case FILTERS:
+                fragment = filtersFragment;
+                break;
+            case ADJUST:
+                fragment = adjustFragment;
+                break;
+            case OVERLAY:
+                fragment = overlayFragment;
+                break;
+            case STICKERS:
+                fragment = stickersFragment;
+                break;
+            case FRAMES:
+                fragment = framesFragment;
+                break;
+            case TRANSFORM:
+                fragment = transformFragment;
+                break;
+            case TRANSFORM_HORIZONTAL:
+                fragment = transformHorizontalFragment;
+                break;
+            case TRANSFORM_STRAIGHTEN:
+                fragment = transformStraightenFragment;
+                break;
+            case TRANSFORM_VERTICAL:
+                fragment = transformVerticalFragment;
+                break;
+            case VIGNETTE:
+                sliderControlFragmentPresenter.setCommand(editorCommand);
+                fragment = sliderControlFragment;
+                break;
+            case TILT_SHIFT:
+                fragment = tiltShiftFragment;
+                break;
+            case DRAWING:
+                fragment = drawingFragment;
+                break;
+            case TEXT:
+                fragment = addTextFragment;
+                break;
+            default:
+                fragment = sliderControlFragment;
+        }
+
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
         fragmentTransaction.replace(fragmentContainer.getId(), fragment)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
@@ -164,14 +265,13 @@ public class EditorActivity extends BaseActivity implements EditorView, IHasComp
     @Override
     public void navigateBack(boolean isFragment) {
         if (isFragment) {
-            if (mFragmentManager.getBackStackEntryCount() > 1) {
+            if (mFragmentManager.getBackStackEntryCount() > 1)
                 super.onBackPressed();
-            } else if (mFragmentManager.getBackStackEntryCount() == 1) {
-                super.onBackPressed();
-                imageEditorView.setCommand(EditorCommand.NONE);
-                editorHeader.setVisibility(View.VISIBLE);
-            } else if (mFragmentManager.getBackStackEntryCount() == 0) {
+            else if (mFragmentManager.getBackStackEntryCount() == 0)
                 presenter.onBackPressed(mBitmap, imageEditorView.getAlteredBitmap());
+            else if (mFragmentManager.getBackStackEntryCount() == 1) {
+                super.onBackPressed();
+                editorHeader.setVisibility(View.VISIBLE);
             }
         } else
             finish();
@@ -180,6 +280,11 @@ public class EditorActivity extends BaseActivity implements EditorView, IHasComp
     @Override
     public void addTextToEditor(Text text) {
         imageEditorView.addText(text);
+    }
+
+    @Override
+    public void setEditorCommand(EditorCommand editorCommand) {
+        imageEditorView.setCommand(editorCommand);
     }
 
     @Override

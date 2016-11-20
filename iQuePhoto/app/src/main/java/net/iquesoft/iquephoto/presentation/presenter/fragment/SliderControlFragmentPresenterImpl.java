@@ -2,19 +2,18 @@ package net.iquesoft.iquephoto.presentation.presenter.fragment;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.core.EditorCommand;
+import net.iquesoft.iquephoto.presentation.view.activity.EditorView;
 import net.iquesoft.iquephoto.presentation.view.fragment.SliderControlView;
 
 import javax.inject.Inject;
 
 public class SliderControlFragmentPresenterImpl implements SliderControlPresenter {
-
-    private EditorCommand mCommand;
-
     private SliderControlView mView;
+    private EditorView mEditorView;
 
     @Inject
-    public SliderControlFragmentPresenterImpl() {
-
+    public SliderControlFragmentPresenterImpl(EditorView editorView) {
+        mEditorView = editorView;
     }
 
     @Override
@@ -24,9 +23,7 @@ public class SliderControlFragmentPresenterImpl implements SliderControlPresente
 
     @Override
     public void setCommand(EditorCommand command) {
-        mCommand = command;
-
-        switch (mCommand) {
+        switch (command) {
             case BRIGHTNESS:
                 mView.initializeCancelButton(R.string.brightness);
                 mView.initializeSlider(-100, 100, 0);
@@ -67,7 +64,9 @@ public class SliderControlFragmentPresenterImpl implements SliderControlPresente
                 mView.initializeCancelButton(R.string.transform_vertical);
                 mView.initializeSlider(-30, 30, 0);
                 break;
-
         }
+
+        mEditorView.setEditorCommand(command);
+        mEditorView.setupToolFragment(command);
     }
 }

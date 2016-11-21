@@ -9,7 +9,18 @@
         android:id="@+id/rgbFrameLayout"
         android:layout_width="match_parent"
         android:layout_height="325dp"
-        android:background="@color/red" />
+        android:background="@color/red">
+
+        <TextView
+            android:id="@+id/rgbHexTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="#FFFFFF"
+            android:textColor="@color/white"
+            android:textSize="75dp"
+            android:textStyle="bold" />
+    </FrameLayout>
 
     <GridLayout
         android:id="@+id/rgbGridLayout"

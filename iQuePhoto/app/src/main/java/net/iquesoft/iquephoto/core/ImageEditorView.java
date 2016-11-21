@@ -296,6 +296,9 @@ public class ImageEditorView extends ImageView {
                 canvas.drawBitmap(bitmap, getTransformVerticalMatrix(mVerticalTransformValue), mImagePaint);
                 drawGuidelines(canvas);
                 break;
+            case TILT_SHIFT:
+                canvas.drawBitmap(BitmapUtil.getBlurImage(mContext, bitmap, (int) mImgWidth, (int) mImgHeight), mMatrix, mImagePaint);
+                break;
         }
 
         if (mStickersList.size() > 0) {

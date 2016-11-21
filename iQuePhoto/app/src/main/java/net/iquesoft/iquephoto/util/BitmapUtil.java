@@ -2,8 +2,13 @@ package net.iquesoft.iquephoto.util;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.v8.renderscript.Allocation;
+import android.support.v8.renderscript.Element;
+import android.support.v8.renderscript.RenderScript;
+import android.support.v8.renderscript.ScriptIntrinsicBlur;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
@@ -65,5 +70,22 @@ public class BitmapUtil {
     public static float dp2px(Context context, float dp) {
         final DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         return displayMetrics.density * dp;
+    }
+
+    public static Bitmap getBlurImage(Context context, Bitmap bitmap, int width, int height) {
+        Bitmap src = bitmap.copy(bitmap.getConfig(), true);
+        Bitmap inputBitmap = Bitmap.createScaledBitmap(src, width, height, false);
+        Bitmap outputBitmap = Bitmap.createBitmap(inputBitmap);
+
+        RenderScript rs = RenderScript.create(context);
+        ScriptIntrinsicBlur theIntrinsic = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
+        Allocation tmpIn = Allocation.createFromBitmap(rs, inputBitmap);
+        Allocation tmpOut = Allocation.createFromBitmap(rs, outputBitmap);
+        theIntrinsic.setRadius(7.5f);
+        theIntrinsic.setInput(tmpIn);
+        theIntrinsic.forEach(tmpOut);
+        tmpOut.copyTo(outputBitmap);
+
+        return outputBitmap;
     }
 }

@@ -56,7 +56,7 @@ public class ShareActivity extends BaseActivity implements ShareView, IHasCompon
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.activity_share);
-        
+
         ButterKnife.bind(this);
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

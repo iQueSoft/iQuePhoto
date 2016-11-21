@@ -24,7 +24,12 @@ public class RGBColorPickerDialog extends Dialog implements DiscreteSeekBar.OnPr
     private int mG;
     private int mB;
 
+    private String mHexColor;
+
     private ColorPickerDialog.OnColorClickListener mOnColorClickListener;
+
+    @BindView(R.id.rgbHexTextView)
+    TextView rgbHexTextView;
 
     @BindView(R.id.rgbRValueTextView)
     TextView redValueTextView;
@@ -65,6 +70,10 @@ public class RGBColorPickerDialog extends Dialog implements DiscreteSeekBar.OnPr
 
         mColor = Color.rgb(mR, mG, mB);
 
+        mHexColor = String.format("#%06X", (0xFFFFFF & mColor));
+
+        rgbHexTextView.setText(mHexColor);
+
         redSeekBar.setOnProgressChangeListener(this);
         greenSeekBar.setOnProgressChangeListener(this);
         blueSeekBar.setOnProgressChangeListener(this);
@@ -83,7 +92,12 @@ public class RGBColorPickerDialog extends Dialog implements DiscreteSeekBar.OnPr
     }
 
     private void setColor(int red, int green, int blue) {
-        colorView.setBackgroundColor(Color.rgb(red, green, blue));
+        mColor = Color.rgb(red, green, blue);
+
+        colorView.setBackgroundColor(mColor);
+
+        mHexColor = String.format("#%06X", (0xFFFFFF & mColor));
+        rgbHexTextView.setText(mHexColor);
     }
 
     @Override

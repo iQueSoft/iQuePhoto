@@ -26,7 +26,7 @@ public class ARGBColorPickerDialog extends Dialog implements DiscreteSeekBar.OnP
     private int mA;
 
     private ColorPickerDialog.OnColorClickListener mOnColorClickListener;
-    
+
     @BindView(R.id.argbAValueTextView)
     TextView argbAValueTextView;
 

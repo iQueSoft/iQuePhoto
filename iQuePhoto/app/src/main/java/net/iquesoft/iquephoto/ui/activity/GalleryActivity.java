@@ -21,7 +21,7 @@ import net.iquesoft.iquephoto.di.modules.GalleryActivityModule;
 import net.iquesoft.iquephoto.model.Image;
 import net.iquesoft.iquephoto.model.ImageAlbum;
 import net.iquesoft.iquephoto.presentation.view.activity.GalleryView;
-import net.iquesoft.iquephoto.presentation.presenter.activity.GalleryActivityPresenterImpl;
+import net.iquesoft.iquephoto.presentation.presenter.activity.GalleryPresenterImpl;
 
 import java.util.List;
 
@@ -48,7 +48,7 @@ public class GalleryActivity extends BaseActivity implements GalleryView, HasCom
     LinearLayout noImagesLinearLayout;
 
     @Inject
-    GalleryActivityPresenterImpl presenter;
+    GalleryPresenterImpl presenter;
 
     /*@Inject
     GalleryImagesFragment galleryImagesFragment;

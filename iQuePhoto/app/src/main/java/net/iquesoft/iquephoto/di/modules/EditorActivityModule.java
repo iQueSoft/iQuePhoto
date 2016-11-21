@@ -1,9 +1,9 @@
 package net.iquesoft.iquephoto.di.modules;
 
+import net.iquesoft.iquephoto.presentation.presenter.activity.EditorPresenterImpl;
 import net.iquesoft.iquephoto.presentation.presenter.fragment.AddTextFragmentPresenterImpl;
 import net.iquesoft.iquephoto.presentation.presenter.fragment.AdjustPresenterImpl;
 import net.iquesoft.iquephoto.presentation.presenter.fragment.DrawingPresenterImpl;
-import net.iquesoft.iquephoto.presentation.presenter.activity.EditorActivityPresenterImpl;
 import net.iquesoft.iquephoto.presentation.presenter.fragment.FiltersPresenterImpl;
 import net.iquesoft.iquephoto.presentation.presenter.fragment.FramesPresenterImpl;
 import net.iquesoft.iquephoto.presentation.presenter.fragment.OverlaysPresenterImpl;
@@ -31,8 +31,8 @@ public class EditorActivityModule {
     }
 
     @Provides
-    EditorActivityPresenterImpl provideEditorActivityPresenterImpl(EditorView view) {
-        return new EditorActivityPresenterImpl(view);
+    EditorPresenterImpl provideEditorActivityPresenterImpl(EditorView view) {
+        return new EditorPresenterImpl(view);
     }
 
     @Provides

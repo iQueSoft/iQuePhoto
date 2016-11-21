@@ -8,7 +8,6 @@ import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
 import android.view.WindowManager;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.tbruyelle.rxpermissions.RxPermissions;
 
@@ -20,7 +19,7 @@ import net.iquesoft.iquephoto.di.components.DaggerIMainActivityComponent;
 import net.iquesoft.iquephoto.di.components.IMainActivityComponent;
 import net.iquesoft.iquephoto.di.modules.MainActivityModule;
 import net.iquesoft.iquephoto.presentation.view.activity.MainView;
-import net.iquesoft.iquephoto.presentation.presenter.activity.MainActivityPresenterImpl;
+import net.iquesoft.iquephoto.presentation.presenter.activity.MainPresenterImpl;
 
 import javax.inject.Inject;
 
@@ -33,7 +32,7 @@ public class MainActivity extends BaseActivity implements MainView, HasComponent
     private static final int REQ_CAMERA = 1;
 
     @Inject
-    MainActivityPresenterImpl presenter;
+    MainPresenterImpl presenter;
 
     private IMainActivityComponent mComponent;
 
@@ -111,7 +110,29 @@ public class MainActivity extends BaseActivity implements MainView, HasComponent
 
     @Override
     public void startCamera() {
-        Toast.makeText(getBaseContext(), "Coming soon!", Toast.LENGTH_SHORT).show();
+        RxPermissions.getInstance(this)
+                .request(Manifest.permission.CAMERA)
+                .subscribe(granted -> {
+                    if (granted) {
+                        Intent intent = new Intent(MainActivity.this, CameraActivity.class);
+                        startActivity(intent);
+                    } else {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AlertMaterialDialog)
+                                .setTitle(getString(R.string.permission_denied))
+                                .setMessage(getString(R.string.camera_storage_permission))
+                                .setPositiveButton(getString(R.string.go_to_app_settings), (dialogInterface, i) -> {
+                                    Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + "net.iquesoft.iquephoto"));
+                                    intent.addCategory(Intent.CATEGORY_DEFAULT);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    startActivity(intent);
+                                    finish();
+                                })
+                                .setNegativeButton(getString(R.string.ok), (dialogInterface, i1) -> {
+                                    dialogInterface.dismiss();
+                                });
+                        builder.show();
+                    }
+                });
     }
 
     public IMainActivityComponent getComponent() {

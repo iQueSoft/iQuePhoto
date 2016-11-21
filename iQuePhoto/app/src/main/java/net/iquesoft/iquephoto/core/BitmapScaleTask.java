@@ -8,6 +8,8 @@ import android.support.annotation.StringRes;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 
+import net.iquesoft.iquephoto.core.editor.ImageEditorView;
+
 class BitmapScaleTask extends AsyncTask<Integer, Void, Bitmap> {
     private Context mContext;
     private int mReqWidth, mReqHeight;
@@ -53,6 +55,6 @@ class BitmapScaleTask extends AsyncTask<Integer, Void, Bitmap> {
     protected void onPostExecute(Bitmap bitmap) {
         super.onPostExecute(bitmap);
         mProgressDialog.dismiss();
-        mImageEditorView.setupOverlay(bitmap);
+        //FIXME: mImageEditorView.setupOverlay(bitmap);
     }
 }

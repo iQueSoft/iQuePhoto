@@ -4,12 +4,13 @@ import android.graphics.Typeface;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.model.Text;
+import net.iquesoft.iquephoto.presentation.presenter.fragment.interfaces.AddTextPresenter;
 import net.iquesoft.iquephoto.presentation.view.activity.EditorView;
 import net.iquesoft.iquephoto.presentation.view.fragment.AddTextView;
 
 import javax.inject.Inject;
 
-import static net.iquesoft.iquephoto.core.EditorCommand.TEXT;
+import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.TEXT;
 
 public class AddTextFragmentPresenterImpl implements AddTextPresenter {
 

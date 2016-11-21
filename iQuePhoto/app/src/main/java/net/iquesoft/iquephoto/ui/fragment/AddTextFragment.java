@@ -31,7 +31,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-import static net.iquesoft.iquephoto.core.EditorCommand.TEXT;
+import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.TEXT;
 
 public class AddTextFragment extends BaseFragment implements AddTextView {
 

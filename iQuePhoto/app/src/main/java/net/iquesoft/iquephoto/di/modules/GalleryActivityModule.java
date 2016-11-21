@@ -1,6 +1,6 @@
 package net.iquesoft.iquephoto.di.modules;
 
-import net.iquesoft.iquephoto.presentation.presenter.activity.GalleryActivityPresenterImpl;
+import net.iquesoft.iquephoto.presentation.presenter.activity.GalleryPresenterImpl;
 import net.iquesoft.iquephoto.presentation.presenter.fragment.GalleryAlbumsPresenterImpl;
 import net.iquesoft.iquephoto.presentation.presenter.fragment.GalleryImagesPresenterImpl;
 import net.iquesoft.iquephoto.presentation.view.activity.GalleryView;
@@ -23,8 +23,8 @@ public class GalleryActivityModule {
     }
 
     @Provides
-    GalleryActivityPresenterImpl provideGalleryActivityPresenterImpl() {
-        return new GalleryActivityPresenterImpl(mView);
+    GalleryPresenterImpl provideGalleryActivityPresenterImpl() {
+        return new GalleryPresenterImpl(mView);
     }
 
     @Provides

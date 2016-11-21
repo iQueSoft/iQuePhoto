@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseFragment;
-import net.iquesoft.iquephoto.core.EditorCommand;
+import net.iquesoft.iquephoto.core.editor.enums.EditorCommand;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
 import net.iquesoft.iquephoto.presentation.presenter.fragment.SliderControlFragmentPresenterImpl;
 import net.iquesoft.iquephoto.presentation.view.activity.EditorView;

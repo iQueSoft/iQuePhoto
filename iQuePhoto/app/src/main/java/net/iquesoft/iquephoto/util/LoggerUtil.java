@@ -3,7 +3,7 @@ package net.iquesoft.iquephoto.util;
 import android.graphics.Bitmap;
 import android.util.Log;
 
-import net.iquesoft.iquephoto.core.EditorCommand;
+import net.iquesoft.iquephoto.core.editor.enums.EditorCommand;
 
 public class LoggerUtil {
 

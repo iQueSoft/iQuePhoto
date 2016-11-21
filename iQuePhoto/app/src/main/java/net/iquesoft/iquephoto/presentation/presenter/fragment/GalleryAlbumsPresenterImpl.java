@@ -1,6 +1,7 @@
 package net.iquesoft.iquephoto.presentation.presenter.fragment;
 
 import net.iquesoft.iquephoto.model.ImageAlbum;
+import net.iquesoft.iquephoto.presentation.presenter.fragment.interfaces.GalleryAlbumsPresenter;
 import net.iquesoft.iquephoto.presentation.view.activity.GalleryView;
 import net.iquesoft.iquephoto.presentation.view.fragment.GalleryAlbumsView;
 

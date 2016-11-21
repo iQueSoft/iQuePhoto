@@ -1,12 +1,13 @@
 package net.iquesoft.iquephoto.presentation.presenter.fragment;
 
-import net.iquesoft.iquephoto.core.EditorCommand;
+import net.iquesoft.iquephoto.core.editor.enums.EditorCommand;
+import net.iquesoft.iquephoto.presentation.presenter.fragment.interfaces.TransformStraightenPresenter;
 import net.iquesoft.iquephoto.presentation.view.activity.EditorView;
 import net.iquesoft.iquephoto.presentation.view.fragment.TransformStraightenView;
 
 import javax.inject.Inject;
 
-import static net.iquesoft.iquephoto.core.EditorCommand.TRANSFORM_STRAIGHTEN;
+import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.TRANSFORM_STRAIGHTEN;
 
 public class TransformStraightenPresenterImpl implements TransformStraightenPresenter {
 

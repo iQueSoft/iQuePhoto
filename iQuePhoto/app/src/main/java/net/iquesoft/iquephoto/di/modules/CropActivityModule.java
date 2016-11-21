@@ -1,6 +1,6 @@
 package net.iquesoft.iquephoto.di.modules;
 
-import net.iquesoft.iquephoto.presentation.presenter.activity.PreviewActivityPresenterImpl;
+import net.iquesoft.iquephoto.presentation.presenter.activity.PreviewPresenterImpl;
 import net.iquesoft.iquephoto.presentation.view.activity.PreviewView;
 
 import dagger.Module;
@@ -21,7 +21,7 @@ public class CropActivityModule {
     }
 
     @Provides
-    PreviewActivityPresenterImpl provideCropActivityPresenterImpl() {
-        return new PreviewActivityPresenterImpl(mView);
+    PreviewPresenterImpl provideCropActivityPresenterImpl() {
+        return new PreviewPresenterImpl(mView);
     }
 }

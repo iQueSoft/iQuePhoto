@@ -1,7 +1,7 @@
 package net.iquesoft.iquephoto.presentation.view.activity;
 
-import net.iquesoft.iquephoto.core.EditorCommand;
-import net.iquesoft.iquephoto.core.ImageEditorView;
+import net.iquesoft.iquephoto.core.editor.enums.EditorCommand;
+import net.iquesoft.iquephoto.core.editor.ImageEditorView;
 import net.iquesoft.iquephoto.model.Text;
 
 public interface EditorView {

@@ -153,7 +153,9 @@
     <!-- START - For alerts. -->
     <string name="permission_denied">Permission denied</string>
     <string name="go_to_app_settings">Go to app settings</string>
-    <string name="read_storage_permission">To work with the mIcon you need to allow the application
+     <string name="camera_storage_permission">To get started you need to allow the application
+        use your camera to take photo. If you selected \"never ask again\" permission you can go to application settings and turn on \"Camera\" permission.</string>
+    <string name="read_storage_permission">To get started you need to allow the application
         use your images. If you selected \"never ask again\" permission you can go to application settings and turn on \"Storage\" permission.</string>
     <string name="on_back_alert">All your current edits will be lost and you will return to start screen!</string>
     <string name="ok">OK</string>

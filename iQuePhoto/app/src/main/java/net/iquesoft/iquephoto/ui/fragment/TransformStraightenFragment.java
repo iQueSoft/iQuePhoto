@@ -22,7 +22,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-import static net.iquesoft.iquephoto.core.EditorCommand.TRANSFORM_STRAIGHTEN;
+import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.TRANSFORM_STRAIGHTEN;
 
 public class TransformStraightenFragment extends BaseFragment implements TransformStraightenView {
 

@@ -1,9 +1,8 @@
 package net.iquesoft.iquephoto.presentation.presenter.fragment;
 
+import net.iquesoft.iquephoto.presentation.presenter.fragment.interfaces.GalleryImagesPresenter;
 import net.iquesoft.iquephoto.presentation.view.activity.GalleryView;
-import net.iquesoft.iquephoto.presentation.view.fragment.GalleryAlbumsView;
 import net.iquesoft.iquephoto.presentation.view.fragment.GalleryImagesView;
-import net.iquesoft.iquephoto.presentation.view.fragment.OverlayView;
 
 import javax.inject.Inject;
 

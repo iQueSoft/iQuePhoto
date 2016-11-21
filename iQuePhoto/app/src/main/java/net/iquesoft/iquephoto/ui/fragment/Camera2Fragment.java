@@ -30,12 +30,6 @@ public class Camera2Fragment extends BaseFragment implements Camera2View {
     @Inject
     Camera2PresenterImpl presenter;
 
-    @BindView(R.id.textOpacitySeekBar)
-    DiscreteSeekBar seekBar;
-
-    @BindView(R.id.textSettingsLayout)
-    LinearLayout textSettingsLayout;
-
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -49,23 +43,6 @@ public class Camera2Fragment extends BaseFragment implements Camera2View {
         mUnbinder = ButterKnife.bind(this, view);
 
         mContext = view.getContext();
-
-        seekBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
-            @Override
-            public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
-
-            }
-
-            @Override
-            public void onStartTrackingTouch(DiscreteSeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(DiscreteSeekBar seekBar) {
-
-            }
-        });
 
         return view;
     }

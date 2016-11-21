@@ -58,7 +58,7 @@
             android:background="@color/colorLine" />
     </RelativeLayout>
 
-    <net.iquesoft.iquephoto.core.ImageEditorView
+    <net.iquesoft.iquephoto.core.editor.ImageEditorView
         android:id="@+id/editorImageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

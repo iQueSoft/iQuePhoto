@@ -18,15 +18,15 @@ import android.widget.Toast;
 import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseActivity;
-import net.iquesoft.iquephoto.core.EditorCommand;
-import net.iquesoft.iquephoto.core.ImageEditorView;
+import net.iquesoft.iquephoto.core.editor.enums.EditorCommand;
+import net.iquesoft.iquephoto.core.editor.ImageEditorView;
 import net.iquesoft.iquephoto.di.HasComponent;
 import net.iquesoft.iquephoto.di.components.IApplicationComponent;
 import net.iquesoft.iquephoto.di.components.DaggerIEditorActivityComponent;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
 import net.iquesoft.iquephoto.di.modules.EditorActivityModule;
 import net.iquesoft.iquephoto.model.Text;
-import net.iquesoft.iquephoto.presentation.presenter.activity.EditorActivityPresenterImpl;
+import net.iquesoft.iquephoto.presentation.presenter.activity.EditorPresenterImpl;
 import net.iquesoft.iquephoto.presentation.presenter.fragment.SliderControlFragmentPresenterImpl;
 import net.iquesoft.iquephoto.task.ImageSaveTask;
 import net.iquesoft.iquephoto.ui.fragment.AddTextFragment;
@@ -56,12 +56,8 @@ import butterknife.OnClick;
 
 public class EditorActivity extends BaseActivity implements EditorView, HasComponent<IEditorActivityComponent> {
 
-    private Bitmap mBitmap;
-    private FragmentManager mFragmentManager;
-    private IEditorActivityComponent mComponent;
-
     @Inject
-    EditorActivityPresenterImpl presenter;
+    EditorPresenterImpl presenter;
 
     @Inject
     ToolsFragment toolsFragment;
@@ -119,6 +115,10 @@ public class EditorActivity extends BaseActivity implements EditorView, HasCompo
 
     @BindView(R.id.fragmentContainer)
     FrameLayout fragmentContainer;
+
+    private Bitmap mBitmap;
+    private FragmentManager mFragmentManager;
+    private IEditorActivityComponent mComponent;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

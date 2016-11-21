@@ -9,7 +9,7 @@ import android.widget.LinearLayout;
 import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseFragment;
-import net.iquesoft.iquephoto.core.ImageEditorView;
+import net.iquesoft.iquephoto.core.editor.ImageEditorView;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
 import net.iquesoft.iquephoto.presentation.presenter.fragment.DrawingPresenterImpl;
 import net.iquesoft.iquephoto.ui.dialog.ColorPickerDialog;

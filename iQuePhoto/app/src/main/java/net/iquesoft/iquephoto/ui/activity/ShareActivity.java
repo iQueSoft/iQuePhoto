@@ -20,7 +20,7 @@ import net.iquesoft.iquephoto.di.components.DaggerIShareActivityComponent;
 import net.iquesoft.iquephoto.di.components.IApplicationComponent;
 import net.iquesoft.iquephoto.di.components.IShareActivityComponent;
 import net.iquesoft.iquephoto.di.modules.ShareActivityModule;
-import net.iquesoft.iquephoto.presentation.presenter.activity.ShareActivityPresenterImpl;
+import net.iquesoft.iquephoto.presentation.presenter.activity.SharePresenterImpl;
 import net.iquesoft.iquephoto.presentation.view.activity.ShareView;
 import net.iquesoft.iquephoto.task.ImageSaveTask;
 import net.iquesoft.iquephoto.util.BitmapUtil;
@@ -31,8 +31,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static net.iquesoft.iquephoto.presentation.presenter.activity.ShareActivityPresenterImpl.FACEBOOK_ID;
-import static net.iquesoft.iquephoto.presentation.presenter.activity.ShareActivityPresenterImpl.INSTAGRAM_ID;
+import static net.iquesoft.iquephoto.presentation.presenter.activity.SharePresenterImpl.FACEBOOK_ID;
+import static net.iquesoft.iquephoto.presentation.presenter.activity.SharePresenterImpl.INSTAGRAM_ID;
 
 public class ShareActivity extends BaseActivity implements ShareView, HasComponent<IShareActivityComponent> {
 
@@ -45,7 +45,7 @@ public class ShareActivity extends BaseActivity implements ShareView, HasCompone
     TabLayout tabLayout;
 
     @Inject
-    ShareActivityPresenterImpl presenter;
+    SharePresenterImpl presenter;
 
     private IShareActivityComponent mComponent;
 

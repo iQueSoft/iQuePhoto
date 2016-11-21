@@ -1,11 +1,12 @@
 package net.iquesoft.iquephoto.presentation.presenter.fragment;
 
+import net.iquesoft.iquephoto.presentation.presenter.fragment.interfaces.ShowStickersPresenter;
 import net.iquesoft.iquephoto.presentation.view.activity.EditorView;
 import net.iquesoft.iquephoto.presentation.view.fragment.ShowStickersView;
 
 import javax.inject.Inject;
 
-import static net.iquesoft.iquephoto.core.EditorCommand.STICKERS;
+import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.STICKERS;
 
 public class ShowStickersFragmentPresenterImpl implements ShowStickersPresenter {
 

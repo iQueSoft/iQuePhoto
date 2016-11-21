@@ -5,12 +5,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.core.EditorCommand;
+import net.iquesoft.iquephoto.core.editor.enums.EditorCommand;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static net.iquesoft.iquephoto.core.EditorCommand.*;
+import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.*;
 
 public class Adjust {
     @StringRes

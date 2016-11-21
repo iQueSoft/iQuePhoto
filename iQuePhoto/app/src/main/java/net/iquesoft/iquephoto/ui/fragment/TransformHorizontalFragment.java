@@ -22,7 +22,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-import static net.iquesoft.iquephoto.core.EditorCommand.TRANSFORM_HORIZONTAL;
+import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.TRANSFORM_HORIZONTAL;
 
 public class TransformHorizontalFragment extends BaseFragment implements TransformHorizontalView {
 

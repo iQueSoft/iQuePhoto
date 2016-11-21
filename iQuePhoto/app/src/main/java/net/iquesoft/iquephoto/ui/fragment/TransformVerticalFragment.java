@@ -22,7 +22,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-import static net.iquesoft.iquephoto.core.EditorCommand.TRANSFORM_VERTICAL;
+import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.TRANSFORM_VERTICAL;
 
 public class TransformVerticalFragment extends BaseFragment implements TransformVerticalView {
 

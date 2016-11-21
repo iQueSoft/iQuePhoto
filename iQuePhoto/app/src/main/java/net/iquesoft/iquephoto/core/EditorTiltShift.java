@@ -1,15 +1,24 @@
 package net.iquesoft.iquephoto.core;
 
 import android.graphics.Canvas;
+import android.graphics.RectF;
 import android.view.MotionEvent;
 
-public abstract class EditorTiltShift {
+public interface EditorTiltShift {
 
-    public abstract void draw(Canvas canvas);
+    void initialize();
 
-    public abstract void actionMove(MotionEvent event);
+    void draw(Canvas canvas);
 
-    public abstract void actionDown(MotionEvent event);
+    void updateRect(RectF bitmapRect);
 
-    public abstract void actionPointerDown(MotionEvent event);
+    void updateGradientRect();
+
+    void updateGradientMatrix(RectF rectF);
+
+    void actionMove(MotionEvent event);
+
+    void actionDown(MotionEvent event);
+
+    void actionPointerDown(MotionEvent event);
 }

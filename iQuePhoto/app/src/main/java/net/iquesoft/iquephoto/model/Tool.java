@@ -2,27 +2,15 @@ package net.iquesoft.iquephoto.model;
 
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
-import android.support.v4.app.Fragment;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.core.EditorCommand;
-import net.iquesoft.iquephoto.ui.fragment.AddTextFragment;
-import net.iquesoft.iquephoto.ui.fragment.DrawingFragment;
-import net.iquesoft.iquephoto.ui.fragment.AdjustFragment;
-import net.iquesoft.iquephoto.ui.fragment.FiltersFragment;
-import net.iquesoft.iquephoto.ui.fragment.FramesFragment;
-import net.iquesoft.iquephoto.ui.fragment.OverlayFragment;
-import net.iquesoft.iquephoto.ui.fragment.SliderControlFragment;
-import net.iquesoft.iquephoto.ui.fragment.StickersFragment;
-import net.iquesoft.iquephoto.ui.fragment.TiltShiftFragment;
-import net.iquesoft.iquephoto.ui.fragment.TransformFragment;
+import net.iquesoft.iquephoto.core.editor.enums.EditorCommand;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static net.iquesoft.iquephoto.core.EditorCommand.*;
+import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.*;
 
 public class Tool {
     @StringRes

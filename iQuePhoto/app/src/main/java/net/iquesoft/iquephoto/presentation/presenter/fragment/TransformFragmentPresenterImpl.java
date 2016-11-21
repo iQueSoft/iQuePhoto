@@ -1,12 +1,13 @@
 package net.iquesoft.iquephoto.presentation.presenter.fragment;
 
-import net.iquesoft.iquephoto.core.EditorCommand;
+import net.iquesoft.iquephoto.core.editor.enums.EditorCommand;
+import net.iquesoft.iquephoto.presentation.presenter.fragment.interfaces.TransformPresenter;
 import net.iquesoft.iquephoto.presentation.view.activity.EditorView;
 import net.iquesoft.iquephoto.presentation.view.fragment.TransformView;
 
 import javax.inject.Inject;
 
-import static net.iquesoft.iquephoto.core.EditorCommand.TRANSFORM;
+import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.TRANSFORM;
 
 public class TransformFragmentPresenterImpl implements TransformPresenter {
 

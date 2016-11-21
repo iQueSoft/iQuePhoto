@@ -2,13 +2,11 @@ package net.iquesoft.iquephoto.di.components;
 
 import net.iquesoft.iquephoto.PhotoApplication;
 import net.iquesoft.iquephoto.di.modules.ApplicationModule;
-import net.iquesoft.iquephoto.model.Overlay;
 import net.iquesoft.iquephoto.ui.fragment.AddTextFragment;
 import net.iquesoft.iquephoto.ui.fragment.AdjustFragment;
 import net.iquesoft.iquephoto.ui.fragment.Camera2Fragment;
 import net.iquesoft.iquephoto.ui.fragment.CameraFiltersFragment;
 import net.iquesoft.iquephoto.ui.fragment.CameraFragment;
-import net.iquesoft.iquephoto.ui.fragment.CameraMainFragment;
 import net.iquesoft.iquephoto.ui.fragment.DrawingFragment;
 import net.iquesoft.iquephoto.ui.fragment.FiltersFragment;
 import net.iquesoft.iquephoto.ui.fragment.FramesFragment;
@@ -60,8 +58,6 @@ public interface IApplicationComponent {
     AddTextFragment addTextFragment();
 
     SliderControlFragment sliderControlFragment();
-
-    CameraMainFragment cameraMainFragment();
 
     CameraFragment cameraFragment();
 

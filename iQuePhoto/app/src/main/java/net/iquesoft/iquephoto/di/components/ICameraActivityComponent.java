@@ -6,7 +6,6 @@ import net.iquesoft.iquephoto.ui.activity.CameraActivity;
 import net.iquesoft.iquephoto.ui.fragment.Camera2Fragment;
 import net.iquesoft.iquephoto.ui.fragment.CameraFiltersFragment;
 import net.iquesoft.iquephoto.ui.fragment.CameraFragment;
-import net.iquesoft.iquephoto.ui.fragment.CameraMainFragment;
 
 import dagger.Component;
 
@@ -16,8 +15,6 @@ import dagger.Component;
 public interface ICameraActivityComponent {
 
     void inject(CameraActivity cameraActivity);
-
-    void inject(CameraMainFragment cameraMainFragment);
 
     void inject(CameraFragment cameraFragment);
 

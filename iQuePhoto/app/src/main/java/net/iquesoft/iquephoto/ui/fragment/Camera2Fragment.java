@@ -1,8 +1,6 @@
 package net.iquesoft.iquephoto.ui.fragment;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Paint;
 import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraDevice;
 import android.media.ImageReader;
@@ -10,19 +8,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseFragment;
 import net.iquesoft.iquephoto.core.AutoFitCameraView;
 import net.iquesoft.iquephoto.di.components.ICameraActivityComponent;
-import net.iquesoft.iquephoto.model.Filter;
 import net.iquesoft.iquephoto.presentation.presenter.fragment.Camera2PresenterImpl;
 import net.iquesoft.iquephoto.presentation.view.fragment.Camera2View;
-
-import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
-
-import java.util.concurrent.Semaphore;
 
 import javax.inject.Inject;
 
@@ -30,7 +22,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-@SuppressLint("NewApi")
 public class Camera2Fragment extends BaseFragment implements Camera2View {
     @Inject
     Camera2PresenterImpl presenter;
@@ -41,14 +32,14 @@ public class Camera2Fragment extends BaseFragment implements Camera2View {
     private Context mContext;
 
     private Unbinder mUnbinder;
-    
-    private ImageReader mImageReader;
+
+    /*private ImageReader mImageReader;
 
     private CameraDevice mCameraDevice;
 
-    private CameraCaptureSession mCaptureSession;
+    private CameraCaptureSession mCaptureSession;*/
 
-    private Semaphore mCameraOpenCloseLock = new Semaphore(1);
+    //private Semaphore mCameraOpenCloseLock = new Semaphore(1);
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -83,12 +74,14 @@ public class Camera2Fragment extends BaseFragment implements Camera2View {
         super.onDestroyView();
         mUnbinder.unbind();
     }
-
+        
+    /*@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void changeFilter(Paint paint) {
         autoFitCameraView.setLayerPaint(paint);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void closeCamera() {
         try {
@@ -110,5 +103,5 @@ public class Camera2Fragment extends BaseFragment implements Camera2View {
         } finally {
             mCameraOpenCloseLock.release();
         }
-    }
+    }*/
 }

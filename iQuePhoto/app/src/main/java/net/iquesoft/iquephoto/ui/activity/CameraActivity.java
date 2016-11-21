@@ -17,7 +17,7 @@ import net.iquesoft.iquephoto.presentation.presenter.activity.CameraPresenterImp
 import net.iquesoft.iquephoto.presentation.view.activity.CameraView;
 import net.iquesoft.iquephoto.ui.fragment.Camera2Fragment;
 import net.iquesoft.iquephoto.ui.fragment.CameraFiltersFragment;
-import net.iquesoft.iquephoto.ui.fragment.CameraMainFragment;
+import net.iquesoft.iquephoto.ui.fragment.CameraFragment;
 
 import javax.inject.Inject;
 
@@ -30,7 +30,7 @@ public class CameraActivity extends BaseActivity implements CameraView, HasCompo
     CameraPresenterImpl presenter;
 
     @Inject
-    CameraMainFragment cameraMainFragment;
+    CameraFragment cameraFragment;
 
     @Inject
     Camera2Fragment camera2Fragment;
@@ -52,14 +52,12 @@ public class CameraActivity extends BaseActivity implements CameraView, HasCompo
         ButterKnife.bind(this);
 
         mFragmentManager = getSupportFragmentManager();
+    }
 
-        //presenter.initializeCamera(this, camera2Fragment);
-
-        /*FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.cameraFragmentsFrameLayout, cameraMainFragment)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .addToBackStack(null)
-                .commit();*/
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //presenter.initializeCamera(cameraFragment, camera2Fragment);
     }
 
     @Override
@@ -78,10 +76,10 @@ public class CameraActivity extends BaseActivity implements CameraView, HasCompo
 
     @Override
     public void setupCamera(Fragment fragment) {
-        /*FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
         fragmentTransaction.add(R.id.cameraFragmentFrameLayout, fragment)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .commit();*/
+                .commit();
     }
 
     @Override
@@ -91,6 +89,16 @@ public class CameraActivity extends BaseActivity implements CameraView, HasCompo
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .addToBackStack(null)
                 .commit();
+    }
+
+    @Override
+    public void hideFiltersButton() {
+        super.onBackPressed();
+    }
+
+    @OnClick(R.id.cameraCaptureImageButton)
+    void onClickCapture() {
+        // TODO: Camera capture button.
     }
 
     @OnClick(R.id.cameraCloseImageButton)

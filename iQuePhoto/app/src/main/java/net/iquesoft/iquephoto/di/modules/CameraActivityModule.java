@@ -4,7 +4,6 @@ import net.iquesoft.iquephoto.presentation.presenter.activity.CameraPresenterImp
 import net.iquesoft.iquephoto.presentation.presenter.fragment.Camera2PresenterImpl;
 import net.iquesoft.iquephoto.presentation.presenter.fragment.CameraFiltersPresenterImpl;
 import net.iquesoft.iquephoto.presentation.presenter.fragment.CameraFragmentPresenterImpl;
-import net.iquesoft.iquephoto.presentation.presenter.fragment.CameraMainPresenterImpl;
 import net.iquesoft.iquephoto.presentation.view.activity.CameraView;
 
 import dagger.Module;
@@ -27,11 +26,6 @@ public class CameraActivityModule {
     @Provides
     CameraPresenterImpl provideCameraPresenterImpl() {
         return new CameraPresenterImpl(mView);
-    }
-
-    @Provides
-    CameraMainPresenterImpl provideCameraMainPresenterImpl() {
-        return new CameraMainPresenterImpl(mView);
     }
 
     @Provides

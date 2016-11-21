@@ -2,11 +2,11 @@ package net.iquesoft.iquephoto.di.modules;
 
 import net.iquesoft.iquephoto.presentation.presenter.fragment.AddTextFragmentPresenterImpl;
 import net.iquesoft.iquephoto.presentation.presenter.fragment.AdjustPresenterImpl;
-import net.iquesoft.iquephoto.presentation.presenter.fragment.DrawingFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presentation.presenter.fragment.DrawingPresenterImpl;
 import net.iquesoft.iquephoto.presentation.presenter.activity.EditorActivityPresenterImpl;
-import net.iquesoft.iquephoto.presentation.presenter.fragment.FiltersFragmentPresenterImpl;
-import net.iquesoft.iquephoto.presentation.presenter.fragment.FramesFragmentPresenterImpl;
-import net.iquesoft.iquephoto.presentation.presenter.fragment.OverlayFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presentation.presenter.fragment.FiltersPresenterImpl;
+import net.iquesoft.iquephoto.presentation.presenter.fragment.FramesPresenterImpl;
+import net.iquesoft.iquephoto.presentation.presenter.fragment.OverlaysPresenterImpl;
 import net.iquesoft.iquephoto.presentation.presenter.fragment.ShowStickersFragmentPresenterImpl;
 import net.iquesoft.iquephoto.presentation.presenter.fragment.SliderControlFragmentPresenterImpl;
 import net.iquesoft.iquephoto.presentation.presenter.fragment.StickersFragmentPresenterImpl;
@@ -17,18 +17,6 @@ import net.iquesoft.iquephoto.presentation.presenter.fragment.TransformHorizonta
 import net.iquesoft.iquephoto.presentation.presenter.fragment.TransformStraightenPresenterImpl;
 import net.iquesoft.iquephoto.presentation.presenter.fragment.TransformVerticalPresenterImpl;
 import net.iquesoft.iquephoto.presentation.view.activity.EditorView;
-import net.iquesoft.iquephoto.ui.fragment.AddTextFragment;
-import net.iquesoft.iquephoto.ui.fragment.AdjustFragment;
-import net.iquesoft.iquephoto.ui.fragment.DrawingFragment;
-import net.iquesoft.iquephoto.ui.fragment.FiltersFragment;
-import net.iquesoft.iquephoto.ui.fragment.FramesFragment;
-import net.iquesoft.iquephoto.ui.fragment.OverlayFragment;
-import net.iquesoft.iquephoto.ui.fragment.StickersFragment;
-import net.iquesoft.iquephoto.ui.fragment.TiltShiftFragment;
-import net.iquesoft.iquephoto.ui.fragment.ToolsFragment;
-import net.iquesoft.iquephoto.ui.fragment.TransformFragment;
-
-import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
@@ -58,8 +46,8 @@ public class EditorActivityModule {
     }
 
     @Provides
-    FiltersFragmentPresenterImpl provideFiltersFragmentPresenterImpl() {
-        return new FiltersFragmentPresenterImpl(mView);
+    FiltersPresenterImpl provideFiltersFragmentPresenterImpl() {
+        return new FiltersPresenterImpl(mView);
     }
 
     @Provides
@@ -73,8 +61,8 @@ public class EditorActivityModule {
     }
 
     @Provides
-    DrawingFragmentPresenterImpl provideBrushFragmentPresenterImpl() {
-        return new DrawingFragmentPresenterImpl(mView);
+    DrawingPresenterImpl provideBrushFragmentPresenterImpl() {
+        return new DrawingPresenterImpl(mView);
     }
 
     @Provides
@@ -88,13 +76,13 @@ public class EditorActivityModule {
     }
 
     @Provides
-    OverlayFragmentPresenterImpl provideOverlayFragmentPresenterImpl() {
-        return new OverlayFragmentPresenterImpl(mView);
+    OverlaysPresenterImpl provideOverlayFragmentPresenterImpl() {
+        return new OverlaysPresenterImpl(mView);
     }
 
     @Provides
-    FramesFragmentPresenterImpl provideFrameFragmentPresenterImpl() {
-        return new FramesFragmentPresenterImpl(mView);
+    FramesPresenterImpl provideFrameFragmentPresenterImpl() {
+        return new FramesPresenterImpl(mView);
     }
 
     @Provides

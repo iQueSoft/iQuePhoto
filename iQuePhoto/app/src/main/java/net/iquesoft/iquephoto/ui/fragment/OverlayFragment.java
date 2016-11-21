@@ -15,7 +15,7 @@ import net.iquesoft.iquephoto.core.EditorCommand;
 import net.iquesoft.iquephoto.core.ImageEditorView;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
 import net.iquesoft.iquephoto.model.Overlay;
-import net.iquesoft.iquephoto.presentation.presenter.fragment.OverlayFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presentation.presenter.fragment.OverlaysPresenterImpl;
 import net.iquesoft.iquephoto.presentation.view.activity.EditorView;
 import net.iquesoft.iquephoto.presentation.view.fragment.OverlayView;
 
@@ -40,7 +40,7 @@ public class OverlayFragment extends BaseFragment implements OverlayView {
     private List<Overlay> mOverlayList = Overlay.getOverlaysList();
 
     @Inject
-    OverlayFragmentPresenterImpl presenter;
+    OverlaysPresenterImpl presenter;
 
     @BindView(R.id.overlaySeekBar)
     DiscreteSeekBar seekBar;

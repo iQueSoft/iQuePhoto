@@ -14,7 +14,7 @@ import com.tbruyelle.rxpermissions.RxPermissions;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseActivity;
-import net.iquesoft.iquephoto.di.IHasComponent;
+import net.iquesoft.iquephoto.di.HasComponent;
 import net.iquesoft.iquephoto.di.components.IApplicationComponent;
 import net.iquesoft.iquephoto.di.components.DaggerIMainActivityComponent;
 import net.iquesoft.iquephoto.di.components.IMainActivityComponent;
@@ -29,7 +29,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 // TODO: Make real time permissions without RxPermission library.
-public class MainActivity extends BaseActivity implements MainView, IHasComponent<IMainActivityComponent> {
+public class MainActivity extends BaseActivity implements MainView, HasComponent<IMainActivityComponent> {
     private static final int REQ_CAMERA = 1;
 
     @Inject

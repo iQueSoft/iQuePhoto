@@ -15,7 +15,7 @@ import net.iquesoft.iquephoto.core.EditorCommand;
 import net.iquesoft.iquephoto.core.ImageEditorView;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
 import net.iquesoft.iquephoto.model.Frame;
-import net.iquesoft.iquephoto.presentation.presenter.fragment.FramesFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presentation.presenter.fragment.FramesPresenterImpl;
 import net.iquesoft.iquephoto.presentation.view.activity.EditorView;
 import net.iquesoft.iquephoto.presentation.view.fragment.FramesView;
 
@@ -42,7 +42,7 @@ public class FramesFragment extends BaseFragment implements FramesView {
     EditorView editorActivityView;
 
     @Inject
-    FramesFragmentPresenterImpl presenter;
+    FramesPresenterImpl presenter;
 
     @BindView(R.id.frameRecyclerView)
     RecyclerView recyclerView;

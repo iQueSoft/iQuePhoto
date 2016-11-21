@@ -7,13 +7,13 @@ import javax.inject.Inject;
 
 import static net.iquesoft.iquephoto.core.EditorCommand.FILTERS;
 
-public class FiltersFragmentPresenterImpl implements FiltersPresenter {
+public class FiltersPresenterImpl implements FiltersPresenter {
 
     private FiltersView mView;
     private EditorView mEditorView;
 
     @Inject
-    public FiltersFragmentPresenterImpl(EditorView editorView) {
+    public FiltersPresenterImpl(EditorView editorView) {
         mEditorView = editorView;
     }
 

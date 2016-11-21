@@ -11,7 +11,7 @@ import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseFragment;
 import net.iquesoft.iquephoto.core.ImageEditorView;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
-import net.iquesoft.iquephoto.presentation.presenter.fragment.DrawingFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presentation.presenter.fragment.DrawingPresenterImpl;
 import net.iquesoft.iquephoto.ui.dialog.ColorPickerDialog;
 import net.iquesoft.iquephoto.ui.dialog.RGBColorPickerDialog;
 import net.iquesoft.iquephoto.presentation.view.fragment.DrawingView;
@@ -28,7 +28,7 @@ import butterknife.Unbinder;
 public class DrawingFragment extends BaseFragment implements DrawingView {
 
     @Inject
-    DrawingFragmentPresenterImpl presenter;
+    DrawingPresenterImpl presenter;
 
     @BindView(R.id.drawingSettings)
     LinearLayout drawingSettings;

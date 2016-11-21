@@ -1,5 +1,5 @@
 package net.iquesoft.iquephoto.di;
 
-public interface IHasComponent<T> {
+public interface HasComponent<T> {
     T getComponent();
 }

@@ -15,7 +15,7 @@ import android.widget.ImageView;
 import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseActivity;
-import net.iquesoft.iquephoto.di.IHasComponent;
+import net.iquesoft.iquephoto.di.HasComponent;
 import net.iquesoft.iquephoto.di.components.DaggerIShareActivityComponent;
 import net.iquesoft.iquephoto.di.components.IApplicationComponent;
 import net.iquesoft.iquephoto.di.components.IShareActivityComponent;
@@ -34,7 +34,7 @@ import butterknife.OnClick;
 import static net.iquesoft.iquephoto.presentation.presenter.activity.ShareActivityPresenterImpl.FACEBOOK_ID;
 import static net.iquesoft.iquephoto.presentation.presenter.activity.ShareActivityPresenterImpl.INSTAGRAM_ID;
 
-public class ShareActivity extends BaseActivity implements ShareView, IHasComponent<IShareActivityComponent> {
+public class ShareActivity extends BaseActivity implements ShareView, HasComponent<IShareActivityComponent> {
 
     private Bitmap mBitmap;
 

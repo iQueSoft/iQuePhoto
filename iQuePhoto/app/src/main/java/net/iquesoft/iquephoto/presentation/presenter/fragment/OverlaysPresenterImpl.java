@@ -7,13 +7,13 @@ import javax.inject.Inject;
 
 import static net.iquesoft.iquephoto.core.EditorCommand.OVERLAY;
 
-public class OverlayFragmentPresenterImpl implements OverlayPresenter {
+public class OverlaysPresenterImpl implements OverlaysPresenter {
 
     private OverlayView mView;
     private EditorView mEditorView;
 
     @Inject
-    public OverlayFragmentPresenterImpl(EditorView editorView) {
+    public OverlaysPresenterImpl(EditorView editorView) {
         mEditorView = editorView;
     }
 

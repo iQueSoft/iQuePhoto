@@ -20,7 +20,7 @@ import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseActivity;
 import net.iquesoft.iquephoto.core.EditorCommand;
 import net.iquesoft.iquephoto.core.ImageEditorView;
-import net.iquesoft.iquephoto.di.IHasComponent;
+import net.iquesoft.iquephoto.di.HasComponent;
 import net.iquesoft.iquephoto.di.components.IApplicationComponent;
 import net.iquesoft.iquephoto.di.components.DaggerIEditorActivityComponent;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
@@ -54,7 +54,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class EditorActivity extends BaseActivity implements EditorView, IHasComponent<IEditorActivityComponent> {
+public class EditorActivity extends BaseActivity implements EditorView, HasComponent<IEditorActivityComponent> {
 
     private Bitmap mBitmap;
     private FragmentManager mFragmentManager;

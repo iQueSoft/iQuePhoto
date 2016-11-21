@@ -13,7 +13,7 @@ import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapter.ImageAlbumsAdapter;
 import net.iquesoft.iquephoto.adapter.ImagesAdapter;
 import net.iquesoft.iquephoto.common.BaseActivity;
-import net.iquesoft.iquephoto.di.IHasComponent;
+import net.iquesoft.iquephoto.di.HasComponent;
 import net.iquesoft.iquephoto.di.components.DaggerIGalleryActivityComponent;
 import net.iquesoft.iquephoto.di.components.IApplicationComponent;
 import net.iquesoft.iquephoto.di.components.IGalleryActivityComponent;
@@ -22,8 +22,6 @@ import net.iquesoft.iquephoto.model.Image;
 import net.iquesoft.iquephoto.model.ImageAlbum;
 import net.iquesoft.iquephoto.presentation.view.activity.GalleryView;
 import net.iquesoft.iquephoto.presentation.presenter.activity.GalleryActivityPresenterImpl;
-import net.iquesoft.iquephoto.ui.fragment.GalleryAlbumsFragment;
-import net.iquesoft.iquephoto.ui.fragment.GalleryImagesFragment;
 
 import java.util.List;
 
@@ -34,7 +32,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 // TODO: Check image orientation.
-public class GalleryActivity extends BaseActivity implements GalleryView, IHasComponent<IGalleryActivityComponent> {
+public class GalleryActivity extends BaseActivity implements GalleryView, HasComponent<IGalleryActivityComponent> {
 
     private IGalleryActivityComponent mComponent;
 

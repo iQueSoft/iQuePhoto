@@ -5,6 +5,7 @@ import android.app.Application;
 import net.iquesoft.iquephoto.PhotoApplication;
 import net.iquesoft.iquephoto.ui.fragment.AddTextFragment;
 import net.iquesoft.iquephoto.ui.fragment.AdjustFragment;
+import net.iquesoft.iquephoto.ui.fragment.Camera2Fragment;
 import net.iquesoft.iquephoto.ui.fragment.DrawingFragment;
 import net.iquesoft.iquephoto.ui.fragment.FiltersFragment;
 import net.iquesoft.iquephoto.ui.fragment.FramesFragment;
@@ -120,5 +121,11 @@ public class ApplicationModule {
     @Singleton
     SliderControlFragment provideSliderControlFragment() {
         return new SliderControlFragment();
+    }
+
+    @Provides
+    @Singleton
+    Camera2Fragment provideCamera2Fragment() {
+        return new Camera2Fragment();
     }
 }

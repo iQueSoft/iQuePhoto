@@ -16,7 +16,7 @@ import net.iquesoft.iquephoto.core.EditorCommand;
 import net.iquesoft.iquephoto.core.ImageEditorView;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
 import net.iquesoft.iquephoto.model.Filter;
-import net.iquesoft.iquephoto.presentation.presenter.fragment.FiltersFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presentation.presenter.fragment.FiltersPresenterImpl;
 import net.iquesoft.iquephoto.presentation.view.activity.EditorView;
 import net.iquesoft.iquephoto.presentation.view.fragment.FiltersView;
 
@@ -40,7 +40,7 @@ public class FiltersFragment extends BaseFragment implements FiltersView {
     EditorView editorActivityView;
 
     @Inject
-    FiltersFragmentPresenterImpl presenter;
+    FiltersPresenterImpl presenter;
 
     @BindView(R.id.filterSeekBar)
     DiscreteSeekBar seekBar;

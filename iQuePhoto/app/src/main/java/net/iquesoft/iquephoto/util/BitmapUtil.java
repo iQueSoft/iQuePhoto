@@ -2,7 +2,6 @@ package net.iquesoft.iquephoto.util;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v8.renderscript.Allocation;
@@ -18,9 +17,11 @@ import java.util.Date;
 
 public class BitmapUtil {
 
+    // FIXME: Something wrong with this.
     public static Uri getBitmapUri(Context context, Bitmap bitmap) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+
         String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmm").format(new Date());
         String title = "iQuePhoto_" + timeStamp;
         String path = MediaStore.Images.Media.
@@ -74,12 +75,12 @@ public class BitmapUtil {
 
     public static Bitmap getBlurImage(Context context, Bitmap bitmap, int width, int height) {
         Bitmap src = bitmap.copy(bitmap.getConfig(), true);
-        Bitmap inputBitmap = Bitmap.createScaledBitmap(src, width, height, false);
-        Bitmap outputBitmap = Bitmap.createBitmap(inputBitmap);
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(src, width, height, false);
+        Bitmap outputBitmap = Bitmap.createBitmap(scaledBitmap);
 
         RenderScript rs = RenderScript.create(context);
         ScriptIntrinsicBlur theIntrinsic = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
-        Allocation tmpIn = Allocation.createFromBitmap(rs, inputBitmap);
+        Allocation tmpIn = Allocation.createFromBitmap(rs, scaledBitmap);
         Allocation tmpOut = Allocation.createFromBitmap(rs, outputBitmap);
         theIntrinsic.setRadius(7.5f);
         theIntrinsic.setInput(tmpIn);

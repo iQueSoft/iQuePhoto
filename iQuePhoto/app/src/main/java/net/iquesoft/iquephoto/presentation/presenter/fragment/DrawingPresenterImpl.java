@@ -7,12 +7,12 @@ import javax.inject.Inject;
 
 import static net.iquesoft.iquephoto.core.EditorCommand.DRAWING;
 
-public class DrawingFragmentPresenterImpl implements DrawingPresenter {
+public class DrawingPresenterImpl implements DrawingPresenter {
     private DrawingView mView;
     private EditorView mEditorView;
 
     @Inject
-    public DrawingFragmentPresenterImpl(EditorView editorView) {
+    public DrawingPresenterImpl(EditorView editorView) {
         mEditorView = editorView;
     }
 

@@ -1,5 +1,6 @@
 package net.iquesoft.iquephoto.di.modules;
 
+import net.iquesoft.iquephoto.presentation.presenter.fragment.Camera2PresenterImpl;
 import net.iquesoft.iquephoto.presentation.view.activity.CameraView;
 
 import dagger.Module;
@@ -18,4 +19,10 @@ public class CameraActivityModule {
     CameraView provideCameraActivityView() {
         return mView;
     }
+
+    @Provides
+    Camera2PresenterImpl provideCamera2PresenterImpl() {
+        return new Camera2PresenterImpl();
+    }
+
 }

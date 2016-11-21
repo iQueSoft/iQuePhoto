@@ -7,13 +7,13 @@ import javax.inject.Inject;
 
 import static net.iquesoft.iquephoto.core.EditorCommand.FRAMES;
 
-public class FramesFragmentPresenterImpl implements FramesPresenter {
+public class FramesPresenterImpl implements FramesPresenter {
 
     private FramesView mView;
     private EditorView mEditorView;
 
     @Inject
-    public FramesFragmentPresenterImpl(EditorView editorView) {
+    public FramesPresenterImpl(EditorView editorView) {
         mEditorView = editorView;
     }
 

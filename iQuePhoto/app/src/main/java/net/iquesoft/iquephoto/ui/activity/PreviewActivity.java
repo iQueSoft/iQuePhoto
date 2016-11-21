@@ -17,7 +17,7 @@ import com.isseiaoki.simplecropview.CropImageView;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseActivity;
-import net.iquesoft.iquephoto.di.IHasComponent;
+import net.iquesoft.iquephoto.di.HasComponent;
 import net.iquesoft.iquephoto.di.components.DaggerICropActivityComponent;
 import net.iquesoft.iquephoto.di.components.IApplicationComponent;
 import net.iquesoft.iquephoto.di.components.ICropActivityComponent;
@@ -35,7 +35,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 // TODO: Replace crop to EditorActivity like as tool.
-public class PreviewActivity extends BaseActivity implements PreviewView, IHasComponent<ICropActivityComponent> {
+public class PreviewActivity extends BaseActivity implements PreviewView, HasComponent<ICropActivityComponent> {
 
     private Bitmap mBitmap;
 

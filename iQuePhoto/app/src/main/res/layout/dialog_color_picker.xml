@@ -1,18 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="300dp"
+    android:layout_width="320dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:paddingLeft="20dp"
-    android:paddingTop="20dp">
+    android:paddingTop="10dp">
 
     <TextView
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
         android:text="@string/select_color"
         android:textColor="@android:color/black"
         android:textSize="18sp"
         android:textStyle="bold" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/rgbButton"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/rgb"
+            android:theme="@style/FlatButtonControlWhite" />
+
+        <Button
+            android:id="@+id/argbButton"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/argb"
+            android:theme="@style/FlatButtonControlWhite" />
+    </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/colorRecyclerView"
@@ -32,9 +60,9 @@
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/colorApplyButton"
-            android:layout_toLeftOf="@+id/colorApplyButton"
-            android:layout_toStartOf="@+id/colorApplyButton"
+            android:layout_alignTop="@+id/rgbApplyButton"
+            android:layout_toLeftOf="@+id/rgbApplyButton"
+            android:layout_toStartOf="@+id/rgbApplyButton"
             android:text="@string/cancel"
             android:theme="@style/FlatButtonControlWhite" />
 

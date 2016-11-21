@@ -77,7 +77,7 @@ public class ColorAdapter extends RecyclerView.Adapter<ColorAdapter.ViewHolder> 
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.colorView)
+        @BindView(R.id.rgbFrameLayout)
         ImageView colorView;
 
         @BindView(R.id.colorSelected)

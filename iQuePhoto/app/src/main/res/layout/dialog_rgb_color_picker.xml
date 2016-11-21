@@ -6,16 +6,16 @@
     android:paddingBottom="5dp">
 
     <FrameLayout
-        android:id="@+id/colorView"
+        android:id="@+id/rgbFrameLayout"
         android:layout_width="match_parent"
         android:layout_height="325dp"
         android:background="@color/red" />
 
     <GridLayout
-        android:id="@+id/rgbController"
+        android:id="@+id/rgbGridLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/colorView"
+        android:layout_below="@+id/rgbFrameLayout"
         android:columnCount="4"
         android:padding="10dp"
         android:rowCount="4">
@@ -32,7 +32,7 @@
             android:textStyle="bold" />
 
         <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
-            android:id="@+id/redSeekBar"
+            android:id="@+id/rgbRSeekBar"
             android:layout_width="285dp"
             android:layout_height="wrap_content"
             android:layout_column="1"
@@ -48,7 +48,7 @@
             app:dsb_value="255" />
 
         <TextView
-            android:id="@+id/redSeekBarValue"
+            android:id="@+id/rgbRValueTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_column="2"
@@ -71,7 +71,7 @@
             android:textStyle="bold" />
 
         <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
-            android:id="@+id/greenSeekBar"
+            android:id="@+id/rgbGSeekBar"
             android:layout_width="285dp"
             android:layout_height="wrap_content"
             android:layout_column="1"
@@ -86,7 +86,7 @@
             app:dsb_value="0" />
 
         <TextView
-            android:id="@+id/greenSeekBarValue"
+            android:id="@+id/rgbGValueTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_column="2"
@@ -109,7 +109,7 @@
             android:textStyle="bold" />
 
         <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
-            android:id="@+id/blueSeekBar"
+            android:id="@+id/rgbBSeekBar"
             android:layout_width="285dp"
             android:layout_height="wrap_content"
             android:layout_column="1"
@@ -125,7 +125,7 @@
             app:dsb_value="0" />
 
         <TextView
-            android:id="@+id/blueSeekBarValue"
+            android:id="@+id/rgbBValueTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_column="2"
@@ -138,28 +138,28 @@
     </GridLayout>
 
     <Button
-        android:id="@+id/colorApplyButton"
+        android:id="@+id/rgbApplyButton"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="false"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/rgbController"
+        android:layout_below="@+id/rgbGridLayout"
         android:layout_marginRight="10dp"
         android:text="@string/apply"
         android:theme="@style/FlatButtonControlWhite" />
 
     <Button
-        android:id="@+id/colorCancelButton"
+        android:id="@+id/rgbCancelButton"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/colorApplyButton"
+        android:layout_alignTop="@+id/rgbApplyButton"
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
-        android:layout_toLeftOf="@+id/colorApplyButton"
-        android:layout_toStartOf="@+id/colorApplyButton"
+        android:layout_toLeftOf="@+id/rgbApplyButton"
+        android:layout_toStartOf="@+id/rgbApplyButton"
         android:text="@string/cancel"
         android:theme="@style/FlatButtonControlWhite" />
 

@@ -18,28 +18,33 @@ import butterknife.OnClick;
 
 public class RGBColorPickerDialog extends Dialog implements DiscreteSeekBar.OnProgressChangeListener {
 
-    private int color;
-    private int r, g, b;
+    private int mColor;
 
-    @BindView(R.id.redSeekBarValue)
+    private int mR;
+    private int mG;
+    private int mB;
+
+    private ColorPickerDialog.OnColorClickListener mOnColorClickListener;
+
+    @BindView(R.id.rgbRValueTextView)
     TextView redValueTextView;
 
-    @BindView(R.id.greenSeekBarValue)
+    @BindView(R.id.rgbGValueTextView)
     TextView greenValueTextView;
 
-    @BindView(R.id.blueSeekBarValue)
+    @BindView(R.id.rgbBValueTextView)
     TextView blueValueTextView;
 
-    @BindView(R.id.colorView)
+    @BindView(R.id.rgbFrameLayout)
     FrameLayout colorView;
 
-    @BindView(R.id.redSeekBar)
+    @BindView(R.id.rgbRSeekBar)
     DiscreteSeekBar redSeekBar;
 
-    @BindView(R.id.greenSeekBar)
+    @BindView(R.id.rgbGSeekBar)
     DiscreteSeekBar greenSeekBar;
 
-    @BindView(R.id.blueSeekBar)
+    @BindView(R.id.rgbBSeekBar)
     DiscreteSeekBar blueSeekBar;
 
     public RGBColorPickerDialog(Context context) {
@@ -54,25 +59,26 @@ public class RGBColorPickerDialog extends Dialog implements DiscreteSeekBar.OnPr
 
         ButterKnife.bind(this);
 
-        r = redSeekBar.getProgress();
-        g = greenSeekBar.getProgress();
-        b = greenSeekBar.getProgress();
+        mR = redSeekBar.getProgress();
+        mG = greenSeekBar.getProgress();
+        mB = greenSeekBar.getProgress();
 
-        color = Color.rgb(r, g, b);
+        mColor = Color.rgb(mR, mG, mB);
 
         redSeekBar.setOnProgressChangeListener(this);
         greenSeekBar.setOnProgressChangeListener(this);
         blueSeekBar.setOnProgressChangeListener(this);
     }
 
-    @OnClick(R.id.colorApplyButton)
-    public void onClickApplyButton() {
-        this.color = Color.rgb(r, g, b);
+    @OnClick(R.id.rgbApplyButton)
+    void onClickApplyButton() {
+        mColor = Color.rgb(mR, mG, mB);
+        mOnColorClickListener.onClick(mColor);
         dismiss();
     }
 
-    @OnClick(R.id.colorCancelButton)
-    public void onClickCancel() {
+    @OnClick(R.id.rgbCancelButton)
+    void onClickCancel() {
         dismiss();
     }
 
@@ -80,28 +86,23 @@ public class RGBColorPickerDialog extends Dialog implements DiscreteSeekBar.OnPr
         colorView.setBackgroundColor(Color.rgb(red, green, blue));
     }
 
-    public int getColor() {
-        return color;
-    }
-
-
     @Override
     public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
         switch (seekBar.getId()) {
-            case R.id.redSeekBar:
-                r = value;
+            case R.id.rgbRSeekBar:
+                mR = value;
                 redValueTextView.setText(String.valueOf(value));
-                setColor(r, g, b);
+                setColor(mR, mG, mB);
                 break;
-            case R.id.greenSeekBar:
-                g = value;
+            case R.id.rgbGSeekBar:
+                mG = value;
                 greenValueTextView.setText(String.valueOf(value));
-                setColor(r, g, b);
+                setColor(mR, mG, mB);
                 break;
-            case R.id.blueSeekBar:
-                b = value;
+            case R.id.rgbBSeekBar:
+                mB = value;
                 blueValueTextView.setText(String.valueOf(value));
-                setColor(r, g, b);
+                setColor(mR, mG, mB);
                 break;
         }
     }
@@ -116,5 +117,7 @@ public class RGBColorPickerDialog extends Dialog implements DiscreteSeekBar.OnPr
 
     }
 
-
+    public void setOnColorClickListener(ColorPickerDialog.OnColorClickListener onColorClickListener) {
+        mOnColorClickListener = onColorClickListener;
+    }
 }

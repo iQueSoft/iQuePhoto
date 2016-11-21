@@ -19,7 +19,11 @@ import butterknife.OnClick;
 public class ColorPickerDialog extends Dialog {
     private int mColor;
     private Context mContext;
-    private OnColorClickListener mListener;
+
+    private RGBColorPickerDialog mRGBColorPickerDialog;
+    private ARGBColorPickerDialog mARGBColorPickerDialog;
+
+    private OnColorClickListener mOnColorClickListener;
 
     public interface OnColorClickListener {
         void onClick(int color);
@@ -33,6 +37,9 @@ public class ColorPickerDialog extends Dialog {
     public ColorPickerDialog(Context context) {
         super(context);
         mContext = context;
+
+        mRGBColorPickerDialog = new RGBColorPickerDialog(context);
+        mARGBColorPickerDialog = new ARGBColorPickerDialog(context);
     }
 
     @Override
@@ -55,7 +62,7 @@ public class ColorPickerDialog extends Dialog {
 
     @OnClick(R.id.applyColor)
     void onClickApply() {
-        mListener.onClick(mColor);
+        mOnColorClickListener.onClick(mColor);
         dismiss();
     }
 
@@ -64,7 +71,23 @@ public class ColorPickerDialog extends Dialog {
         dismiss();
     }
 
-    public void setOnColorClickListener(OnColorClickListener listener) {
-        mListener = listener;
+    public void setOnColorClickListener(OnColorClickListener onColorClickListener) {
+        mOnColorClickListener = onColorClickListener;
+
+        mRGBColorPickerDialog.setOnColorClickListener(onColorClickListener);
+        mARGBColorPickerDialog.setOnColorClickListener(onColorClickListener);
     }
+
+    @OnClick(R.id.rgbButton)
+    void onClickRGB() {
+        dismiss();
+        mRGBColorPickerDialog.show();
+    }
+
+    @OnClick(R.id.argbButton)
+    void onClikcARGB() {
+        dismiss();
+        mARGBColorPickerDialog.show();
+    }
+
 }

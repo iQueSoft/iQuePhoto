@@ -1,8 +1,10 @@
 package net.iquesoft.iquephoto.di.modules;
 
 import net.iquesoft.iquephoto.presentation.presenter.activity.GalleryPresenterImpl;
+import net.iquesoft.iquephoto.presentation.presenter.fragment.CameraFiltersPresenterImpl;
 import net.iquesoft.iquephoto.presentation.presenter.fragment.GalleryAlbumsPresenterImpl;
 import net.iquesoft.iquephoto.presentation.presenter.fragment.GalleryImagesPresenterImpl;
+import net.iquesoft.iquephoto.presentation.presenter.fragment.interfaces.CameraFiltersPresenter;
 import net.iquesoft.iquephoto.presentation.view.activity.GalleryView;
 
 import dagger.Module;

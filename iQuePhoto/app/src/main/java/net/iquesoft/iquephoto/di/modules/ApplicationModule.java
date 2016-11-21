@@ -6,6 +6,8 @@ import net.iquesoft.iquephoto.PhotoApplication;
 import net.iquesoft.iquephoto.ui.fragment.AddTextFragment;
 import net.iquesoft.iquephoto.ui.fragment.AdjustFragment;
 import net.iquesoft.iquephoto.ui.fragment.Camera2Fragment;
+import net.iquesoft.iquephoto.ui.fragment.CameraFiltersFragment;
+import net.iquesoft.iquephoto.ui.fragment.CameraFragment;
 import net.iquesoft.iquephoto.ui.fragment.CameraMainFragment;
 import net.iquesoft.iquephoto.ui.fragment.DrawingFragment;
 import net.iquesoft.iquephoto.ui.fragment.FiltersFragment;
@@ -134,5 +136,17 @@ public class ApplicationModule {
     @Singleton
     Camera2Fragment provideCamera2Fragment() {
         return new Camera2Fragment();
+    }
+
+    @Provides
+    @Singleton
+    CameraFiltersFragment provideCameraFiltersFragment() {
+        return new CameraFiltersFragment();
+    }
+
+    @Provides
+    @Singleton
+    CameraFragment provideCameraFragment() {
+        return new CameraFragment();
     }
 }

@@ -6,6 +6,8 @@ import net.iquesoft.iquephoto.model.Overlay;
 import net.iquesoft.iquephoto.ui.fragment.AddTextFragment;
 import net.iquesoft.iquephoto.ui.fragment.AdjustFragment;
 import net.iquesoft.iquephoto.ui.fragment.Camera2Fragment;
+import net.iquesoft.iquephoto.ui.fragment.CameraFiltersFragment;
+import net.iquesoft.iquephoto.ui.fragment.CameraFragment;
 import net.iquesoft.iquephoto.ui.fragment.CameraMainFragment;
 import net.iquesoft.iquephoto.ui.fragment.DrawingFragment;
 import net.iquesoft.iquephoto.ui.fragment.FiltersFragment;
@@ -61,5 +63,9 @@ public interface IApplicationComponent {
 
     CameraMainFragment cameraMainFragment();
 
+    CameraFragment cameraFragment();
+
     Camera2Fragment camera2Fragment();
+
+    CameraFiltersFragment cameraFiltersFragment();
 }

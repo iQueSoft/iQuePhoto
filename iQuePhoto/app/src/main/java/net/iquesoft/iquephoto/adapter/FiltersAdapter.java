@@ -61,12 +61,23 @@ public class FiltersAdapter extends RecyclerView.Adapter<FiltersAdapter.ViewHold
 
         holder.filterTitle.setText(filter.getTitle());
 
-        Picasso.with(mContext)
-                .load(DataHolder.getInstance().getImageUri())
-                .fit()
-                .centerCrop()
-                .noPlaceholder()
-                .into(holder.filterImageView);
+        Uri uri = null;
+        if (DataHolder.getInstance().getImageUri() != null) {
+            uri = DataHolder.getInstance().getImageUri();
+            Picasso.with(mContext)
+                    .load(uri)
+                    .fit()
+                    .centerCrop()
+                    .noPlaceholder()
+                    .into(holder.filterImageView);
+        } else {
+            Picasso.with(mContext)
+                    .load(R.drawable.buldog)
+                    .fit()
+                    .centerCrop()
+                    .noPlaceholder()
+                    .into(holder.filterImageView);
+        }
 
         holder.filterImageView.setColorFilter(new ColorMatrixColorFilter(filter.getColorMatrix()));
 

@@ -2,6 +2,8 @@ package net.iquesoft.iquephoto.di.modules;
 
 import net.iquesoft.iquephoto.presentation.presenter.activity.CameraPresenterImpl;
 import net.iquesoft.iquephoto.presentation.presenter.fragment.Camera2PresenterImpl;
+import net.iquesoft.iquephoto.presentation.presenter.fragment.CameraFiltersPresenterImpl;
+import net.iquesoft.iquephoto.presentation.presenter.fragment.CameraFragmentPresenterImpl;
 import net.iquesoft.iquephoto.presentation.presenter.fragment.CameraMainPresenterImpl;
 import net.iquesoft.iquephoto.presentation.view.activity.CameraView;
 
@@ -33,7 +35,17 @@ public class CameraActivityModule {
     }
 
     @Provides
+    CameraFragmentPresenterImpl provideCameraFragmentPresenterImpl() {
+        return new CameraFragmentPresenterImpl(mView);
+    }
+
+    @Provides
     Camera2PresenterImpl provideCamera2PresenterImpl() {
-        return new Camera2PresenterImpl();
+        return new Camera2PresenterImpl(mView);
+    }
+
+    @Provides
+    CameraFiltersPresenterImpl provideCameraFiltersPresenterImpl() {
+        return new CameraFiltersPresenterImpl(mView);
     }
 }

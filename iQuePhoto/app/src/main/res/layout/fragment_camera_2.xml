@@ -1,7 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<net.iquesoft.iquephoto.core.AutoFitCameraView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/camera2View"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent" />
 
-</RelativeLayout>

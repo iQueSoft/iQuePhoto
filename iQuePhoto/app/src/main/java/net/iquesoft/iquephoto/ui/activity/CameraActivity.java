@@ -1,5 +1,7 @@
 package net.iquesoft.iquephoto.ui.activity;
 
+import android.graphics.ColorMatrix;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -14,6 +16,7 @@ import net.iquesoft.iquephoto.di.components.IApplicationComponent;
 import net.iquesoft.iquephoto.di.components.ICameraActivityComponent;
 import net.iquesoft.iquephoto.di.modules.CameraActivityModule;
 import net.iquesoft.iquephoto.presentation.presenter.activity.CameraPresenterImpl;
+import net.iquesoft.iquephoto.presentation.presenter.fragment.Camera2PresenterImpl;
 import net.iquesoft.iquephoto.presentation.view.activity.CameraActivityView;
 import net.iquesoft.iquephoto.ui.fragment.Camera2Fragment;
 import net.iquesoft.iquephoto.ui.fragment.CameraFiltersFragment;
@@ -28,6 +31,9 @@ public class CameraActivity extends BaseActivity implements CameraActivityView, 
 
     @Inject
     CameraPresenterImpl presenter;
+
+    @Inject
+    Camera2PresenterImpl camera2Presenter;
 
     @Inject
     CameraFragment cameraFragment;
@@ -96,9 +102,22 @@ public class CameraActivity extends BaseActivity implements CameraActivityView, 
         super.onBackPressed();
     }
 
+    @Override
+    public void setFilter(ColorMatrix colorMatrix) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            camera2Fragment.setFilter(colorMatrix);
+        }
+    }
+
     @OnClick(R.id.cameraCaptureImageButton)
     void onClickCapture() {
         // TODO: Camera capture button.
+        //camera2Presenter.takePhoto();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            camera2Fragment.takePhoto();
+        } else {
+            // TODO: Camera capture for camera 1.
+        }
     }
 
     @OnClick(R.id.cameraCloseImageButton)

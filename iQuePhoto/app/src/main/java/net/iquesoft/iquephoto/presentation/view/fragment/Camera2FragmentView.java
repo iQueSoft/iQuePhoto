@@ -6,4 +6,6 @@ public interface Camera2FragmentView {
     //void changeFilter(Paint paint);
 
     //void closeCamera();
+
+    void takePhoto();
 }

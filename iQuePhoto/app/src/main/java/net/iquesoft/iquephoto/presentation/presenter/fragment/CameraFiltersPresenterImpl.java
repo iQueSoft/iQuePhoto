@@ -1,5 +1,7 @@
 package net.iquesoft.iquephoto.presentation.presenter.fragment;
 
+import android.graphics.ColorMatrix;
+
 import net.iquesoft.iquephoto.model.Filter;
 import net.iquesoft.iquephoto.presentation.presenter.fragment.interfaces.CameraFiltersPresenter;
 import net.iquesoft.iquephoto.presentation.view.activity.CameraActivityView;
@@ -25,5 +27,10 @@ public class CameraFiltersPresenterImpl implements CameraFiltersPresenter {
     public void init(CameraFiltersView view) {
         mView = view;
         mView.setupFiltersAdapter(mFilters);
+    }
+
+    @Override
+    public void onFilterClick(Filter filter) {
+        mCameraActivityView.setFilter(filter.getColorMatrix());
     }
 }

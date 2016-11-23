@@ -77,7 +77,7 @@ public class CameraFiltersFragment extends BaseFragment implements CameraFilters
         FiltersAdapter adapter = new FiltersAdapter(filters);
 
         adapter.setFiltersListener(filter -> {
-            //TODO: mImageEditorView.setFilter(filter.getColorMatrix());
+            presenter.onFilterClick(filter);
         });
 
         recyclerView.setLayoutManager(new LinearLayoutManager(null, LinearLayout.HORIZONTAL, false));

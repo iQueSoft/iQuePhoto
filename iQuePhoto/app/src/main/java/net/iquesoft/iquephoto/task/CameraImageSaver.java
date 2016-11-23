@@ -1,4 +1,4 @@
-package net.iquesoft.iquephoto.core;
+package net.iquesoft.iquephoto.task;
 
 import android.media.Image;
 import android.os.Build;

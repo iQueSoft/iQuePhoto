@@ -1,6 +1,9 @@
 package net.iquesoft.iquephoto.ui.fragment;
 
 import android.content.Context;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.Paint;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -11,6 +14,7 @@ import android.view.ViewGroup;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseFragment;
+import net.iquesoft.iquephoto.core.camera.Camera2Module;
 import net.iquesoft.iquephoto.core.camera.Camera2View;
 import net.iquesoft.iquephoto.di.components.ICameraActivityComponent;
 import net.iquesoft.iquephoto.presentation.presenter.fragment.Camera2PresenterImpl;
@@ -34,6 +38,8 @@ public class Camera2Fragment extends BaseFragment implements Camera2FragmentView
 
     private Unbinder mUnbinder;
 
+    private Camera2Module mCameraModule;
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -50,6 +56,9 @@ public class Camera2Fragment extends BaseFragment implements Camera2FragmentView
 
         mContext = view.getContext();
 
+        mCameraModule = new Camera2Module(getActivity(), camera2View);
+        //camera2View.setAspectRatio(0, 0);
+
         return view;
     }
 
@@ -58,15 +67,15 @@ public class Camera2Fragment extends BaseFragment implements Camera2FragmentView
         super.onResume();
         presenter.init(this);
 
-        camera2View.setActivity(getActivity());
+        mCameraModule.startHandlerThread();
 
-        camera2View.startHandlerThread();
+        camera2View.setCameraModule(mCameraModule);
     }
 
     @Override
     public void onPause() {
-        camera2View.closeCamera();
-        camera2View.stopHandlerThread();
+        mCameraModule.closeCamera();
+        mCameraModule.stopHandlerThread();
         super.onPause();
     }
 
@@ -75,5 +84,17 @@ public class Camera2Fragment extends BaseFragment implements Camera2FragmentView
         super.onDestroyView();
         mUnbinder.unbind();
 
+    }
+
+    @Override
+    public void takePhoto() {
+        mCameraModule.takePicture();
+    }
+
+    public void setFilter(ColorMatrix colorMatrix) {
+        Paint paint = new Paint();
+        paint.setColorFilter(new ColorMatrixColorFilter(colorMatrix));
+
+        camera2View.setLayerPaint(paint);
     }
 }

@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import net.iquesoft.iquephoto.model.StickersSet;
-import net.iquesoft.iquephoto.ui.fragment.ShowStickersFragment;
+import net.iquesoft.iquephoto.ui.fragment.StickersFragment;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ public class StickersPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return ShowStickersFragment.newInstance(position);
+        return StickersFragment.newInstance(position);
     }
 
     @Override

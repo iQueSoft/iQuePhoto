@@ -57,7 +57,7 @@ public class ImageAlbumsAdapter extends RecyclerView.Adapter<ImageAlbumsAdapter.
                 .centerCrop()
                 .into(holder.folderImage);
 
-        holder.folderName.setText(imageAlbum.getFolderName());
+        holder.folderName.setText(imageAlbum.getName());
         holder.folderImagesCount.setText(String.valueOf(imageAlbum.getImages().size()));
 
         holder.itemView.setOnClickListener(view -> {

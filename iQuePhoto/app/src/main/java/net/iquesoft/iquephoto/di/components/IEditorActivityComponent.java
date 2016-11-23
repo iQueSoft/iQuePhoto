@@ -9,9 +9,9 @@ import net.iquesoft.iquephoto.ui.fragment.FiltersFragment;
 import net.iquesoft.iquephoto.ui.activity.EditorActivity;
 import net.iquesoft.iquephoto.ui.fragment.FramesFragment;
 import net.iquesoft.iquephoto.ui.fragment.OverlayFragment;
-import net.iquesoft.iquephoto.ui.fragment.ShowStickersFragment;
-import net.iquesoft.iquephoto.ui.fragment.SliderControlFragment;
 import net.iquesoft.iquephoto.ui.fragment.StickersFragment;
+import net.iquesoft.iquephoto.ui.fragment.SliderControlFragment;
+import net.iquesoft.iquephoto.ui.fragment.StickersToolFragment;
 import net.iquesoft.iquephoto.ui.fragment.TiltShiftFragment;
 import net.iquesoft.iquephoto.ui.fragment.ToolsFragment;
 import net.iquesoft.iquephoto.ui.fragment.TransformFragment;
@@ -39,9 +39,9 @@ public interface IEditorActivityComponent {
 
     void inject(DrawingFragment drawingFragment);
 
-    void inject(StickersFragment stickersFragment);
+    void inject(StickersToolFragment stickersToolFragment);
 
-    void inject(ShowStickersFragment showStickersFragment);
+    void inject(StickersFragment stickersFragment);
 
     void inject(OverlayFragment overlayFragment);
 

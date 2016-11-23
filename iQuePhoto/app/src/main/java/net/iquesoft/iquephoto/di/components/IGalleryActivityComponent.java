@@ -6,6 +6,8 @@ import net.iquesoft.iquephoto.ui.activity.GalleryActivity;
 import net.iquesoft.iquephoto.ui.fragment.GalleryAlbumsFragment;
 import net.iquesoft.iquephoto.ui.fragment.GalleryImagesFragment;
 
+import javax.inject.Singleton;
+
 import dagger.Component;
 
 @ActivityScope

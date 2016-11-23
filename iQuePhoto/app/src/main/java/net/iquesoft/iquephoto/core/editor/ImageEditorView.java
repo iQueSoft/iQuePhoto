@@ -18,6 +18,7 @@ import android.os.AsyncTask;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -404,7 +405,6 @@ public class ImageEditorView extends ImageView {
         invalidate();
     }
 
-
     private Matrix getStraightenTransformMatrix(float value) {
         Matrix matrix;
 
@@ -600,9 +600,7 @@ public class ImageEditorView extends ImageView {
                 }
                 break;
             case DRAWING:
-                if (isBrushInsideImageHorizontal(event.getX(0))
-                        && isBrushInsideImageVertical(event.getY(0)))
-                    drawingMove(event);
+                drawingMove(event);
                 break;
             case VIGNETTE:
                 mEditorVignette.actionMove(event);
@@ -709,7 +707,7 @@ public class ImageEditorView extends ImageView {
     }
 
     public void setBrushColor(@ColorRes int color) {
-        mDrawingPaint.setColor(getResources().getColor(color));
+        mDrawingPaint.setColor(ResourcesCompat.getColor(getResources(), color, null));
     }
 
     public void setUndoListener(UndoListener undoListener) {
@@ -724,16 +722,6 @@ public class ImageEditorView extends ImageView {
         mBrushSize = brushSize; //TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, brushSize, mDisplayMetrics);
 
         mDrawingPaint.setStrokeWidth(mBrushSize);
-    }
-
-    private void moveSticker(MotionEvent event) {
-        //if (isStickerInsideImageHorizontal(event.getX(0), mCurrentEditorSticker) && isStickerInsideImageVertical(event.getY(0), mCurrentEditorSticker)) {
-        //mCurrentEditorSticker.getMatrix().postTranslate(event.getX(0) - mLastX, event.getY(0) - mLastY);
-
-        mLastX = event.getX(0);
-        mLastY = event.getY(0);
-        invalidate();
-        //}
     }
 
     private float distance(float x0, float x1, float y0, float y1) {
@@ -1047,17 +1035,7 @@ public class ImageEditorView extends ImageView {
         for (int i = mStickersList.size() - 1; i >= 0; i--) {
             EditorSticker editorSticker = mStickersList.get(i);
 
-            /*if (isInStickerBitmap(event, editorSticker)) {
-                mCurrentEditorSticker = editorSticker;
-
-                mMode = EditorMode.MOVE;
-
-                mLastX = event.getX(0);
-                mLastY = event.getY(0);
-                return;
-            }*/
-            //} else if (editorSticker.isInEdit()) {
-            if (editorSticker.getDstRect().contains(event.getX(), event.getY())) {
+            if (editorSticker.isInside(event)) {
                 mCurrentEditorSticker = mStickersList.get(i);
                 mMode = EditorMode.MOVE;
 
@@ -1065,7 +1043,7 @@ public class ImageEditorView extends ImageView {
                 mLastY = event.getY();
 
                 return;
-            } else if (editorSticker.getDeleteHandleDstRect().contains(event.getX(), event.getY())) {
+            } else if (editorSticker.isInDeleteHandleButton(event)) {
                 mCurrentEditorSticker = null;
 
                 mMode = EditorMode.NONE;
@@ -1073,18 +1051,19 @@ public class ImageEditorView extends ImageView {
                 mStickersList.remove(i);
                 invalidate();
                 return;
-            /*} else if (isInButton(event, editorSticker.getRotateHandleRect())) {
-                mMode = EditorMode.ROTATE;
-                mCurrentEditorSticker = null;
-                return;*/
-            } else if (editorSticker.getResizeHandleDstRect().contains(event.getX(), event.getY())) {
+            } else if (editorSticker.isInResizeHandleButton(event)) {
                 mMode = EditorMode.RESIZE;
-                /*midPointToStartPoint(event, editorSticker);
-                editorSticker.setLength(diagonalLength(event, editorSticker.getPoint()));*/
                 // TODO: Resize sticker.
                 return;
+            } else if (editorSticker.isInFrontHandleButton(event)) {
+                mMode = EditorMode.NONE;
+
+                EditorSticker sticker = mStickersList.remove(i);
+                mStickersList.add(sticker);
+
+                invalidate();
+                return;
             }
-            // }
         }
 
         mCurrentEditorSticker = null;

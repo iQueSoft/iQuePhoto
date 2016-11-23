@@ -13,6 +13,7 @@ import net.iquesoft.iquephoto.common.BaseFragment;
 import net.iquesoft.iquephoto.di.components.IGalleryActivityComponent;
 import net.iquesoft.iquephoto.model.ImageAlbum;
 import net.iquesoft.iquephoto.presentation.presenter.fragment.GalleryAlbumsPresenterImpl;
+import net.iquesoft.iquephoto.presentation.presenter.fragment.GalleryImagesPresenterImpl;
 import net.iquesoft.iquephoto.presentation.view.fragment.GalleryAlbumsView;
 
 import java.util.List;
@@ -21,25 +22,21 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.Unbinder;
 
 public class GalleryAlbumsFragment extends BaseFragment implements GalleryAlbumsView {
-
-    private Unbinder mUnbinder;
-
     @Inject
     GalleryAlbumsPresenterImpl presenter;
 
     @BindView(R.id.albumsRecyclerView)
     RecyclerView recyclerView;
 
-    private ImageAlbumsAdapter mAdapter;
+    private Unbinder mUnbinder;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        this.getComponent(IGalleryActivityComponent.class).inject(this);
+        getComponent(IGalleryActivityComponent.class).inject(this);
     }
 
     @Override
@@ -55,6 +52,7 @@ public class GalleryAlbumsFragment extends BaseFragment implements GalleryAlbums
     public void onResume() {
         super.onResume();
         presenter.init(this);
+        presenter.fetchImages(getContext());
     }
 
     @Override
@@ -65,13 +63,13 @@ public class GalleryAlbumsFragment extends BaseFragment implements GalleryAlbums
 
     @Override
     public void setupAdapter(List<ImageAlbum> imageAlbums) {
-        mAdapter = new ImageAlbumsAdapter(imageAlbums);
+        ImageAlbumsAdapter adapter = new ImageAlbumsAdapter(imageAlbums);
 
-        mAdapter.setOnAlbumClickListener(imageAlbum -> {
+        adapter.setOnAlbumClickListener(imageAlbum -> {
             presenter.showAlbumImages(imageAlbum);
         });
 
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
-        recyclerView.setAdapter(mAdapter);
+        recyclerView.setAdapter(adapter);
     }
 }

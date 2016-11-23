@@ -7,6 +7,8 @@ import net.iquesoft.iquephoto.presentation.presenter.fragment.GalleryImagesPrese
 import net.iquesoft.iquephoto.presentation.presenter.fragment.interfaces.CameraFiltersPresenter;
 import net.iquesoft.iquephoto.presentation.view.activity.GalleryView;
 
+import javax.inject.Singleton;
+
 import dagger.Module;
 import dagger.Provides;
 

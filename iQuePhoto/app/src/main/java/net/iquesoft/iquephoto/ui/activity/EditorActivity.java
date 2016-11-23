@@ -36,7 +36,7 @@ import net.iquesoft.iquephoto.ui.fragment.FiltersFragment;
 import net.iquesoft.iquephoto.ui.fragment.FramesFragment;
 import net.iquesoft.iquephoto.ui.fragment.OverlayFragment;
 import net.iquesoft.iquephoto.ui.fragment.SliderControlFragment;
-import net.iquesoft.iquephoto.ui.fragment.StickersFragment;
+import net.iquesoft.iquephoto.ui.fragment.StickersToolFragment;
 import net.iquesoft.iquephoto.ui.fragment.TiltShiftFragment;
 import net.iquesoft.iquephoto.ui.fragment.TransformFragment;
 import net.iquesoft.iquephoto.ui.fragment.TransformHorizontalFragment;
@@ -72,7 +72,7 @@ public class EditorActivity extends BaseActivity implements EditorView, HasCompo
     OverlayFragment overlayFragment;
 
     @Inject
-    StickersFragment stickersFragment;
+    StickersToolFragment stickersToolFragment;
 
     @Inject
     FramesFragment framesFragment;
@@ -214,7 +214,7 @@ public class EditorActivity extends BaseActivity implements EditorView, HasCompo
                 fragment = overlayFragment;
                 break;
             case STICKERS:
-                fragment = stickersFragment;
+                fragment = stickersToolFragment;
                 break;
             case FRAMES:
                 fragment = framesFragment;

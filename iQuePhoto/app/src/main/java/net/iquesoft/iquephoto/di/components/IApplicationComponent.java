@@ -10,9 +10,11 @@ import net.iquesoft.iquephoto.ui.fragment.CameraFragment;
 import net.iquesoft.iquephoto.ui.fragment.DrawingFragment;
 import net.iquesoft.iquephoto.ui.fragment.FiltersFragment;
 import net.iquesoft.iquephoto.ui.fragment.FramesFragment;
+import net.iquesoft.iquephoto.ui.fragment.GalleryAlbumsFragment;
+import net.iquesoft.iquephoto.ui.fragment.GalleryImagesFragment;
 import net.iquesoft.iquephoto.ui.fragment.OverlayFragment;
 import net.iquesoft.iquephoto.ui.fragment.SliderControlFragment;
-import net.iquesoft.iquephoto.ui.fragment.StickersFragment;
+import net.iquesoft.iquephoto.ui.fragment.StickersToolFragment;
 import net.iquesoft.iquephoto.ui.fragment.TiltShiftFragment;
 import net.iquesoft.iquephoto.ui.fragment.ToolsFragment;
 import net.iquesoft.iquephoto.ui.fragment.TransformFragment;
@@ -31,6 +33,10 @@ import dagger.Component;
 public interface IApplicationComponent {
     void inject(PhotoApplication application);
 
+    GalleryAlbumsFragment galleryAlbumsFragment();
+
+    GalleryImagesFragment galleryImagesFragment();
+
     ToolsFragment toolsFragment();
 
     FiltersFragment filtersFragment();
@@ -39,7 +45,7 @@ public interface IApplicationComponent {
 
     OverlayFragment overlayFragment();
 
-    StickersFragment stickersFragment();
+    StickersToolFragment stickersFragment();
 
     FramesFragment framesFragment();
 

@@ -2,6 +2,8 @@ package net.iquesoft.iquephoto.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -11,7 +13,6 @@ import android.widget.TextView;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapter.ImageAlbumsAdapter;
-import net.iquesoft.iquephoto.adapter.ImagesAdapter;
 import net.iquesoft.iquephoto.common.BaseActivity;
 import net.iquesoft.iquephoto.di.HasComponent;
 import net.iquesoft.iquephoto.di.components.DaggerIGalleryActivityComponent;
@@ -20,8 +21,12 @@ import net.iquesoft.iquephoto.di.components.IGalleryActivityComponent;
 import net.iquesoft.iquephoto.di.modules.GalleryActivityModule;
 import net.iquesoft.iquephoto.model.Image;
 import net.iquesoft.iquephoto.model.ImageAlbum;
+import net.iquesoft.iquephoto.presentation.presenter.fragment.GalleryAlbumsPresenterImpl;
+import net.iquesoft.iquephoto.presentation.presenter.fragment.GalleryImagesPresenterImpl;
 import net.iquesoft.iquephoto.presentation.view.activity.GalleryView;
 import net.iquesoft.iquephoto.presentation.presenter.activity.GalleryPresenterImpl;
+import net.iquesoft.iquephoto.ui.fragment.GalleryAlbumsFragment;
+import net.iquesoft.iquephoto.ui.fragment.GalleryImagesFragment;
 
 import java.util.List;
 
@@ -31,18 +36,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+// TODO: Change album images showing.
 // TODO: Check image orientation.
 public class GalleryActivity extends BaseActivity implements GalleryView, HasComponent<IGalleryActivityComponent> {
-
-    private IGalleryActivityComponent mComponent;
-
-    private ImageAlbumsAdapter mImageAlbumsAdapter;
-
     @BindView(R.id.galleryHeaderTextView)
     TextView headerTextView;
-
-    @BindView(R.id.galleryRecyclerView)
-    RecyclerView recyclerView;
 
     @BindView(R.id.galleryNoImagesLinearLayout)
     LinearLayout noImagesLinearLayout;
@@ -50,11 +48,15 @@ public class GalleryActivity extends BaseActivity implements GalleryView, HasCom
     @Inject
     GalleryPresenterImpl presenter;
 
-    /*@Inject
+    @Inject
     GalleryImagesFragment galleryImagesFragment;
 
     @Inject
-    GalleryAlbumsFragment galleryAlbumsFragment;*/
+    GalleryAlbumsFragment galleryAlbumsFragment;
+
+    private IGalleryActivityComponent mComponent;
+
+    private FragmentManager mFragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,14 +68,20 @@ public class GalleryActivity extends BaseActivity implements GalleryView, HasCom
 
         ButterKnife.bind(this);
 
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+        mFragmentManager = getSupportFragmentManager();
 
-        presenter.fetchImages(this);
+        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.galleryFragmentFrameLayout, galleryAlbumsFragment)
+                .commit();
     }
 
     @Override
     public void onBackPressed() {
-        presenter.onBackPressed(recyclerView);
+        if (mFragmentManager.getBackStackEntryCount() == 1) {
+            super.onBackPressed();
+        } else {
+            finish();
+        }
     }
 
     @Override
@@ -96,50 +104,38 @@ public class GalleryActivity extends BaseActivity implements GalleryView, HasCom
     }
 
     @Override
-    public void setupFoldersAdapter(List<ImageAlbum> imageAlba) {
-        mImageAlbumsAdapter = new ImageAlbumsAdapter(imageAlba);
-        mImageAlbumsAdapter.setOnAlbumClickListener(imageFolder -> {
-            presenter.folderClicked(imageFolder);
-        });
+    public void showImages(String albumName) {
+        headerTextView.setText(albumName);
 
-        recyclerView.setAdapter(mImageAlbumsAdapter);
+        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.galleryFragmentFrameLayout, galleryImagesFragment)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .addToBackStack(null)
+                .commit();
     }
 
     @Override
-    public void showImages(String folderName, List<Image> images) {
-        ImagesAdapter imagesAdapter = new ImagesAdapter(images);
-
-        imagesAdapter.setOnImageClickListener(image -> {
-            Intent intent = new Intent(GalleryActivity.this, PreviewActivity.class);
-            intent.putExtra("Image", image.getPath());
-            startActivity(intent);
-            finish();
-        });
-
-        recyclerView.setAdapter(imagesAdapter);
-
-        headerTextView.setText(folderName);
+    public void setAlbumImages(List<Image> images) {
+        galleryImagesFragment.setImages(images);
     }
 
     @Override
     public void showHaveNoImages() {
-        recyclerView.setVisibility(View.GONE);
         noImagesLinearLayout.setVisibility(View.VISIBLE);
     }
 
     @Override
-    public void showFolders() {
-        headerTextView.setText(R.string.gallery);
-        recyclerView.setAdapter(mImageAlbumsAdapter);
+    public void editImage(String imagePath) {
+        Intent intent = new Intent(GalleryActivity.this, PreviewActivity.class);
+        intent.putExtra("Image", imagePath);
+        startActivity(intent);
+        finish();
     }
 
-    @Override
-    public void navigateBack() {
-        super.onBackPressed();
-    }
-
+    // TODO: Maybe change startActivity() to startActivityForResult().
     @OnClick(R.id.takePhotoButton)
-    void OnClickTakePhotoButton() {
-        // TODO: Take photo from application custom camera.
+    void onClickTakePhotoButton() {
+        Intent intent = new Intent(GalleryActivity.this, CameraActivity.class);
+        startActivity(intent);
     }
 }

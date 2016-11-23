@@ -3,6 +3,7 @@ package net.iquesoft.iquephoto.di.modules;
 import android.app.Application;
 
 import net.iquesoft.iquephoto.PhotoApplication;
+import net.iquesoft.iquephoto.presentation.presenter.fragment.GalleryImagesPresenterImpl;
 import net.iquesoft.iquephoto.ui.fragment.AddTextFragment;
 import net.iquesoft.iquephoto.ui.fragment.AdjustFragment;
 import net.iquesoft.iquephoto.ui.fragment.Camera2Fragment;
@@ -11,9 +12,11 @@ import net.iquesoft.iquephoto.ui.fragment.CameraFragment;
 import net.iquesoft.iquephoto.ui.fragment.DrawingFragment;
 import net.iquesoft.iquephoto.ui.fragment.FiltersFragment;
 import net.iquesoft.iquephoto.ui.fragment.FramesFragment;
+import net.iquesoft.iquephoto.ui.fragment.GalleryAlbumsFragment;
+import net.iquesoft.iquephoto.ui.fragment.GalleryImagesFragment;
 import net.iquesoft.iquephoto.ui.fragment.OverlayFragment;
 import net.iquesoft.iquephoto.ui.fragment.SliderControlFragment;
-import net.iquesoft.iquephoto.ui.fragment.StickersFragment;
+import net.iquesoft.iquephoto.ui.fragment.StickersToolFragment;
 import net.iquesoft.iquephoto.ui.fragment.TiltShiftFragment;
 import net.iquesoft.iquephoto.ui.fragment.ToolsFragment;
 import net.iquesoft.iquephoto.ui.fragment.TransformFragment;
@@ -43,6 +46,18 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
+    GalleryAlbumsFragment provideGalleryAlbumsFragment() {
+        return new GalleryAlbumsFragment();
+    }
+
+    @Provides
+    @Singleton
+    GalleryImagesFragment provideGalleryImagesFragment() {
+        return new GalleryImagesFragment();
+    }
+
+    @Provides
+    @Singleton
     ToolsFragment provideToolsFragment() {
         return new ToolsFragment();
     }
@@ -67,8 +82,8 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    StickersFragment provideStickersFragment() {
-        return new StickersFragment();
+    StickersToolFragment provideStickersFragment() {
+        return new StickersToolFragment();
     }
 
     @Provides

@@ -7,11 +7,11 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module
-public class CropActivityModule {
+public class PreviewActivityModule {
 
     private PreviewView mView;
 
-    public CropActivityModule(PreviewView view) {
+    public PreviewActivityModule(PreviewView view) {
         mView = view;
     }
 
@@ -21,7 +21,7 @@ public class CropActivityModule {
     }
 
     @Provides
-    PreviewPresenterImpl provideCropActivityPresenterImpl() {
+    PreviewPresenterImpl providePreviewActivityPresenterImpl() {
         return new PreviewPresenterImpl(mView);
     }
 }

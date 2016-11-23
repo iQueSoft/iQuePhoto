@@ -18,10 +18,10 @@ import com.isseiaoki.simplecropview.CropImageView;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseActivity;
 import net.iquesoft.iquephoto.di.HasComponent;
-import net.iquesoft.iquephoto.di.components.DaggerICropActivityComponent;
+import net.iquesoft.iquephoto.di.components.DaggerIPreviewActivityComponent;
 import net.iquesoft.iquephoto.di.components.IApplicationComponent;
-import net.iquesoft.iquephoto.di.components.ICropActivityComponent;
-import net.iquesoft.iquephoto.di.modules.CropActivityModule;
+import net.iquesoft.iquephoto.di.components.IPreviewActivityComponent;
+import net.iquesoft.iquephoto.di.modules.PreviewActivityModule;
 import net.iquesoft.iquephoto.presentation.presenter.activity.PreviewPresenterImpl;
 import net.iquesoft.iquephoto.presentation.view.activity.PreviewView;
 import net.iquesoft.iquephoto.util.BitmapUtil;
@@ -34,8 +34,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-// TODO: Replace crop to EditorActivity like as tool.
-public class PreviewActivity extends BaseActivity implements PreviewView, HasComponent<ICropActivityComponent> {
+public class PreviewActivity extends BaseActivity implements PreviewView, HasComponent<IPreviewActivityComponent> {
 
     private Bitmap mBitmap;
 
@@ -47,7 +46,7 @@ public class PreviewActivity extends BaseActivity implements PreviewView, HasCom
     @BindView(R.id.cropImageView)
     CropImageView cropImageView;
 
-    private ICropActivityComponent mComponent;
+    private IPreviewActivityComponent mComponent;
 
     @Inject
     PreviewPresenterImpl presenter;
@@ -112,9 +111,9 @@ public class PreviewActivity extends BaseActivity implements PreviewView, HasCom
 
     @Override
     protected void setupComponent(IApplicationComponent component) {
-        mComponent = DaggerICropActivityComponent.builder()
+        mComponent = DaggerIPreviewActivityComponent.builder()
                 .iApplicationComponent(component)
-                .cropActivityModule(new CropActivityModule(this))
+                .previewActivityModule(new PreviewActivityModule(this))
                 .build();
         mComponent.inject(this);
     }
@@ -154,7 +153,7 @@ public class PreviewActivity extends BaseActivity implements PreviewView, HasCom
         return Uri.fromFile(new File(getCacheDir(), "cropped"));
     }
 
-    public ICropActivityComponent getComponent() {
+    public IPreviewActivityComponent getComponent() {
         return mComponent;
     }
 

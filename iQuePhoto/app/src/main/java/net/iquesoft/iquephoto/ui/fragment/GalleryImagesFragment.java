@@ -11,6 +11,7 @@ import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapter.ImageAlbumsAdapter;
 import net.iquesoft.iquephoto.adapter.ImagesAdapter;
 import net.iquesoft.iquephoto.common.BaseFragment;
+import net.iquesoft.iquephoto.di.HasComponent;
 import net.iquesoft.iquephoto.di.components.IGalleryActivityComponent;
 import net.iquesoft.iquephoto.model.Image;
 import net.iquesoft.iquephoto.presentation.presenter.fragment.GalleryImagesPresenterImpl;
@@ -27,13 +28,13 @@ import butterknife.Unbinder;
 public class GalleryImagesFragment extends BaseFragment implements GalleryImagesView {
     private Unbinder mUnbinder;
 
+    private List<Image> mImages;
+
     @Inject
     GalleryImagesPresenterImpl presenter;
 
     @BindView(R.id.imagesRecyclerView)
     RecyclerView recyclerView;
-
-    private ImagesAdapter mAdapter;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -63,15 +64,18 @@ public class GalleryImagesFragment extends BaseFragment implements GalleryImages
     }
 
     @Override
-    public void setupAdapter(List<Image> images) {
-        mAdapter = new ImagesAdapter(images);
+    public void setupAdapter() {
+        ImagesAdapter adapter = new ImagesAdapter(mImages);
 
-        mAdapter.setOnImageClickListener(image -> {
-
+        adapter.setOnImageClickListener(image -> {
+            presenter.setImageForEditing(image.getPath());
         });
 
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
-        recyclerView.setAdapter(mAdapter);
+        recyclerView.setAdapter(adapter);
+    }
 
+    public void setImages(List<Image> images) {
+        mImages = images;
     }
 }

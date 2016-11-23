@@ -4,16 +4,16 @@ import java.util.ArrayList;
 
 public class ImageAlbum {
 
-    private String mFolderName;
+    private String mName;
     private ArrayList<Image> mImages;
 
-    public ImageAlbum(String folderName) {
-        mFolderName = folderName;
+    public ImageAlbum(String name) {
+        mName = name;
         mImages = new ArrayList<>();
     }
 
-    public String getFolderName() {
-        return mFolderName;
+    public String getName() {
+        return mName;
     }
 
     public ArrayList<Image> getImages() {

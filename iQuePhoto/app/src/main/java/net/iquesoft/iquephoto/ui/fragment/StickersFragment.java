@@ -1,20 +1,23 @@
 package net.iquesoft.iquephoto.ui.fragment;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
+import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.adapter.StickersPagerAdapter;
+import net.iquesoft.iquephoto.adapter.StickersAdapter;
 import net.iquesoft.iquephoto.common.BaseFragment;
+import net.iquesoft.iquephoto.core.editor.ImageEditorView;
 import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
+import net.iquesoft.iquephoto.model.Sticker;
 import net.iquesoft.iquephoto.model.StickersSet;
-import net.iquesoft.iquephoto.presentation.presenter.fragment.StickersFragmentPresenterImpl;
-import net.iquesoft.iquephoto.presentation.view.fragment.StickersView;
+import net.iquesoft.iquephoto.presentation.presenter.fragment.ShowStickersFragmentPresenterImpl;
+import net.iquesoft.iquephoto.presentation.view.fragment.ShowStickersView;
 
 import java.util.List;
 
@@ -24,32 +27,31 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class StickersFragment extends BaseFragment implements StickersView {
+@SuppressLint("ValidFragment")
+public class StickersFragment extends BaseFragment implements ShowStickersView {
 
-    private List<StickersSet> mStickersSetsList = StickersSet.getStickersSetsList();
+    private int mPosition;
 
     private Unbinder mUnbinder;
 
-    private StickersPagerAdapter mPagerAdapter;
+    @BindView(R.id.stickersRecyclerView)
+    RecyclerView recyclerView;
+
+    private ImageEditorView mImageEditorView;
 
     @Inject
-    StickersFragmentPresenterImpl presenter;
+    ShowStickersFragmentPresenterImpl presenter;
 
-    @BindView(R.id.stickerTabLayout)
-    TabLayout tabLayout;
-
-    @BindView(R.id.stickersLayout)
-    LinearLayout stickersLayout;
-
-    @BindView(R.id.stickersViewPager)
-    ViewPager viewPager;
-
-    public static StickersFragment newInstance() {
+    public static StickersFragment newInstance(int position) {
         /*Bundle b = new Bundle();
         b.putString("msg", text);
         b.putString("color", color);
         f.setArguments(b);*/
-        return new StickersFragment();
+        return new StickersFragment(position);
+    }
+
+    public StickersFragment(int position) {
+        mPosition = position;
     }
 
     @Override
@@ -66,27 +68,35 @@ public class StickersFragment extends BaseFragment implements StickersView {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_stickers, container, false);
+        View view = inflater.inflate(R.layout.fragment_show_stickers, container, false);
 
-        mUnbinder = ButterKnife.bind(this, v);
+        mUnbinder = ButterKnife.bind(this, view);
 
-        mPagerAdapter = new StickersPagerAdapter(getChildFragmentManager(), getContext(), mStickersSetsList);
-        viewPager.setAdapter(mPagerAdapter);
+        mImageEditorView = DataHolder.getInstance().getEditorView();
 
-        tabLayout.setupWithViewPager(viewPager);
+        StickersAdapter adapter = new StickersAdapter(getStickers(mPosition));
+        adapter.setOnStickerClickListener(sticker -> {
+            //editorView.addSticker(sticker);
+            mImageEditorView.addSticker(sticker);
+        });
 
-        for (int i = 0; i < tabLayout.getTabCount(); i++) {
-            TabLayout.Tab tab = tabLayout.getTabAt(i);
-            StickersSet stickersSet = mStickersSetsList.get(i);
-            tab.setIcon(stickersSet.getIcon());
-        }
+        recyclerView.setLayoutManager(new GridLayoutManager(view.getContext(), 4));
+        recyclerView.setAdapter(adapter);
 
-        return v;
+        return view;
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         mUnbinder.unbind();
+    }
+
+    private List<Sticker> getStickers(int position) {
+        return StickersSet.getStickersSetsList().get(position).getStickers();
+    }
+
+    public void setPosition(int position) {
+        mPosition = position;
     }
 }

@@ -19,5 +19,11 @@ public class GalleryImagesPresenterImpl implements GalleryImagesPresenter {
     @Override
     public void init(GalleryImagesView view) {
         mView = view;
+        mView.setupAdapter();
+    }
+
+    @Override
+    public void setImageForEditing(String imagePath) {
+        mGalleryView.editImage(imagePath);
     }
 }

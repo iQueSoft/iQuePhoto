@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.model.Sticker;
@@ -23,14 +22,14 @@ public class StickersAdapter extends RecyclerView.Adapter<StickersAdapter.ViewHo
 
     private List<Sticker> mStickersList;
 
-    private OnStickerClickListener mListener;
+    private OnStickerClickListener mOnStickerClickListener;
 
     public interface OnStickerClickListener {
         void onClick(Sticker sticker);
     }
 
-    public void setOnStickerClickListener(OnStickerClickListener listener) {
-        mListener = listener;
+    public void setOnStickerClickListener(OnStickerClickListener onStickerClickListener) {
+        mOnStickerClickListener = onStickerClickListener;
     }
 
     public StickersAdapter(List<Sticker> stickers) {
@@ -50,13 +49,11 @@ public class StickersAdapter extends RecyclerView.Adapter<StickersAdapter.ViewHo
     public void onBindViewHolder(StickersAdapter.ViewHolder holder, int position) {
         final Sticker sticker = mStickersList.get(position);
 
-        holder.stickerTitle.setText(mContext.getResources().getString(sticker.getTitle()));
-
         holder.stickerImage.setImageDrawable(
                 ResourcesCompat.getDrawable(mContext.getResources(), sticker.getImage(), null)
         );
 
-        holder.stickerImage.setOnClickListener(view -> mListener.onClick(sticker));
+        holder.stickerImage.setOnClickListener(view -> mOnStickerClickListener.onClick(sticker));
     }
 
     @Override
@@ -65,9 +62,6 @@ public class StickersAdapter extends RecyclerView.Adapter<StickersAdapter.ViewHo
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.stickerTitleTextView)
-        TextView stickerTitle;
-
         @BindView(R.id.stickerImageView)
         ImageView stickerImage;
 

@@ -5,10 +5,11 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.view.MotionEvent;
 
 import net.iquesoft.iquephoto.util.RectUtil;
 
-// TODO: Make front handle button for stickers.
+// TODO: Make abstract class for this and EditorText.
 public class EditorSticker {
     private static final float MIN_SCALE = 0.15f;
     private static final int HELP_BOX_PAD = 25;
@@ -122,8 +123,8 @@ public class EditorSticker {
         //mDeleteHandleRect.offset(dx, dy);
         //mResizeHandleRect.offset(dx, dy);
 
-        mResizeHandleDstRect.offset(dx, dy);
-        mDeleteHandleDstRect.offset(dx, dy);
+        //mResizeHandleDstRect.offset(dx, dy);
+        //mDeleteHandleDstRect.offset(dx, dy);
     }
 
     public void updateRotateAndScale(final float oldx, final float oldy,
@@ -194,10 +195,10 @@ public class EditorSticker {
     public void draw(Canvas canvas) {
         canvas.drawBitmap(mBitmap, mMatrix, null);
 
-        //if (isDrawHelpTool) {
         canvas.save();
         canvas.rotate(mRotateAngle, mFrameRect.centerX(), mFrameRect.centerY());
         canvas.drawRect(mFrameRect, mEditorFrame.getPaint());
+        canvas.restore();
 
         int offsetValue = ((int) mDeleteHandleDstRect.width()) >> 1;
 
@@ -206,9 +207,26 @@ public class EditorSticker {
         mRotateHandleDstRect.offsetTo(mFrameRect.right - offsetValue, mFrameRect.top - offsetValue);
         mFrontHandleDstRect.offsetTo(mFrameRect.left - offsetValue, mFrameRect.bottom - offsetValue);
 
+        RectUtil.rotateRect(mDeleteHandleDstRect, mFrameRect.centerX(),
+                mFrameRect.centerY(), mRotateAngle);
+
+        RectUtil.rotateRect(mRotateHandleDstRect, mFrameRect.centerX(),
+                mFrameRect.centerY(), mRotateAngle);
+
+        RectUtil.rotateRect(mResizeHandleDstRect, mFrameRect.centerX(),
+                mFrameRect.centerY(), mRotateAngle);
+
+        RectUtil.rotateRect(mFrontHandleDstRect, mFrameRect.centerX(),
+                mFrameRect.centerY(), mRotateAngle);
+
         canvas.drawBitmap(mEditorFrame.getDeleteHandleBitmap(),
                 mDeleteHandleSrcRect,
                 mDeleteHandleDstRect,
+                null);
+
+        canvas.drawBitmap(mEditorFrame.getRotateHandleBitmap(),
+                mRotateHandleSrcRect,
+                mRotateHandleDstRect,
                 null);
 
         canvas.drawBitmap(mEditorFrame.getResizeHandleBitmap(),
@@ -216,19 +234,31 @@ public class EditorSticker {
                 mResizeHandleDstRect,
                 null);
 
-        canvas.restore();
-        //}
+        canvas.drawBitmap(mEditorFrame.getFrontHandleBitmap(),
+                mFrontHandleSrcRect,
+                mFrontHandleDstRect,
+                null);
+
+
     }
 
-    public RectF getDstRect() {
-        return mDstRect;
+    private void drawFrame(Canvas canvas) {
+
     }
 
-    public RectF getDeleteHandleDstRect() {
-        return mDeleteHandleDstRect;
+    public boolean isInside(MotionEvent event) {
+        return mDstRect.contains(event.getX(), event.getY());
     }
 
-    public RectF getResizeHandleDstRect() {
-        return mResizeHandleDstRect;
+    public boolean isInDeleteHandleButton(MotionEvent event) {
+        return mDeleteHandleDstRect.contains(event.getX(), event.getY());
+    }
+
+    public boolean isInResizeHandleButton(MotionEvent event) {
+        return mResizeHandleDstRect.contains(event.getX(), event.getY());
+    }
+
+    public boolean isInFrontHandleButton(MotionEvent event) {
+        return mFrontHandleDstRect.contains(event.getX(), event.getY());
     }
 }

@@ -488,8 +488,12 @@ public class Camera2Module implements ImageReader.OnImageAvailableListener {
         }
     }
 
-    private static Size chooseOptimalSize(Size[] choices, int textureViewWidth,
-                                          int textureViewHeight, int maxWidth, int maxHeight, Size aspectRatio) {
+    private static Size chooseOptimalSize(Size[] choices,
+                                          int textureViewWidth,
+                                          int textureViewHeight,
+                                          int maxWidth,
+                                          int maxHeight,
+                                          Size aspectRatio) {
 
         // Collect the supported resolutions that are at least as big as the preview Surface
         List<Size> bigEnough = new ArrayList<>();

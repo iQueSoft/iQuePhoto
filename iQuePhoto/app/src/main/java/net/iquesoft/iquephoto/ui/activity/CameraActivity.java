@@ -14,7 +14,7 @@ import net.iquesoft.iquephoto.di.components.IApplicationComponent;
 import net.iquesoft.iquephoto.di.components.ICameraActivityComponent;
 import net.iquesoft.iquephoto.di.modules.CameraActivityModule;
 import net.iquesoft.iquephoto.presentation.presenter.activity.CameraPresenterImpl;
-import net.iquesoft.iquephoto.presentation.view.activity.CameraView;
+import net.iquesoft.iquephoto.presentation.view.activity.CameraActivityView;
 import net.iquesoft.iquephoto.ui.fragment.Camera2Fragment;
 import net.iquesoft.iquephoto.ui.fragment.CameraFiltersFragment;
 import net.iquesoft.iquephoto.ui.fragment.CameraFragment;
@@ -24,7 +24,7 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class CameraActivity extends BaseActivity implements CameraView, HasComponent<ICameraActivityComponent> {
+public class CameraActivity extends BaseActivity implements CameraActivityView, HasComponent<ICameraActivityComponent> {
 
     @Inject
     CameraPresenterImpl presenter;
@@ -57,7 +57,7 @@ public class CameraActivity extends BaseActivity implements CameraView, HasCompo
     @Override
     protected void onResume() {
         super.onResume();
-        //presenter.initializeCamera(cameraFragment, camera2Fragment);
+        presenter.initializeCamera(cameraFragment, camera2Fragment);
     }
 
     @Override
@@ -77,7 +77,7 @@ public class CameraActivity extends BaseActivity implements CameraView, HasCompo
     @Override
     public void setupCamera(Fragment fragment) {
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.cameraFragmentFrameLayout, fragment)
+        fragmentTransaction.add(R.id.cameraFrameLayout, fragment)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commit();
     }

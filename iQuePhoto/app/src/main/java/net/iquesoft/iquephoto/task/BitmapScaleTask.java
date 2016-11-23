@@ -1,4 +1,4 @@
-package net.iquesoft.iquephoto.core;
+package net.iquesoft.iquephoto.task;
 
 import android.content.Context;
 import android.graphics.Bitmap;

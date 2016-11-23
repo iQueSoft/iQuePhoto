@@ -22,6 +22,7 @@ import java.util.Date;
 
 public class ImageSaveTask extends AsyncTask<Void, Void, Void> {
     private static final String TAG = ImageSaveTask.class.getSimpleName();
+
     private final static String IMAGE_STORAGE_PATH = Environment.getExternalStorageDirectory().toString() + "/" +
             android.os.Environment.DIRECTORY_DCIM + "/iQuePhoto";
 
@@ -86,6 +87,12 @@ public class ImageSaveTask extends AsyncTask<Void, Void, Void> {
     }
 
     private File getOutputMediaFile() {
+        // TODO: Change output file name.
+        long date;
+        int seconds;
+
+        SimpleDateFormat format;
+
         File mediaStorageDir = new File(IMAGE_STORAGE_PATH);
 
         if (!mediaStorageDir.exists()) {

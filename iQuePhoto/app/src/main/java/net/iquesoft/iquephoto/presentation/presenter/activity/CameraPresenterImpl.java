@@ -3,7 +3,7 @@ package net.iquesoft.iquephoto.presentation.presenter.activity;
 import android.os.Build;
 
 import net.iquesoft.iquephoto.presentation.presenter.activity.interfaces.CameraPresenter;
-import net.iquesoft.iquephoto.presentation.view.activity.CameraView;
+import net.iquesoft.iquephoto.presentation.view.activity.CameraActivityView;
 import net.iquesoft.iquephoto.ui.fragment.Camera2Fragment;
 import net.iquesoft.iquephoto.ui.fragment.CameraFiltersFragment;
 import net.iquesoft.iquephoto.ui.fragment.CameraFragment;
@@ -13,10 +13,10 @@ import javax.inject.Inject;
 public class CameraPresenterImpl implements CameraPresenter {
     private boolean mIsFilterVisible;
 
-    private CameraView mView;
+    private CameraActivityView mView;
 
     @Inject
-    public CameraPresenterImpl(CameraView view) {
+    public CameraPresenterImpl(CameraActivityView view) {
         mView = view;
     }
 

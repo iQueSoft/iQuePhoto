@@ -1,4 +1,4 @@
-package net.iquesoft.iquephoto.core;
+package net.iquesoft.iquephoto.core.editor.model;
 
 import android.graphics.Canvas;
 import android.graphics.RectF;

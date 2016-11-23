@@ -1,4 +1,4 @@
-package net.iquesoft.iquephoto.core;
+package net.iquesoft.iquephoto.core.editor.model;
 
 import android.graphics.Canvas;
 import android.graphics.LinearGradient;
@@ -10,6 +10,7 @@ import android.graphics.RectF;
 import android.view.MotionEvent;
 
 import net.iquesoft.iquephoto.core.editor.ImageEditorView;
+import net.iquesoft.iquephoto.core.editor.model.EditorTiltShift;
 
 // TODO: Linear tilt shift.
 public class EditorTiltShiftLinear implements EditorTiltShift {

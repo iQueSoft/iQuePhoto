@@ -1,20 +1,20 @@
 package net.iquesoft.iquephoto.ui.fragment;
 
 import android.content.Context;
-import android.hardware.camera2.CameraCaptureSession;
-import android.hardware.camera2.CameraDevice;
-import android.media.ImageReader;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseFragment;
-import net.iquesoft.iquephoto.core.AutoFitCameraView;
+import net.iquesoft.iquephoto.core.camera.Camera2View;
 import net.iquesoft.iquephoto.di.components.ICameraActivityComponent;
 import net.iquesoft.iquephoto.presentation.presenter.fragment.Camera2PresenterImpl;
-import net.iquesoft.iquephoto.presentation.view.fragment.Camera2View;
+import net.iquesoft.iquephoto.presentation.view.fragment.Camera2FragmentView;
 
 import javax.inject.Inject;
 
@@ -22,24 +22,17 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class Camera2Fragment extends BaseFragment implements Camera2View {
+@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+public class Camera2Fragment extends BaseFragment implements Camera2FragmentView {
     @Inject
     Camera2PresenterImpl presenter;
 
     @BindView(R.id.camera2View)
-    AutoFitCameraView autoFitCameraView;
+    Camera2View camera2View;
 
     private Context mContext;
 
     private Unbinder mUnbinder;
-
-    /*private ImageReader mImageReader;
-
-    private CameraDevice mCameraDevice;
-
-    private CameraCaptureSession mCaptureSession;*/
-
-    //private Semaphore mCameraOpenCloseLock = new Semaphore(1);
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -53,6 +46,8 @@ public class Camera2Fragment extends BaseFragment implements Camera2View {
 
         mUnbinder = ButterKnife.bind(this, view);
 
+        Log.i(Camera2Fragment.class.getSimpleName(), "USED CAMERA 2");
+
         mContext = view.getContext();
 
         return view;
@@ -62,10 +57,16 @@ public class Camera2Fragment extends BaseFragment implements Camera2View {
     public void onResume() {
         super.onResume();
         presenter.init(this);
+
+        camera2View.setActivity(getActivity());
+
+        camera2View.startHandlerThread();
     }
 
     @Override
     public void onPause() {
+        camera2View.closeCamera();
+        camera2View.stopHandlerThread();
         super.onPause();
     }
 
@@ -73,35 +74,6 @@ public class Camera2Fragment extends BaseFragment implements Camera2View {
     public void onDestroyView() {
         super.onDestroyView();
         mUnbinder.unbind();
-    }
-        
-    /*@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    @Override
-    public void changeFilter(Paint paint) {
-        autoFitCameraView.setLayerPaint(paint);
-    }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    @Override
-    public void closeCamera() {
-        try {
-            mCameraOpenCloseLock.acquire();
-            if (null != mCaptureSession) {
-                mCaptureSession.close();
-                mCaptureSession = null;
-            }
-            if (null != mCameraDevice) {
-                mCameraDevice.close();
-                mCameraDevice = null;
-            }
-            if (null != mImageReader) {
-                mImageReader.close();
-                mImageReader = null;
-            }
-        } catch (InterruptedException e) {
-            throw new RuntimeException("Interrupted while trying to lock camera closing.", e);
-        } finally {
-            mCameraOpenCloseLock.release();
-        }
-    }*/
+    }
 }

@@ -1,4 +1,4 @@
-<net.iquesoft.iquephoto.core.AutoFitCameraView xmlns:android="http://schemas.android.com/apk/res/android"
+<net.iquesoft.iquephoto.core.camera.Camera2View xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/camera2View"
     android:layout_width="match_parent"
     android:layout_height="match_parent" />

@@ -1,4 +1,4 @@
-package net.iquesoft.iquephoto.core;
+package net.iquesoft.iquephoto.core.editor.model;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -12,6 +12,7 @@ import android.graphics.Shader;
 import android.view.MotionEvent;
 
 import net.iquesoft.iquephoto.core.editor.ImageEditorView;
+import net.iquesoft.iquephoto.core.editor.model.EditorTiltShift;
 
 // TODO: Radial tilt shift.
 public class EditorTiltShiftRadial implements EditorTiltShift {

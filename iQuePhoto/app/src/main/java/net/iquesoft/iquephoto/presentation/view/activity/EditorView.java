@@ -13,7 +13,7 @@ public interface EditorView {
     void showToastMessage(int stringResource);
 
     void navigateBack(boolean isFragment);
-
+    
     void addTextToEditor(Text text);
 
     void setEditorCommand(EditorCommand editorCommand);

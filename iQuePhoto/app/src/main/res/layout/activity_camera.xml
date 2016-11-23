@@ -9,11 +9,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageView
+        <FrameLayout
+            android:id="@+id/cameraFrameLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/buldog" />
+            android:layout_height="match_parent" />
 
         <ImageButton
             android:id="@+id/cameraCloseImageButton"

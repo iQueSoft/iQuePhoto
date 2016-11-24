@@ -3,11 +3,15 @@ package net.iquesoft.iquephoto.util;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.VectorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v8.renderscript.Allocation;
 import android.support.v8.renderscript.Element;
 import android.support.v8.renderscript.RenderScript;
@@ -94,8 +98,19 @@ public class BitmapUtil {
         return outputBitmap;
     }
 
+    public static Bitmap drawable2Bitmap(Context context, int drawableId) {
+        Drawable drawable = ResourcesCompat.getDrawable(context.getResources(), drawableId, null);
+        if (drawable instanceof BitmapDrawable) {
+            return ((BitmapDrawable) drawable).getBitmap();
+        } else if (drawable instanceof VectorDrawable) {
+            return vectorDrawable2Bitmap((VectorDrawable) drawable);
+        } else {
+            throw new IllegalArgumentException("unsupported drawable type");
+        }
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public static Bitmap vectorDrawable2Bitmap(VectorDrawable vectorDrawable) {
+    private static Bitmap vectorDrawable2Bitmap(VectorDrawable vectorDrawable) {
         Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(),
                 vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);

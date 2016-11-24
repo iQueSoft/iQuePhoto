@@ -706,8 +706,9 @@ public class ImageEditorView extends ImageView {
         invalidate();
     }
 
-    public void setBrushColor(@ColorRes int color) {
-        mDrawingPaint.setColor(ResourcesCompat.getColor(getResources(), color, null));
+    public void setBrushColor(int color) {
+        // TODO: mDrawingPaint.setColor(ResourcesCompat.getColor(getResources(), color, null));
+        mDrawingPaint.setColor(color);
     }
 
     public void setUndoListener(UndoListener undoListener) {
@@ -737,7 +738,7 @@ public class ImageEditorView extends ImageView {
     }
 
     public void addSticker(Sticker sticker) {
-        sticker.setBitmap(((BitmapDrawable) mContext.getResources().getDrawable(sticker.getImage())).getBitmap());
+        sticker.setBitmap(BitmapUtil.drawable2Bitmap(mContext, sticker.getImage()));
 
         EditorSticker editorSticker = new EditorSticker(sticker.getBitmap(), mBitmapRect, mEditorFrame);
 

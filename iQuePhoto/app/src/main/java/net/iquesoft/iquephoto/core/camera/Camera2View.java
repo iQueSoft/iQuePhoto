@@ -11,12 +11,7 @@ import android.view.KeyEvent;
 import android.view.TextureView;
 import android.view.View;
 
-import net.iquesoft.iquephoto.core.CameraListener;
-
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 
 import static android.view.KeyEvent.ACTION_DOWN;
 import static android.view.KeyEvent.ACTION_UP;

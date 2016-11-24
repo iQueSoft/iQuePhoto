@@ -31,7 +31,6 @@ import android.view.Surface;
 import android.widget.Toast;
 
 import net.iquesoft.iquephoto.task.CameraImageSaver;
-import net.iquesoft.iquephoto.core.CameraState;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -41,11 +40,11 @@ import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
-import static net.iquesoft.iquephoto.core.CameraState.PICTURE_TAKEN;
-import static net.iquesoft.iquephoto.core.CameraState.PREVIEW;
-import static net.iquesoft.iquephoto.core.CameraState.WAITING_LOCK;
-import static net.iquesoft.iquephoto.core.CameraState.WAITING_NON_PRECAPTURE;
-import static net.iquesoft.iquephoto.core.CameraState.WAITING_PRECAPTURE;
+import static net.iquesoft.iquephoto.core.camera.CameraState.PICTURE_TAKEN;
+import static net.iquesoft.iquephoto.core.camera.CameraState.PREVIEW;
+import static net.iquesoft.iquephoto.core.camera.CameraState.WAITING_LOCK;
+import static net.iquesoft.iquephoto.core.camera.CameraState.WAITING_NON_PRECAPTURE;
+import static net.iquesoft.iquephoto.core.camera.CameraState.WAITING_PRECAPTURE;
 
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class Camera2Module implements ImageReader.OnImageAvailableListener {

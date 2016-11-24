@@ -79,6 +79,7 @@ public class GalleryActivity extends BaseActivity implements GalleryView, HasCom
     public void onBackPressed() {
         if (mFragmentManager.getBackStackEntryCount() == 1) {
             super.onBackPressed();
+            headerTextView.setText(R.string.gallery);
         } else {
             finish();
         }

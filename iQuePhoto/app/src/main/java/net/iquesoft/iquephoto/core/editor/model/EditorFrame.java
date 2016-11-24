@@ -4,9 +4,9 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.drawable.BitmapDrawable;
 
 import net.iquesoft.iquephoto.R;
+import net.iquesoft.iquephoto.util.BitmapUtil;
 
 public class EditorFrame {
     static final int EDITOR_FRAME_PADDING = 25;
@@ -33,18 +33,10 @@ public class EditorFrame {
     }
 
     private void initHandlesBitmap(Context context) {
-        mDeleteHandleBitmap = ((BitmapDrawable) context.getResources()
-                .getDrawable(R.drawable.ic_handle_delete))
-                .getBitmap();
-        mResizeHandleBitmap = ((BitmapDrawable) context.getResources()
-                .getDrawable(R.drawable.ic_handle_resize))
-                .getBitmap();
-        mFrontHandleBitmap = ((BitmapDrawable) context.getResources()
-                .getDrawable(R.drawable.ic_handle_front))
-                .getBitmap();
-        mRotateHandleBitmap = ((BitmapDrawable) context.getResources()
-                .getDrawable(R.drawable.ic_handle_rotate))
-                .getBitmap();
+        mDeleteHandleBitmap = BitmapUtil.drawable2Bitmap(context, R.drawable.ic_handle_delete);
+        mResizeHandleBitmap = BitmapUtil.drawable2Bitmap(context, R.drawable.ic_handle_resize);
+        mFrontHandleBitmap = BitmapUtil.drawable2Bitmap(context, R.drawable.ic_handle_front);
+        mRotateHandleBitmap = BitmapUtil.drawable2Bitmap(context, R.drawable.ic_handle_rotate);
     }
 
     public Paint getPaint() {

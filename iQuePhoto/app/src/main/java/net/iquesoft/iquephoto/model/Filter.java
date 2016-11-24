@@ -1,10 +1,6 @@
 package net.iquesoft.iquephoto.model;
 
 import android.graphics.ColorMatrix;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.StringRes;
-
-import net.iquesoft.iquephoto.R;
 
 import java.util.Arrays;
 import java.util.List;
@@ -20,11 +16,6 @@ public class Filter {
     }
 
     private static Filter[] filters = {
-            new Filter("F01", new ColorMatrix(new float[]{
-                    2, -1, 0, 0, 0,
-                    -1, 2, 0, 0, 0,
-                    0, -1, 2, 0, 0,
-                    0, 0, 0, 1, 0})),
 
             new Filter("F02", new ColorMatrix(new float[]{
                     1, 0, 0, 0, 0,
@@ -36,6 +27,18 @@ public class Filter {
                     1.5f, 0, 0, 0, -40,
                     0, 1.5f, 0, 0, -40,
                     0, 0, 1.5f, 0, -40,
+                    0, 0, 0, 1, 0})),
+
+            new Filter("F01", new ColorMatrix(new float[]{
+                    2, -1, 0, 0, 0,
+                    -1, 2, 0, 0, 0,
+                    0, -1, 2, 0, 0,
+                    0, 0, 0, 1, 0})),
+
+            new Filter("F12", new ColorMatrix(new float[]{ // TechColor mMatrix
+                    1.9125277891456083f, -0.8545344976951645f, -0.09155508482755585f, 0, 11.793603434377337f,
+                    -0.3087833385928097f, 1.7658908555458428f, -0.10601743074722245f, 0, -70.35205161461398f,
+                    -0.231103377548616f, -0.7501899197440212f, 1.847597816108189f, 0, 30.950940869491138f,
                     0, 0, 0, 1, 0})),
 
             new Filter("F04", new ColorMatrix(new float[]{
@@ -84,12 +87,6 @@ public class Filter {
                     0.6279345635605994f, 0.3202183420819367f, -0.03965408211312453f, 0, 9.651285835294123f,
                     0.02578397704808868f, 0.6441188644374771f, 0.03259127616149294f, 0, 7.462829176470591f,
                     0.0466055556782719f, -0.0851232987247891f, 0.5241648018700465f, 0, 5.159190588235296f,
-                    0, 0, 0, 1, 0})),
-
-            new Filter("F12", new ColorMatrix(new float[]{ // TechColor mMatrix
-                    1.9125277891456083f, -0.8545344976951645f, -0.09155508482755585f, 0, 11.793603434377337f,
-                    -0.3087833385928097f, 1.7658908555458428f, -0.10601743074722245f, 0, -70.35205161461398f,
-                    -0.231103377548616f, -0.7501899197440212f, 1.847597816108189f, 0, 30.950940869491138f,
                     0, 0, 0, 1, 0})),
 
             new Filter("F13", new ColorMatrix(new float[]{ // Browni mMatrix

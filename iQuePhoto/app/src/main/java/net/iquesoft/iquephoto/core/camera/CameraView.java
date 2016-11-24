@@ -1,13 +1,12 @@
 package net.iquesoft.iquephoto.core.camera;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Canvas;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.ShutterCallback;
 import android.hardware.Camera.Size;
-import android.support.v7.widget.LinearLayoutCompat;
-import android.support.v7.widget.OrientationHelper;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.SurfaceHolder;
@@ -20,17 +19,14 @@ import java.util.List;
 import static android.view.KeyEvent.ACTION_DOWN;
 import static android.view.KeyEvent.ACTION_UP;
 
-public class CameraView extends SurfaceView implements SurfaceHolder.Callback, View.OnKeyListener {
+public class CameraView extends SurfaceView implements SurfaceHolder.Callback,
+        Camera.PictureCallback, Camera.PreviewCallback, Camera.AutoFocusCallback, View.OnKeyListener {
 
     private Camera mCamera;
 
     private Size mSize;
 
     private SurfaceHolder mSurfaceHolder;
-
-    private ShutterCallback mShutterCallback;
-    private PictureCallback mRawCallback;
-    private PictureCallback mJPEGCallback;
 
     private List<Size> mSupportedSizes;
 
@@ -111,9 +107,16 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback, V
         try {
             if (mCamera != null) {
                 mCamera.setPreviewDisplay(surfaceHolder);
+                mCamera.setPreviewCallback(this);
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+
+        if (getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE) {
+            mCamera.setDisplayOrientation(90);
+        } else {
+            mCamera.setDisplayOrientation(0);
         }
     }
 
@@ -196,5 +199,22 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback, V
                 break;
         }
         return false;
+    }
+
+    @Override
+    public void onPictureTaken(byte[] bytes, Camera camera) {
+
+    }
+
+    @Override
+    public void onPreviewFrame(byte[] bytes, Camera camera) {
+
+    }
+
+    @Override
+    public void onAutoFocus(boolean b, Camera camera) {
+        if (b) {
+            // TODO: Auto focus.
+        }
     }
 }

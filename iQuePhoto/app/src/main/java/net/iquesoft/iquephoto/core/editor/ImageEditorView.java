@@ -15,10 +15,8 @@ import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
-import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -35,6 +33,7 @@ import net.iquesoft.iquephoto.core.editor.enums.EditorCommand;
 import net.iquesoft.iquephoto.core.editor.enums.EditorMode;
 import net.iquesoft.iquephoto.core.editor.model.EditorSticker;
 import net.iquesoft.iquephoto.core.editor.model.EditorText;
+import net.iquesoft.iquephoto.core.editor.model.EditorTiltShiftRadial;
 import net.iquesoft.iquephoto.core.editor.model.EditorVignette;
 import net.iquesoft.iquephoto.core.editor.model.Drawing;
 import net.iquesoft.iquephoto.core.editor.model.EditorFrame;
@@ -43,7 +42,6 @@ import net.iquesoft.iquephoto.model.Sticker;
 import net.iquesoft.iquephoto.model.Text;
 import net.iquesoft.iquephoto.util.AdjustUtil;
 import net.iquesoft.iquephoto.util.BitmapUtil;
-import net.iquesoft.iquephoto.util.LoggerUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,6 +63,7 @@ public class ImageEditorView extends ImageView {
 
     private EditorFrame mEditorFrame;
     private EditorVignette mEditorVignette;
+    private EditorTiltShiftRadial mTiltShiftRadial;
     private EditorText mCurrentEditorText;
     private EditorSticker mCurrentEditorSticker;
 
@@ -173,6 +172,7 @@ public class ImageEditorView extends ImageView {
 
         mEditorFrame = new EditorFrame(context);
         mEditorVignette = new EditorVignette(this);
+        mTiltShiftRadial = new EditorTiltShiftRadial(this);
 
         mImagePaint.setFilterBitmap(true);
 
@@ -294,6 +294,7 @@ public class ImageEditorView extends ImageView {
                         getStraightenTransformMatrix(mTransformStraightenValue),
                         mImagePaint
                 );
+
                 // TODO: Off guidelines when click on this view.
                 drawGuidelines(canvas);
                 break;
@@ -306,7 +307,7 @@ public class ImageEditorView extends ImageView {
                 drawGuidelines(canvas);
                 break;
             case TILT_SHIFT:
-                canvas.drawBitmap(BitmapUtil.getBlurImage(mContext, bitmap, (int) mImgWidth, (int) mImgHeight), mMatrix, mImagePaint);
+                mTiltShiftRadial.draw(canvas, bitmap, mMatrix, mImagePaint);
                 break;
         }
 
@@ -329,11 +330,29 @@ public class ImageEditorView extends ImageView {
         else {
             matrix = new Matrix(mMatrix);
 
+            float[] matrixValue = new float[9];
+            mMatrix.getValues(matrixValue);
+
+            Log.i("Transform V - Before", String.valueOf(matrixValue[0]) + "\n" +
+                    String.valueOf(matrixValue[1])
+                    + "\n" +
+                    String.valueOf(matrixValue[2])
+                    + "\n" +
+                    String.valueOf(matrixValue[3])
+                    + "\n" +
+                    String.valueOf(matrixValue[4])
+                    + "\n" +
+                    String.valueOf(matrixValue[5])
+                    + "\n" +
+                    String.valueOf(matrixValue[6])
+                    + "\n" +
+                    String.valueOf(matrixValue[7])
+                    + "\n" +
+                    String.valueOf(matrixValue[8])
+            );
+
             float width = mBitmapRect.width();
             float height = mBitmapRect.height();
-            RectF src = new RectF(0, 0, width, height);
-            RectF dst = new RectF(src);
-            //mMatrix.setRectToRect(src, dst, Matrix.ScaleToFit.CENTER);
 
             float[] pts = {0, 0, 0, height, width, height, width, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
@@ -344,36 +363,39 @@ public class ImageEditorView extends ImageView {
 
                 matrix.mapPoints(pts, 8, pts, 0, 4);
 
-
                 pts[8] += dX;
                 pts[14] -= dX;
             } else {
 
-                matrix.mapPoints(pts, 8, pts, 4, 8);
+                matrix.mapPoints(pts, 8, pts, 0, 4);
 
                 pts[8] -= dX;
                 pts[14] += dX;
             }
-            /*float a = (float) Math.atan(height / width);
-
-            float length1 = (width / 2) / (float) Math.cos(a - Math.abs(Math.toRadians(value)));
-
-            float length2 = (float) Math.sqrt(Math.pow(width / 2, 2) + Math.pow(height / 2, 2));
-
-            float scale = length2 / length1;
-
-            float dX = mCenter.x * (1 - scale);
-            float dY = mCenter.y * (1 - scale);
-
-            mMatrix.postScale(scale, scale);*/
 
             matrix.setPolyToPoly(pts, 0, pts, 8, 4);
 
-            /*float[] matrixValue = new float[9];
-            mMatrix.getValues(matrixValue);
-            float oldX = mMatrix.getValues();
-            float oldY =*/
-            //mMatrix.postTranslate(dX, dY);
+            float[] matrixValue2 = new float[9];
+            matrix.getValues(matrixValue2);
+
+            Log.i("Transform V - After", String.valueOf(matrixValue2[0]) + "\n" +
+                    String.valueOf(matrixValue2[1])
+                    + "\n" +
+                    String.valueOf(matrixValue2[2])
+                    + "\n" +
+                    String.valueOf(matrixValue2[3])
+                    + "\n" +
+                    String.valueOf(matrixValue2[4])
+                    + "\n" +
+                    String.valueOf(matrixValue2[5])
+                    + "\n" +
+                    String.valueOf(matrixValue2[6])
+                    + "\n" +
+                    String.valueOf(matrixValue2[7])
+                    + "\n" +
+                    String.valueOf(matrixValue2[8])
+            );
+            //matrix.postScale(dX, -dX);
         }
 
         return matrix;
@@ -452,7 +474,7 @@ public class ImageEditorView extends ImageView {
     }
 
     @Override
-    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         if (getBitmap() != null) setupLayout(mViewWidth, mViewHeight);
     }
 
@@ -480,9 +502,14 @@ public class ImageEditorView extends ImageView {
                 break;
             case MotionEvent.ACTION_POINTER_DOWN:
                 mMode = EditorMode.NONE;
-                if (mCommand == VIGNETTE)
-                    mEditorVignette.actionPointerDown(event);
-
+                switch (mCommand) {
+                    case VIGNETTE:
+                        mEditorVignette.actionPointerDown(event);
+                        break;
+                    case TILT_SHIFT:
+                        mTiltShiftRadial.actionPointerDown(event);
+                        break;
+                }
                 break;
             case MotionEvent.ACTION_MOVE:
                 actionMove(event);
@@ -528,6 +555,9 @@ public class ImageEditorView extends ImageView {
             case DRAWING:
                 drawingStart(event);
                 break;
+            case TILT_SHIFT:
+                mTiltShiftRadial.actionDown(event);
+                break;
         }
     }
 
@@ -544,10 +574,10 @@ public class ImageEditorView extends ImageView {
                 if (mCurrentEditorSticker != null) {
                     switch (mMode) {
                         case MOVE:
-                            float distanceX = event.getX() - mLastX;
-                            float distanceY = event.getY() - mLastY;
-
-                            mCurrentEditorSticker.actionMove(distanceX, distanceY);
+                            mCurrentEditorSticker.actionMove(
+                                    getDistanceX(event),
+                                    getDistanceY(event)
+                            );
 
                             mLastX = event.getX();
                             mLastY = event.getY();
@@ -555,6 +585,15 @@ public class ImageEditorView extends ImageView {
                             invalidate();
                             break;
                         case RESIZE:
+                            mCurrentEditorSticker.updateRotateAndScale(
+                                    mLastX,
+                                    mLastY,
+                                    getDistanceX(event),
+                                    getDistanceY(event)
+                            );
+
+                            mLastX = event.getX();
+                            mLastY = event.getY();
                             /*float stickerScale = diagonalLength(event, mCurrentEditorSticker.getPoint()) / mCurrentEditorSticker.getLength();
                             mCurrentEditorSticker.getMatrix()
                                     .postScale(stickerScale, stickerScale, mCurrentEditorSticker.getPoint().x, mCurrentEditorSticker.getPoint().y);*/
@@ -573,15 +612,15 @@ public class ImageEditorView extends ImageView {
                 break;
             case TEXT:
                 if (mCurrentEditorText != null) {
-                    float distanceX = event.getX() - mLastX;
-                    float distanceY = event.getY() - mLastY;
-
                     switch (mMode) {
                         case MOVE:
                             moveText(event);
                             break;
                         case RESIZE:
-                            mCurrentEditorText.scaleText(distanceX, distanceY);
+                            mCurrentEditorText.scaleText(
+                                    getDistanceX(event),
+                                    getDistanceY(event)
+                            );
 
                             invalidate();
 
@@ -589,7 +628,10 @@ public class ImageEditorView extends ImageView {
                             mLastY = event.getY();
                             break;
                         case ROTATE:
-                            mCurrentEditorText.rotateText(distanceX, distanceY);
+                            mCurrentEditorText.rotateText(
+                                    getDistanceX(event),
+                                    getDistanceY(event)
+                            );
 
                             invalidate();
 
@@ -605,8 +647,20 @@ public class ImageEditorView extends ImageView {
             case VIGNETTE:
                 mEditorVignette.actionMove(event);
                 break;
+            case TILT_SHIFT:
+                mTiltShiftRadial.actionMove(event);
+                invalidate();
+                break;
         }
 
+    }
+
+    private float getDistanceX(MotionEvent motionEvent) {
+        return motionEvent.getX() - mLastX;
+    }
+
+    private float getDistanceY(MotionEvent motionEvent) {
+        return motionEvent.getY() - mLastY;
     }
 
     private void moveText(MotionEvent event) {
@@ -636,13 +690,16 @@ public class ImageEditorView extends ImageView {
             case DRAWING:
                 drawingStop();
                 break;
+            case TILT_SHIFT:
+                mTiltShiftRadial.actionUp();
         }
     }
 
     public Bitmap getAlteredBitmap() {
         if (!mImagesList.isEmpty())
             return mImagesList.get(mImagesList.size() - 1).getBitmap();
-        return null;
+
+        return mSourceBitmap;
     }
 
     public RectF getBitmapRect() {
@@ -1037,7 +1094,7 @@ public class ImageEditorView extends ImageView {
             EditorSticker editorSticker = mStickersList.get(i);
 
             if (editorSticker.isInside(event)) {
-                mCurrentEditorSticker = mStickersList.get(i);
+                mCurrentEditorSticker = editorSticker;
                 mMode = EditorMode.MOVE;
 
                 mLastX = event.getX();
@@ -1053,8 +1110,13 @@ public class ImageEditorView extends ImageView {
                 invalidate();
                 return;
             } else if (editorSticker.isInResizeHandleButton(event)) {
+                mCurrentEditorSticker = editorSticker;
+
                 mMode = EditorMode.RESIZE;
-                // TODO: Resize sticker.
+
+                mLastX = event.getX();
+                mLastY = event.getY();
+
                 return;
             } else if (editorSticker.isInFrontHandleButton(event)) {
                 mMode = EditorMode.NONE;
@@ -1071,10 +1133,6 @@ public class ImageEditorView extends ImageView {
         mMode = EditorMode.NONE;
     }
 
-    private float diagonalLength(MotionEvent event, PointF pointF) {
-        return (float) Math.hypot(event.getX(0) - pointF.x, event.getY(0) - pointF.y);
-    }
-
     private void setMatrix() {
         mMatrix.reset();
         mMatrix.setTranslate(mCenter.x - mImgWidth * 0.5f, mCenter.y - mImgHeight * 0.5f);
@@ -1082,6 +1140,11 @@ public class ImageEditorView extends ImageView {
         mMatrix.postRotate(mAngle, mCenter.x, mCenter.y);
 
         //mTransformMatrix.set(mMatrix);
+    }
+
+    @Override
+    public Matrix getImageMatrix() {
+        return super.getImageMatrix();
     }
 
     private void setupLayout(int viewW, int viewH) {
@@ -1092,6 +1155,8 @@ public class ImageEditorView extends ImageView {
         mBitmapRect = calcImageRect(new RectF(0f, 0f, mImgWidth, mImgHeight), mMatrix);
 
         mEditorVignette.updateRect(mBitmapRect);
+
+        mTiltShiftRadial.updateRect(mBitmapRect);
 
         mIsInitialized = true;
         invalidate();
@@ -1120,14 +1185,6 @@ public class ImageEditorView extends ImageView {
         RectF applied = new RectF();
         matrix.mapRect(applied, rect);
         return applied;
-    }
-
-    private boolean isBrushInsideImageHorizontal(float x) {
-        return mBitmapRect.left + mBrushSize <= x && mBitmapRect.right + mBrushSize >= x;
-    }
-
-    private boolean isBrushInsideImageVertical(float y) {
-        return mBitmapRect.top + mBrushSize <= y && mBitmapRect.bottom + mBrushSize >= y;
     }
 
     private float getDensity() {
@@ -1212,8 +1269,6 @@ public class ImageEditorView extends ImageView {
 
             mImageHeight = mBitmap.getHeight();
             mImageWidth = mBitmap.getWidth();
-
-            LoggerUtil.applyInfo(editorCommands[0]);
 
             switch (editorCommands[0]) {
                 case NONE:

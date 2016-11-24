@@ -12,8 +12,9 @@
         <FrameLayout
             android:id="@+id/cameraFrameLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
+            android:layout_height="match_parent"
+            android:background="@color/transparency" />
+        
         <ImageButton
             android:id="@+id/cameraCloseImageButton"
             android:layout_width="wrap_content"
@@ -21,6 +22,14 @@
             android:layout_alignParentLeft="true"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_close_50dp" />
+
+        <ImageButton
+            android:id="@+id/flipCameraButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_flip_camera" />
 
         <!--<ImageButton
             android:id="@+id/cameraSwitchImageButton"

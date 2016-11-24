@@ -12,30 +12,17 @@
         android:scaleType="centerCrop"
         android:src="@drawable/buldog" />
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/albumTitleTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:background="@color/transparency"
-        android:orientation="vertical"
-        android:padding="5dp">
+        android:padding="5dp"
+        android:text="Gallery (102)"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/albumTitleTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Gallery"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/albumImagesCountTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="102"
-            android:textColor="#f5f5f5"
-            android:textSize="14sp"
-            android:textStyle="bold" />
-    </LinearLayout>
 </net.iquesoft.iquephoto.common.SquareFrameLayout>

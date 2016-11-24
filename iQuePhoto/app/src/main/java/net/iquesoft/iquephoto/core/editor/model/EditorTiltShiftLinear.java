@@ -1,5 +1,7 @@
 package net.iquesoft.iquephoto.core.editor.model;
 
+import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.LinearGradient;
 import android.graphics.Matrix;
@@ -35,7 +37,7 @@ public class EditorTiltShiftLinear implements EditorTiltShift {
     }
 
     @Override
-    public void initialize() {
+    public void initialize(Context context) {
         mPaint = new Paint();
 
         mTiltShiftLinearPaint = new Paint();
@@ -54,7 +56,7 @@ public class EditorTiltShiftLinear implements EditorTiltShift {
     }
 
     @Override
-    public void draw(Canvas canvas) {
+    public void draw(Canvas canvas, Bitmap bitmap, Matrix matrix, Paint paint) {
         if (!mTiltShiftLinearRect.isEmpty()) {
             canvas.saveLayer(mBitmapRect, mPaint, Canvas.CLIP_TO_LAYER_SAVE_FLAG);
 
@@ -82,6 +84,11 @@ public class EditorTiltShiftLinear implements EditorTiltShift {
     }
 
     @Override
+    public void updateGradientShader(float value, Paint paint) {
+
+    }
+
+    @Override
     public void updateGradientMatrix(RectF rectF) {
 
     }
@@ -99,5 +106,20 @@ public class EditorTiltShiftLinear implements EditorTiltShift {
     @Override
     public void actionPointerDown(MotionEvent event) {
 
+    }
+
+    @Override
+    public void actionUp() {
+
+    }
+
+    @Override
+    public void setPaintAlpha(int value) {
+
+    }
+
+    @Override
+    public int getPaintAlpha() {
+        return 0;
     }
 }

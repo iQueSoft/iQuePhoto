@@ -57,8 +57,9 @@ public class ImageAlbumsAdapter extends RecyclerView.Adapter<ImageAlbumsAdapter.
                 .centerCrop()
                 .into(holder.folderImage);
 
-        holder.folderName.setText(imageAlbum.getName());
-        holder.folderImagesCount.setText(String.valueOf(imageAlbum.getImages().size()));
+        holder.folderName.setText(
+                imageAlbum.getName() + " (" + String.valueOf(imageAlbum.getImages().size()) + ")"
+        );
 
         holder.itemView.setOnClickListener(view -> {
             mOnAlbumClickListener.onFolderClick(imageAlbum);
@@ -77,9 +78,6 @@ public class ImageAlbumsAdapter extends RecyclerView.Adapter<ImageAlbumsAdapter.
 
         @BindView(R.id.albumTitleTextView)
         TextView folderName;
-
-        @BindView(R.id.albumImagesCountTextView)
-        TextView folderImagesCount;
 
         public ViewHolder(View itemView) {
             super(itemView);

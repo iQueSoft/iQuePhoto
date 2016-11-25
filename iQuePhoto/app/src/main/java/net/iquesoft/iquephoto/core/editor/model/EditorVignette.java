@@ -14,6 +14,11 @@ import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 
 import net.iquesoft.iquephoto.core.editor.ImageEditorView;
+import net.iquesoft.iquephoto.core.editor.enums.EditorMode;
+import net.iquesoft.iquephoto.util.MotionEventUtil;
+import net.iquesoft.iquephoto.util.RectUtil;
+
+import static net.iquesoft.iquephoto.core.editor.enums.EditorMode.*;
 
 public class EditorVignette {
 
@@ -24,7 +29,7 @@ public class EditorVignette {
     private float mPreX;
     private float mPreY;
 
-    private int mFingersCount;
+    private float mPreDistance;
 
     private float mGradientInset = 100;
     private float mControlPointTolerance = 20;
@@ -45,6 +50,8 @@ public class EditorVignette {
     private RadialGradient mRadialGradient;
 
     private Matrix mGradientMatrix;
+
+    private EditorMode mMode = NONE;
 
     private ImageEditorView mImageEditorView;
 
@@ -190,34 +197,50 @@ public class EditorVignette {
         mPreX = motionEvent.getX();
         mPreY = motionEvent.getY();
 
-        mFingersCount = motionEvent.getPointerCount();
+        mMode = MOVE;
     }
 
     public void actionPointerDown(MotionEvent motionEvent) {
-        mFingersCount = motionEvent.getPointerCount();
+        if (motionEvent.getPointerCount() == 2) {
+            mMode = RESIZE;
+        }
     }
 
-    public void actionMove(MotionEvent motionEvent) {
+    public void actionMove(MotionEvent event) {
         mTempVignetteRect.set(mVignetteRect);
 
-        if (mFingersCount == 1) {
-            float distanceX = motionEvent.getX() - mPreX;
-            float distanceY = motionEvent.getY() - mPreY;
+        switch (mMode) {
+            case MOVE:
+                float distanceX = event.getX() - mPreX;
+                float distanceY = event.getY() - mPreY;
 
-            mTempVignetteRect.offset(distanceX, distanceY);
+                mTempVignetteRect.offset(distanceX, distanceY);
+                break;
+            case RESIZE:
+                float dist = MotionEventUtil.getFingersDistance(event);
+                float displayDistance = MotionEventUtil.getDisplayDistance(
+                        mImageEditorView.getWidth(),
+                        mImageEditorView.getHeight()
+                );
 
-        } else if (mFingersCount == 2) {
-            float max = motionEvent.getAxisValue(1); //getFingersDistance(motionEvent);
-            mTempVignetteRect.inset(max, max);
-            //if (getFingersAngle(motionEvent) == 0 && getFingersAngle(motionEvent))
+                float scale = ((dist - mPreDistance) / displayDistance);
+
+                mPreDistance = dist;
+
+                scale += 1;
+                scale *= scale;
+
+                RectUtil.scaleRect(mTempVignetteRect, scale);
+
+                break;
         }
 
         if (mTempVignetteRect.width() > mControlPointTolerance
                 && mTempVignetteRect.height() > mControlPointTolerance) {
             mVignetteRect.set(mTempVignetteRect);
 
-            mPreX = motionEvent.getX();
-            mPreY = motionEvent.getY();
+            mPreX = event.getX();
+            mPreY = event.getY();
         }
 
         updateGradientMatrix(mVignetteRect);
@@ -225,8 +248,12 @@ public class EditorVignette {
         mImageEditorView.invalidate();
     }
 
-    public void actionUp(MotionEvent motionEvent) {
+    public void actionUp() {
+        mMode = NONE;
+    }
 
+    public void actionPointerUp() {
+        mMode = MOVE;
     }
 
     private float getFingersAngle(MotionEvent event) {
@@ -234,12 +261,6 @@ public class EditorVignette {
         double delta_y = (event.getY(0) - event.getY(1));
         double radians = Math.atan2(delta_y, delta_x);
         return (float) Math.toDegrees(radians);
-    }
-
-    private float distanceBetweenFingers(MotionEvent event) {
-        float x = event.getX(0) - event.getX(1);
-        float y = event.getY(0) - event.getY(1);
-        return (float) Math.sqrt(x * x + y * y);
     }
 
     private float dp2px(final float density, float dp) {

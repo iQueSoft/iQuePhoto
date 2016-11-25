@@ -501,15 +501,7 @@ public class ImageEditorView extends ImageView {
                 actionDown(event);
                 break;
             case MotionEvent.ACTION_POINTER_DOWN:
-                mMode = EditorMode.NONE;
-                switch (mCommand) {
-                    case VIGNETTE:
-                        mEditorVignette.actionPointerDown(event);
-                        break;
-                    case TILT_SHIFT:
-                        mTiltShiftRadial.actionPointerDown(event);
-                        break;
-                }
+                actionPointerDown(event);
                 break;
             case MotionEvent.ACTION_MOVE:
                 actionMove(event);
@@ -558,6 +550,18 @@ public class ImageEditorView extends ImageView {
                 break;
             case TILT_SHIFT:
                 mTiltShiftRadial.actionDown(event);
+                break;
+        }
+    }
+
+    private void actionPointerDown(MotionEvent event) {
+        mMode = EditorMode.NONE;
+        switch (mCommand) {
+            case VIGNETTE:
+                mEditorVignette.actionPointerDown(event);
+                break;
+            case TILT_SHIFT:
+                mTiltShiftRadial.actionPointerDown(event);
                 break;
         }
     }
@@ -662,11 +666,17 @@ public class ImageEditorView extends ImageView {
                 break;
             case TILT_SHIFT:
                 mTiltShiftRadial.actionUp();
+                break;
+            case VIGNETTE:
+                mEditorVignette.actionUp();
         }
     }
 
     private void actionPointerUp() {
         switch (mCommand) {
+            case VIGNETTE:
+                mEditorVignette.actionPointerUp();
+                break;
             case TILT_SHIFT:
                 mTiltShiftRadial.actionPointerUp();
                 break;
@@ -1190,6 +1200,8 @@ public class ImageEditorView extends ImageView {
         return scale;
     }
 
+
+    // FIXME: Problem with bitmap rect size.
     private RectF calcImageRect(RectF rect, Matrix matrix) {
         RectF applied = new RectF();
         matrix.mapRect(applied, rect);

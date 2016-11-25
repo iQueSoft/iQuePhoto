@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 
 import net.iquesoft.iquephoto.R;
@@ -58,7 +57,9 @@ public class OverlaysAdapter extends RecyclerView.Adapter<OverlaysAdapter.ViewHo
 
         Picasso.with(mContext)
                 .load(overlay.getImage())
-                .resize(100, 100)
+                .fit()
+                .centerCrop()
+                .noPlaceholder()
                 .into(holder.image);
 
         if (mCurrentPosition == position) {
@@ -83,8 +84,8 @@ public class OverlaysAdapter extends RecyclerView.Adapter<OverlaysAdapter.ViewHo
         @BindView(R.id.overlayTitle)
         TextView title;
 
-        @BindView(R.id.overlayImage)
-        CircularImageView image;
+        @BindView(R.id.overlayImageView)
+        ImageView image;
 
         @BindView(R.id.overlayChecked)
         ImageView overlaySelected;

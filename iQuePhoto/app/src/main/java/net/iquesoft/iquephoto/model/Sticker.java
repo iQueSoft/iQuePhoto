@@ -8,6 +8,7 @@ import net.iquesoft.iquephoto.R;
 import java.util.Arrays;
 import java.util.List;
 
+// TODO: Change sticker images size.
 public class Sticker {
     @DrawableRes
     private int mImage;

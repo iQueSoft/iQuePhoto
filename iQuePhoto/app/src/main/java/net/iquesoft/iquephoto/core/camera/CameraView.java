@@ -106,22 +106,23 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback,
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
         try {
             if (mCamera != null) {
+
+                if (getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE) {
+                    mCamera.setDisplayOrientation(90);
+                } else {
+                    mCamera.setDisplayOrientation(0);
+                }
+
                 mCamera.setPreviewDisplay(surfaceHolder);
                 mCamera.setPreviewCallback(this);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        if (getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE) {
-            mCamera.setDisplayOrientation(90);
-        } else {
-            mCamera.setDisplayOrientation(0);
-        }
     }
-
+    
     @Override
-    public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
+    public void surfaceChanged(SurfaceHolder surfaceHolder, int format, int w, int h) {
         if (mCamera != null) {
             Camera.Parameters parameters = mCamera.getParameters();
             parameters.setPreviewSize(mSize.width, mSize.height);
@@ -138,6 +139,9 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback,
     }
 
     public void setCamera(Camera camera) {
+        if (mCamera == camera) return;
+
+        stopPreviewAndFreeCamera();
 
         mCamera = camera;
 
@@ -148,12 +152,31 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback,
 
             requestLayout();
 
+            try {
+                mCamera.setPreviewDisplay(mSurfaceHolder);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
             List<String> focusModes = parameters.getSupportedFocusModes();
             if (focusModes.contains(Camera.Parameters.FOCUS_MODE_AUTO)) {
                 parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
 
                 mCamera.setParameters(parameters);
             }
+
+            mCamera.startPreview();
+        }
+    }
+
+    private void stopPreviewAndFreeCamera() {
+        if (mCamera != null) {
+
+            mCamera.stopPreview();
+
+            mCamera.release();
+
+            mCamera = null;
         }
     }
 

@@ -4,4 +4,5 @@ import android.graphics.Paint;
 
 public interface CameraFragmentView {
     void changeFilter(Paint paint);
+
 }

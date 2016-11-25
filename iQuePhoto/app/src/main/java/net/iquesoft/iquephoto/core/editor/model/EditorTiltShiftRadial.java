@@ -26,9 +26,8 @@ import net.iquesoft.iquephoto.util.RectUtil;
 import static net.iquesoft.iquephoto.core.editor.enums.EditorMode.*;
 
 // TODO: FadeIn and FadeOut Animators.
-// TODO: Radial tilt shift.
 public class EditorTiltShiftRadial implements EditorTiltShift {
-    private static final int FADEOUT_DELAY = 3000;
+    private static final int FADEOUT_DELAY = 1000;
 
     private float mFeather = 0.7f;
     private float mGradientInset = 100;

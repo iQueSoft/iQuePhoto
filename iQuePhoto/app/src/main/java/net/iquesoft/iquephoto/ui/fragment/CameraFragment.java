@@ -3,6 +3,7 @@ package net.iquesoft.iquephoto.ui.fragment;
 import android.graphics.Paint;
 import android.hardware.Camera;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,19 +54,12 @@ public class CameraFragment extends BaseFragment implements CameraFragmentView {
         super.onResume();
         presenter.init(this);
 
-        mCamera = Camera.open(0);
-        mCamera.stopPreview();
-        cameraView.setCamera(mCamera);
+        safeCameraOpen(0);
     }
 
     @Override
     public void onPause() {
-        if (mCamera != null) {
-            mCamera.stopPreview();
-            cameraView.setCamera(null);
-            mCamera.release();
-            mCamera = null;
-        }
+        releaseCameraAndPreview();
         super.onPause();
     }
 
@@ -78,5 +72,28 @@ public class CameraFragment extends BaseFragment implements CameraFragmentView {
     @Override
     public void changeFilter(Paint paint) {
 
+    }
+
+    private boolean safeCameraOpen(int id) {
+        boolean qOpened = false;
+
+        try {
+            releaseCameraAndPreview();
+            mCamera = Camera.open(id);
+            qOpened = (mCamera != null);
+        } catch (Exception e) {
+            Log.e(getString(R.string.app_name), "failed to open Camera");
+            e.printStackTrace();
+        }
+
+        return qOpened;
+    }
+
+    private void releaseCameraAndPreview() {
+        cameraView.setCamera(null);
+        if (mCamera != null) {
+            mCamera.release();
+            mCamera = null;
+        }
     }
 }

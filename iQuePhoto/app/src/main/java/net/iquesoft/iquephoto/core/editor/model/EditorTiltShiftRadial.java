@@ -18,14 +18,17 @@ import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 
 import net.iquesoft.iquephoto.core.editor.ImageEditorView;
+import net.iquesoft.iquephoto.core.editor.enums.EditorMode;
 import net.iquesoft.iquephoto.util.BitmapUtil;
 import net.iquesoft.iquephoto.util.MotionEventUtil;
+import net.iquesoft.iquephoto.util.RectUtil;
 
+import static net.iquesoft.iquephoto.core.editor.enums.EditorMode.*;
+
+// TODO: FadeIn and FadeOut Animators.
 // TODO: Radial tilt shift.
 public class EditorTiltShiftRadial implements EditorTiltShift {
     private static final int FADEOUT_DELAY = 3000;
-
-    private int mPointerCount = 0;
 
     private float mFeather = 0.7f;
     private float mGradientInset = 100;
@@ -57,6 +60,8 @@ public class EditorTiltShiftRadial implements EditorTiltShift {
 
     private Animator mFadeInAnimator;
     private Animator mFadeOutAnimator;
+
+    private EditorMode mMode = NONE;
 
     private ImageEditorView mImageEditorView;
 
@@ -209,43 +214,6 @@ public class EditorTiltShiftRadial implements EditorTiltShift {
     }
 
     @Override
-    public void actionMove(MotionEvent event) {
-        mTempTiltShiftRadialRect.set(mTiltShiftRadialRect);
-
-        if (mPointerCount == 1) {
-            float distanceX = event.getX() - mPreX;
-            float distanceY = event.getY() - mPreY;
-
-            mTempTiltShiftRadialRect.offset(distanceX, distanceY);
-        } else {
-            float dist = MotionEventUtil.distanceBetweenFingers(event);
-            float scale = ((dist - mPreDistance) / displayDistance());
-
-            mPreDistance = dist;
-
-            scale += 1;
-            scale *= scale;
-
-            // TODO: Radial tilt shift resize.
-            mTempTiltShiftRadialRect.inset(scale, scale);
-        }
-
-        if (mTempTiltShiftRadialRect.width() > mControlPointTolerance
-                && mTempTiltShiftRadialRect.height() > mControlPointTolerance) {
-            mTiltShiftRadialRect.set(mTempTiltShiftRadialRect);
-
-            mPreX = event.getX();
-            mPreY = event.getY();
-        }
-
-        updateGradientMatrix(mTiltShiftRadialRect);
-
-        mImageEditorView.invalidate();
-
-        ViewCompat.postInvalidateOnAnimation(mImageEditorView);
-    }
-
-    @Override
     public void actionDown(MotionEvent event) {
         mFadeOutAnimator.cancel();
 
@@ -253,19 +221,62 @@ public class EditorTiltShiftRadial implements EditorTiltShift {
             mFadeInAnimator.start();
         }
 
-        mPointerCount = event.getPointerCount();
+        if (event.getPointerCount() == 1) {
+            mMode = MOVE;
+        }
 
         mPreX = event.getX();
         mPreY = event.getY();
     }
 
     @Override
+    public void actionMove(MotionEvent event) {
+        mTempTiltShiftRadialRect.set(mTiltShiftRadialRect);
+
+        switch (mMode) {
+            case MOVE:
+                float distanceX = event.getX() - mPreX;
+                float distanceY = event.getY() - mPreY;
+
+                mTempTiltShiftRadialRect.offset(distanceX, distanceY);
+                break;
+            case RESIZE:
+                float dist = MotionEventUtil.getFingersDistance(event);
+                float scale = ((dist - mPreDistance) / displayDistance());
+
+                mPreDistance = dist;
+
+                scale += 1;
+                scale *= scale;
+
+                RectUtil.scaleRect(mTempTiltShiftRadialRect, scale);
+                break;
+        }
+
+        if (mTempTiltShiftRadialRect.width() > mControlPointTolerance
+                && mTempTiltShiftRadialRect.height() > mControlPointTolerance) {
+            // FIXME: Something wrong with tilt shift moving.
+            if (isTiltShiftInRect()) {
+                mTiltShiftRadialRect.set(mTempTiltShiftRadialRect);
+
+                mPreX = event.getX();
+                mPreY = event.getY();
+            }
+
+            updateGradientMatrix(mTiltShiftRadialRect);
+
+            mImageEditorView.invalidate();
+
+            ViewCompat.postInvalidateOnAnimation(mImageEditorView);
+        }
+    }
+
+    @Override
     public void actionPointerDown(MotionEvent event) {
 
-        mPointerCount = event.getPointerCount();
-
         if (event.getPointerCount() == 2) {
-            mPreDistance = MotionEventUtil.distanceBetweenFingers(event);
+            mPreDistance = MotionEventUtil.getFingersDistance(event);
+            mMode = RESIZE;
         }
     }
 
@@ -273,7 +284,12 @@ public class EditorTiltShiftRadial implements EditorTiltShift {
     public void actionUp() {
         mFadeOutAnimator.start();
 
-        mPointerCount = 0;
+        mMode = NONE;
+    }
+
+    @Override
+    public void actionPointerUp() {
+        mMode = NONE;
     }
 
     @Override
@@ -293,5 +309,12 @@ public class EditorTiltShiftRadial implements EditorTiltShift {
         float width = mImageEditorView.getWidth();
 
         return (float) Math.sqrt(width * width + height * height);
+    }
+
+    private boolean isTiltShiftInRect() {
+        return mBitmapRect.contains(
+                mTempTiltShiftRadialRect.centerX(),
+                mTempTiltShiftRadialRect.centerY()
+        );
     }
 }

@@ -3,7 +3,7 @@ package net.iquesoft.iquephoto.util;
 import android.graphics.RectF;
 
 public class RectUtil {
-
+    
     public static void scaleRect(RectF rectF, float scale) {
         float w = rectF.width();
         float h = rectF.height();
@@ -24,8 +24,10 @@ public class RectUtil {
                                   float rotateAngle) {
         float x = rectF.centerX();
         float y = rectF.centerY();
+
         float sinA = (float) Math.sin(Math.toRadians(rotateAngle));
         float cosA = (float) Math.cos(Math.toRadians(rotateAngle));
+
         float newX = centerX + (x - centerX) * cosA - (y - centerY) * sinA;
         float newY = centerY + (y - centerY) * cosA + (x - centerX) * sinA;
 

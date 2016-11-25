@@ -518,6 +518,7 @@ public class ImageEditorView extends ImageView {
                 actionUp();
                 break;
             case MotionEvent.ACTION_POINTER_UP:
+                actionPointerUp();
                 break;
         }
 
@@ -559,13 +560,6 @@ public class ImageEditorView extends ImageView {
                 mTiltShiftRadial.actionDown(event);
                 break;
         }
-    }
-
-    private float getFingersAngle(MotionEvent event) {
-        double delta_x = (event.getX(0) - event.getX(1));
-        double delta_y = (event.getY(0) - event.getY(1));
-        double radians = Math.atan2(delta_y, delta_x);
-        return (float) Math.toDegrees(radians);
     }
 
     private void actionMove(MotionEvent event) {
@@ -655,6 +649,37 @@ public class ImageEditorView extends ImageView {
 
     }
 
+    private void actionUp() {
+        mMode = EditorMode.NONE;
+
+        switch (mCommand) {
+            case NONE:
+                mIsShowOriginalImage = false;
+                invalidate();
+                break;
+            case DRAWING:
+                drawingStop();
+                break;
+            case TILT_SHIFT:
+                mTiltShiftRadial.actionUp();
+        }
+    }
+
+    private void actionPointerUp() {
+        switch (mCommand) {
+            case TILT_SHIFT:
+                mTiltShiftRadial.actionPointerUp();
+                break;
+        }
+    }
+
+    private float getFingersAngle(MotionEvent event) {
+        double delta_x = (event.getX(0) - event.getX(1));
+        double delta_y = (event.getY(0) - event.getY(1));
+        double radians = Math.atan2(delta_y, delta_x);
+        return (float) Math.toDegrees(radians);
+    }
+
     private float getDistanceX(MotionEvent motionEvent) {
         return motionEvent.getX() - mLastX;
     }
@@ -677,22 +702,6 @@ public class ImageEditorView extends ImageView {
         mLastY = event.getY();
 
         invalidate();
-    }
-
-    private void actionUp() {
-        mMode = EditorMode.NONE;
-
-        switch (mCommand) {
-            case NONE:
-                mIsShowOriginalImage = false;
-                invalidate();
-                break;
-            case DRAWING:
-                drawingStop();
-                break;
-            case TILT_SHIFT:
-                mTiltShiftRadial.actionUp();
-        }
     }
 
     public Bitmap getAlteredBitmap() {

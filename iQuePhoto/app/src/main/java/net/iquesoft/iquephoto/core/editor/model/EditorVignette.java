@@ -207,7 +207,7 @@ public class EditorVignette {
             mTempVignetteRect.offset(distanceX, distanceY);
 
         } else if (mFingersCount == 2) {
-            float max = motionEvent.getAxisValue(1); //distanceBetweenFingers(motionEvent);
+            float max = motionEvent.getAxisValue(1); //getFingersDistance(motionEvent);
             mTempVignetteRect.inset(max, max);
             //if (getFingersAngle(motionEvent) == 0 && getFingersAngle(motionEvent))
         }

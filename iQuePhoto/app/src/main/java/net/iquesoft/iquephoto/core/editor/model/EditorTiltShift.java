@@ -30,6 +30,8 @@ public interface EditorTiltShift {
 
     void actionUp();
 
+    void actionPointerUp();
+
     void setPaintAlpha(int value);
 
     int getPaintAlpha();

@@ -1,7 +1,7 @@
 package net.iquesoft.iquephoto.di.components;
 
 import net.iquesoft.iquephoto.di.ActivityScope;
-import net.iquesoft.iquephoto.di.modules.EditorActivityModule;
+import net.iquesoft.iquephoto.di.modules.EditorModule;
 import net.iquesoft.iquephoto.ui.fragment.AddTextFragment;
 import net.iquesoft.iquephoto.ui.fragment.AdjustFragment;
 import net.iquesoft.iquephoto.ui.fragment.DrawingFragment;
@@ -22,8 +22,8 @@ import net.iquesoft.iquephoto.ui.fragment.TransformVerticalFragment;
 import dagger.Component;
 
 @ActivityScope
-@Component(dependencies = ApplicationComponent.class,
-        modules = EditorActivityModule.class)
+@Component(dependencies = AppComponent.class,
+        modules = EditorModule.class)
 
 public interface EditorComponent {
 

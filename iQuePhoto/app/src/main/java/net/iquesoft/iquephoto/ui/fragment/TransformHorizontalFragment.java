@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseFragment;
-import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
+import net.iquesoft.iquephoto.di.components.EditorComponent;
 import net.iquesoft.iquephoto.presentation.presenter.fragment.TransformHorizontalPresenterImpl;
 import net.iquesoft.iquephoto.presentation.view.activity.EditorView;
 import net.iquesoft.iquephoto.presentation.view.fragment.TransformHorizontalView;
@@ -43,7 +43,7 @@ public class TransformHorizontalFragment extends BaseFragment implements Transfo
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getComponent(IEditorActivityComponent.class).inject(this);
+        getComponent(EditorComponent.class).inject(this);
     }
 
     @Override

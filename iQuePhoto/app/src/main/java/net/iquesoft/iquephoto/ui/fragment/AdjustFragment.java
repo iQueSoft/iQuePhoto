@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
 import net.iquesoft.iquephoto.adapter.AdjustAdapter;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseFragment;
-import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
+import net.iquesoft.iquephoto.di.components.EditorComponent;
 import net.iquesoft.iquephoto.model.Adjust;
 import net.iquesoft.iquephoto.presentation.presenter.fragment.AdjustPresenterImpl;
 import net.iquesoft.iquephoto.presentation.presenter.fragment.SliderControlFragmentPresenterImpl;
@@ -50,7 +50,7 @@ public class AdjustFragment extends BaseFragment implements AdjustView {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        this.getComponent(IEditorActivityComponent.class).inject(this);
+        this.getComponent(EditorComponent.class).inject(this);
     }
 
     @Override

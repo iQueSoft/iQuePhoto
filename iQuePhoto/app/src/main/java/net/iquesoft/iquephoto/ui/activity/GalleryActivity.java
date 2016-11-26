@@ -12,10 +12,10 @@ import android.widget.TextView;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseActivity;
 import net.iquesoft.iquephoto.di.HasComponent;
-import net.iquesoft.iquephoto.di.components.DaggerIGalleryActivityComponent;
-import net.iquesoft.iquephoto.di.components.IApplicationComponent;
-import net.iquesoft.iquephoto.di.components.IGalleryActivityComponent;
-import net.iquesoft.iquephoto.di.modules.GalleryActivityModule;
+import net.iquesoft.iquephoto.di.components.DaggerGalleryComponent;
+import net.iquesoft.iquephoto.di.components.AppComponent;
+import net.iquesoft.iquephoto.di.components.GalleryComponent;
+import net.iquesoft.iquephoto.di.modules.GalleryModule;
 import net.iquesoft.iquephoto.model.Image;
 import net.iquesoft.iquephoto.presentation.view.activity.GalleryView;
 import net.iquesoft.iquephoto.presentation.presenter.activity.GalleryPresenterImpl;
@@ -32,7 +32,7 @@ import butterknife.OnClick;
 
 // TODO: Change album images showing.
 // TODO: Check image orientation.
-public class GalleryActivity extends BaseActivity implements GalleryView, HasComponent<IGalleryActivityComponent> {
+public class GalleryActivity extends BaseActivity implements GalleryView, HasComponent<GalleryComponent> {
     @BindView(R.id.galleryHeaderTextView)
     TextView headerTextView;
 
@@ -48,7 +48,7 @@ public class GalleryActivity extends BaseActivity implements GalleryView, HasCom
     @Inject
     GalleryAlbumsFragment galleryAlbumsFragment;
 
-    private IGalleryActivityComponent mComponent;
+    private GalleryComponent mComponent;
 
     private FragmentManager mFragmentManager;
 
@@ -80,10 +80,10 @@ public class GalleryActivity extends BaseActivity implements GalleryView, HasCom
     }
 
     @Override
-    protected void setupComponent(IApplicationComponent component) {
-        mComponent = DaggerIGalleryActivityComponent.builder()
-                .iApplicationComponent(component)
-                .galleryActivityModule(new GalleryActivityModule(this))
+    protected void setupComponent(AppComponent component) {
+        mComponent = DaggerGalleryComponent.builder()
+                .appComponent(component)
+                .galleryModule(new GalleryModule(this))
                 .build();
         mComponent.inject(this);
     }
@@ -94,7 +94,7 @@ public class GalleryActivity extends BaseActivity implements GalleryView, HasCom
     }
 
     @Override
-    public IGalleryActivityComponent getComponent() {
+    public GalleryComponent getComponent() {
         return mComponent;
     }
 

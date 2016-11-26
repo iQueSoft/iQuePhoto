@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapter.FiltersAdapter;
 import net.iquesoft.iquephoto.common.BaseFragment;
-import net.iquesoft.iquephoto.di.components.ICameraActivityComponent;
+import net.iquesoft.iquephoto.di.components.CameraComponent;
 import net.iquesoft.iquephoto.model.Filter;
 import net.iquesoft.iquephoto.presentation.presenter.fragment.CameraFiltersPresenterImpl;
 import net.iquesoft.iquephoto.presentation.view.fragment.CameraFiltersView;
@@ -37,7 +37,7 @@ public class CameraFiltersFragment extends BaseFragment implements CameraFilters
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getComponent(ICameraActivityComponent.class).inject(this);
+        getComponent(CameraComponent.class).inject(this);
     }
 
     @Override

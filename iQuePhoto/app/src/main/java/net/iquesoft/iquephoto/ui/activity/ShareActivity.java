@@ -16,10 +16,10 @@ import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseActivity;
 import net.iquesoft.iquephoto.di.HasComponent;
-import net.iquesoft.iquephoto.di.components.DaggerIShareActivityComponent;
-import net.iquesoft.iquephoto.di.components.IApplicationComponent;
-import net.iquesoft.iquephoto.di.components.IShareActivityComponent;
-import net.iquesoft.iquephoto.di.modules.ShareActivityModule;
+import net.iquesoft.iquephoto.di.components.DaggerShareComponent;
+import net.iquesoft.iquephoto.di.components.AppComponent;
+import net.iquesoft.iquephoto.di.components.ShareComponent;
+import net.iquesoft.iquephoto.di.modules.ShareModule;
 import net.iquesoft.iquephoto.presentation.presenter.activity.SharePresenterImpl;
 import net.iquesoft.iquephoto.presentation.view.activity.ShareView;
 import net.iquesoft.iquephoto.task.ImageSaveTask;
@@ -34,7 +34,7 @@ import butterknife.OnClick;
 import static net.iquesoft.iquephoto.presentation.presenter.activity.SharePresenterImpl.FACEBOOK_ID;
 import static net.iquesoft.iquephoto.presentation.presenter.activity.SharePresenterImpl.INSTAGRAM_ID;
 
-public class ShareActivity extends BaseActivity implements ShareView, HasComponent<IShareActivityComponent> {
+public class ShareActivity extends BaseActivity implements ShareView, HasComponent<ShareComponent> {
 
     private Bitmap mBitmap;
 
@@ -47,7 +47,7 @@ public class ShareActivity extends BaseActivity implements ShareView, HasCompone
     @Inject
     SharePresenterImpl presenter;
 
-    private IShareActivityComponent mComponent;
+    private ShareComponent mComponent;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -84,10 +84,10 @@ public class ShareActivity extends BaseActivity implements ShareView, HasCompone
     }
 
     @Override
-    protected void setupComponent(IApplicationComponent component) {
-        mComponent = DaggerIShareActivityComponent.builder()
-                .iApplicationComponent(component)
-                .shareActivityModule(new ShareActivityModule(this))
+    protected void setupComponent(AppComponent component) {
+        mComponent = DaggerShareComponent.builder()
+                .appComponent(component)
+                .shareModule(new ShareModule(this))
                 .build();
         mComponent.inject(this);
     }
@@ -97,7 +97,7 @@ public class ShareActivity extends BaseActivity implements ShareView, HasCompone
         finish();
     }
 
-    public IShareActivityComponent getComponent() {
+    public ShareComponent getComponent() {
         return mComponent;
     }
 

@@ -3,7 +3,6 @@ package net.iquesoft.iquephoto.ui.activity;
 import android.Manifest;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
@@ -15,10 +14,10 @@ import com.tbruyelle.rxpermissions.RxPermissions;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseActivity;
 import net.iquesoft.iquephoto.di.HasComponent;
-import net.iquesoft.iquephoto.di.components.IApplicationComponent;
-import net.iquesoft.iquephoto.di.components.DaggerIMainActivityComponent;
-import net.iquesoft.iquephoto.di.components.IMainActivityComponent;
-import net.iquesoft.iquephoto.di.modules.MainActivityModule;
+import net.iquesoft.iquephoto.di.components.AppComponent;
+import net.iquesoft.iquephoto.di.components.DaggerMainComponent;
+import net.iquesoft.iquephoto.di.components.MainComponent;
+import net.iquesoft.iquephoto.di.modules.MainModule;
 import net.iquesoft.iquephoto.presentation.view.activity.MainView;
 import net.iquesoft.iquephoto.presentation.presenter.activity.MainPresenterImpl;
 
@@ -29,13 +28,13 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 // TODO: Make real time permissions without RxPermission library.
-public class MainActivity extends BaseActivity implements MainView, HasComponent<IMainActivityComponent> {
+public class MainActivity extends BaseActivity implements MainView, HasComponent<MainComponent> {
     private static final int REQ_CAMERA = 1;
 
     @Inject
     MainPresenterImpl presenter;
 
-    private IMainActivityComponent mComponent;
+    private MainComponent mComponent;
 
     @BindView(R.id.applicationName)
     TextView applicationTextView;
@@ -52,10 +51,10 @@ public class MainActivity extends BaseActivity implements MainView, HasComponent
     }
 
     @Override
-    protected void setupComponent(IApplicationComponent component) {
-        mComponent = DaggerIMainActivityComponent.builder()
-                .iApplicationComponent(component)
-                .mainActivityModule(new MainActivityModule(this))
+    protected void setupComponent(AppComponent component) {
+        mComponent = DaggerMainComponent.builder()
+                .appComponent(component)
+                .mainModule(new MainModule(this))
                 .build();
         mComponent.inject(this);
     }
@@ -136,7 +135,7 @@ public class MainActivity extends BaseActivity implements MainView, HasComponent
                 });
     }
 
-    public IMainActivityComponent getComponent() {
+    public MainComponent getComponent() {
         return mComponent;
     }
 }

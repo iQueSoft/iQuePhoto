@@ -11,10 +11,10 @@ import android.view.WindowManager;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseActivity;
 import net.iquesoft.iquephoto.di.HasComponent;
-import net.iquesoft.iquephoto.di.components.DaggerICameraActivityComponent;
-import net.iquesoft.iquephoto.di.components.IApplicationComponent;
-import net.iquesoft.iquephoto.di.components.ICameraActivityComponent;
-import net.iquesoft.iquephoto.di.modules.CameraActivityModule;
+import net.iquesoft.iquephoto.di.components.CameraComponent;
+import net.iquesoft.iquephoto.di.components.DaggerCameraComponent;
+import net.iquesoft.iquephoto.di.components.AppComponent;
+import net.iquesoft.iquephoto.di.modules.CameraModule;
 import net.iquesoft.iquephoto.presentation.presenter.activity.CameraPresenterImpl;
 import net.iquesoft.iquephoto.presentation.presenter.fragment.Camera2PresenterImpl;
 import net.iquesoft.iquephoto.presentation.view.activity.CameraActivityView;
@@ -27,7 +27,7 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class CameraActivity extends BaseActivity implements CameraActivityView, HasComponent<ICameraActivityComponent> {
+public class CameraActivity extends BaseActivity implements CameraActivityView, HasComponent<CameraComponent> {
 
     @Inject
     CameraPresenterImpl presenter;
@@ -45,7 +45,7 @@ public class CameraActivity extends BaseActivity implements CameraActivityView, 
     CameraFiltersFragment cameraFiltersFragment;
 
     private FragmentManager mFragmentManager;
-    private ICameraActivityComponent mComponent;
+    private CameraComponent mComponent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,16 +67,16 @@ public class CameraActivity extends BaseActivity implements CameraActivityView, 
     }
 
     @Override
-    protected void setupComponent(IApplicationComponent component) {
-        mComponent = DaggerICameraActivityComponent.builder()
-                .iApplicationComponent(component)
-                .cameraActivityModule(new CameraActivityModule(this))
+    protected void setupComponent(AppComponent component) {
+        mComponent = DaggerCameraComponent.builder()
+                .appComponent(component)
+                .cameraModule(new CameraModule(this))
                 .build();
         mComponent.inject(this);
     }
 
     @Override
-    public ICameraActivityComponent getComponent() {
+    public CameraComponent getComponent() {
         return mComponent;
     }
 

@@ -16,7 +16,7 @@ import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseFragment;
 import net.iquesoft.iquephoto.core.camera.Camera2Module;
 import net.iquesoft.iquephoto.core.camera.Camera2View;
-import net.iquesoft.iquephoto.di.components.ICameraActivityComponent;
+import net.iquesoft.iquephoto.di.components.CameraComponent;
 import net.iquesoft.iquephoto.presentation.presenter.fragment.Camera2PresenterImpl;
 import net.iquesoft.iquephoto.presentation.view.fragment.Camera2FragmentView;
 
@@ -43,7 +43,7 @@ public class Camera2Fragment extends BaseFragment implements Camera2FragmentView
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getComponent(ICameraActivityComponent.class).inject(this);
+        getComponent(CameraComponent.class).inject(this);
     }
 
     @Override

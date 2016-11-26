@@ -18,10 +18,10 @@ import com.isseiaoki.simplecropview.CropImageView;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseActivity;
 import net.iquesoft.iquephoto.di.HasComponent;
-import net.iquesoft.iquephoto.di.components.DaggerIPreviewActivityComponent;
-import net.iquesoft.iquephoto.di.components.IApplicationComponent;
-import net.iquesoft.iquephoto.di.components.IPreviewActivityComponent;
-import net.iquesoft.iquephoto.di.modules.PreviewActivityModule;
+import net.iquesoft.iquephoto.di.components.AppComponent;
+import net.iquesoft.iquephoto.di.components.DaggerPreviewComponent;
+import net.iquesoft.iquephoto.di.components.PreviewComponent;
+import net.iquesoft.iquephoto.di.modules.PreviewModule;
 import net.iquesoft.iquephoto.presentation.presenter.activity.PreviewPresenterImpl;
 import net.iquesoft.iquephoto.presentation.view.activity.PreviewView;
 import net.iquesoft.iquephoto.util.BitmapUtil;
@@ -34,7 +34,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class PreviewActivity extends BaseActivity implements PreviewView, HasComponent<IPreviewActivityComponent> {
+public class PreviewActivity extends BaseActivity implements PreviewView, HasComponent<PreviewComponent> {
 
     private Bitmap mBitmap;
 
@@ -46,7 +46,7 @@ public class PreviewActivity extends BaseActivity implements PreviewView, HasCom
     @BindView(R.id.cropImageView)
     CropImageView cropImageView;
 
-    private IPreviewActivityComponent mComponent;
+    private PreviewComponent mComponent;
 
     @Inject
     PreviewPresenterImpl presenter;
@@ -110,10 +110,10 @@ public class PreviewActivity extends BaseActivity implements PreviewView, HasCom
     }
 
     @Override
-    protected void setupComponent(IApplicationComponent component) {
-        mComponent = DaggerIPreviewActivityComponent.builder()
-                .iApplicationComponent(component)
-                .previewActivityModule(new PreviewActivityModule(this))
+    protected void setupComponent(AppComponent component) {
+        mComponent = DaggerPreviewComponent.builder()
+                .appComponent(component)
+                .previewModule(new PreviewModule(this))
                 .build();
         mComponent.inject(this);
     }
@@ -153,7 +153,7 @@ public class PreviewActivity extends BaseActivity implements PreviewView, HasCom
         return Uri.fromFile(new File(getCacheDir(), "cropped"));
     }
 
-    public IPreviewActivityComponent getComponent() {
+    public PreviewComponent getComponent() {
         return mComponent;
     }
 

@@ -4,11 +4,11 @@ apply plugin: 'me.tatarka.retrolambda'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.0"
+    buildToolsVersion "25.0.1"
 
     defaultConfig {
         applicationId "net.iquesoft.iquephoto"
-        minSdkVersion 15
+        minSdkVersion 18
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -16,6 +16,7 @@ android {
         renderscriptTargetApi 18
         renderscriptSupportModeEnabled true
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -35,18 +36,23 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:25.0.1'
     compile 'com.android.support:cardview-v7:25.0.1'
     compile 'com.android.support:design:25.0.1'
+
+    compile 'com.jakewharton:butterknife:8.4.0'
+    apt 'com.jakewharton:butterknife-compiler:8.4.0'
+
+    compile 'com.google.dagger:dagger:2.8'
+    apt 'com.google.dagger:dagger-compiler:2.8'
+
+    compile 'com.isseiaoki:simplecropview:1.1.4'
     compile 'org.adw.library:discrete-seekbar:1.0.1'
-    compile 'com.jakewharton:butterknife:8.3.0'
-    compile 'com.google.dagger:dagger:2.5'
+    compile 'com.afollestad.material-dialogs:core:0.9.0.2'
+
     compile 'com.tbruyelle.rxpermissions:rxpermissions:0.7.0@aar'
     compile 'com.jakewharton.rxbinding:rxbinding:0.4.0'
-    compile 'com.isseiaoki:simplecropview:1.1.4'
-    compile 'com.afollestad.material-dialogs:core:0.9.0.2'
+
     compile 'com.squareup.picasso:picasso:2.5.2'
     testCompile 'junit:junit:4.12'
-    apt 'com.jakewharton:butterknife-compiler:8.3.0'
-    apt 'com.google.dagger:dagger-compiler:2.5'
-    provided 'org.glassfish:javax.annotation:10.0-b28'
+
     compile 'io.reactivex:rxjava:1.1.6'
     compile 'io.reactivex:rxandroid:1.2.1'
 }

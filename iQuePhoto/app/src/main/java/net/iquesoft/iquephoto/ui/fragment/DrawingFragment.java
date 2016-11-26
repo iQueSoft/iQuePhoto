@@ -10,7 +10,7 @@ import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseFragment;
 import net.iquesoft.iquephoto.core.editor.ImageEditorView;
-import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
+import net.iquesoft.iquephoto.di.components.EditorComponent;
 import net.iquesoft.iquephoto.presentation.presenter.fragment.DrawingPresenterImpl;
 import net.iquesoft.iquephoto.ui.dialog.ColorPickerDialog;
 import net.iquesoft.iquephoto.ui.dialog.RGBColorPickerDialog;
@@ -55,7 +55,7 @@ public class DrawingFragment extends BaseFragment implements DrawingView {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        this.getComponent(IEditorActivityComponent.class).inject(this);
+        this.getComponent(EditorComponent.class).inject(this);
     }
 
     @Override

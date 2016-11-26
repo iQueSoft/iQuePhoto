@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -21,10 +22,10 @@ import net.iquesoft.iquephoto.common.BaseActivity;
 import net.iquesoft.iquephoto.core.editor.enums.EditorCommand;
 import net.iquesoft.iquephoto.core.editor.ImageEditorView;
 import net.iquesoft.iquephoto.di.HasComponent;
-import net.iquesoft.iquephoto.di.components.IApplicationComponent;
-import net.iquesoft.iquephoto.di.components.DaggerIEditorActivityComponent;
-import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
-import net.iquesoft.iquephoto.di.modules.EditorActivityModule;
+import net.iquesoft.iquephoto.di.components.AppComponent;
+import net.iquesoft.iquephoto.di.components.DaggerEditorComponent;
+import net.iquesoft.iquephoto.di.components.EditorComponent;
+import net.iquesoft.iquephoto.di.modules.EditorModule;
 import net.iquesoft.iquephoto.model.Text;
 import net.iquesoft.iquephoto.presentation.presenter.activity.EditorPresenterImpl;
 import net.iquesoft.iquephoto.presentation.presenter.fragment.SliderControlFragmentPresenterImpl;
@@ -54,7 +55,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class EditorActivity extends BaseActivity implements EditorView, HasComponent<IEditorActivityComponent> {
+public class EditorActivity extends BaseActivity implements EditorView, HasComponent<EditorComponent> {
 
     @Inject
     EditorPresenterImpl presenter;
@@ -118,7 +119,7 @@ public class EditorActivity extends BaseActivity implements EditorView, HasCompo
 
     private Bitmap mBitmap;
     private FragmentManager mFragmentManager;
-    private IEditorActivityComponent mComponent;
+    private EditorComponent mComponent;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -161,10 +162,10 @@ public class EditorActivity extends BaseActivity implements EditorView, HasCompo
     }
 
     @Override
-    protected void setupComponent(IApplicationComponent component) {
-        mComponent = DaggerIEditorActivityComponent.builder()
-                .editorActivityModule(new EditorActivityModule(this))
-                .iApplicationComponent(component)
+    protected void setupComponent(AppComponent component) {
+        mComponent = DaggerEditorComponent.builder()
+                .appComponent(component)
+                .editorModule(new EditorModule(this))
                 .build();
         mComponent.inject(this);
     }
@@ -308,7 +309,7 @@ public class EditorActivity extends BaseActivity implements EditorView, HasCompo
         imageEditorView.undo();
     }
 
-    public IEditorActivityComponent getComponent() {
+    public EditorComponent getComponent() {
         return mComponent;
     }
 }

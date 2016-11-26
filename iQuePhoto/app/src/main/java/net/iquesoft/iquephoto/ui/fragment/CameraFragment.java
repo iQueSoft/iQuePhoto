@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseFragment;
 import net.iquesoft.iquephoto.core.camera.CameraView;
-import net.iquesoft.iquephoto.di.components.ICameraActivityComponent;
+import net.iquesoft.iquephoto.di.components.CameraComponent;
 import net.iquesoft.iquephoto.presentation.presenter.fragment.CameraFragmentPresenterImpl;
 import net.iquesoft.iquephoto.presentation.view.fragment.CameraFragmentView;
 
@@ -35,7 +35,7 @@ public class CameraFragment extends BaseFragment implements CameraFragmentView {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getComponent(ICameraActivityComponent.class).inject(this);
+        getComponent(CameraComponent.class).inject(this);
     }
 
     @Override

@@ -10,10 +10,9 @@ import android.view.ViewGroup;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapter.ImageAlbumsAdapter;
 import net.iquesoft.iquephoto.common.BaseFragment;
-import net.iquesoft.iquephoto.di.components.IGalleryActivityComponent;
+import net.iquesoft.iquephoto.di.components.GalleryComponent;
 import net.iquesoft.iquephoto.model.ImageAlbum;
 import net.iquesoft.iquephoto.presentation.presenter.fragment.GalleryAlbumsPresenterImpl;
-import net.iquesoft.iquephoto.presentation.presenter.fragment.GalleryImagesPresenterImpl;
 import net.iquesoft.iquephoto.presentation.view.fragment.GalleryAlbumsView;
 
 import java.util.List;
@@ -36,7 +35,7 @@ public class GalleryAlbumsFragment extends BaseFragment implements GalleryAlbums
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getComponent(IGalleryActivityComponent.class).inject(this);
+        getComponent(GalleryComponent.class).inject(this);
     }
 
     @Override

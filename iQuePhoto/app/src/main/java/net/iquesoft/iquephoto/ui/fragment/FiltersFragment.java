@@ -14,7 +14,7 @@ import net.iquesoft.iquephoto.adapter.FiltersAdapter;
 import net.iquesoft.iquephoto.common.BaseFragment;
 import net.iquesoft.iquephoto.core.editor.enums.EditorCommand;
 import net.iquesoft.iquephoto.core.editor.ImageEditorView;
-import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
+import net.iquesoft.iquephoto.di.components.EditorComponent;
 import net.iquesoft.iquephoto.model.Filter;
 import net.iquesoft.iquephoto.presentation.presenter.fragment.FiltersPresenterImpl;
 import net.iquesoft.iquephoto.presentation.view.activity.EditorView;
@@ -51,7 +51,7 @@ public class FiltersFragment extends BaseFragment implements FiltersView {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        this.getComponent(IEditorActivityComponent.class).inject(this);
+        this.getComponent(EditorComponent.class).inject(this);
     }
 
     @Override

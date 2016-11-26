@@ -13,7 +13,7 @@ import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapter.StickersAdapter;
 import net.iquesoft.iquephoto.common.BaseFragment;
 import net.iquesoft.iquephoto.core.editor.ImageEditorView;
-import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
+import net.iquesoft.iquephoto.di.components.EditorComponent;
 import net.iquesoft.iquephoto.model.Sticker;
 import net.iquesoft.iquephoto.model.StickersSet;
 import net.iquesoft.iquephoto.presentation.presenter.fragment.ShowStickersFragmentPresenterImpl;
@@ -57,7 +57,7 @@ public class StickersFragment extends BaseFragment implements ShowStickersView {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        this.getComponent(IEditorActivityComponent.class).inject(this);
+        this.getComponent(EditorComponent.class).inject(this);
     }
 
     @Override

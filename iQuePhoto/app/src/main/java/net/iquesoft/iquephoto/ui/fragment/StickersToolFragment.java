@@ -10,12 +10,10 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.adapter.StickersPagerAdapter;
 import net.iquesoft.iquephoto.common.BaseFragment;
-import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
+import net.iquesoft.iquephoto.di.components.EditorComponent;
 import net.iquesoft.iquephoto.model.StickersSet;
 import net.iquesoft.iquephoto.presentation.presenter.fragment.StickersFragmentPresenterImpl;
 import net.iquesoft.iquephoto.presentation.view.fragment.StickersView;
@@ -48,7 +46,7 @@ public class StickersToolFragment extends BaseFragment implements StickersView {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        this.getComponent(IEditorActivityComponent.class).inject(this);
+        this.getComponent(EditorComponent.class).inject(this);
     }
 
     @Override

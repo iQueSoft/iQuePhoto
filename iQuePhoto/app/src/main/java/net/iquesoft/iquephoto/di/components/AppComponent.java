@@ -1,7 +1,7 @@
 package net.iquesoft.iquephoto.di.components;
 
 import net.iquesoft.iquephoto.App;
-import net.iquesoft.iquephoto.di.modules.ApplicationModule;
+import net.iquesoft.iquephoto.di.modules.AppModule;
 import net.iquesoft.iquephoto.ui.fragment.AddTextFragment;
 import net.iquesoft.iquephoto.ui.fragment.AdjustFragment;
 import net.iquesoft.iquephoto.ui.fragment.Camera2Fragment;
@@ -28,7 +28,7 @@ import dagger.Component;
 
 @Singleton
 @Component(modules = {
-        ApplicationModule.class}
+        AppModule.class}
 )
 public interface AppComponent {
     void inject(App application);

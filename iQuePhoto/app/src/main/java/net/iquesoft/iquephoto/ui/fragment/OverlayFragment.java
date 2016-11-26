@@ -13,7 +13,7 @@ import net.iquesoft.iquephoto.adapter.OverlaysAdapter;
 import net.iquesoft.iquephoto.common.BaseFragment;
 import net.iquesoft.iquephoto.core.editor.enums.EditorCommand;
 import net.iquesoft.iquephoto.core.editor.ImageEditorView;
-import net.iquesoft.iquephoto.di.components.IEditorActivityComponent;
+import net.iquesoft.iquephoto.di.components.EditorComponent;
 import net.iquesoft.iquephoto.model.Overlay;
 import net.iquesoft.iquephoto.presentation.presenter.fragment.OverlaysPresenterImpl;
 import net.iquesoft.iquephoto.presentation.view.activity.EditorView;
@@ -54,7 +54,7 @@ public class OverlayFragment extends BaseFragment implements OverlayView {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        this.getComponent(IEditorActivityComponent.class).inject(this);
+        this.getComponent(EditorComponent.class).inject(this);
     }
 
     @Override

@@ -557,6 +557,9 @@ public class ImageEditorView extends ImageView {
             case TILT_SHIFT_RADIAL:
                 mTiltShiftRadial.actionDown(event);
                 break;
+            case TILT_SHIFT_LINEAR:
+                mTiltShiftLinear.actionDown(event);
+                break;
         }
     }
 
@@ -568,6 +571,9 @@ public class ImageEditorView extends ImageView {
                 break;
             case TILT_SHIFT_RADIAL:
                 mTiltShiftRadial.actionPointerDown(event);
+                break;
+            case TILT_SHIFT_LINEAR:
+                mTiltShiftLinear.actionPointerDown(event);
                 break;
         }
     }
@@ -615,35 +621,7 @@ public class ImageEditorView extends ImageView {
                 }
                 break;
             case TEXT:
-                if (mCurrentEditorText != null) {
-                    switch (mMode) {
-                        case MOVE:
-                            moveText(event);
-                            break;
-                        case RESIZE:
-                            mCurrentEditorText.scaleText(
-                                    getDistanceX(event),
-                                    getDistanceY(event)
-                            );
-
-                            invalidate();
-
-                            mLastX = event.getX();
-                            mLastY = event.getY();
-                            break;
-                        case ROTATE:
-                            mCurrentEditorText.rotateText(
-                                    getDistanceX(event),
-                                    getDistanceY(event)
-                            );
-
-                            invalidate();
-
-                            mLastX = event.getX();
-                            mLastY = event.getY();
-                            break;
-                    }
-                }
+                moveText(event);
                 break;
             case DRAWING:
                 drawingMove(event);
@@ -653,10 +631,11 @@ public class ImageEditorView extends ImageView {
                 break;
             case TILT_SHIFT_RADIAL:
                 mTiltShiftRadial.actionMove(event);
-                invalidate();
+                break;
+            case TILT_SHIFT_LINEAR:
+                mTiltShiftLinear.actionMove(event);
                 break;
         }
-
     }
 
     private void actionUp() {
@@ -673,8 +652,11 @@ public class ImageEditorView extends ImageView {
             case TILT_SHIFT_RADIAL:
                 mTiltShiftRadial.actionUp();
                 break;
+            case TILT_SHIFT_LINEAR:
+                mTiltShiftLinear.actionUp();
             case VIGNETTE:
                 mEditorVignette.actionUp();
+                break;
         }
     }
 
@@ -685,6 +667,9 @@ public class ImageEditorView extends ImageView {
                 break;
             case TILT_SHIFT_RADIAL:
                 mTiltShiftRadial.actionPointerUp();
+                break;
+            case TILT_SHIFT_LINEAR:
+                mTiltShiftLinear.actionPointerUp();
                 break;
         }
     }
@@ -705,19 +690,47 @@ public class ImageEditorView extends ImageView {
     }
 
     private void moveText(MotionEvent event) {
-        float distanceX = event.getX() - mLastX;
-        float distanceY = event.getY() - mLastY;
+        if (mCurrentEditorText != null) {
+            switch (mMode) {
+                case MOVE:
+                    float distanceX = event.getX() - mLastX;
+                    float distanceY = event.getY() - mLastY;
 
-        int newX = mCurrentEditorText.getX() + (int) distanceX;
-        int newY = mCurrentEditorText.getY() + (int) distanceY;
+                    int newX = mCurrentEditorText.getX() + (int) distanceX;
+                    int newY = mCurrentEditorText.getY() + (int) distanceY;
 
-        mCurrentEditorText.setX(newX);
-        mCurrentEditorText.setY(newY);
+                    mCurrentEditorText.setX(newX);
+                    mCurrentEditorText.setY(newY);
 
-        mLastX = event.getX();
-        mLastY = event.getY();
+                    mLastX = event.getX();
+                    mLastY = event.getY();
 
-        invalidate();
+                    invalidate();
+                    break;
+                case RESIZE:
+                    mCurrentEditorText.scaleText(
+                            getDistanceX(event),
+                            getDistanceY(event)
+                    );
+
+                    invalidate();
+
+                    mLastX = event.getX();
+                    mLastY = event.getY();
+                    break;
+                case ROTATE:
+                    mCurrentEditorText.rotateText(
+                            getDistanceX(event),
+                            getDistanceY(event)
+                    );
+
+                    invalidate();
+
+                    mLastX = event.getX();
+                    mLastY = event.getY();
+                    break;
+            }
+        }
     }
 
     public Bitmap getAlteredBitmap() {
@@ -1181,7 +1194,7 @@ public class ImageEditorView extends ImageView {
 
         mEditorVignette.updateRect(mBitmapRect);
         mTiltShiftRadial.updateRect(mBitmapRect);
-//        mTiltShiftLinear.updateRect(mBitmapRect);
+        mTiltShiftLinear.updateRect(mBitmapRect);
 
         mIsInitialized = true;
         invalidate();

@@ -33,7 +33,7 @@ public class EditorSticker {
     private Rect mFrontHandleSrcRect;
 
     private RectF mDeleteHandleDstRect;
-    private RectF mRotateHandleDstRect;
+    //private RectF mRotateHandleDstRect;
     private RectF mResizeHandleDstRect;
     private RectF mFrontHandleDstRect;
 
@@ -92,19 +92,7 @@ public class EditorSticker {
         mDeleteHandleDstRect = new RectF(0, 0, handleHalfSize << 1, handleHalfSize << 1);
         mResizeHandleDstRect = new RectF(0, 0, handleHalfSize << 1, handleHalfSize << 1);
         mFrontHandleDstRect = new RectF(0, 0, handleHalfSize << 1, handleHalfSize << 1);
-        mRotateHandleDstRect = new RectF(0, 0, handleHalfSize << 1, handleHalfSize << 1);
-        /*mFrameHandlesRect = new Rect(0, 0, mEditorFrame.getDeleteHandleBitmap().getWidth(),
-                mEditorFrame.getDeleteHandleBitmap().getHeight());
-
-        mDeleteHandleRect = new RectF(mFrameRect.left - BUTTON_WIDTH, mFrameRect.top
-                - BUTTON_WIDTH, mFrameRect.left + BUTTON_WIDTH, mFrameRect.top
-                + BUTTON_WIDTH);
-        mResizeHandleRect = new RectF(mFrameRect.right - BUTTON_WIDTH, mFrameRect.bottom
-                - BUTTON_WIDTH, mFrameRect.right + BUTTON_WIDTH, mFrameRect.bottom
-                + BUTTON_WIDTH);
-
-        mResizeHandleDstRect = new RectF(mResizeHandleRect);
-        mDeleteHandleDstRect = new RectF(mDeleteHandleRect);*/
+        //mRotateHandleDstRect = new RectF(0, 0, handleHalfSize << 1, handleHalfSize << 1);
     }
 
     private void updateFrameRect() {
@@ -120,11 +108,6 @@ public class EditorSticker {
         mDstRect.offset(dx, dy);
 
         mFrameRect.offset(dx, dy);
-        //mDeleteHandleRect.offset(dx, dy);
-        //mResizeHandleRect.offset(dx, dy);
-
-        //mResizeHandleDstRect.offset(dx, dy);
-        //mDeleteHandleDstRect.offset(dx, dy);
     }
 
     public void updateRotateAndScale(final float oldx, final float oldy,
@@ -161,10 +144,7 @@ public class EditorSticker {
 
         mFrameRect.set(mDstRect);
         updateFrameRect();
-        /*mResizeHandleRect.offsetTo(mFrameRect.right - BUTTON_WIDTH, mFrameRect.bottom
-                - BUTTON_WIDTH);
-        mDeleteHandleRect.offsetTo(mFrameRect.left - BUTTON_WIDTH, mFrameRect.top
-                - BUTTON_WIDTH);*/
+
 
         mResizeHandleDstRect.offsetTo(mFrameRect.right - BUTTON_WIDTH, mFrameRect.bottom
                 - BUTTON_WIDTH);
@@ -195,6 +175,10 @@ public class EditorSticker {
     public void draw(Canvas canvas) {
         canvas.drawBitmap(mBitmap, mMatrix, null);
 
+        drawFrame(canvas);
+    }
+
+    private void drawFrame(Canvas canvas) {
         canvas.save();
         canvas.rotate(mRotateAngle, mFrameRect.centerX(), mFrameRect.centerY());
         canvas.drawRect(mFrameRect, mEditorFrame.getPaint());
@@ -204,14 +188,14 @@ public class EditorSticker {
 
         mDeleteHandleDstRect.offsetTo(mFrameRect.left - offsetValue, mFrameRect.top - offsetValue);
         mResizeHandleDstRect.offsetTo(mFrameRect.right - offsetValue, mFrameRect.bottom - offsetValue);
-        mRotateHandleDstRect.offsetTo(mFrameRect.right - offsetValue, mFrameRect.top - offsetValue);
+        //mRotateHandleDstRect.offsetTo(mFrameRect.right - offsetValue, mFrameRect.top - offsetValue);
         mFrontHandleDstRect.offsetTo(mFrameRect.left - offsetValue, mFrameRect.bottom - offsetValue);
 
         RectUtil.rotateRect(mDeleteHandleDstRect, mFrameRect.centerX(),
                 mFrameRect.centerY(), mRotateAngle);
 
-        RectUtil.rotateRect(mRotateHandleDstRect, mFrameRect.centerX(),
-                mFrameRect.centerY(), mRotateAngle);
+        /*RectUtil.rotateRect(mRotateHandleDstRect, mFrameRect.centerX(),
+                mFrameRect.centerY(), mRotateAngle);*/
 
         RectUtil.rotateRect(mResizeHandleDstRect, mFrameRect.centerX(),
                 mFrameRect.centerY(), mRotateAngle);
@@ -224,10 +208,10 @@ public class EditorSticker {
                 mDeleteHandleDstRect,
                 null);
 
-        canvas.drawBitmap(mEditorFrame.getRotateHandleBitmap(),
+        /*canvas.drawBitmap(mEditorFrame.getRotateHandleBitmap(),
                 mRotateHandleSrcRect,
                 mRotateHandleDstRect,
-                null);
+                null);*/
 
         canvas.drawBitmap(mEditorFrame.getResizeHandleBitmap(),
                 mResizeHandleSrcRect,
@@ -238,12 +222,6 @@ public class EditorSticker {
                 mFrontHandleSrcRect,
                 mFrontHandleDstRect,
                 null);
-
-
-    }
-
-    private void drawFrame(Canvas canvas) {
-
     }
 
     public boolean isInside(MotionEvent event) {

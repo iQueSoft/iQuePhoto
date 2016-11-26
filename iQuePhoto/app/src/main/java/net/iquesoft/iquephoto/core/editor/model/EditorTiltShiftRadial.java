@@ -124,7 +124,7 @@ public class EditorTiltShiftRadial implements EditorTiltShift {
 
             mTiltShiftRadialControlRect.set(mTiltShiftRadialRect);
             mTiltShiftRadialControlRect.inset(-mGradientInset, -mGradientInset);
-
+            
             if (mBlurBitmap == null) {
                 mBitmap = bitmap;
                 mBlurBitmap = BitmapUtil.getBlurImage(
@@ -146,7 +146,7 @@ public class EditorTiltShiftRadial implements EditorTiltShift {
             if (mBlurBitmap != null) {
                 canvas.drawBitmap(mBlurBitmap, matrix, paint);
             }
-            
+
             canvas.drawCircle(
                     mTiltShiftRadialControlRect.centerX(),
                     mTiltShiftRadialControlRect.centerY(),
@@ -251,14 +251,14 @@ public class EditorTiltShiftRadial implements EditorTiltShift {
                 scale *= scale;
 
                 RectUtil.scaleRect(mTempTiltShiftRadialRect, scale);
-                mFocusRadius = mTempTiltShiftRadialRect.height() / 2;
+
+                mFocusRadius = mTempTiltShiftRadialRect.height();
 
                 break;
         }
 
         if (mTempTiltShiftRadialRect.width() > mControlPointTolerance
                 && mTempTiltShiftRadialRect.height() > mControlPointTolerance) {
-            // FIXME: Something wrong with tilt shift moving.
             if (isTiltShiftInRect()) {
                 mTiltShiftRadialRect.set(mTempTiltShiftRadialRect);
 

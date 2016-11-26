@@ -33,8 +33,8 @@ public class DrawingFragment extends BaseFragment implements DrawingView {
     @BindView(R.id.drawingSettings)
     LinearLayout drawingSettings;
 
-    @BindView(R.id.brashSizeSeekBar)
-    DiscreteSeekBar brashSizeSeekBar;
+    /*@BindView(R.id.brashSizeSeekBar)
+    DiscreteSeekBar brashSizeSeekBar;*/
 
     private ColorPickerDialog mColorPickerDialog;
 
@@ -80,7 +80,7 @@ public class DrawingFragment extends BaseFragment implements DrawingView {
 
         RGBColorPickerDialog = new RGBColorPickerDialog(view.getContext());
 
-        brashSizeSeekBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
+        /*brashSizeSeekBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
             @Override
             public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
                 mImageEditorView.setBrushSize(value);
@@ -95,7 +95,7 @@ public class DrawingFragment extends BaseFragment implements DrawingView {
             public void onStopTrackingTouch(DiscreteSeekBar seekBar) {
 
             }
-        });
+        });*/
 
         return view;
     }

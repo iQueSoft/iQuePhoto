@@ -45,7 +45,7 @@ public class HomeActivity extends BaseActivity implements HomeView, HasComponent
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        setContentView(R.layout.activity_start);
+        setContentView(R.layout.activity_home);
 
         ButterKnife.bind(this);
     }

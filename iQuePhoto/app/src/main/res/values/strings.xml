@@ -185,6 +185,7 @@
     <string name="saving">Saving…</string>
     <string name="prepare_frame">Prepare frame…</string>
     <string name="prepare_overlay">Prepare overlay…</string>
+    <string name="brush_size">Brush Size</string>
     <!-- Progress dialog message - END. -->
 
 </resources>

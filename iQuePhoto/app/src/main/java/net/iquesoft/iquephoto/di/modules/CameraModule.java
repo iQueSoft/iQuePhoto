@@ -10,11 +10,11 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module
-public class CameraActivityModule {
+public class CameraModule {
 
     private CameraActivityView mView;
 
-    public CameraActivityModule(CameraActivityView view) {
+    public CameraModule(CameraActivityView view) {
         mView = view;
     }
 

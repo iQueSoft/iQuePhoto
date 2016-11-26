@@ -22,11 +22,11 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module
-public class EditorActivityModule {
+public class EditorModule {
 
     private EditorView mView;
 
-    public EditorActivityModule(EditorView view) {
+    public EditorModule(EditorView view) {
         mView = view;
     }
 

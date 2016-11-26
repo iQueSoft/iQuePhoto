@@ -7,9 +7,9 @@ import net.iquesoft.iquephoto.ui.activity.ShareActivity;
 import dagger.Component;
 
 @ActivityScope
-@Component(dependencies = IApplicationComponent.class,
+@Component(dependencies = ApplicationComponent.class,
         modules = ShareActivityModule.class)
 
-public interface IShareActivityComponent {
+public interface ShareComponent {
     void inject(ShareActivity shareActivity);
 }

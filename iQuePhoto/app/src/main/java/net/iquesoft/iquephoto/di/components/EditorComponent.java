@@ -22,10 +22,10 @@ import net.iquesoft.iquephoto.ui.fragment.TransformVerticalFragment;
 import dagger.Component;
 
 @ActivityScope
-@Component(dependencies = IApplicationComponent.class,
+@Component(dependencies = ApplicationComponent.class,
         modules = EditorActivityModule.class)
 
-public interface IEditorActivityComponent {
+public interface EditorComponent {
 
     void inject(EditorActivity editorActivity);
 

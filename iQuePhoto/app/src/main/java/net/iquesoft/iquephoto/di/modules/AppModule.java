@@ -2,8 +2,7 @@ package net.iquesoft.iquephoto.di.modules;
 
 import android.app.Application;
 
-import net.iquesoft.iquephoto.PhotoApplication;
-import net.iquesoft.iquephoto.presentation.presenter.fragment.GalleryImagesPresenterImpl;
+import net.iquesoft.iquephoto.App;
 import net.iquesoft.iquephoto.ui.fragment.AddTextFragment;
 import net.iquesoft.iquephoto.ui.fragment.AdjustFragment;
 import net.iquesoft.iquephoto.ui.fragment.Camera2Fragment;
@@ -30,11 +29,11 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module
-public class ApplicationModule {
+public class AppModule {
 
-    private PhotoApplication mApplication;
+    private App mApplication;
 
-    public ApplicationModule(PhotoApplication application) {
+    public AppModule(App application) {
         mApplication = application;
     }
 

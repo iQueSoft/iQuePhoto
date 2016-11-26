@@ -1,6 +1,6 @@
 package net.iquesoft.iquephoto.di.components;
 
-import net.iquesoft.iquephoto.PhotoApplication;
+import net.iquesoft.iquephoto.App;
 import net.iquesoft.iquephoto.di.modules.ApplicationModule;
 import net.iquesoft.iquephoto.ui.fragment.AddTextFragment;
 import net.iquesoft.iquephoto.ui.fragment.AdjustFragment;
@@ -30,8 +30,8 @@ import dagger.Component;
 @Component(modules = {
         ApplicationModule.class}
 )
-public interface IApplicationComponent {
-    void inject(PhotoApplication application);
+public interface AppComponent {
+    void inject(App application);
 
     GalleryAlbumsFragment galleryAlbumsFragment();
 

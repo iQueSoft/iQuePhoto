@@ -7,11 +7,11 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module
-public class ShareActivityModule {
+public class ShareModule {
 
     private ShareView mView;
 
-    public ShareActivityModule(ShareView view) {
+    public ShareModule(ShareView view) {
         mView = view;
     }
 

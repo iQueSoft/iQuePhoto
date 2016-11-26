@@ -7,11 +7,11 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module
-public class MainActivityModule {
+public class MainModule {
 
     private MainView mView;
 
-    public MainActivityModule(MainView view) {
+    public MainModule(MainView view) {
         mView = view;
     }
 

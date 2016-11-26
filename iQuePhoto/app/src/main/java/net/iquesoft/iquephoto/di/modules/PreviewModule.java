@@ -7,11 +7,11 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module
-public class PreviewActivityModule {
+public class PreviewModule {
 
     private PreviewView mView;
 
-    public PreviewActivityModule(PreviewView view) {
+    public PreviewModule(PreviewView view) {
         mView = view;
     }
 

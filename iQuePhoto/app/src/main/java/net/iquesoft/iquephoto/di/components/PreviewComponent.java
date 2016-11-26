@@ -7,9 +7,9 @@ import net.iquesoft.iquephoto.ui.activity.PreviewActivity;
 import dagger.Component;
 
 @ActivityScope
-@Component(dependencies = IApplicationComponent.class,
+@Component(dependencies = ApplicationComponent.class,
         modules = PreviewActivityModule.class)
-public interface IPreviewActivityComponent {
+public interface PreviewComponent {
 
     void inject(PreviewActivity previewActivity);
 }

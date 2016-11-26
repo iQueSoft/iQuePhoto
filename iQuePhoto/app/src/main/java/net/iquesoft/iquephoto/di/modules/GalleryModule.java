@@ -13,11 +13,11 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module
-public class GalleryActivityModule {
+public class GalleryModule {
 
     private GalleryView mView;
 
-    public GalleryActivityModule(GalleryView view) {
+    public GalleryModule(GalleryView view) {
         mView = view;
     }
 

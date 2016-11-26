@@ -10,9 +10,9 @@ import net.iquesoft.iquephoto.ui.fragment.CameraFragment;
 import dagger.Component;
 
 @ActivityScope
-@Component(dependencies = IApplicationComponent.class,
+@Component(dependencies = ApplicationComponent.class,
         modules = CameraActivityModule.class)
-public interface ICameraActivityComponent {
+public interface CameraComponent {
 
     void inject(CameraActivity cameraActivity);
 

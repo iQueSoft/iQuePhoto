@@ -6,15 +6,13 @@ import net.iquesoft.iquephoto.ui.activity.GalleryActivity;
 import net.iquesoft.iquephoto.ui.fragment.GalleryAlbumsFragment;
 import net.iquesoft.iquephoto.ui.fragment.GalleryImagesFragment;
 
-import javax.inject.Singleton;
-
 import dagger.Component;
 
 @ActivityScope
-@Component(dependencies = IApplicationComponent.class,
+@Component(dependencies = ApplicationComponent.class,
         modules = GalleryActivityModule.class)
 
-public interface IGalleryActivityComponent {
+public interface GalleryComponent {
     void inject(GalleryActivity galleryActivity);
 
     void inject(GalleryImagesFragment galleryImagesFragment);

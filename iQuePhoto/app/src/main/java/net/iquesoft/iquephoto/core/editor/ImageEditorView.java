@@ -33,6 +33,7 @@ import net.iquesoft.iquephoto.core.editor.enums.EditorCommand;
 import net.iquesoft.iquephoto.core.editor.enums.EditorMode;
 import net.iquesoft.iquephoto.core.editor.model.EditorSticker;
 import net.iquesoft.iquephoto.core.editor.model.EditorText;
+import net.iquesoft.iquephoto.core.editor.model.EditorTiltShiftLinear;
 import net.iquesoft.iquephoto.core.editor.model.EditorTiltShiftRadial;
 import net.iquesoft.iquephoto.core.editor.model.EditorVignette;
 import net.iquesoft.iquephoto.core.editor.model.Drawing;
@@ -64,6 +65,7 @@ public class ImageEditorView extends ImageView {
     private EditorFrame mEditorFrame;
     private EditorVignette mEditorVignette;
     private EditorTiltShiftRadial mTiltShiftRadial;
+    private EditorTiltShiftLinear mTiltShiftLinear;
     private EditorText mCurrentEditorText;
     private EditorSticker mCurrentEditorSticker;
 
@@ -173,6 +175,7 @@ public class ImageEditorView extends ImageView {
         mEditorFrame = new EditorFrame(context);
         mEditorVignette = new EditorVignette(this);
         mTiltShiftRadial = new EditorTiltShiftRadial(this);
+        mTiltShiftLinear = new EditorTiltShiftLinear(this);
 
         mImagePaint.setFilterBitmap(true);
 
@@ -306,8 +309,11 @@ public class ImageEditorView extends ImageView {
                 canvas.drawBitmap(bitmap, getTransformVerticalMatrix(mVerticalTransformValue), mImagePaint);
                 drawGuidelines(canvas);
                 break;
-            case TILT_SHIFT:
+            case TILT_SHIFT_RADIAL:
                 mTiltShiftRadial.draw(canvas, bitmap, mMatrix, mImagePaint);
+                break;
+            case TILT_SHIFT_LINEAR:
+                mTiltShiftLinear.draw(canvas, bitmap, mMatrix, mImagePaint);
                 break;
         }
 
@@ -548,7 +554,7 @@ public class ImageEditorView extends ImageView {
             case DRAWING:
                 drawingStart(event);
                 break;
-            case TILT_SHIFT:
+            case TILT_SHIFT_RADIAL:
                 mTiltShiftRadial.actionDown(event);
                 break;
         }
@@ -560,7 +566,7 @@ public class ImageEditorView extends ImageView {
             case VIGNETTE:
                 mEditorVignette.actionPointerDown(event);
                 break;
-            case TILT_SHIFT:
+            case TILT_SHIFT_RADIAL:
                 mTiltShiftRadial.actionPointerDown(event);
                 break;
         }
@@ -645,7 +651,7 @@ public class ImageEditorView extends ImageView {
             case VIGNETTE:
                 mEditorVignette.actionMove(event);
                 break;
-            case TILT_SHIFT:
+            case TILT_SHIFT_RADIAL:
                 mTiltShiftRadial.actionMove(event);
                 invalidate();
                 break;
@@ -664,7 +670,7 @@ public class ImageEditorView extends ImageView {
             case DRAWING:
                 drawingStop();
                 break;
-            case TILT_SHIFT:
+            case TILT_SHIFT_RADIAL:
                 mTiltShiftRadial.actionUp();
                 break;
             case VIGNETTE:
@@ -677,7 +683,7 @@ public class ImageEditorView extends ImageView {
             case VIGNETTE:
                 mEditorVignette.actionPointerUp();
                 break;
-            case TILT_SHIFT:
+            case TILT_SHIFT_RADIAL:
                 mTiltShiftRadial.actionPointerUp();
                 break;
         }
@@ -1174,8 +1180,8 @@ public class ImageEditorView extends ImageView {
         mBitmapRect = calcImageRect(new RectF(0f, 0f, mImgWidth, mImgHeight), mMatrix);
 
         mEditorVignette.updateRect(mBitmapRect);
-
         mTiltShiftRadial.updateRect(mBitmapRect);
+//        mTiltShiftLinear.updateRect(mBitmapRect);
 
         mIsInitialized = true;
         invalidate();
@@ -1318,7 +1324,7 @@ public class ImageEditorView extends ImageView {
                     break;
                 case DRAWING:
                     break;
-                case TILT_SHIFT:
+                case TILT_SHIFT_RADIAL:
                     break;
                 case VIGNETTE:
                     // TODO: Draw vignette on image with original size.

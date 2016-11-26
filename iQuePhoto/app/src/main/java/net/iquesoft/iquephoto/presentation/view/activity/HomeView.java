@@ -1,6 +1,6 @@
 package net.iquesoft.iquephoto.presentation.view.activity;
 
-public interface MainView {
+public interface HomeView {
     void startGallery();
 
     void startCamera();

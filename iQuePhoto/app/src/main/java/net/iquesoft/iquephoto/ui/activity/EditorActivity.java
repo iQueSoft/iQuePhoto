@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -236,7 +235,7 @@ public class EditorActivity extends BaseActivity implements EditorView, HasCompo
                 sliderControlFragmentPresenter.setCommand(editorCommand);
                 fragment = sliderControlFragment;
                 break;
-            case TILT_SHIFT:
+            case TILT_SHIFT_RADIAL:
                 fragment = tiltShiftFragment;
                 break;
             case DRAWING:
@@ -281,6 +280,11 @@ public class EditorActivity extends BaseActivity implements EditorView, HasCompo
     @Override
     public void addTextToEditor(Text text) {
         imageEditorView.addText(text);
+    }
+
+    @Override
+    public void applyCommand(EditorCommand editorCommand) {
+        imageEditorView.apply(editorCommand);
     }
 
     @Override

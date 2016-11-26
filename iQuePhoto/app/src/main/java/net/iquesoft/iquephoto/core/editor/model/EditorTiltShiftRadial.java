@@ -30,6 +30,7 @@ public class EditorTiltShiftRadial implements EditorTiltShift {
     private static final int FADEOUT_DELAY = 1000;
 
     private float mFeather = 0.7f;
+    private float mFocusRadius;
     private float mGradientInset = 100;
     private float mControlPointTolerance = 20;
 
@@ -145,42 +146,43 @@ public class EditorTiltShiftRadial implements EditorTiltShift {
             if (mBlurBitmap != null) {
                 canvas.drawBitmap(mBlurBitmap, matrix, paint);
             }
+            
+            canvas.drawCircle(
+                    mTiltShiftRadialControlRect.centerX(),
+                    mTiltShiftRadialControlRect.centerY(),
+                    mFocusRadius,
+                    mShaderPaint
+            );
 
-            canvas.drawOval(mTiltShiftRadialControlRect, mShaderPaint);
             canvas.restore();
 
             mTiltShiftRadialControlRect.set(mTiltShiftRadialRect);
 
-            canvas.drawOval(mTiltShiftRadialRect, mTiltShiftRadialControlPaint);
+            canvas.drawCircle(
+                    mTiltShiftRadialRect.centerX(),
+                    mTiltShiftRadialRect.centerY(),
+                    mFocusRadius,
+                    mTiltShiftRadialControlPaint
+            );
         }
     }
 
     @Override
     public void updateRect(RectF bitmapRect) {
-        RectF rect = bitmapRect;
-        final boolean rect_changed = !mBitmapRect.equals(rect);
-
-        if (null != rect) {
-            if (rect_changed) {
-                if (!mBitmapRect.isEmpty()) {
-                    float old_left = mBitmapRect.left;
-                    float old_top = mBitmapRect.top;
-                    float old_width = mBitmapRect.width();
-                    float old_height = mBitmapRect.height();
-
-                    mTiltShiftRadialRect.inset(-(rect.width() - old_width) / 2, -(rect.height() - old_height) / 2);
-                    mTiltShiftRadialRect.offset(rect.left - old_left, rect.top - old_top);
-                    mTiltShiftRadialRect.offset((rect.width() - old_width) / 2, (rect.height() - old_height) / 2);
-                } else {
-                    mTiltShiftRadialRect.set(rect);
-                    mTiltShiftRadialRect.inset(mControlPointTolerance, mControlPointTolerance);
-                }
-            }
-            mBitmapRect.set(rect);
+        if (bitmapRect.height() <= bitmapRect.width()) {
+            mFocusRadius = bitmapRect.height() / 3;
         } else {
-            mBitmapRect.setEmpty();
-            mTiltShiftRadialRect.setEmpty();
+            mFocusRadius = bitmapRect.width() / 3;
         }
+
+        mTiltShiftRadialRect.set(0, 0, mFocusRadius, mFocusRadius);
+
+        mTiltShiftRadialRect.offsetTo(
+                bitmapRect.centerX() - mFocusRadius / 2,
+                bitmapRect.centerY() - mFocusRadius / 2
+        );
+
+        mBitmapRect.set(bitmapRect);
 
         updateGradientMatrix(mTiltShiftRadialRect);
 
@@ -249,6 +251,8 @@ public class EditorTiltShiftRadial implements EditorTiltShift {
                 scale *= scale;
 
                 RectUtil.scaleRect(mTempTiltShiftRadialRect, scale);
+                mFocusRadius = mTempTiltShiftRadialRect.height() / 2;
+
                 break;
         }
 

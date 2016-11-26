@@ -33,7 +33,7 @@ public class Tool {
             new Tool(R.string.frames, R.drawable.ic_frame, FRAMES),
             new Tool(R.string.transform, R.drawable.ic_frame, TRANSFORM),
             new Tool(R.string.vignette, R.drawable.ic_vignette, VIGNETTE),
-            new Tool(R.string.tilt_shift, R.drawable.ic_tilt_shift, TILT_SHIFT),
+            new Tool(R.string.tilt_shift, R.drawable.ic_tilt_shift, TILT_SHIFT_RADIAL),
             new Tool(R.string.drawing, R.drawable.ic_brush, DRAWING),
             new Tool(R.string.text, R.drawable.ic_letters, TEXT)
     };

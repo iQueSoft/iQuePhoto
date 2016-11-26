@@ -87,6 +87,11 @@ public class EditorTiltShiftLinear implements EditorTiltShift {
         mShaderPaint.setFilterBitmap(false);
         mShaderPaint.setDither(true);
         mShaderPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OUT));
+
+        updateGradientRect();
+
+        mControlPointTolerance *= 1.5f;
+        mGradientInset = 0;
     }
 
     @Override
@@ -166,12 +171,14 @@ public class EditorTiltShiftLinear implements EditorTiltShift {
 
     @Override
     public void updateGradientRect() {
-        final int[] colors = new int[]{0xff000000, 0xff000000, 0};
         final float[] anchors = new float[]{0, mFeather, 1};
 
-        /*mLinearGradient = new android.graphics.LinearGradient(
-                0, 0, 1, colors, anchors, Shader.TileMode.CLAMP
-        );*/
+        float start = 0;
+        float bottom = 0;
+
+        mLinearGradient = new android.graphics.LinearGradient(
+                0, start, 0, bottom, 0xffffffff, 0x00ffffff, Shader.TileMode.CLAMP
+        );
 
         updateGradientMatrix(mTiltShiftLinearRect);
     }

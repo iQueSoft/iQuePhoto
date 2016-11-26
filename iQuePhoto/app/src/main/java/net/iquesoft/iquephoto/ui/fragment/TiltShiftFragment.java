@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseFragment;
+import net.iquesoft.iquephoto.core.editor.enums.EditorCommand;
 import net.iquesoft.iquephoto.di.components.EditorComponent;
 import net.iquesoft.iquephoto.presentation.presenter.fragment.TiltShiftFragmentPresenterImpl;
 import net.iquesoft.iquephoto.presentation.view.activity.EditorView;
@@ -17,6 +18,9 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+
+import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.TILT_SHIFT_LINEAR;
+import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.TILT_SHIFT_RADIAL;
 
 public class TiltShiftFragment extends BaseFragment implements TiltShiftView {
     private Unbinder mUnbinder;
@@ -61,16 +65,17 @@ public class TiltShiftFragment extends BaseFragment implements TiltShiftView {
 
     @OnClick(R.id.tiltShiftApplyButton)
     void onClickApply() {
-        //TODO: Apply Tilt Shift.
+        presenter.apply();
         editorActivityView.navigateBack(true);
     }
 
     @OnClick(R.id.tiltShiftLinearButton)
     void onClickLinear() {
-        //TODO: Switch to Linear Tilt Shift.
+        presenter.setCommand(TILT_SHIFT_LINEAR);
     }
 
+    @OnClick(R.id.tiltShiftRadialButton)
     void onClickRadial() {
-        //TODO: Switch to Radial Tilt Shift.
+        presenter.setCommand(TILT_SHIFT_RADIAL);
     }
 }

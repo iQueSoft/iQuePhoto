@@ -15,11 +15,11 @@ import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseActivity;
 import net.iquesoft.iquephoto.di.HasComponent;
 import net.iquesoft.iquephoto.di.components.AppComponent;
-import net.iquesoft.iquephoto.di.components.DaggerMainComponent;
-import net.iquesoft.iquephoto.di.components.MainComponent;
-import net.iquesoft.iquephoto.di.modules.MainModule;
-import net.iquesoft.iquephoto.presentation.view.activity.MainView;
-import net.iquesoft.iquephoto.presentation.presenter.activity.MainPresenterImpl;
+import net.iquesoft.iquephoto.di.components.DaggerHomeComponent;
+import net.iquesoft.iquephoto.di.components.HomeComponent;
+import net.iquesoft.iquephoto.di.modules.HomeModule;
+import net.iquesoft.iquephoto.presentation.view.activity.HomeView;
+import net.iquesoft.iquephoto.presentation.presenter.activity.HomePresenterImpl;
 
 import javax.inject.Inject;
 
@@ -28,13 +28,13 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 // TODO: Make real time permissions without RxPermission library.
-public class MainActivity extends BaseActivity implements MainView, HasComponent<MainComponent> {
+public class HomeActivity extends BaseActivity implements HomeView, HasComponent<HomeComponent> {
     private static final int REQ_CAMERA = 1;
 
     @Inject
-    MainPresenterImpl presenter;
+    HomePresenterImpl presenter;
 
-    private MainComponent mComponent;
+    private HomeComponent mComponent;
 
     @BindView(R.id.applicationName)
     TextView applicationTextView;
@@ -52,9 +52,9 @@ public class MainActivity extends BaseActivity implements MainView, HasComponent
 
     @Override
     protected void setupComponent(AppComponent component) {
-        mComponent = DaggerMainComponent.builder()
+        mComponent = DaggerHomeComponent.builder()
                 .appComponent(component)
-                .mainModule(new MainModule(this))
+                .homeModule(new HomeModule(this))
                 .build();
         mComponent.inject(this);
     }
@@ -72,7 +72,7 @@ public class MainActivity extends BaseActivity implements MainView, HasComponent
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Intent intent = new Intent(MainActivity.this, PreviewActivity.class);
+        Intent intent = new Intent(HomeActivity.this, PreviewActivity.class);
 
         switch (requestCode) {
             case REQ_CAMERA:
@@ -87,7 +87,7 @@ public class MainActivity extends BaseActivity implements MainView, HasComponent
                 .request(Manifest.permission.READ_EXTERNAL_STORAGE)
                 .subscribe(granted -> {
                     if (granted) {
-                        Intent intent = new Intent(MainActivity.this, GalleryActivity.class);
+                        Intent intent = new Intent(HomeActivity.this, GalleryActivity.class);
                         startActivity(intent);
                     } else {
                         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AlertMaterialDialog)
@@ -114,7 +114,7 @@ public class MainActivity extends BaseActivity implements MainView, HasComponent
                 .request(Manifest.permission.CAMERA)
                 .subscribe(granted -> {
                     if (granted) {
-                        Intent intent = new Intent(MainActivity.this, CameraActivity.class);
+                        Intent intent = new Intent(HomeActivity.this, CameraActivity.class);
                         startActivity(intent);
                     } else {
                         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AlertMaterialDialog)
@@ -135,7 +135,7 @@ public class MainActivity extends BaseActivity implements MainView, HasComponent
                 });
     }
 
-    public MainComponent getComponent() {
+    public HomeComponent getComponent() {
         return mComponent;
     }
 }

@@ -1,15 +1,15 @@
 package net.iquesoft.iquephoto.presentation.presenter.activity;
 
 import net.iquesoft.iquephoto.presentation.presenter.activity.interfaces.MainPresenter;
-import net.iquesoft.iquephoto.presentation.view.activity.MainView;
+import net.iquesoft.iquephoto.presentation.view.activity.HomeView;
 
 import javax.inject.Inject;
 
-public class MainPresenterImpl implements MainPresenter {
-    private MainView mView;
+public class HomePresenterImpl implements MainPresenter {
+    private HomeView mView;
 
     @Inject
-    public MainPresenterImpl(MainView view) {
+    public HomePresenterImpl(HomeView view) {
         mView = view;
     }
 

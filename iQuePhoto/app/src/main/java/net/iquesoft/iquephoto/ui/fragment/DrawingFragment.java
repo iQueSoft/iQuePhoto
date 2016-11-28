@@ -16,8 +16,6 @@ import net.iquesoft.iquephoto.ui.dialog.ColorPickerDialog;
 import net.iquesoft.iquephoto.ui.dialog.RGBColorPickerDialog;
 import net.iquesoft.iquephoto.presentation.view.fragment.DrawingView;
 
-import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
-
 import javax.inject.Inject;
 
 import butterknife.BindView;

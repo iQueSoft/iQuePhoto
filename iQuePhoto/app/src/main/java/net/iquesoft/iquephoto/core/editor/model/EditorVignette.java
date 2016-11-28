@@ -11,6 +11,7 @@ import android.graphics.RadialGradient;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MotionEvent;
 
 import net.iquesoft.iquephoto.core.editor.ImageEditorView;
@@ -194,14 +195,31 @@ public class EditorVignette {
     }
 
     public void actionDown(MotionEvent motionEvent) {
+        mMode = MOVE;
+
         mPreX = motionEvent.getX();
         mPreY = motionEvent.getY();
-
-        mMode = MOVE;
     }
 
-    public void actionPointerDown(MotionEvent motionEvent) {
-        if (motionEvent.getPointerCount() == 2) {
+    public void actionPointerDown(MotionEvent event) {
+        if (event.getPointerCount() == 2) {
+            float angle = MotionEventUtil.getFingersAngle(event);
+
+            if (angle < 0) {
+                angle += 180;
+            }
+
+            if (angle > 36 && angle < 72 || angle > 108 && angle < 144) {
+                // TODO: Log.i("Action", "Resize");
+            } else if (angle >= 72 && angle <= 108) {
+                // TODO: Log.i("Action", "Height");
+            } else {
+                // TODO: Log.i("Action", "Width");
+            }
+
+            Log.i("Angle", String.valueOf(MotionEventUtil.getFingersAngle(event)));
+
+            mPreDistance = MotionEventUtil.getFingersDistance(event);
             mMode = RESIZE;
         }
     }

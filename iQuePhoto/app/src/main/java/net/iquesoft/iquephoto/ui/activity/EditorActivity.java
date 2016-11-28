@@ -54,6 +54,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.VIGNETTE;
+
 public class EditorActivity extends BaseActivity implements EditorView, HasComponent<EditorComponent> {
 
     @Inject
@@ -100,9 +102,6 @@ public class EditorActivity extends BaseActivity implements EditorView, HasCompo
 
     @Inject
     SliderControlFragment sliderControlFragment;
-
-    @Inject
-    SliderControlFragmentPresenterImpl sliderControlFragmentPresenter;
 
     @BindView(R.id.undoButton)
     Button undoButton;
@@ -232,7 +231,7 @@ public class EditorActivity extends BaseActivity implements EditorView, HasCompo
                 fragment = transformVerticalFragment;
                 break;
             case VIGNETTE:
-                sliderControlFragmentPresenter.setCommand(editorCommand);
+                sliderControlFragment.setCommand(VIGNETTE);
                 fragment = sliderControlFragment;
                 break;
             case TILT_SHIFT_RADIAL:

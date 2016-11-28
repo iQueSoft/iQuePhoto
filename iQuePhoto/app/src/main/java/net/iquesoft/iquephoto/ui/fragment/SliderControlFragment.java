@@ -55,7 +55,7 @@ public class SliderControlFragment extends BaseFragment implements SliderControl
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        this.getComponent(EditorComponent.class).inject(this);
+        getComponent(EditorComponent.class).inject(this);
     }
 
     @Override
@@ -92,7 +92,7 @@ public class SliderControlFragment extends BaseFragment implements SliderControl
                         editorActivityView.getImageEditorView().setTintValue(value);
                         break;
                     case TRANSFORM_STRAIGHTEN:
-                        //
+
                         break;
                     case TRANSFORM_HORIZONTAL:
                         editorActivityView.getImageEditorView().setHorizontalTransformValue(value);
@@ -131,6 +131,10 @@ public class SliderControlFragment extends BaseFragment implements SliderControl
     @Override
     public void initializeCancelButton(@StringRes int toolTitle) {
         toolCancelButton.setText(toolTitle);
+    }
+
+    public void setCommand(EditorCommand command) {
+        mCommand = command;
     }
 
     @Override

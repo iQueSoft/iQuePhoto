@@ -674,13 +674,6 @@ public class ImageEditorView extends ImageView {
         }
     }
 
-    private float getFingersAngle(MotionEvent event) {
-        double delta_x = (event.getX(0) - event.getX(1));
-        double delta_y = (event.getY(0) - event.getY(1));
-        double radians = Math.atan2(delta_y, delta_x);
-        return (float) Math.toDegrees(radians);
-    }
-
     private float getDistanceX(MotionEvent motionEvent) {
         return motionEvent.getX() - mLastX;
     }
@@ -1328,6 +1321,7 @@ public class ImageEditorView extends ImageView {
                     mCanvas.drawBitmap(mBitmap, 0, 0, mContrastPaint);
                     break;
                 case STICKERS:
+
                     break;
                 case FRAMES:
                     if (mFrameBitmap != null)
@@ -1361,6 +1355,8 @@ public class ImageEditorView extends ImageView {
                     mCanvas.restore();
                     break;
             }
+
+            drawStickers(mCanvas);
 
             return mBitmap;
         }

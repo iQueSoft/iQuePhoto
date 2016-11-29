@@ -10,6 +10,7 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.RadialGradient;
 import android.graphics.RectF;
 import android.graphics.Shader;
+import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -159,8 +160,8 @@ public class EditorVignette {
 
         updateGradientMatrix(mVignetteRect);
     }
-
-    public void draw(Canvas canvas) {
+    
+    public void draw(@NonNull Canvas canvas) {
         if (!mVignetteRect.isEmpty()) {
             canvas.saveLayer(mBitmapRect, mPaint, Canvas.CLIP_TO_LAYER_SAVE_FLAG);
 
@@ -169,11 +170,10 @@ public class EditorVignette {
 
             canvas.drawRect(mBitmapRect, mVignettePaint);
             canvas.drawOval(mVignetteControlRect, mShaderPaint);
+
             canvas.restore();
 
-            mVignetteControlRect.set(mVignetteRect);
-
-            canvas.drawOval(mVignetteRect, mVignetteControlPaint);
+            canvas.drawOval(mVignetteControlRect, mVignetteControlPaint);
         }
     }
 
@@ -210,17 +210,16 @@ public class EditorVignette {
             }
 
             if (angle > 36 && angle < 72 || angle > 108 && angle < 144) {
-                // TODO: Log.i("Action", "Resize");
+                mPreDistance = MotionEventUtil.getFingersDistance(event);
+
+                mMode = RESIZE;
             } else if (angle >= 72 && angle <= 108) {
                 // TODO: Log.i("Action", "Height");
             } else {
                 // TODO: Log.i("Action", "Width");
             }
 
-            Log.i("Angle", String.valueOf(MotionEventUtil.getFingersAngle(event)));
-
-            mPreDistance = MotionEventUtil.getFingersDistance(event);
-            mMode = RESIZE;
+            Log.i("Angle", String.valueOf(angle));
         }
     }
 

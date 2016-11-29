@@ -48,7 +48,7 @@
             android:background="@color/colorLine" />
 
         <ImageButton
-            android:id="@+id/stickerApply"
+            android:id="@+id/stickersApplyImageButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackgroundBorderless"

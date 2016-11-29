@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.BaseFragment;
+import net.iquesoft.iquephoto.core.editor.ImageEditorView;
+import net.iquesoft.iquephoto.core.editor.enums.EditorCommand;
 import net.iquesoft.iquephoto.di.components.EditorComponent;
 import net.iquesoft.iquephoto.model.StickersSet;
 import net.iquesoft.iquephoto.presentation.presenter.fragment.StickersFragmentPresenterImpl;
@@ -24,7 +26,10 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
+
+import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.STICKERS;
 
 public class StickersToolFragment extends BaseFragment implements StickersView {
 
@@ -46,7 +51,7 @@ public class StickersToolFragment extends BaseFragment implements StickersView {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        this.getComponent(EditorComponent.class).inject(this);
+        getComponent(EditorComponent.class).inject(this);
     }
 
     @Override
@@ -73,6 +78,11 @@ public class StickersToolFragment extends BaseFragment implements StickersView {
         }
 
         return view;
+    }
+
+    @OnClick(R.id.stickersApplyImageButton)
+    void onClickApply() {
+        ((ImageEditorView) getActivity().findViewById(R.id.editorImageView)).apply(STICKERS);
     }
 
     @Override

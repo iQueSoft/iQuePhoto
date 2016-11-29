@@ -304,7 +304,10 @@ public class EditorActivity extends BaseActivity implements EditorView, HasCompo
     @OnClick(R.id.shareButton)
     void onClickShare() {
         Intent intent = new Intent(EditorActivity.this, ShareActivity.class);
-        imageEditorView.makeImage(intent);
+
+        // TODO: Make it without DataHolder.
+        DataHolder.getInstance().setShareBitmap(imageEditorView.getAlteredBitmap());
+        startActivity(intent);
     }
 
     @OnClick(R.id.undoButton)

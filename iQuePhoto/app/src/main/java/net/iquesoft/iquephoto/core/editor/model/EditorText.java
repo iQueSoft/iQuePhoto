@@ -6,7 +6,9 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
+import android.support.annotation.NonNull;
 import android.text.TextPaint;
+import android.view.MotionEvent;
 
 import net.iquesoft.iquephoto.model.Text;
 import net.iquesoft.iquephoto.util.RectUtil;
@@ -14,7 +16,6 @@ import net.iquesoft.iquephoto.util.RectUtil;
 import static net.iquesoft.iquephoto.core.editor.model.EditorFrame.EDITOR_FRAME_PADDING;
 
 public class EditorText {
-
     static final int DEFAULT_COLOR = Color.BLACK;
     private static final float DEFAULT_TEXT_SIZE = 80;
 
@@ -29,24 +30,26 @@ public class EditorText {
     private float mScale = 1;
     private float mRotateAngle = 0;
 
-    private boolean mIsInEdit;
+    private boolean mIsDrawHelperFrame = true;
 
     private Typeface mTypeface;
 
+    private Paint mHelperFramePaint;
     private TextPaint mTextPaint;
 
     private Rect mTextRect;
 
-    private Rect mRotateHandleSrcRect;
-    private Rect mResizeHandleSrcRect;
     private Rect mDeleteHandleSrcRect;
     private Rect mFrontHandleSrcRect;
+    private Rect mTransparencyHandleSrcRect;
+    private Rect mResizeAndScaleHandleSrcRect;
 
     private RectF mFrameRect;
+
     private RectF mDeleteHandleDstRect;
-    private RectF mRotateHandleDstRect;
-    private RectF mResizeHandleDstRect;
     private RectF mFrontHandleDstRect;
+    private RectF mTransparencyHandleDstRect;
+    private RectF mResizeAndScaleHandleDstRect;
 
     private EditorFrame mEditorFrame;
 
@@ -60,6 +63,8 @@ public class EditorText {
 
         mEditorFrame = editorFrame;
 
+        mHelperFramePaint = new Paint(mEditorFrame.getFramePaint());
+
         initTextPaint();
         initEditorText();
     }
@@ -68,11 +73,11 @@ public class EditorText {
         mTextRect = new Rect();
         mFrameRect = new RectF();
 
-        mRotateHandleSrcRect = new Rect(0, 0, mEditorFrame.getDeleteHandleBitmap().getWidth(),
+        mTransparencyHandleSrcRect = new Rect(0, 0, mEditorFrame.getDeleteHandleBitmap().getWidth(),
                 mEditorFrame.getDeleteHandleBitmap().getHeight());
         mDeleteHandleSrcRect = new Rect(0, 0, mEditorFrame.getResizeHandleBitmap().getWidth(),
                 mEditorFrame.getResizeHandleBitmap().getHeight());
-        mResizeHandleSrcRect = new Rect(0, 0, mEditorFrame.getRotateHandleBitmap().getWidth(),
+        mResizeAndScaleHandleSrcRect = new Rect(0, 0, mEditorFrame.getRotateHandleBitmap().getWidth(),
                 mEditorFrame.getRotateHandleBitmap().getHeight());
         mFrontHandleSrcRect = new Rect(0, 0, mEditorFrame.getFrontHandleBitmap().getWidth(),
                 mEditorFrame.getFrontHandleBitmap().getHeight());
@@ -80,9 +85,9 @@ public class EditorText {
         int handleHalfSize = mEditorFrame.getDeleteHandleBitmap().getWidth() / 2;
 
         mDeleteHandleDstRect = new RectF(0, 0, handleHalfSize << 1, handleHalfSize << 1);
-        mResizeHandleDstRect = new RectF(0, 0, handleHalfSize << 1, handleHalfSize << 1);
+        mResizeAndScaleHandleDstRect = new RectF(0, 0, handleHalfSize << 1, handleHalfSize << 1);
         mFrontHandleDstRect = new RectF(0, 0, handleHalfSize << 1, handleHalfSize << 1);
-        mRotateHandleDstRect = new RectF(0, 0, handleHalfSize << 1, handleHalfSize << 1);
+        mTransparencyHandleDstRect = new RectF(0, 0, handleHalfSize << 1, handleHalfSize << 1);
     }
 
     private void initTextPaint() {
@@ -97,7 +102,7 @@ public class EditorText {
         mTextPaint.setTextAlign(Paint.Align.CENTER);
     }
 
-    public void draw(Canvas canvas) {
+    public void draw(@NonNull Canvas canvas) {
 
         mTextPaint.getTextBounds(mText, 0, mText.length(), mTextRect);
 
@@ -114,21 +119,26 @@ public class EditorText {
         canvas.drawText(mText, mX, mY, mTextPaint);
         canvas.restore();
 
-        // TODO: Doesn't draw EditorFrame if text does'n touched.
+        if (mIsDrawHelperFrame) {
+            drawHelperFrame(canvas);
+        }
+    }
+
+    private void drawHelperFrame(Canvas canvas) {
         int offsetValue = ((int) mDeleteHandleDstRect.width()) >> 1;
 
         mDeleteHandleDstRect.offsetTo(mFrameRect.left - offsetValue, mFrameRect.top - offsetValue);
-        mResizeHandleDstRect.offsetTo(mFrameRect.right - offsetValue, mFrameRect.bottom - offsetValue);
-        mRotateHandleDstRect.offsetTo(mFrameRect.right - offsetValue, mFrameRect.top - offsetValue);
+        mResizeAndScaleHandleDstRect.offsetTo(mFrameRect.right - offsetValue, mFrameRect.bottom - offsetValue);
+        mTransparencyHandleDstRect.offsetTo(mFrameRect.right - offsetValue, mFrameRect.top - offsetValue);
         mFrontHandleDstRect.offsetTo(mFrameRect.left - offsetValue, mFrameRect.bottom - offsetValue);
 
         RectUtil.rotateRect(mDeleteHandleDstRect, mFrameRect.centerX(),
                 mFrameRect.centerY(), mRotateAngle);
 
-        RectUtil.rotateRect(mRotateHandleDstRect, mFrameRect.centerX(),
+        RectUtil.rotateRect(mTransparencyHandleDstRect, mFrameRect.centerX(),
                 mFrameRect.centerY(), mRotateAngle);
 
-        RectUtil.rotateRect(mResizeHandleDstRect, mFrameRect.centerX(),
+        RectUtil.rotateRect(mResizeAndScaleHandleDstRect, mFrameRect.centerX(),
                 mFrameRect.centerY(), mRotateAngle);
 
         RectUtil.rotateRect(mFrontHandleDstRect, mFrameRect.centerX(),
@@ -136,15 +146,15 @@ public class EditorText {
 
         canvas.save();
         canvas.rotate(mRotateAngle, mFrameRect.centerX(), mFrameRect.centerY());
-        canvas.drawRect(mFrameRect, mEditorFrame.getPaint());
+        canvas.drawRect(mFrameRect, mHelperFramePaint);
         canvas.restore();
 
         canvas.drawBitmap(mEditorFrame.getDeleteHandleBitmap(),
                 mDeleteHandleSrcRect, mDeleteHandleDstRect, null);
         canvas.drawBitmap(mEditorFrame.getRotateHandleBitmap(),
-                mRotateHandleSrcRect, mRotateHandleDstRect, null);
+                mTransparencyHandleSrcRect, mTransparencyHandleDstRect, null);
         canvas.drawBitmap(mEditorFrame.getResizeHandleBitmap(),
-                mResizeHandleSrcRect, mResizeHandleDstRect, null);
+                mResizeAndScaleHandleSrcRect, mResizeAndScaleHandleDstRect, null);
         canvas.drawBitmap(mEditorFrame.getFrontHandleBitmap(),
                 mFrontHandleSrcRect, mFrontHandleDstRect, null);
     }
@@ -165,86 +175,48 @@ public class EditorText {
         return mY;
     }
 
-    public RectF getFrameRect() {
-        return mFrameRect;
-    }
-
-    public RectF getDeleteHandleDstRect() {
-        return mDeleteHandleDstRect;
-    }
-
-    public RectF getRotateHandleDstRect() {
-        return mRotateHandleDstRect;
+    public RectF getRotateAndScaleHandleDstRect() {
+        return mResizeAndScaleHandleDstRect;
     }
 
     public RectF getResizeHandleDstRect() {
-        return mResizeHandleDstRect;
+        return mResizeAndScaleHandleDstRect;
     }
 
-    public RectF getFrontHandleDstRect() {
-        return mFrontHandleDstRect;
+    public void setHelperFrameOpacity() {
+        mHelperFramePaint.setAlpha(255);
     }
 
-    public void setIsInEdit(boolean isInEdit) {
-        mIsInEdit = isInEdit;
+    public void resetHelperFrameOpacity() {
+        mHelperFramePaint.set(mEditorFrame.getFramePaint());
+    }
+
+    public void setIsDrawHelperFrame(boolean isDrawHelperFrame) {
+        mIsDrawHelperFrame = isDrawHelperFrame;
     }
 
     public float getRotateDegree() {
         return mRotateAngle;
     }
 
-    public boolean isInEdit() {
-        return mIsInEdit;
-    }
+    public void updateRotateAndScale(float distanceX, float distanceY) {
+        float frameCenterX = mFrameRect.centerX();
+        float frameCenterY = mFrameRect.centerY();
 
-    public void rotateText(float distanceX, float distanceY) {
-        float frameX = mFrameRect.centerX();
-        float frameY = mFrameRect.centerY();
+        float handleCenterX = mResizeAndScaleHandleDstRect.centerX();
+        float handleCenterY = mResizeAndScaleHandleDstRect.centerY();
 
-        float rotateX = mResizeHandleDstRect.centerX();
-        float rotateY = mResizeHandleDstRect.centerY();
+        float newX = handleCenterX + distanceX;
+        float newY = handleCenterY + distanceY;
 
-        float newX = rotateX + distanceX;
-        float newY = rotateY + distanceY;
+        float xa = handleCenterX - frameCenterX;
+        float ya = handleCenterY - frameCenterY;
 
-        float x = rotateX - frameX;
-        float y = rotateY - frameY;
-        float x1 = newX - frameX;
-        float y1 = newY - frameY;
+        float xb = newX - frameCenterX;
+        float yb = newY - frameCenterY;
 
-        float sourceLength = (float) Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
-        float currentLength = (float) Math.sqrt(Math.pow(x1, 2) + Math.pow(y1, 2));
-
-        double cos = (x * x1 + y * y1) / (sourceLength * currentLength);
-        if (cos > 1 || cos < -1)
-            return;
-
-        float angle = (float) Math.toDegrees(Math.acos(cos));
-        float calMatrix = x * y1 - x1 * y;
-
-        int flag = calMatrix > 0 ? 1 : -1;
-        angle = flag * angle;
-
-        mRotateAngle += angle;
-    }
-
-    public void scaleText(float distanceX, float distanceY) {
-        float frameX = mFrameRect.centerX();
-        float frameY = mFrameRect.centerY();
-
-        float resizeX = mResizeHandleDstRect.centerX();
-        float resizeY = mResizeHandleDstRect.centerY();
-
-        float newX = resizeX + distanceX;
-        float newY = resizeY + distanceY;
-
-        float x = resizeX - frameX;
-        float y = resizeY - frameY;
-        float x1 = newX - frameX;
-        float y1 = newY - frameY;
-
-        float sourceLength = (float) Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
-        float currentLength = (float) Math.sqrt(Math.pow(x1, 2) + Math.pow(y1, 2));
+        float sourceLength = (float) Math.sqrt(Math.pow(xa, 2) + Math.pow(ya, 2));
+        float currentLength = (float) Math.sqrt(Math.pow(xb, 2) + Math.pow(yb, 2));
 
         float scale = currentLength / sourceLength;
 
@@ -254,6 +226,40 @@ public class EditorText {
 
         if (newWidth < 70) {
             mScale /= scale;
+            return;
         }
+
+        double cos = (xa * xb + ya * yb) / (sourceLength * currentLength);
+
+        if (cos > 1 || cos < -1) return;
+
+        float angle = (float) Math.toDegrees(Math.acos(cos));
+        float calMatrix = xa * yb - xb * ya;
+
+        int flag = calMatrix > 0 ? 1 : -1;
+        angle = flag * angle;
+
+        mRotateAngle += angle;
+    }
+
+    public boolean isInside(MotionEvent event) {
+        return mFrameRect.contains(event.getX(), event.getY());
+    }
+
+    public boolean isInDeleteHandleButton(MotionEvent event) {
+        return mDeleteHandleDstRect.contains(event.getX(), event.getY());
+    }
+
+    public boolean isInFrontHandleButton(MotionEvent event) {
+        return mFrontHandleDstRect.contains(event.getX(), event.getY());
+    }
+
+    // TODO: Stickers transparency.
+    public boolean isInTransparencyHandleButton(MotionEvent event) {
+        return mTransparencyHandleDstRect.contains(event.getX(), event.getY());
+    }
+
+    public boolean isInResizeAndScaleHandleButton(MotionEvent event) {
+        return mResizeAndScaleHandleDstRect.contains(event.getX(), event.getY());
     }
 }

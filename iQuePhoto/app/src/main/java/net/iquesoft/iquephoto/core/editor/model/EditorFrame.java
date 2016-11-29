@@ -11,36 +11,38 @@ import net.iquesoft.iquephoto.util.BitmapUtil;
 public class EditorFrame {
     static final int EDITOR_FRAME_PADDING = 25;
 
-    private Paint mPaint;
+    private Paint mFramePaint;
 
     private Bitmap mDeleteHandleBitmap;
-    private Bitmap mRotateHandleBitmap;
+    private Bitmap mTransparencyHandleBitmap;
     private Bitmap mResizeHandleBitmap;
     private Bitmap mFrontHandleBitmap;
 
     public EditorFrame(Context context) {
-        initFramePaint();
-        initHandlesBitmap(context);
+        initializeFramePaint();
+        initializeHandlesBitmap(context);
     }
 
-    private void initFramePaint() {
-        mPaint = new Paint();
-        mPaint.setColor(Color.WHITE);
-        mPaint.setAntiAlias(true);
-        mPaint.setDither(true);
-        mPaint.setStyle(Paint.Style.STROKE);
-        mPaint.setStrokeWidth(5.5f);
+    private void initializeFramePaint() {
+        mFramePaint = new Paint();
+        mFramePaint.setColor(Color.WHITE);
+        mFramePaint.setAntiAlias(true);
+        mFramePaint.setDither(true);
+        mFramePaint.setStyle(Paint.Style.STROKE);
+        mFramePaint.setStrokeWidth(5.5f);
+        mFramePaint.setAlpha(175);
     }
 
-    private void initHandlesBitmap(Context context) {
+    private void initializeHandlesBitmap(Context context) {
         mDeleteHandleBitmap = BitmapUtil.drawable2Bitmap(context, R.drawable.ic_handle_delete);
         mResizeHandleBitmap = BitmapUtil.drawable2Bitmap(context, R.drawable.ic_handle_resize);
         mFrontHandleBitmap = BitmapUtil.drawable2Bitmap(context, R.drawable.ic_handle_front);
-        mRotateHandleBitmap = BitmapUtil.drawable2Bitmap(context, R.drawable.ic_handle_rotate);
+        mTransparencyHandleBitmap =
+                BitmapUtil.drawable2Bitmap(context, R.drawable.ic_handle_transparency);
     }
 
-    public Paint getPaint() {
-        return mPaint;
+    public Paint getFramePaint() {
+        return mFramePaint;
     }
 
     public Bitmap getDeleteHandleBitmap() {
@@ -48,7 +50,7 @@ public class EditorFrame {
     }
 
     public Bitmap getRotateHandleBitmap() {
-        return mRotateHandleBitmap;
+        return mTransparencyHandleBitmap;
     }
 
     public Bitmap getResizeHandleBitmap() {

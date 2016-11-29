@@ -119,6 +119,7 @@ public class ImageEditorView extends ImageView {
     private UndoListener mUndoListener;
 
     private Matrix mMatrix = null;
+    private Matrix mOverlayMatrix;
     private Matrix mTransformMatrix;
 
     private RectF mBitmapRect;
@@ -181,6 +182,7 @@ public class ImageEditorView extends ImageView {
 
         mMatrix = new Matrix();
         mTransformMatrix = new Matrix();
+        mOverlayMatrix = new Matrix();
 
         mScale = 1.0f;
 
@@ -237,7 +239,7 @@ public class ImageEditorView extends ImageView {
             }
         }
 
-        canvas.clipRect(mBitmapRect);
+        // TODO: Remove comment canvas.clipRect(mBitmapRect);
 
         switch (mCommand) {
             case FILTERS:
@@ -261,7 +263,7 @@ public class ImageEditorView extends ImageView {
                 break;
             case OVERLAY:
                 if (mOverlayBitmap != null)
-                    canvas.drawBitmap(mOverlayBitmap, mMatrix, mOverlayPaint);
+                    canvas.drawBitmap(mOverlayBitmap, mOverlayMatrix, mOverlayPaint);
                 break;
             case CONTRAST:
                 if (mContrastValue != 0)
@@ -335,56 +337,41 @@ public class ImageEditorView extends ImageView {
             return mMatrix;
         else {
             matrix = new Matrix(mMatrix);
+        }
 
-            float[] matrixValue = new float[9];
-            mMatrix.getValues(matrixValue);
+        float width = mBitmapRect.width();
+        float height = mBitmapRect.height();
 
-            Log.i("Transform V - Before", String.valueOf(matrixValue[0]) + "\n" +
-                    String.valueOf(matrixValue[1])
-                    + "\n" +
-                    String.valueOf(matrixValue[2])
-                    + "\n" +
-                    String.valueOf(matrixValue[3])
-                    + "\n" +
-                    String.valueOf(matrixValue[4])
-                    + "\n" +
-                    String.valueOf(matrixValue[5])
-                    + "\n" +
-                    String.valueOf(matrixValue[6])
-                    + "\n" +
-                    String.valueOf(matrixValue[7])
-                    + "\n" +
-                    String.valueOf(matrixValue[8])
-            );
+        float kx = (width / 2 / 30);
 
-            float width = mBitmapRect.width();
-            float height = mBitmapRect.height();
+        float[] pts = {0, 0,
+                0, height,
+                width, height,
+                width, 0,
+                0, 0,
+                0, 0,
+                0, 0,
+                0, 0};
 
-            float[] pts = {0, 0, 0, height, width, height, width, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+        int dX = value;
 
-            int dX = value;
+        if (value < 0) {
+            dX *= -1;
 
-            if (value < 0) {
-                dX *= -1;
+            matrix.mapPoints(pts, 8, pts, 0, 4);
 
-                matrix.mapPoints(pts, 8, pts, 0, 4);
+            pts[8] -= dX * kx;
+            pts[14] += dX * kx;
+        } else {
 
-                pts[8] += dX;
-                pts[14] -= dX;
-            } else {
+            matrix.mapPoints(pts, 8, pts, 0, 4);
 
-                matrix.mapPoints(pts, 8, pts, 0, 4);
+            pts[10] -= dX * kx;
+            pts[12] += dX * kx;
+        }
 
-                pts[8] -= dX;
-                pts[14] += dX;
-            }
-
-            matrix.setPolyToPoly(pts, 0, pts, 8, 4);
-
-            float[] matrixValue2 = new float[9];
-            matrix.getValues(matrixValue2);
-
-            Log.i("Transform V - After", String.valueOf(matrixValue2[0]) + "\n" +
+        matrix.setPolyToPoly(pts, 0, pts, 8, 4);
+            /*Log.i("Transform V - After", String.valueOf(matrixValue2[0]) + "\n" +
                     String.valueOf(matrixValue2[1])
                     + "\n" +
                     String.valueOf(matrixValue2[2])
@@ -400,9 +387,7 @@ public class ImageEditorView extends ImageView {
                     String.valueOf(matrixValue2[7])
                     + "\n" +
                     String.valueOf(matrixValue2[8])
-            );
-            //matrix.postScale(dX, -dX);
-        }
+            );*/
 
         return matrix;
     }
@@ -870,21 +855,31 @@ public class ImageEditorView extends ImageView {
     }
 
     public void setOverlay(@DrawableRes int drawableRes) {
-        // TODO: Overlays.
-        /*new BitmapScaleTask(mContext, this, R.string.prepare_overlay,
-                mSourceBitmap.getWidth(),
-                mSourceBitmap.getHeight())
-                .execute(drawableRes);*/
-    }
-
-    protected void setupOverlay(Bitmap bitmap) {
-        mOverlayBitmap = bitmap;
-
+        mOverlayBitmap = BitmapUtil.drawable2Bitmap(mContext, drawableRes);
         BitmapUtil.logBitmapInfo("Overlay", mOverlayBitmap);
 
         mOverlayPaint.setAlpha(125);
 
+        float bitmapWidth = mBitmapRect.width();
+        float bitmapHeight = mBitmapRect.height();
+
+        float overlayWidth = mOverlayBitmap.getWidth();
+        float overlayHeight = mOverlayBitmap.getHeight();
+
+        float sX = bitmapWidth / overlayWidth;
+        float sY = bitmapHeight / overlayHeight;
+
+        mOverlayMatrix.reset();
+        mOverlayMatrix.setTranslate(mBitmapRect.left, mBitmapRect.top);
+        mOverlayMatrix.postScale(sX, sY);
+
         invalidate();
+
+        /* TODO: If this method return exception use it:
+        new BitmapScaleTask(mContext, this, R.string.prepare_overlay,
+                mSourceBitmap.getWidth(),
+                mSourceBitmap.getHeight())
+                .execute(drawableRes);*/
     }
 
     public void setOverlayOpacity(int value) {

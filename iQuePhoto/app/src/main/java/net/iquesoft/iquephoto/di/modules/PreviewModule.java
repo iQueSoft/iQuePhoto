@@ -1,7 +1,6 @@
 package net.iquesoft.iquephoto.di.modules;
 
-import net.iquesoft.iquephoto.presentation.presenter.activity.PreviewPresenterImpl;
-import net.iquesoft.iquephoto.presentation.view.activity.PreviewView;
+import net.iquesoft.iquephoto.mvp.views.activity.PreviewView;
 
 import dagger.Module;
 import dagger.Provides;
@@ -18,10 +17,5 @@ public class PreviewModule {
     @Provides
     PreviewView provideView() {
         return mView;
-    }
-
-    @Provides
-    PreviewPresenterImpl providePreviewActivityPresenterImpl() {
-        return new PreviewPresenterImpl(mView);
     }
 }

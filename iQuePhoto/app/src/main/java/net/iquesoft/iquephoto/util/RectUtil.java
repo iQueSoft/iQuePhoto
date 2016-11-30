@@ -1,9 +1,14 @@
 package net.iquesoft.iquephoto.util;
 
 import android.graphics.RectF;
+import android.util.Log;
 
 public class RectUtil {
     
+    public static void logRectInfo(RectF rect) {
+        Log.i("Rect info", rect.toString());
+    }
+
     public static void scaleRect(RectF rectF, float scale) {
         float w = rectF.width();
         float h = rectF.height();

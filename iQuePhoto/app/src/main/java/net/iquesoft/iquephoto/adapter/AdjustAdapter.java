@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.model.Adjust;
+import net.iquesoft.iquephoto.mvp.models.Adjust;
 
 import java.util.List;
 

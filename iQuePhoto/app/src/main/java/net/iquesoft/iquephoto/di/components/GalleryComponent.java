@@ -2,9 +2,9 @@ package net.iquesoft.iquephoto.di.components;
 
 import net.iquesoft.iquephoto.di.ActivityScope;
 import net.iquesoft.iquephoto.di.modules.GalleryModule;
-import net.iquesoft.iquephoto.ui.activity.GalleryActivity;
-import net.iquesoft.iquephoto.ui.fragment.GalleryAlbumsFragment;
-import net.iquesoft.iquephoto.ui.fragment.GalleryImagesFragment;
+import net.iquesoft.iquephoto.ui.activities.GalleryActivity;
+import net.iquesoft.iquephoto.ui.fragments.GalleryAlbumsFragment;
+import net.iquesoft.iquephoto.ui.fragments.GalleryImagesFragment;
 
 import dagger.Component;
 

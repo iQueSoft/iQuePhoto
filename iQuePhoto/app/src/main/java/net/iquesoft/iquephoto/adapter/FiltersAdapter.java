@@ -1,7 +1,6 @@
 package net.iquesoft.iquephoto.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.ColorMatrixColorFilter;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
@@ -15,7 +14,7 @@ import com.squareup.picasso.Picasso;
 
 import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.model.Filter;
+import net.iquesoft.iquephoto.mvp.models.Filter;
 
 import java.util.List;
 

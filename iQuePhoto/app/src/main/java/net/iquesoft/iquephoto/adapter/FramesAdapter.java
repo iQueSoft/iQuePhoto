@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.model.Frame;
+import net.iquesoft.iquephoto.mvp.models.Frame;
 
 import java.util.List;
 

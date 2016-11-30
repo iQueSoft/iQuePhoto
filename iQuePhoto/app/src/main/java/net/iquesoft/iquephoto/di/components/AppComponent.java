@@ -1,26 +1,24 @@
 package net.iquesoft.iquephoto.di.components;
 
-import net.iquesoft.iquephoto.App;
+import android.content.Context;
+
 import net.iquesoft.iquephoto.di.modules.AppModule;
-import net.iquesoft.iquephoto.ui.fragment.AddTextFragment;
-import net.iquesoft.iquephoto.ui.fragment.AdjustFragment;
-import net.iquesoft.iquephoto.ui.fragment.Camera2Fragment;
-import net.iquesoft.iquephoto.ui.fragment.CameraFiltersFragment;
-import net.iquesoft.iquephoto.ui.fragment.CameraFragment;
-import net.iquesoft.iquephoto.ui.fragment.DrawingFragment;
-import net.iquesoft.iquephoto.ui.fragment.FiltersFragment;
-import net.iquesoft.iquephoto.ui.fragment.FramesFragment;
-import net.iquesoft.iquephoto.ui.fragment.GalleryAlbumsFragment;
-import net.iquesoft.iquephoto.ui.fragment.GalleryImagesFragment;
-import net.iquesoft.iquephoto.ui.fragment.OverlayFragment;
-import net.iquesoft.iquephoto.ui.fragment.SliderControlFragment;
-import net.iquesoft.iquephoto.ui.fragment.StickersToolFragment;
-import net.iquesoft.iquephoto.ui.fragment.TiltShiftFragment;
-import net.iquesoft.iquephoto.ui.fragment.ToolsFragment;
-import net.iquesoft.iquephoto.ui.fragment.TransformFragment;
-import net.iquesoft.iquephoto.ui.fragment.TransformHorizontalFragment;
-import net.iquesoft.iquephoto.ui.fragment.TransformStraightenFragment;
-import net.iquesoft.iquephoto.ui.fragment.TransformVerticalFragment;
+import net.iquesoft.iquephoto.ui.fragments.AddTextFragment;
+import net.iquesoft.iquephoto.ui.fragments.AdjustFragment;
+import net.iquesoft.iquephoto.ui.fragments.Camera2Fragment;
+import net.iquesoft.iquephoto.ui.fragments.CameraFiltersFragment;
+import net.iquesoft.iquephoto.ui.fragments.CameraFragment;
+import net.iquesoft.iquephoto.ui.fragments.DrawingFragment;
+import net.iquesoft.iquephoto.ui.fragments.FiltersFragment;
+import net.iquesoft.iquephoto.ui.fragments.FramesFragment;
+import net.iquesoft.iquephoto.ui.fragments.GalleryAlbumsFragment;
+import net.iquesoft.iquephoto.ui.fragments.GalleryImagesFragment;
+import net.iquesoft.iquephoto.ui.fragments.OverlaysFragment;
+import net.iquesoft.iquephoto.ui.fragments.SliderControlFragment;
+import net.iquesoft.iquephoto.ui.fragments.StickersToolFragment;
+import net.iquesoft.iquephoto.ui.fragments.TiltShiftFragment;
+import net.iquesoft.iquephoto.ui.fragments.ToolsFragment;
+import net.iquesoft.iquephoto.ui.fragments.TransformFragment;
 
 import javax.inject.Singleton;
 
@@ -31,7 +29,7 @@ import dagger.Component;
         AppModule.class}
 )
 public interface AppComponent {
-    void inject(App application);
+    Context getContext();
 
     GalleryAlbumsFragment galleryAlbumsFragment();
 
@@ -43,19 +41,13 @@ public interface AppComponent {
 
     AdjustFragment adjustFragment();
 
-    OverlayFragment overlayFragment();
+    OverlaysFragment overlayFragment();
 
     StickersToolFragment stickersFragment();
 
     FramesFragment framesFragment();
 
     TransformFragment transformFragment();
-
-    TransformVerticalFragment transformVerticalFragment();
-
-    TransformStraightenFragment transformStraightenFragment();
-
-    TransformHorizontalFragment transformHorizontalFragment();
 
     TiltShiftFragment tiltShiftFragment();
 

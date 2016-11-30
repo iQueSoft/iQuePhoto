@@ -10,7 +10,7 @@ import android.support.annotation.NonNull;
 import android.text.TextPaint;
 import android.view.MotionEvent;
 
-import net.iquesoft.iquephoto.model.Text;
+import net.iquesoft.iquephoto.mvp.models.Text;
 import net.iquesoft.iquephoto.util.RectUtil;
 
 import static net.iquesoft.iquephoto.core.editor.model.EditorFrame.EDITOR_FRAME_PADDING;

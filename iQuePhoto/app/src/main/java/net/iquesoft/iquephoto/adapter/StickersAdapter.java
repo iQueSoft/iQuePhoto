@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.model.Sticker;
+import net.iquesoft.iquephoto.mvp.models.Sticker;
 
 import java.util.List;
 

@@ -2,22 +2,19 @@ package net.iquesoft.iquephoto.di.components;
 
 import net.iquesoft.iquephoto.di.ActivityScope;
 import net.iquesoft.iquephoto.di.modules.EditorModule;
-import net.iquesoft.iquephoto.ui.fragment.AddTextFragment;
-import net.iquesoft.iquephoto.ui.fragment.AdjustFragment;
-import net.iquesoft.iquephoto.ui.fragment.DrawingFragment;
-import net.iquesoft.iquephoto.ui.fragment.FiltersFragment;
-import net.iquesoft.iquephoto.ui.activity.EditorActivity;
-import net.iquesoft.iquephoto.ui.fragment.FramesFragment;
-import net.iquesoft.iquephoto.ui.fragment.OverlayFragment;
-import net.iquesoft.iquephoto.ui.fragment.StickersFragment;
-import net.iquesoft.iquephoto.ui.fragment.SliderControlFragment;
-import net.iquesoft.iquephoto.ui.fragment.StickersToolFragment;
-import net.iquesoft.iquephoto.ui.fragment.TiltShiftFragment;
-import net.iquesoft.iquephoto.ui.fragment.ToolsFragment;
-import net.iquesoft.iquephoto.ui.fragment.TransformFragment;
-import net.iquesoft.iquephoto.ui.fragment.TransformHorizontalFragment;
-import net.iquesoft.iquephoto.ui.fragment.TransformStraightenFragment;
-import net.iquesoft.iquephoto.ui.fragment.TransformVerticalFragment;
+import net.iquesoft.iquephoto.ui.fragments.AddTextFragment;
+import net.iquesoft.iquephoto.ui.fragments.AdjustFragment;
+import net.iquesoft.iquephoto.ui.fragments.DrawingFragment;
+import net.iquesoft.iquephoto.ui.fragments.FiltersFragment;
+import net.iquesoft.iquephoto.ui.activities.EditorActivity;
+import net.iquesoft.iquephoto.ui.fragments.FramesFragment;
+import net.iquesoft.iquephoto.ui.fragments.OverlaysFragment;
+import net.iquesoft.iquephoto.ui.fragments.StickersFragment;
+import net.iquesoft.iquephoto.ui.fragments.SliderControlFragment;
+import net.iquesoft.iquephoto.ui.fragments.StickersToolFragment;
+import net.iquesoft.iquephoto.ui.fragments.TiltShiftFragment;
+import net.iquesoft.iquephoto.ui.fragments.ToolsFragment;
+import net.iquesoft.iquephoto.ui.fragments.TransformFragment;
 
 import dagger.Component;
 
@@ -43,19 +40,13 @@ public interface EditorComponent {
 
     void inject(StickersFragment stickersFragment);
 
-    void inject(OverlayFragment overlayFragment);
+    void inject(OverlaysFragment overlayFragment);
 
     void inject(FramesFragment framesFragment);
 
     void inject(TiltShiftFragment tiltShiftFragment);
 
     void inject(TransformFragment transformFragment);
-
-    void inject(TransformHorizontalFragment transformHorizontalFragment);
-
-    void inject(TransformStraightenFragment transformStraightenFragment);
-
-    void inject(TransformVerticalFragment transformVerticalFragment);
 
     void inject(SliderControlFragment sliderControlFragment);
 }

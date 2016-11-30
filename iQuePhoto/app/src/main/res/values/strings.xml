@@ -186,6 +186,9 @@
     <string name="prepare_frame">Prepare frame…</string>
     <string name="prepare_overlay">Prepare overlay…</string>
     <string name="brush_size">Brush Size</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
     <!-- Progress dialog message - END. -->
 
 </resources>

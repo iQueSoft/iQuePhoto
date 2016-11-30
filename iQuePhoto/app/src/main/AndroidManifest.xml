@@ -19,7 +19,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
         <activity
-            android:name=".ui.activity.HomeActivity"
+            android:name=".ui.activities.HomeActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,17 +28,17 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.activity.EditorActivity"
+            android:name=".ui.activities.EditorActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activity.GalleryActivity"
+            android:name=".ui.activities.GalleryActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.activity.CameraActivity" />
+        <activity android:name=".ui.activities.CameraActivity" />
         <activity
-            android:name=".ui.activity.PreviewActivity"
+            android:name=".ui.activities.PreviewActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activity.ShareActivity"
+            android:name=".ui.activities.ShareActivity"
             android:screenOrientation="portrait" />
     </application>
 

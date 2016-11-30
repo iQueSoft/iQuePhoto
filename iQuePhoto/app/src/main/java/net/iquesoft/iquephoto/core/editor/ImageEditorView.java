@@ -37,10 +37,11 @@ import net.iquesoft.iquephoto.core.editor.model.EditorVignette;
 import net.iquesoft.iquephoto.core.editor.model.Drawing;
 import net.iquesoft.iquephoto.core.editor.model.EditorFrame;
 import net.iquesoft.iquephoto.core.editor.model.EditorImage;
-import net.iquesoft.iquephoto.model.Sticker;
-import net.iquesoft.iquephoto.model.Text;
+import net.iquesoft.iquephoto.mvp.models.Sticker;
+import net.iquesoft.iquephoto.mvp.models.Text;
 import net.iquesoft.iquephoto.util.AdjustUtil;
 import net.iquesoft.iquephoto.util.BitmapUtil;
+import net.iquesoft.iquephoto.util.RectUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -576,6 +577,8 @@ public class ImageEditorView extends ImageView {
     }
 
     private void actionMove(MotionEvent event) {
+        Log.i("MotionEvent info", event.toString());
+
         switch (mCommand) {
             case STICKERS:
                 if (mCurrentEditorSticker != null) {
@@ -1197,6 +1200,8 @@ public class ImageEditorView extends ImageView {
         setScale(calcScale(viewW, viewH, mAngle));
         setMatrix();
         mBitmapRect = calcImageRect(new RectF(0f, 0f, mImageWidth, mImageHeight), mMatrix);
+
+        RectUtil.logRectInfo(mBitmapRect);
 
         mEditorVignette.updateRect(mBitmapRect);
         mTiltShiftRadial.updateRect(mBitmapRect);

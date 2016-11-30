@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.model.Image;
+import net.iquesoft.iquephoto.mvp.models.Image;
 
 import java.util.List;
 

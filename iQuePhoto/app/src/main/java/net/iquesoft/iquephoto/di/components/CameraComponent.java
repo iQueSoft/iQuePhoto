@@ -2,10 +2,10 @@ package net.iquesoft.iquephoto.di.components;
 
 import net.iquesoft.iquephoto.di.ActivityScope;
 import net.iquesoft.iquephoto.di.modules.CameraModule;
-import net.iquesoft.iquephoto.ui.activity.CameraActivity;
-import net.iquesoft.iquephoto.ui.fragment.Camera2Fragment;
-import net.iquesoft.iquephoto.ui.fragment.CameraFiltersFragment;
-import net.iquesoft.iquephoto.ui.fragment.CameraFragment;
+import net.iquesoft.iquephoto.ui.activities.CameraActivity;
+import net.iquesoft.iquephoto.ui.fragments.Camera2Fragment;
+import net.iquesoft.iquephoto.ui.fragments.CameraFiltersFragment;
+import net.iquesoft.iquephoto.ui.fragments.CameraFragment;
 
 import dagger.Component;
 

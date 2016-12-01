@@ -35,8 +35,6 @@ public class DrawingFragment extends MvpAppCompatFragment implements DrawingView
 
     private ColorPickerDialog mColorPickerDialog;
 
-    private ImageEditorView mImageEditorView;
-
     private Unbinder mUnbinder;
 
     private RGBColorPickerDialog RGBColorPickerDialog;
@@ -65,12 +63,10 @@ public class DrawingFragment extends MvpAppCompatFragment implements DrawingView
 
         mUnbinder = ButterKnife.bind(this, view);
 
-        mImageEditorView = DataHolder.getInstance().getEditorView();
-
         mColorPickerDialog = new ColorPickerDialog(view.getContext());
 
         mColorPickerDialog.setOnColorClickListener(color -> {
-            mImageEditorView.setBrushColor(color);
+            // TODO: mImageEditorView.setBrushColor(color);
         });
 
         RGBColorPickerDialog = new RGBColorPickerDialog(view.getContext());

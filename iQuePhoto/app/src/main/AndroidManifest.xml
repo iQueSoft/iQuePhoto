@@ -33,10 +33,22 @@
         <activity
             android:name=".ui.activities.GalleryActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.activities.CameraActivity" />
+        <activity android:name=".ui.activities.CameraActivity">
+            <intent-filter>
+                <action android:name="app.intent.action.Camera" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".ui.activities.PreviewActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="app.intent.action.Preview" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".ui.activities.ShareActivity"
             android:screenOrientation="portrait" />

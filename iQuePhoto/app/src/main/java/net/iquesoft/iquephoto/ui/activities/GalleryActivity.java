@@ -9,19 +9,15 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.mvp.models.Image;
+import net.iquesoft.iquephoto.mvp.common.BaseActivity;
+import net.iquesoft.iquephoto.mvp.models.ImageAlbum;
 import net.iquesoft.iquephoto.mvp.views.activity.GalleryView;
 import net.iquesoft.iquephoto.mvp.presenters.activity.GalleryPresenter;
 import net.iquesoft.iquephoto.ui.fragments.GalleryAlbumsFragment;
 import net.iquesoft.iquephoto.ui.fragments.GalleryImagesFragment;
-
-import java.util.List;
-
-import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,21 +25,12 @@ import butterknife.OnClick;
 
 // TODO: Change album images showing.
 // TODO: Check image orientation.
-public class GalleryActivity extends MvpAppCompatActivity implements GalleryView {
-    @BindView(R.id.galleryHeaderTextView)
-    TextView headerTextView;
-
-    @BindView(R.id.galleryNoImagesLinearLayout)
-    LinearLayout noImagesLinearLayout;
-
+public class GalleryActivity extends BaseActivity implements GalleryView {
     @InjectPresenter
     GalleryPresenter presenter;
 
-    @Inject
-    GalleryImagesFragment galleryImagesFragment;
-
-    @Inject
-    GalleryAlbumsFragment galleryAlbumsFragment;
+    @BindView(R.id.galleryHeaderTextView)
+    TextView headerTextView;
 
     private FragmentManager mFragmentManager;
 
@@ -60,7 +47,7 @@ public class GalleryActivity extends MvpAppCompatActivity implements GalleryView
         mFragmentManager = getSupportFragmentManager();
 
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.galleryFragmentFrameLayout, galleryAlbumsFragment)
+        fragmentTransaction.add(R.id.galleryFragmentFrameLayout, new GalleryAlbumsFragment())
                 .commit();
     }
 
@@ -80,38 +67,19 @@ public class GalleryActivity extends MvpAppCompatActivity implements GalleryView
     }
 
     @Override
-    public void showImages(String albumName) {
-        headerTextView.setText(albumName);
+    public void showImages(ImageAlbum imageAlbum) {
+        headerTextView.setText(imageAlbum.getName());
 
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.galleryFragmentFrameLayout, galleryImagesFragment)
+        fragmentTransaction.replace(R.id.galleryFragmentFrameLayout, GalleryImagesFragment.newInstance(imageAlbum.getImages()))
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .addToBackStack(null)
                 .commit();
     }
 
     @Override
-    public void setAlbumImages(List<Image> images) {
-        galleryImagesFragment.setImages(images);
-    }
-
-    @Override
-    public void showHaveNoImages() {
-        noImagesLinearLayout.setVisibility(View.VISIBLE);
-    }
-
-    @Override
     public void editImage(String imagePath) {
-        Intent intent = new Intent(GalleryActivity.this, PreviewActivity.class);
-        intent.putExtra("Image", imagePath);
-        startActivity(intent);
-        finish();
+
     }
 
-    // TODO: Maybe change startActivity() to startActivityForResult().
-    @OnClick(R.id.takePhotoButton)
-    void onClickTakePhotoButton() {
-        Intent intent = new Intent(GalleryActivity.this, CameraActivity.class);
-        startActivity(intent);
-    }
 }

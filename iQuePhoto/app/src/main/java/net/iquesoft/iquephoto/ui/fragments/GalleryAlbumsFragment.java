@@ -1,11 +1,13 @@
 package net.iquesoft.iquephoto.ui.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -15,11 +17,13 @@ import net.iquesoft.iquephoto.adapter.ImageAlbumsAdapter;
 import net.iquesoft.iquephoto.mvp.models.ImageAlbum;
 import net.iquesoft.iquephoto.mvp.presenters.fragment.GalleryAlbumsPresenter;
 import net.iquesoft.iquephoto.mvp.views.fragment.GalleryAlbumsView;
+import net.iquesoft.iquephoto.ui.activities.GalleryActivity;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 public class GalleryAlbumsFragment extends MvpAppCompatFragment implements GalleryAlbumsView {
@@ -28,6 +32,9 @@ public class GalleryAlbumsFragment extends MvpAppCompatFragment implements Galle
 
     @BindView(R.id.albumsRecyclerView)
     RecyclerView recyclerView;
+
+    @BindView(R.id.noImagesLinearLayout)
+    LinearLayout noImagesLinearLayout;
 
     private Unbinder mUnbinder;
 
@@ -58,14 +65,24 @@ public class GalleryAlbumsFragment extends MvpAppCompatFragment implements Galle
     }
 
     @Override
+    public void showNoImages() {
+        noImagesLinearLayout.setVisibility(View.VISIBLE);
+    }
+
+    @Override
     public void setupAdapter(List<ImageAlbum> imageAlbums) {
         ImageAlbumsAdapter adapter = new ImageAlbumsAdapter(imageAlbums);
 
-        adapter.setOnAlbumClickListener(imageAlbum -> {
-            presenter.showAlbumImages(imageAlbum);
-        });
+        adapter.setOnAlbumClickListener(imageAlbum ->
+                ((GalleryActivity) getActivity()).showImages(imageAlbum));
 
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
         recyclerView.setAdapter(adapter);
+    }
+
+    @OnClick(R.id.takePhotoButton)
+    void onClickTakePhoto() {
+        Intent intent = new Intent("app.intent.action.Camera");
+        startActivity(intent);
     }
 }

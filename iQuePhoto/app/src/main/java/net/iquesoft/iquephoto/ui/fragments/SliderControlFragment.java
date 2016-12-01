@@ -14,12 +14,9 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.core.editor.enums.EditorCommand;
 import net.iquesoft.iquephoto.mvp.presenters.fragment.SliderControlPresenter;
-import net.iquesoft.iquephoto.mvp.views.activity.EditorView;
 import net.iquesoft.iquephoto.mvp.views.fragment.SliderControlView;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
-
-import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -27,13 +24,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 public class SliderControlFragment extends MvpAppCompatFragment implements SliderControlView {
-
-    private Unbinder mUnbinder;
-
-    private EditorCommand mCommand;
-
-    @Inject
-    EditorView editorActivityView;
+    public static final String ARG_PARAM = "command";
 
     @InjectPresenter
     SliderControlPresenter presenter;
@@ -53,9 +44,30 @@ public class SliderControlFragment extends MvpAppCompatFragment implements Slide
     @BindView(R.id.toolSeekBar)
     DiscreteSeekBar toolSeekBar;
 
+    private Unbinder mUnbinder;
+
+    private EditorCommand mCommand;
+
+    public static SliderControlFragment newInstance(EditorCommand editorCommand) {
+        SliderControlFragment fragment = new SliderControlFragment();
+
+        Bundle args = new Bundle();
+        args.putSerializable(ARG_PARAM, editorCommand);
+
+        fragment.setArguments(args);
+
+        return fragment;
+    }
+
+    public SliderControlFragment() {
+    }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        if (getArguments() != null) {
+            presenter.setupTool(getArguments());
+        }
     }
 
     @Override
@@ -69,6 +81,7 @@ public class SliderControlFragment extends MvpAppCompatFragment implements Slide
             public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
                 currentValueTextView.setText(String.valueOf(value));
 
+                /* TODO:
                 switch (mCommand) {
                     case VIGNETTE:
                         editorActivityView.getImageEditorView().setVignetteIntensity(value);
@@ -97,7 +110,7 @@ public class SliderControlFragment extends MvpAppCompatFragment implements Slide
                     case TRANSFORM_HORIZONTAL:
                         editorActivityView.getImageEditorView().setHorizontalTransformValue(value);
                         break;
-                }
+                }*/
             }
 
             @Override
@@ -117,8 +130,7 @@ public class SliderControlFragment extends MvpAppCompatFragment implements Slide
     @Override
     public void onResume() {
         super.onResume();
-
-        editorActivityView.getImageEditorView().setCommand(mCommand);
+        // TODO: editorActivityView.getImageEditorView().setupTool(mCommand);
     }
 
     @Override
@@ -150,12 +162,12 @@ public class SliderControlFragment extends MvpAppCompatFragment implements Slide
 
     @OnClick(R.id.toolCancelButton)
     void onClickBack() {
-        editorActivityView.navigateBack(true);
+        // TODO: editorActivityView.navigateBack(true);
     }
 
     @OnClick(R.id.toolApplyButton)
     void onClickApply() {
-        editorActivityView.getImageEditorView().apply(mCommand);
-        editorActivityView.navigateBack(true);
+        // TODO: editorActivityView.getImageEditorView().apply(mCommand);
+        // TODO: editorActivityView.navigateBack(true);
     }
 }

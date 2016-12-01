@@ -5,14 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.mvp.common.BaseFragment;
-import net.iquesoft.iquephoto.di.components.EditorComponent;
-import net.iquesoft.iquephoto.mvp.presenters.fragment.TransformPresenter;
-import net.iquesoft.iquephoto.mvp.views.activity.EditorView;
-import net.iquesoft.iquephoto.mvp.views.fragment.TransformView;
+import com.arellomobile.mvp.MvpAppCompatFragment;
+import com.arellomobile.mvp.presenter.InjectPresenter;
 
-import javax.inject.Inject;
+import net.iquesoft.iquephoto.R;
+
+import net.iquesoft.iquephoto.mvp.presenters.fragment.TransformPresenter;
+import net.iquesoft.iquephoto.mvp.views.fragment.TransformView;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -22,20 +21,16 @@ import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.TRANSFORM_H
 import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.TRANSFORM_STRAIGHTEN;
 import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.TRANSFORM_VERTICAL;
 
-public class TransformFragment extends BaseFragment implements TransformView {
+public class TransformFragment extends MvpAppCompatFragment implements TransformView {
+
+    @InjectPresenter
+    TransformPresenter presenter;
 
     private Unbinder mUnbinder;
-
-    @Inject
-    EditorView editorActivityView;
-
-    @Inject
-    TransformPresenter presenter;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        this.getComponent(EditorComponent.class).inject(this);
     }
 
     @Override
@@ -50,7 +45,6 @@ public class TransformFragment extends BaseFragment implements TransformView {
     @Override
     public void onResume() {
         super.onResume();
-        presenter.init(this);
     }
 
     @Override
@@ -61,7 +55,7 @@ public class TransformFragment extends BaseFragment implements TransformView {
 
     @OnClick(R.id.transformBackButton)
     void onClickBack() {
-        editorActivityView.navigateBack(true);
+        // TODO; editorActivityView.navigateBack(true);
     }
 
     @OnClick(R.id.transformHorizontalButton)

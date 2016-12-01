@@ -15,77 +15,28 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.core.editor.enums.EditorCommand;
 import net.iquesoft.iquephoto.core.editor.ImageEditorView;
-import net.iquesoft.iquephoto.mvp.models.Text;
+import net.iquesoft.iquephoto.mvp.common.BaseActivity;
 import net.iquesoft.iquephoto.mvp.presenters.activity.EditorPresenter;
 import net.iquesoft.iquephoto.task.ImageSaveTask;
-import net.iquesoft.iquephoto.ui.fragments.AddTextFragment;
-import net.iquesoft.iquephoto.ui.fragments.AdjustFragment;
-import net.iquesoft.iquephoto.ui.fragments.DrawingFragment;
-import net.iquesoft.iquephoto.ui.fragments.FiltersFragment;
-import net.iquesoft.iquephoto.ui.fragments.FramesFragment;
-import net.iquesoft.iquephoto.ui.fragments.OverlaysFragment;
-import net.iquesoft.iquephoto.ui.fragments.SliderControlFragment;
-import net.iquesoft.iquephoto.ui.fragments.StickersToolFragment;
-import net.iquesoft.iquephoto.ui.fragments.TiltShiftFragment;
-import net.iquesoft.iquephoto.ui.fragments.TransformFragment;
 import net.iquesoft.iquephoto.util.BitmapUtil;
 import net.iquesoft.iquephoto.mvp.views.activity.EditorView;
 import net.iquesoft.iquephoto.ui.fragments.ToolsFragment;
 
 import java.io.IOException;
 
-import javax.inject.Inject;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.VIGNETTE;
-
-public class EditorActivity extends MvpAppCompatActivity implements EditorView {
+public class EditorActivity extends BaseActivity implements EditorView {
 
     @InjectPresenter
     EditorPresenter presenter;
-
-    @Inject
-    ToolsFragment toolsFragment;
-
-    @Inject
-    FiltersFragment filtersFragment;
-
-    @Inject
-    AdjustFragment adjustFragment;
-
-    @Inject
-    OverlaysFragment overlayFragment;
-
-    @Inject
-    StickersToolFragment stickersToolFragment;
-
-    @Inject
-    FramesFragment framesFragment;
-
-    @Inject
-    TransformFragment transformFragment;
-
-    @Inject
-    TiltShiftFragment tiltShiftFragment;
-
-    @Inject
-    DrawingFragment drawingFragment;
-
-    @Inject
-    AddTextFragment addTextFragment;
-
-    @Inject
-    SliderControlFragment sliderControlFragment;
 
     @BindView(R.id.undoButton)
     Button undoButton;
@@ -133,12 +84,10 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorView {
             }
         });
 
-        DataHolder.getInstance().setEditorView(imageEditorView);
-
         mFragmentManager = getSupportFragmentManager();
 
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-        fragmentTransaction.add(fragmentContainer.getId(), toolsFragment)
+        fragmentTransaction.add(fragmentContainer.getId(), new ToolsFragment())
                 .commit();
     }
 
@@ -172,55 +121,8 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorView {
                 .show();
     }
 
-    @Override
-    public void setupToolFragment(EditorCommand editorCommand) {
-        Fragment fragment = null;
 
-        switch (editorCommand) {
-            case FILTERS:
-                fragment = filtersFragment;
-                break;
-            case ADJUST:
-                fragment = adjustFragment;
-                break;
-            case OVERLAY:
-                fragment = overlayFragment;
-                break;
-            case STICKERS:
-                fragment = stickersToolFragment;
-                break;
-            case FRAMES:
-                fragment = framesFragment;
-                break;
-            case TRANSFORM:
-                fragment = transformFragment;
-                break;
-            case TRANSFORM_HORIZONTAL:
-                fragment = sliderControlFragment;
-                break;
-            case TRANSFORM_STRAIGHTEN:
-                fragment = sliderControlFragment;
-                break;
-            case TRANSFORM_VERTICAL:
-                fragment = sliderControlFragment;
-                break;
-            case VIGNETTE:
-                sliderControlFragment.setCommand(VIGNETTE);
-                fragment = sliderControlFragment;
-                break;
-            case TILT_SHIFT_RADIAL:
-                fragment = tiltShiftFragment;
-                break;
-            case DRAWING:
-                fragment = drawingFragment;
-                break;
-            case TEXT:
-                fragment = addTextFragment;
-                break;
-            default:
-                fragment = sliderControlFragment;
-        }
-
+    public void setupFragment(Fragment fragment) {
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
         fragmentTransaction.replace(fragmentContainer.getId(), fragment)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
@@ -248,26 +150,6 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorView {
             }
         } else
             finish();
-    }
-
-    @Override
-    public void addTextToEditor(Text text) {
-        imageEditorView.addText(text);
-    }
-
-    @Override
-    public void applyCommand(EditorCommand editorCommand) {
-        imageEditorView.apply(editorCommand);
-    }
-
-    @Override
-    public void setEditorCommand(EditorCommand editorCommand) {
-        imageEditorView.setCommand(editorCommand);
-    }
-
-    @Override
-    public ImageEditorView getImageEditorView() {
-        return imageEditorView;
     }
 
     @OnClick(R.id.editorBackButton)

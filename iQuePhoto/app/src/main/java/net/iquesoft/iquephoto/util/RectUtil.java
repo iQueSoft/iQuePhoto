@@ -4,7 +4,7 @@ import android.graphics.RectF;
 import android.util.Log;
 
 public class RectUtil {
-    
+
     public static void logRectInfo(RectF rect) {
         Log.i("Rect info", rect.toString());
     }

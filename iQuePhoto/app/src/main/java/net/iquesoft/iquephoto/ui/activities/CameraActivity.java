@@ -8,10 +8,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.WindowManager;
 
-import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.R;
+import net.iquesoft.iquephoto.di.components.CameraComponent;
+import net.iquesoft.iquephoto.mvp.common.BaseActivity;
 import net.iquesoft.iquephoto.mvp.presenters.activity.CameraPresenter;
 import net.iquesoft.iquephoto.mvp.presenters.fragment.Camera2Presenter;
 import net.iquesoft.iquephoto.mvp.views.activity.CameraActivityView;
@@ -24,22 +25,22 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class CameraActivity extends MvpAppCompatActivity implements CameraActivityView {
+public class CameraActivity extends BaseActivity implements CameraActivityView {
 
     @InjectPresenter
     CameraPresenter presenter;
 
-    @InjectPresenter
-    Camera2Presenter camera2Presenter;
+    /*@InjectPresenter
+    Camera2Presenter camera2Presenter;*/
 
-    @Inject
+    /*@Inject
     CameraFragment cameraFragment;
 
     @Inject
     Camera2Fragment camera2Fragment;
 
     @Inject
-    CameraFiltersFragment cameraFiltersFragment;
+    CameraFiltersFragment cameraFiltersFragment;*/
 
     private FragmentManager mFragmentManager;
 
@@ -59,7 +60,7 @@ public class CameraActivity extends MvpAppCompatActivity implements CameraActivi
     @Override
     protected void onResume() {
         super.onResume();
-        presenter.initializeCamera(cameraFragment, camera2Fragment);
+        presenter.initializeCamera(new CameraFragment(), new Camera2Fragment());
     }
 
     @Override
@@ -87,7 +88,7 @@ public class CameraActivity extends MvpAppCompatActivity implements CameraActivi
     @Override
     public void setFilter(ColorMatrix colorMatrix) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            camera2Fragment.setFilter(colorMatrix);
+            // TODO: camera2Fragment.setFilter(colorMatrix);
         }
     }
 
@@ -96,7 +97,7 @@ public class CameraActivity extends MvpAppCompatActivity implements CameraActivi
         // TODO: Camera capture button.
         //camera2Presenter.takePhoto();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            camera2Fragment.takePhoto();
+            // TODO: camera2Fragment.takePhoto();
         } else {
             // TODO: Camera capture for camera 1.
         }
@@ -109,6 +110,6 @@ public class CameraActivity extends MvpAppCompatActivity implements CameraActivi
 
     @OnClick(R.id.cameraFiltersImageButton)
     void onClickFiltersButton() {
-        presenter.showFilters(cameraFiltersFragment);
+        // TODO: presenter.showFilters(cameraFiltersFragment);
     }
 }

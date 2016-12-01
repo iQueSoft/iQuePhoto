@@ -30,9 +30,8 @@ import butterknife.OnClick;
 
 public class PreviewActivity extends MvpAppCompatActivity implements PreviewView {
 
-    private Bitmap mBitmap;
-
-    private MaterialDialog mProgressDialog;
+    @InjectPresenter
+    PreviewPresenter presenter;
 
     @BindView(R.id.cropTabLayout)
     TabLayout tabLayout;
@@ -40,8 +39,9 @@ public class PreviewActivity extends MvpAppCompatActivity implements PreviewView
     @BindView(R.id.cropImageView)
     CropImageView cropImageView;
 
-    @InjectPresenter
-    PreviewPresenter presenter;
+    private Bitmap mBitmap;
+
+    private MaterialDialog mProgressDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

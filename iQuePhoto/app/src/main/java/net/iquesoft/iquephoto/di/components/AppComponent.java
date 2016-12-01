@@ -3,6 +3,7 @@ package net.iquesoft.iquephoto.di.components;
 import android.content.Context;
 
 import net.iquesoft.iquephoto.di.modules.AppModule;
+import net.iquesoft.iquephoto.mvp.common.BaseActivity;
 import net.iquesoft.iquephoto.ui.fragments.AddTextFragment;
 import net.iquesoft.iquephoto.ui.fragments.AdjustFragment;
 import net.iquesoft.iquephoto.ui.fragments.Camera2Fragment;
@@ -29,6 +30,8 @@ import dagger.Component;
         AppModule.class}
 )
 public interface AppComponent {
+    void inject(BaseActivity baseActivity);
+
     Context getContext();
 
     GalleryAlbumsFragment galleryAlbumsFragment();

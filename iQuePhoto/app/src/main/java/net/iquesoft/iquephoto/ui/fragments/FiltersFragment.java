@@ -11,11 +11,9 @@ import android.widget.LinearLayout;
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
-import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapter.FiltersAdapter;
 import net.iquesoft.iquephoto.core.editor.enums.EditorCommand;
-import net.iquesoft.iquephoto.core.editor.ImageEditorView;
 import net.iquesoft.iquephoto.mvp.models.Filter;
 import net.iquesoft.iquephoto.mvp.presenters.fragment.FiltersPresenter;
 import net.iquesoft.iquephoto.mvp.views.activity.EditorView;
@@ -30,11 +28,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-
 public class FiltersFragment extends MvpAppCompatFragment implements FiltersView {
-    @Inject
-    EditorView editorActivityView;
-
     @InjectPresenter
     FiltersPresenter presenter;
 
@@ -46,7 +40,12 @@ public class FiltersFragment extends MvpAppCompatFragment implements FiltersView
 
     private Unbinder mUnbinder;
 
-    private ImageEditorView mImageEditorView;
+    public FiltersFragment() {
+    }
+
+    public static FiltersFragment newInstance() {
+        return new FiltersFragment();
+    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -69,12 +68,10 @@ public class FiltersFragment extends MvpAppCompatFragment implements FiltersView
 
         mUnbinder = ButterKnife.bind(this, v);
 
-        mImageEditorView = DataHolder.getInstance().getEditorView();
-
         seekBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
             @Override
             public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
-                mImageEditorView.setFilterIntensity(value);
+                // TODO: mImageEditorView.setFilterIntensity(value);
             }
 
             @Override
@@ -107,7 +104,7 @@ public class FiltersFragment extends MvpAppCompatFragment implements FiltersView
         FiltersAdapter adapter = new FiltersAdapter(Filter.getFiltersList());
 
         adapter.setFiltersListener(filter -> {
-            mImageEditorView.setFilter(filter.getColorMatrix());
+            // TODO: mImageEditorView.setFilter(filter.getColorMatrix());
         });
 
         filtersList.setLayoutManager(new LinearLayoutManager(null, LinearLayout.HORIZONTAL, false));
@@ -116,12 +113,12 @@ public class FiltersFragment extends MvpAppCompatFragment implements FiltersView
 
     @OnClick(R.id.filterBack)
     void onClickBack() {
-        editorActivityView.navigateBack(true);
+        // TODO: editorActivityView.navigateBack(true);
     }
 
     @OnClick(R.id.filterApply)
     void onClickApply() {
-        editorActivityView.getImageEditorView().apply(EditorCommand.FILTERS);
-        editorActivityView.navigateBack(true);
+        /* TODO: editorActivityView.getImageEditorView().apply(EditorCommand.FILTERS);
+        editorActivityView.navigateBack(true);*/
     }
 }

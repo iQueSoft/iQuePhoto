@@ -8,20 +8,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
+import com.arellomobile.mvp.presenter.InjectPresenter;
 
-import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapter.FramesAdapter;
-import net.iquesoft.iquephoto.core.editor.enums.EditorCommand;
-import net.iquesoft.iquephoto.core.editor.ImageEditorView;
 import net.iquesoft.iquephoto.mvp.models.Frame;
 import net.iquesoft.iquephoto.mvp.presenters.fragment.FramesPresenter;
-import net.iquesoft.iquephoto.mvp.views.activity.EditorView;
 import net.iquesoft.iquephoto.mvp.views.fragment.FramesView;
 
 import java.util.List;
-
-import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,12 +31,7 @@ public class FramesFragment extends MvpAppCompatFragment implements FramesView {
 
     private FramesAdapter mAdapter;
 
-    private ImageEditorView mImageEditorView;
-
-    @Inject
-    EditorView editorActivityView;
-
-    @Inject
+    @InjectPresenter
     FramesPresenter presenter;
 
     @BindView(R.id.frameRecyclerView)
@@ -71,13 +61,11 @@ public class FramesFragment extends MvpAppCompatFragment implements FramesView {
 
         mAdapter = new FramesAdapter(mFrameList);
         mAdapter.setFramesListener(frame -> {
-            mImageEditorView.setFrame(getResources().getDrawable(frame.getImage()));
+            // TODO: mImageEditorView.setFrame(getResources().getDrawable(frame.getImage()));
         });
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         recyclerView.setAdapter(mAdapter);
-
-        mImageEditorView = DataHolder.getInstance().getEditorView();
 
         return view;
     }
@@ -96,12 +84,12 @@ public class FramesFragment extends MvpAppCompatFragment implements FramesView {
 
     @OnClick(R.id.framesBack)
     void onClickBack() {
-        editorActivityView.navigateBack(true);
+        // TODO: editorActivityView.navigateBack(true);
     }
 
     @OnClick(R.id.framesApply)
     void onClickApply() {
-        editorActivityView.getImageEditorView().apply(EditorCommand.FRAMES);
+        // TODO: editorActivityView.getImageEditorView().apply(EditorCommand.FRAMES);
         onClickBack();
     }
 }

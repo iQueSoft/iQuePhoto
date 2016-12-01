@@ -16,12 +16,10 @@ import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.mvp.models.Adjust;
 import net.iquesoft.iquephoto.mvp.presenters.fragment.AdjustPresenter;
 import net.iquesoft.iquephoto.mvp.presenters.fragment.SliderControlPresenter;
-import net.iquesoft.iquephoto.mvp.views.activity.EditorView;
 import net.iquesoft.iquephoto.mvp.views.fragment.AdjustView;
+import net.iquesoft.iquephoto.ui.activities.EditorActivity;
 
 import java.util.List;
-
-import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,6 +27,9 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 public class AdjustFragment extends MvpAppCompatFragment implements AdjustView {
+
+    @InjectPresenter
+    AdjustPresenter presenter;
 
     private List<Adjust> mAdjustList = Adjust.getAdjustList();
 
@@ -38,15 +39,6 @@ public class AdjustFragment extends MvpAppCompatFragment implements AdjustView {
 
     @BindView(R.id.adjustRecyclerView)
     RecyclerView recyclerView;
-
-    @Inject
-    EditorView editorActivityView;
-
-    @InjectPresenter
-    AdjustPresenter presenter;
-
-    @InjectPresenter
-    SliderControlPresenter sliderControlFragmentPresenter;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -62,8 +54,8 @@ public class AdjustFragment extends MvpAppCompatFragment implements AdjustView {
         mAdapter = new AdjustAdapter(mAdjustList);
 
         mAdapter.setOnAdjustClickListener(adjust -> {
-            sliderControlFragmentPresenter.setCommand(adjust.getCommand());
-            //editorActivityView.setupFragment(SliderControlFragment.newInstance(adjust.getCommand()));
+            ((EditorActivity) getActivity())
+                    .setupFragment(SliderControlFragment.newInstance(adjust.getCommand()));
         });
 
         recyclerView.setLayoutManager(new LinearLayoutManager(null, LinearLayout.HORIZONTAL, false));
@@ -86,6 +78,6 @@ public class AdjustFragment extends MvpAppCompatFragment implements AdjustView {
 
     @OnClick(R.id.adjustBack)
     public void onClickBack() {
-        editorActivityView.navigateBack(true);
+        // TODO: editorActivityView.navigateBack(true);
     }
 }

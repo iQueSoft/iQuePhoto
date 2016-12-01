@@ -12,20 +12,15 @@ import android.util.Log;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
+import com.arellomobile.mvp.MvpAppCompatActivity;
+import com.arellomobile.mvp.presenter.InjectPresenter;
+
 import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.mvp.common.BaseActivity;
-import net.iquesoft.iquephoto.di.HasComponent;
-import net.iquesoft.iquephoto.di.components.DaggerShareComponent;
-import net.iquesoft.iquephoto.di.components.AppComponent;
-import net.iquesoft.iquephoto.di.components.ShareComponent;
-import net.iquesoft.iquephoto.di.modules.ShareModule;
 import net.iquesoft.iquephoto.mvp.presenters.activity.SharePresenter;
 import net.iquesoft.iquephoto.mvp.views.activity.ShareView;
 import net.iquesoft.iquephoto.task.ImageSaveTask;
 import net.iquesoft.iquephoto.util.BitmapUtil;
-
-import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,9 +29,10 @@ import butterknife.OnClick;
 import static net.iquesoft.iquephoto.mvp.presenters.activity.SharePresenter.FACEBOOK_ID;
 import static net.iquesoft.iquephoto.mvp.presenters.activity.SharePresenter.INSTAGRAM_ID;
 
-public class ShareActivity extends BaseActivity implements ShareView, HasComponent<ShareComponent> {
+public class ShareActivity extends MvpAppCompatActivity implements ShareView {
 
-    private Bitmap mBitmap;
+    @InjectPresenter
+    SharePresenter presenter;
 
     @BindView(R.id.shareImageView)
     ImageView imageView;
@@ -44,10 +40,7 @@ public class ShareActivity extends BaseActivity implements ShareView, HasCompone
     @BindView(R.id.imageSizeTabLayout)
     TabLayout tabLayout;
 
-    @Inject
-    SharePresenter presenter;
-
-    private ShareComponent mComponent;
+    private Bitmap mBitmap;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -84,21 +77,8 @@ public class ShareActivity extends BaseActivity implements ShareView, HasCompone
     }
 
     @Override
-    protected void setupComponent(AppComponent component) {
-        mComponent = DaggerShareComponent.builder()
-                .appComponent(component)
-                .shareModule(new ShareModule(this))
-                .build();
-        mComponent.inject(this);
-    }
-
-    @Override
     public void onBackPressed() {
         finish();
-    }
-
-    public ShareComponent getComponent() {
-        return mComponent;
     }
 
     @OnClick(R.id.shareBackButton)

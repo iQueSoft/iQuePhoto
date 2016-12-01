@@ -7,36 +7,38 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.arellomobile.mvp.MvpAppCompatFragment;
+import com.arellomobile.mvp.presenter.InjectPresenter;
+
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapter.ToolsAdapter;
-import net.iquesoft.iquephoto.mvp.common.BaseFragment;
-import net.iquesoft.iquephoto.di.components.EditorComponent;
+import net.iquesoft.iquephoto.core.editor.ImageEditorView;
 import net.iquesoft.iquephoto.mvp.models.Tool;
 import net.iquesoft.iquephoto.mvp.presenters.fragment.ToolsPresenter;
 import net.iquesoft.iquephoto.mvp.views.fragment.ToolsView;
-
-import javax.inject.Inject;
+import net.iquesoft.iquephoto.ui.activities.EditorActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class ToolsFragment extends BaseFragment implements ToolsView {
+import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.NONE;
+
+public class ToolsFragment extends MvpAppCompatFragment implements ToolsView {
+
+    @InjectPresenter
+    ToolsPresenter presenter;
+
+    @BindView(R.id.toolsRecyclerView)
+    RecyclerView recyclerView;
 
     private Unbinder mUnbinder;
 
     private ToolsAdapter mAdapter;
 
-    @BindView(R.id.toolsRecyclerView)
-    RecyclerView recyclerView;
-
-    @Inject
-    ToolsPresenter presenter;
-
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        this.getComponent(EditorComponent.class).inject(this);
     }
 
     @Override
@@ -48,7 +50,7 @@ public class ToolsFragment extends BaseFragment implements ToolsView {
         mAdapter = new ToolsAdapter(Tool.getToolsList());
 
         mAdapter.setOnToolsClickListener(tool -> {
-            presenter.setupTool(tool);
+            ((EditorActivity) getActivity()).setupFragment(tool.getFragment());
         });
 
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 4));
@@ -61,7 +63,8 @@ public class ToolsFragment extends BaseFragment implements ToolsView {
     @Override
     public void onResume() {
         super.onResume();
-        presenter.init(this);
+        ((ImageEditorView) getActivity().findViewById(R.id.editorImageView))
+                .setCommand(NONE);
     }
 
     @Override

@@ -10,8 +10,6 @@ public class DataHolder {
 
     private Bitmap mShareBitmap;
 
-    private ImageEditorView editorView;
-
     private Uri mImageUri;
 
     private static DataHolder ourInstance = new DataHolder();
@@ -21,14 +19,6 @@ public class DataHolder {
     }
 
     private DataHolder() {
-    }
-
-    public ImageEditorView getEditorView() {
-        return editorView;
-    }
-
-    public void setEditorView(ImageEditorView editorView) {
-        this.editorView = editorView;
     }
 
     public Bitmap getShareBitmap() {

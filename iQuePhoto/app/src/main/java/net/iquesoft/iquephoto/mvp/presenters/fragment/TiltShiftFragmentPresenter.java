@@ -22,7 +22,7 @@ public class TiltShiftFragmentPresenter extends MvpPresenter<TiltShiftView> {
     }
 
     @Override
-    public void setCommand(EditorCommand editorCommand) {
+    public void setupTool(EditorCommand editorCommand) {
         mCurrentCommand = editorCommand;
         mEditorView.setEditorCommand(mCurrentCommand);
     }*/

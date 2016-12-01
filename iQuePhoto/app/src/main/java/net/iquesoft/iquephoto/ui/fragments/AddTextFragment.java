@@ -37,21 +37,6 @@ import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.TEXT;
 
 public class AddTextFragment extends MvpAppCompatFragment implements AddTextView {
 
-    private Context mContext;
-
-    private int mColor = Color.BLACK;
-
-    private Typeface mTypeface = Typeface.DEFAULT;
-
-    private Unbinder mUnbinder;
-
-    private FontPickerDialog mFontPickerDialog;
-    private ColorPickerDialog mColorPickerDialog;
-    private RGBColorPickerDialog RGBColorPickerDialog;
-
-    @Inject
-    EditorView editorActivityView;
-
     @InjectPresenter
     AddTextPresenter presenter;
 
@@ -67,6 +52,17 @@ public class AddTextFragment extends MvpAppCompatFragment implements AddTextView
     @BindView(R.id.textField)
     EditText editText;
 
+    private Context mContext;
+
+    private int mColor = Color.BLACK;
+
+    private Typeface mTypeface = Typeface.DEFAULT;
+
+    private Unbinder mUnbinder;
+
+    private FontPickerDialog mFontPickerDialog;
+    private ColorPickerDialog mColorPickerDialog;
+
     public static AddTextFragment newInstance() {
         return new AddTextFragment();
     }
@@ -78,13 +74,13 @@ public class AddTextFragment extends MvpAppCompatFragment implements AddTextView
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_text, container, false);
+        View view = inflater.inflate(R.layout.fragment_text, container, false);
 
-        mUnbinder = ButterKnife.bind(this, v);
+        mUnbinder = ButterKnife.bind(this, view);
 
-        mContext = v.getContext();
+        mContext = view.getContext();
 
-        mFontPickerDialog = new FontPickerDialog(v.getContext());
+        mFontPickerDialog = new FontPickerDialog(view.getContext());
         mFontPickerDialog.setOnFontClickListener(typeface -> {
             mTypeface = typeface;
         });
@@ -93,8 +89,6 @@ public class AddTextFragment extends MvpAppCompatFragment implements AddTextView
         mColorPickerDialog.setOnColorClickListener(color -> {
             mColor = color;
         });
-
-        RGBColorPickerDialog = new RGBColorPickerDialog(v.getContext());
 
         opacityValueTextView.setText(String.valueOf(seekBar.getProgress()));
 
@@ -115,7 +109,7 @@ public class AddTextFragment extends MvpAppCompatFragment implements AddTextView
             }
         });
 
-        return v;
+        return view;
     }
 
     @Override
@@ -146,12 +140,12 @@ public class AddTextFragment extends MvpAppCompatFragment implements AddTextView
 
     @OnClick(R.id.textBackButton)
     void onClickBack() {
-        editorActivityView.navigateBack(true);
+        //TODO: editorActivityView.navigateBack(true);
     }
 
     @OnClick(R.id.textApplyButton)
     void onClickApply() {
-        editorActivityView.getImageEditorView().apply(TEXT);
+        // TODO: editorActivityView.getImageEditorView().apply(TEXT);
     }
 
     @Override

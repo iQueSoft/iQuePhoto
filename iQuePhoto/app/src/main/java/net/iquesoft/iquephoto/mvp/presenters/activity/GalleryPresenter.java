@@ -1,13 +1,9 @@
 package net.iquesoft.iquephoto.mvp.presenters.activity;
 
-import android.support.v7.widget.RecyclerView;
-
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
 import net.iquesoft.iquephoto.mvp.views.activity.GalleryView;
-
-import javax.inject.Inject;
 
 @InjectViewState
 public class GalleryPresenter extends MvpPresenter<GalleryView> {

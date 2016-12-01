@@ -7,5 +7,7 @@ import net.iquesoft.iquephoto.mvp.models.ImageAlbum;
 import java.util.List;
 
 public interface GalleryAlbumsView extends MvpView {
+    void showNoImages();
+
     void setupAdapter(List<ImageAlbum> imageAlbums);
 }

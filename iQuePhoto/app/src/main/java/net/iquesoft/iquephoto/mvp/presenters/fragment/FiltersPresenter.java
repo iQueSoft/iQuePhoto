@@ -12,7 +12,9 @@ import java.util.List;
 public class FiltersPresenter extends MvpPresenter<FiltersView> {
     private List<Filter> mFilters = Filter.getFiltersList();
 
-    public FiltersPresenter() {
+    @Override
+    protected void onFirstViewAttach() {
+        super.onFirstViewAttach();
         getViewState().setupFiltersAdapter(mFilters);
     }
 }

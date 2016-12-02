@@ -13,6 +13,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.adapter.AdjustAdapter;
 import net.iquesoft.iquephoto.R;
+import net.iquesoft.iquephoto.core.editor.ImageEditorView;
 import net.iquesoft.iquephoto.mvp.models.Adjust;
 import net.iquesoft.iquephoto.mvp.presenters.fragment.AdjustPresenter;
 import net.iquesoft.iquephoto.mvp.views.fragment.AdjustView;
@@ -25,11 +26,11 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
+import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.NONE;
+
 public class AdjustFragment extends MvpAppCompatFragment implements AdjustView {
     @InjectPresenter
     AdjustPresenter presenter;
-
-    private List<Adjust> mAdjustList = Adjust.getAdjustList();
 
     private Unbinder mUnbinder;
 
@@ -47,23 +48,14 @@ public class AdjustFragment extends MvpAppCompatFragment implements AdjustView {
 
         mUnbinder = ButterKnife.bind(this, view);
 
-        AdjustAdapter adapter = new AdjustAdapter(mAdjustList);
-
-        adapter.setOnAdjustClickListener(adjust ->
-                ((EditorActivity) getActivity())
-                        .setupFragment(SliderControlFragment.newInstance(adjust.getCommand()))
-        );
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(null, LinearLayout.HORIZONTAL, false));
-
-        recyclerView.setAdapter(adapter);
-
         return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        ((ImageEditorView) getActivity().findViewById(R.id.editorImageView))
+                .setCommand(NONE);
     }
 
     @Override
@@ -72,8 +64,21 @@ public class AdjustFragment extends MvpAppCompatFragment implements AdjustView {
         mUnbinder.unbind();
     }
 
-    @OnClick(R.id.adjustBack)
+    @OnClick(R.id.adjustBackButton)
     public void onClickBack() {
-        // TODO: editorActivityView.navigateBack(true);
+        ((EditorActivity) getActivity()).navigateBack(true);
+    }
+
+    @Override
+    public void setupAdapter(List<Adjust> adjusts) {
+        AdjustAdapter adapter = new AdjustAdapter(adjusts);
+        adapter.setOnAdjustClickListener(adjust ->
+                ((EditorActivity) getActivity())
+                        .setupFragment(SliderControlFragment.newInstance(adjust.getCommand()))
+        );
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(null, LinearLayout.HORIZONTAL, false));
+
+        recyclerView.setAdapter(adapter);
     }
 }

@@ -22,7 +22,7 @@ public class Adjust {
     private int mValue;
     private int mMinValue;
     private int mMaxValue;
-    
+
     private EditorCommand mCommand;
 
     public static List<Adjust> getAdjustList() {
@@ -38,13 +38,14 @@ public class Adjust {
                     -100, 100, 0),
             new Adjust(R.string.warmth, R.drawable.ic_warmth, WARMTH,
                     -100, 100, 0),
+            new Adjust(R.string.shadows, R.drawable.ic_shadows, SHADOWS,
+                    -100, 100, 0),
             new Adjust(R.string.tint, R.drawable.ic_fade, TINT,
                     -100, 100, 0),
             new Adjust(R.string.exposure, R.drawable.ic_exposure, EXPOSURE,
                     -100, 100, 0),
             new Adjust(R.string.fade, R.drawable.ic_fade, FADE,
-                    -10, 100, 0)
-
+                    -100, 100, 0),
     };
 
     private Adjust(@StringRes int title, @DrawableRes int icon, @NonNull EditorCommand command,

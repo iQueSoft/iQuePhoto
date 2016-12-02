@@ -40,11 +40,6 @@ public class Camera2Fragment extends MvpAppCompatFragment implements Camera2Frag
     private Camera2Module mCameraModule;
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_camera_2, container, false);
 
@@ -58,6 +53,11 @@ public class Camera2Fragment extends MvpAppCompatFragment implements Camera2Frag
         //camera2View.setAspectRatio(0, 0);
 
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
     }
 
     @Override

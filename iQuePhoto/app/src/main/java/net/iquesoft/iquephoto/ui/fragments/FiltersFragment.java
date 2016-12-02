@@ -51,7 +51,6 @@ public class FiltersFragment extends MvpAppCompatFragment implements FiltersView
     public FiltersFragment() {
     }
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,8 +103,9 @@ public class FiltersFragment extends MvpAppCompatFragment implements FiltersView
     @Override
     public void setupFiltersAdapter(List<Filter> filters) {
         FiltersAdapter adapter = new FiltersAdapter(filters);
-
-        adapter.setFiltersListener(filter -> mImageEditorView.setFilter(filter.getColorMatrix()));
+        adapter.setFiltersListener(filter ->
+                mImageEditorView.setFilter(filter.getColorMatrix())
+        );
 
         filtersList.setLayoutManager(new LinearLayoutManager(null, LinearLayout.HORIZONTAL, false));
         filtersList.setAdapter(adapter);

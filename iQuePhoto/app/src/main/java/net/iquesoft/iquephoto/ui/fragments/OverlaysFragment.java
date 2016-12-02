@@ -16,6 +16,7 @@ import net.iquesoft.iquephoto.core.editor.ImageEditorView;
 import net.iquesoft.iquephoto.mvp.models.Overlay;
 import net.iquesoft.iquephoto.mvp.presenters.fragment.OverlaysPresenter;
 import net.iquesoft.iquephoto.mvp.views.fragment.OverlaysView;
+import net.iquesoft.iquephoto.ui.activities.EditorActivity;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
@@ -42,29 +43,18 @@ public class OverlaysFragment extends MvpAppCompatFragment implements OverlaysVi
 
     private ImageEditorView mImageEditorView;
 
-    private List<Overlay> mOverlayList = Overlay.getOverlaysList();
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mImageEditorView = (ImageEditorView) getActivity().findViewById(R.id.editorImageView);
+        mImageEditorView =
+                (ImageEditorView) getActivity().findViewById(R.id.editorImageView);
     }
-
+    
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_overlay, container, false);
 
         mUnbinder = ButterKnife.bind(this, view);
-
-        OverlaysAdapter adapter = new OverlaysAdapter(mOverlayList);
-
-        adapter.setOnOverlayClickListener(overlay -> {
-            mImageEditorView.setOverlay(overlay.getImage());
-        });
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        recyclerView.setAdapter(adapter);
 
         seekBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
             @Override
@@ -98,15 +88,24 @@ public class OverlaysFragment extends MvpAppCompatFragment implements OverlaysVi
         mUnbinder.unbind();
     }
 
+    @Override
+    public void setupAdapter(List<Overlay> overlays) {
+        OverlaysAdapter adapter = new OverlaysAdapter(overlays);
+        adapter.setOnOverlayClickListener(overlay ->
+                mImageEditorView.setOverlay(overlay.getImage()));
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        recyclerView.setAdapter(adapter);
+    }
+
     @OnClick(R.id.overlayCancel)
     void onClickBack() {
-        //TODO: editorActivityView.navigateBack(true);
+        ((EditorActivity) getActivity()).navigateBack(true);
     }
 
     @OnClick(R.id.overlayApply)
     void onClickApply() {
-        /* TODO:
-        editorActivityView.getImageEditorView().applyChanges(EditorCommand.OVERLAY);
-        editorActivityView.navigateBack(true);*/
+        mImageEditorView.apply(OVERLAY);
+        onClickBack();
     }
 }

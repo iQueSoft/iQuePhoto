@@ -46,8 +46,6 @@ public class SliderControlFragment extends MvpAppCompatFragment implements Slide
 
     private Unbinder mUnbinder;
 
-    private EditorCommand mCommand;
-
     public static SliderControlFragment newInstance(EditorCommand editorCommand) {
         SliderControlFragment fragment = new SliderControlFragment();
 
@@ -142,10 +140,6 @@ public class SliderControlFragment extends MvpAppCompatFragment implements Slide
     @Override
     public void initializeCancelButton(@StringRes int toolTitle) {
         toolCancelButton.setText(toolTitle);
-    }
-
-    public void setCommand(EditorCommand command) {
-        mCommand = command;
     }
 
     @Override

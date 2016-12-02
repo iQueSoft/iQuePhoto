@@ -43,16 +43,12 @@ public class StickersToolFragment extends MvpAppCompatFragment implements Sticke
 
     private Unbinder mUnbinder;
 
-    private StickersPagerAdapter mPagerAdapter;
+    private ImageEditorView mImageEditorView;
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mImageEditorView = (ImageEditorView) getActivity().findViewById(R.id.editorImageView);
     }
 
     @Override
@@ -61,8 +57,10 @@ public class StickersToolFragment extends MvpAppCompatFragment implements Sticke
 
         mUnbinder = ButterKnife.bind(this, view);
 
-        mPagerAdapter = new StickersPagerAdapter(getChildFragmentManager(), getContext(), mStickersSetsList);
-        viewPager.setAdapter(mPagerAdapter);
+        StickersPagerAdapter pagerAdapter =
+                new StickersPagerAdapter(getChildFragmentManager(), getContext(), mStickersSetsList);
+
+        viewPager.setAdapter(pagerAdapter);
 
         tabLayout.setupWithViewPager(viewPager);
 
@@ -75,15 +73,26 @@ public class StickersToolFragment extends MvpAppCompatFragment implements Sticke
         return view;
     }
 
-    @OnClick(R.id.stickersApplyImageButton)
-    void onClickApply() {
-        ((ImageEditorView) getActivity().findViewById(R.id.editorImageView)).apply(STICKERS);
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mImageEditorView.setCommand(STICKERS);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         mUnbinder.unbind();
+    }
+
+    @OnClick(R.id.stickersApplyImageButton)
+    void onClickApply() {
+        mImageEditorView.apply(STICKERS);
     }
 
     private class StickersPagerAdapter extends FragmentPagerAdapter {

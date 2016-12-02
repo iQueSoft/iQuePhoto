@@ -15,7 +15,6 @@ import net.iquesoft.iquephoto.adapter.AdjustAdapter;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.mvp.models.Adjust;
 import net.iquesoft.iquephoto.mvp.presenters.fragment.AdjustPresenter;
-import net.iquesoft.iquephoto.mvp.presenters.fragment.SliderControlPresenter;
 import net.iquesoft.iquephoto.mvp.views.fragment.AdjustView;
 import net.iquesoft.iquephoto.ui.activities.EditorActivity;
 
@@ -27,15 +26,12 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 public class AdjustFragment extends MvpAppCompatFragment implements AdjustView {
-
     @InjectPresenter
     AdjustPresenter presenter;
 
     private List<Adjust> mAdjustList = Adjust.getAdjustList();
 
     private Unbinder mUnbinder;
-
-    private AdjustAdapter mAdapter;
 
     @BindView(R.id.adjustRecyclerView)
     RecyclerView recyclerView;
@@ -51,16 +47,16 @@ public class AdjustFragment extends MvpAppCompatFragment implements AdjustView {
 
         mUnbinder = ButterKnife.bind(this, view);
 
-        mAdapter = new AdjustAdapter(mAdjustList);
+        AdjustAdapter adapter = new AdjustAdapter(mAdjustList);
 
-        mAdapter.setOnAdjustClickListener(adjust -> {
-            ((EditorActivity) getActivity())
-                    .setupFragment(SliderControlFragment.newInstance(adjust.getCommand()));
-        });
+        adapter.setOnAdjustClickListener(adjust ->
+                ((EditorActivity) getActivity())
+                        .setupFragment(SliderControlFragment.newInstance(adjust.getCommand()))
+        );
 
         recyclerView.setLayoutManager(new LinearLayoutManager(null, LinearLayout.HORIZONTAL, false));
 
-        recyclerView.setAdapter(mAdapter);
+        recyclerView.setAdapter(adapter);
 
         return view;
     }

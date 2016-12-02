@@ -26,7 +26,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class CameraActivity extends BaseActivity implements CameraActivityView {
-
     @InjectPresenter
     CameraPresenter presenter;
 

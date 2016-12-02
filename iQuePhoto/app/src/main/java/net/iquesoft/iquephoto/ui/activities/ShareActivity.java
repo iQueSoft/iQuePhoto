@@ -30,7 +30,6 @@ import static net.iquesoft.iquephoto.mvp.presenters.activity.SharePresenter.FACE
 import static net.iquesoft.iquephoto.mvp.presenters.activity.SharePresenter.INSTAGRAM_ID;
 
 public class ShareActivity extends MvpAppCompatActivity implements ShareView {
-
     @InjectPresenter
     SharePresenter presenter;
 

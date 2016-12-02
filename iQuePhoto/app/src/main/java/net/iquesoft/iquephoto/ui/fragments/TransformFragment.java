@@ -10,27 +10,32 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.R;
 
+import net.iquesoft.iquephoto.core.editor.ImageEditorView;
 import net.iquesoft.iquephoto.mvp.presenters.fragment.TransformPresenter;
 import net.iquesoft.iquephoto.mvp.views.fragment.TransformView;
+import net.iquesoft.iquephoto.ui.activities.EditorActivity;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
+import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.TRANSFORM;
 import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.TRANSFORM_HORIZONTAL;
 import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.TRANSFORM_STRAIGHTEN;
 import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.TRANSFORM_VERTICAL;
 
 public class TransformFragment extends MvpAppCompatFragment implements TransformView {
-
     @InjectPresenter
     TransformPresenter presenter;
 
     private Unbinder mUnbinder;
 
+    private EditorActivity mEditorActivity;
+
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mEditorActivity = (EditorActivity) getActivity();
     }
 
     @Override
@@ -43,8 +48,15 @@ public class TransformFragment extends MvpAppCompatFragment implements Transform
     }
 
     @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
+        ((ImageEditorView) getActivity().findViewById(R.id.editorImageView))
+                .setCommand(TRANSFORM);
     }
 
     @Override
@@ -55,21 +67,21 @@ public class TransformFragment extends MvpAppCompatFragment implements Transform
 
     @OnClick(R.id.transformBackButton)
     void onClickBack() {
-        // TODO; editorActivityView.navigateBack(true);
+        ((EditorActivity) getActivity()).navigateBack(true);
     }
 
     @OnClick(R.id.transformHorizontalButton)
     void onClickTransformHorizontal() {
-        presenter.setupTransform(TRANSFORM_HORIZONTAL);
+        mEditorActivity.setupFragment(SliderControlFragment.newInstance(TRANSFORM_HORIZONTAL));
     }
 
     @OnClick(R.id.transformStraightenButton)
     void onClickTransformStraighten() {
-        presenter.setupTransform(TRANSFORM_STRAIGHTEN);
+        mEditorActivity.setupFragment(SliderControlFragment.newInstance(TRANSFORM_STRAIGHTEN));
     }
 
     @OnClick(R.id.transformVerticalButton)
     void onClickTransformVertical() {
-        presenter.setupTransform(TRANSFORM_VERTICAL);
+        mEditorActivity.setupFragment(SliderControlFragment.newInstance(TRANSFORM_VERTICAL));
     }
 }

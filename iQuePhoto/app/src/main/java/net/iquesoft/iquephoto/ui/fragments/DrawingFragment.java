@@ -9,12 +9,11 @@ import android.widget.LinearLayout;
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
-import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.core.editor.ImageEditorView;
 import net.iquesoft.iquephoto.mvp.presenters.fragment.DrawingPresenter;
+import net.iquesoft.iquephoto.ui.activities.EditorActivity;
 import net.iquesoft.iquephoto.ui.dialogs.ColorPickerDialog;
-import net.iquesoft.iquephoto.ui.dialogs.RGBColorPickerDialog;
 import net.iquesoft.iquephoto.mvp.views.fragment.DrawingView;
 
 import butterknife.BindView;
@@ -22,8 +21,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-public class DrawingFragment extends MvpAppCompatFragment implements DrawingView {
+import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.DRAWING;
 
+public class DrawingFragment extends MvpAppCompatFragment implements DrawingView {
     @InjectPresenter
     DrawingPresenter presenter;
 
@@ -33,11 +33,11 @@ public class DrawingFragment extends MvpAppCompatFragment implements DrawingView
     /*@BindView(R.id.brashSizeSeekBar)
     DiscreteSeekBar brashSizeSeekBar;*/
 
-    private ColorPickerDialog mColorPickerDialog;
-
     private Unbinder mUnbinder;
 
-    private RGBColorPickerDialog RGBColorPickerDialog;
+    private ImageEditorView mImageEditorView;
+
+    private ColorPickerDialog mColorPickerDialog;
 
     public static DrawingFragment newInstance() {
         /*Bundle b = new Bundle();
@@ -48,13 +48,9 @@ public class DrawingFragment extends MvpAppCompatFragment implements DrawingView
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mImageEditorView = (ImageEditorView) getActivity().findViewById(R.id.editorImageView);
     }
 
     @Override
@@ -65,11 +61,7 @@ public class DrawingFragment extends MvpAppCompatFragment implements DrawingView
 
         mColorPickerDialog = new ColorPickerDialog(view.getContext());
 
-        mColorPickerDialog.setOnColorClickListener(color -> {
-            // TODO: mImageEditorView.setBrushColor(color);
-        });
-
-        RGBColorPickerDialog = new RGBColorPickerDialog(view.getContext());
+        mColorPickerDialog.setOnColorClickListener(color -> mImageEditorView.setBrushColor(color));
 
         /*brashSizeSeekBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
             @Override
@@ -92,13 +84,36 @@ public class DrawingFragment extends MvpAppCompatFragment implements DrawingView
     }
 
     @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mImageEditorView.setCommand(DRAWING);
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         mUnbinder.unbind();
     }
 
     @OnClick(R.id.brushColorButton)
-    public void onClickBrushColor() {
+    void onClickBrushColor() {
         mColorPickerDialog.show();
+    }
+
+    @OnClick(R.id.drawingApplyButton)
+    void onClickApply() {
+        mImageEditorView.apply(DRAWING);
+        onClickBack();
+
+    }
+
+    @OnClick(R.id.drawingBackButton)
+    void onClickBack() {
+        ((EditorActivity) getActivity()).navigateBack(true);
     }
 }

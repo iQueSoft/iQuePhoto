@@ -32,7 +32,7 @@ public class StickersFragment extends MvpAppCompatFragment implements ShowSticke
 
     @BindView(R.id.stickersRecyclerView)
     RecyclerView recyclerView;
-
+    
     private Context mContext;
 
     private Unbinder mUnbinder;

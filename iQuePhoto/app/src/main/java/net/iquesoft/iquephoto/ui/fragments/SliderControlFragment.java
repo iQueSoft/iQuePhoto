@@ -167,7 +167,7 @@ public class SliderControlFragment extends MvpAppCompatFragment implements Slide
 
     @OnClick(R.id.toolApplyButton)
     void onClickApply() {
-        // TODO: editorActivityView.getImageEditorView().apply(mCommand);
+        // TODO: editorActivityView.getImageEditorView().applyChanges(mCommand);
         // TODO: editorActivityView.navigateBack(true);
     }
 }

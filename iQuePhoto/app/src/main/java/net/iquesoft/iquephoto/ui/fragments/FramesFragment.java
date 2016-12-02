@@ -12,9 +12,11 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapter.FramesAdapter;
+import net.iquesoft.iquephoto.core.editor.ImageEditorView;
 import net.iquesoft.iquephoto.mvp.models.Frame;
 import net.iquesoft.iquephoto.mvp.presenters.fragment.FramesPresenter;
 import net.iquesoft.iquephoto.mvp.views.fragment.FramesView;
+import net.iquesoft.iquephoto.ui.activities.EditorActivity;
 
 import java.util.List;
 
@@ -23,34 +25,23 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
+import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.FRAMES;
+
 public class FramesFragment extends MvpAppCompatFragment implements FramesView {
-
-    private Unbinder mUnbinder;
-
-    private List<Frame> mFrameList = Frame.getFramesList();
-
-    private FramesAdapter mAdapter;
-
     @InjectPresenter
     FramesPresenter presenter;
 
     @BindView(R.id.frameRecyclerView)
     RecyclerView recyclerView;
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
+    private Unbinder mUnbinder;
+
+    private ImageEditorView mImageEditorView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
+        mImageEditorView = (ImageEditorView) getActivity().findViewById(R.id.editorImageView);
     }
 
     @Override
@@ -59,21 +50,18 @@ public class FramesFragment extends MvpAppCompatFragment implements FramesView {
 
         mUnbinder = ButterKnife.bind(this, view);
 
-        mAdapter = new FramesAdapter(mFrameList);
-        mAdapter.setFramesListener(frame -> {
-            // TODO: mImageEditorView.setFrame(getResources().getDrawable(frame.getImage()));
-        });
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        recyclerView.setAdapter(mAdapter);
-
         return view;
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        mImageEditorView.setCommand(FRAMES);
     }
 
     @Override
@@ -82,14 +70,23 @@ public class FramesFragment extends MvpAppCompatFragment implements FramesView {
         mUnbinder.unbind();
     }
 
+    @Override
+    public void setupAdapter(List<Frame> frames) {
+        FramesAdapter adapter = new FramesAdapter(frames);
+        adapter.setFramesListener(frame -> mImageEditorView.setFrame(frame.getImage()));
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        recyclerView.setAdapter(adapter);
+    }
+
     @OnClick(R.id.framesBack)
     void onClickBack() {
-        // TODO: editorActivityView.navigateBack(true);
+        ((EditorActivity) getActivity()).navigateBack(true);
     }
 
     @OnClick(R.id.framesApply)
     void onClickApply() {
-        // TODO: editorActivityView.getImageEditorView().apply(EditorCommand.FRAMES);
+        mImageEditorView.apply(FRAMES);
         onClickBack();
     }
 }

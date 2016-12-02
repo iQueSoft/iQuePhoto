@@ -39,8 +39,8 @@ public class GalleryAlbumsFragment extends MvpAppCompatFragment implements Galle
     private Unbinder mUnbinder;
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -50,6 +50,11 @@ public class GalleryAlbumsFragment extends MvpAppCompatFragment implements Galle
         mUnbinder = ButterKnife.bind(this, view);
 
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
     }
 
     @Override

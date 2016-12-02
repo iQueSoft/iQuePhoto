@@ -34,8 +34,6 @@ public class ToolsFragment extends MvpAppCompatFragment implements ToolsView {
 
     private Unbinder mUnbinder;
 
-    private ToolsAdapter mAdapter;
-
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -47,15 +45,15 @@ public class ToolsFragment extends MvpAppCompatFragment implements ToolsView {
 
         mUnbinder = ButterKnife.bind(this, view);
 
-        mAdapter = new ToolsAdapter(Tool.getToolsList());
+        ToolsAdapter adapter = new ToolsAdapter(Tool.getToolsList());
 
-        mAdapter.setOnToolsClickListener(tool -> {
-            ((EditorActivity) getActivity()).setupFragment(tool.getFragment());
-        });
+        adapter.setOnToolsClickListener(tool ->
+                ((EditorActivity) getActivity()).setupFragment(tool.getFragment())
+        );
 
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 4));
 
-        recyclerView.setAdapter(mAdapter);
+        recyclerView.setAdapter(adapter);
 
         return view;
     }

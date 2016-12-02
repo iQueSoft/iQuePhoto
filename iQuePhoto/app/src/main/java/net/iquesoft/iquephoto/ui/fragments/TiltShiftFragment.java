@@ -9,12 +9,18 @@ import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.R;
+import net.iquesoft.iquephoto.core.editor.ImageEditorView;
+import net.iquesoft.iquephoto.core.editor.enums.EditorCommand;
 import net.iquesoft.iquephoto.mvp.presenters.fragment.TiltShiftFragmentPresenter;
 import net.iquesoft.iquephoto.mvp.views.fragment.TiltShiftView;
+import net.iquesoft.iquephoto.ui.activities.EditorActivity;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+
+import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.TILT_SHIFT_LINEAR;
+import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.TILT_SHIFT_RADIAL;
 
 public class TiltShiftFragment extends MvpAppCompatFragment implements TiltShiftView {
     @InjectPresenter
@@ -22,9 +28,13 @@ public class TiltShiftFragment extends MvpAppCompatFragment implements TiltShift
 
     private Unbinder mUnbinder;
 
+    private ImageEditorView mImageEditorView;
+
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mImageEditorView =
+                (ImageEditorView) getActivity().findViewById(R.id.editorImageView);
     }
 
     @Override
@@ -37,8 +47,14 @@ public class TiltShiftFragment extends MvpAppCompatFragment implements TiltShift
     }
 
     @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
+        mImageEditorView.setCommand(TILT_SHIFT_RADIAL);
     }
 
     @Override
@@ -47,24 +63,36 @@ public class TiltShiftFragment extends MvpAppCompatFragment implements TiltShift
         mUnbinder.unbind();
     }
 
+    @Override
+    public void onTiltShiftChanged(EditorCommand command) {
+        mImageEditorView.setCommand(command);
+    }
+
+    @Override
+    public void applyTiltShift(EditorCommand command) {
+        mImageEditorView.apply(command);
+        onClickBack();
+    }
+
     @OnClick(R.id.tiltShiftCancelButton)
-    void onClickCancel() {
-        // TODO: editorActivityView.navigateBack(true);
+    void onClickBack() {
+        ((EditorActivity) getActivity()).navigateBack(true);
     }
 
     @OnClick(R.id.tiltShiftApplyButton)
     void onClickApply() {
-        // TODO: presenter.apply();
-        //editorActivityView.navigateBack(true);
+        presenter.applyChanges();
     }
 
     @OnClick(R.id.tiltShiftLinearButton)
     void onClickLinear() {
-        // TODO: presenter.setupTool(TILT_SHIFT_LINEAR);
+        presenter.changeTiltShift(TILT_SHIFT_LINEAR);
     }
 
     @OnClick(R.id.tiltShiftRadialButton)
     void onClickRadial() {
-        // TODO: presenter.setupTool(TILT_SHIFT_RADIAL);
+        presenter.changeTiltShift(TILT_SHIFT_RADIAL);
     }
+
+
 }

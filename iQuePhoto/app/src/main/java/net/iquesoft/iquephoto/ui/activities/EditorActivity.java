@@ -34,7 +34,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class EditorActivity extends BaseActivity implements EditorView {
-
     @InjectPresenter
     EditorPresenter presenter;
 

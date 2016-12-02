@@ -15,7 +15,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.annotation.DrawableRes;
-import android.support.annotation.Nullable;
 import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -39,7 +38,6 @@ import net.iquesoft.iquephoto.core.editor.model.EditorFrame;
 import net.iquesoft.iquephoto.core.editor.model.EditorImage;
 import net.iquesoft.iquephoto.mvp.models.Sticker;
 import net.iquesoft.iquephoto.mvp.models.Text;
-import net.iquesoft.iquephoto.util.AdjustUtil;
 import net.iquesoft.iquephoto.util.BitmapUtil;
 import net.iquesoft.iquephoto.util.RectUtil;
 
@@ -68,12 +66,6 @@ public class ImageEditorView extends ImageView {
     private int mViewHeight = 0;
     private float mImageWidth = 0.0f;
     private float mImageHeight = 0.0f;
-
-    // TODO: Get image padding for move something on image with original size.
-    private float topPadding;
-    private float bottomPadding;
-    private float leftPadding;
-    private float rightPadding;
 
     private Context mContext;
 
@@ -776,17 +768,6 @@ public class ImageEditorView extends ImageView {
         invalidate();
     }
 
-    private void drawGuidelines(Canvas canvas) {
-        float h1 = mBitmapRect.left + (mBitmapRect.right - mBitmapRect.left) / 3.0f;
-        float h2 = mBitmapRect.right - (mBitmapRect.right - mBitmapRect.left) / 3.0f;
-        float v1 = mBitmapRect.top + (mBitmapRect.bottom - mBitmapRect.top) / 3.0f;
-        float v2 = mBitmapRect.bottom - (mBitmapRect.bottom - mBitmapRect.top) / 3.0f;
-        canvas.drawLine(h1, mBitmapRect.top, h1, mBitmapRect.bottom, mGuidelinesPaint);
-        canvas.drawLine(h2, mBitmapRect.top, h2, mBitmapRect.bottom, mGuidelinesPaint);
-        canvas.drawLine(mBitmapRect.left, v1, mBitmapRect.right, v1, mGuidelinesPaint);
-        canvas.drawLine(mBitmapRect.left, v2, mBitmapRect.right, v2, mGuidelinesPaint);
-    }
-
     private void drawingStop() {
         mDrawingPath.lineTo(mLastX, mLastY);
         mOriginalDrawingPath.lineTo(mLastX * mScale, mLastY * mScale);
@@ -797,6 +778,17 @@ public class ImageEditorView extends ImageView {
         mOriginalDrawingPath.reset();
 
         invalidate();
+    }
+
+    private void drawGuidelines(Canvas canvas) {
+        float h1 = mBitmapRect.left + (mBitmapRect.right - mBitmapRect.left) / 3.0f;
+        float h2 = mBitmapRect.right - (mBitmapRect.right - mBitmapRect.left) / 3.0f;
+        float v1 = mBitmapRect.top + (mBitmapRect.bottom - mBitmapRect.top) / 3.0f;
+        float v2 = mBitmapRect.bottom - (mBitmapRect.bottom - mBitmapRect.top) / 3.0f;
+        canvas.drawLine(h1, mBitmapRect.top, h1, mBitmapRect.bottom, mGuidelinesPaint);
+        canvas.drawLine(h2, mBitmapRect.top, h2, mBitmapRect.bottom, mGuidelinesPaint);
+        canvas.drawLine(mBitmapRect.left, v1, mBitmapRect.right, v1, mGuidelinesPaint);
+        canvas.drawLine(mBitmapRect.left, v2, mBitmapRect.right, v2, mGuidelinesPaint);
     }
 
     public void setBrushColor(int color) {
@@ -860,17 +852,15 @@ public class ImageEditorView extends ImageView {
         mFilterPaint.setColorFilter(new ColorMatrixColorFilter(colorMatrix));
     }
 
-    public void setFrame(@Nullable Drawable drawable) {
-        if (drawable != null) {
-            mFrameImageBitmap = Bitmap.createScaledBitmap(((BitmapDrawable) drawable).getBitmap(),
-                    mSourceImageBitmap.getWidth(), mSourceImageBitmap.getHeight(), false);
-        } else {
-            mFrameImageBitmap = null;
-        }
+    public void setFrame(@DrawableRes int drawable) {
+        mFrameImageBitmap = BitmapUtil.drawable2Bitmap(mContext, drawable);
+
+        BitmapUtil.logBitmapInfo("Frame", mFrameImageBitmap);
     }
 
-    public void setOverlay(@DrawableRes int drawableRes) {
-        mOverlayImageBitmap = BitmapUtil.drawable2Bitmap(mContext, drawableRes);
+    public void setOverlay(@DrawableRes int drawable) {
+        mOverlayImageBitmap = BitmapUtil.drawable2Bitmap(mContext, drawable);
+
         BitmapUtil.logBitmapInfo("Overlay", mOverlayImageBitmap);
 
         mOverlayPaint.setAlpha(125);
@@ -1189,11 +1179,6 @@ public class ImageEditorView extends ImageView {
         mMatrix.postRotate(mAngle, mCenter.x, mCenter.y);
     }
 
-    @Override
-    public Matrix getImageMatrix() {
-        return super.getImageMatrix();
-    }
-
     private void setupLayout(int viewW, int viewH) {
         if (viewW == 0 || viewH == 0) return;
         setCenter(new PointF(getPaddingLeft() + viewW * 0.5f, getPaddingTop() + viewH * 0.5f));
@@ -1229,7 +1214,6 @@ public class ImageEditorView extends ImageView {
 
         return scale;
     }
-
 
     // FIXME: Problem with bitmap rect size.
     private RectF calcImageRect(RectF rect, Matrix matrix) {
@@ -1272,10 +1256,6 @@ public class ImageEditorView extends ImageView {
 
     private float getRotatedHeight(float angle, float width, float height) {
         return angle % 180 == 0 ? height : width;
-    }
-
-    public Bitmap getImageBitmap() {
-        return getBitmap();
     }
 
     private void updateLayout() {
@@ -1360,7 +1340,7 @@ public class ImageEditorView extends ImageView {
                     mCanvas.drawBitmap(mBitmap, 0, 0, mWarmthPaint);
                     break;
                 case EXPOSURE:
-                    mCanvas.drawBitmap(mBitmap, 0, 0, AdjustUtil.getExposurePaint(mExposureValue));
+                    mCanvas.drawBitmap(mBitmap, 0, 0, mExposurePaint);
                     break;
                 case TRANSFORM_STRAIGHTEN:
                     mCanvas.save(Canvas.CLIP_SAVE_FLAG);
@@ -1465,36 +1445,4 @@ public class ImageEditorView extends ImageView {
     }
 
     return mMatrix;*/
-    /*private class RedrawImagesTask extends AsyncTask<Integer, Void, Bitmap> {
-        private Bitmap mBitmap;
-        private Canvas mCanvas = new Canvas();
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            mBitmap = mSourceImageBitmap.copy(mSourceImageBitmap.getConfig(), true);
-        }
-
-        @Override
-        protected Bitmap doInBackground(Integer... integers) {
-            mCanvas.setBitmap(mSourceImageBitmap);
-            for (EditorImage editorImage : mImagesList) {
-                switch (editorImage.getCommand()) {
-                    case R.string.filters:
-                        mCanvas.drawBitmap(mBitmap, 0, 0, mFilterPaint);
-                        break;
-                    case R.string.overlay:
-                        break;
-                }
-            }
-            return mBitmap;
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap mBitmap) {
-            super.onPostExecute(mBitmap);
-
-        }
-    }*/
 }

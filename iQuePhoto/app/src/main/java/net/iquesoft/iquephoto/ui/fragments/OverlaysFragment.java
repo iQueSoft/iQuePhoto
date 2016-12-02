@@ -29,7 +29,6 @@ import butterknife.Unbinder;
 import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.OVERLAY;
 
 public class OverlaysFragment extends MvpAppCompatFragment implements OverlaysView {
-
     @InjectPresenter
     OverlaysPresenter presenter;
 
@@ -43,7 +42,6 @@ public class OverlaysFragment extends MvpAppCompatFragment implements OverlaysVi
 
     private ImageEditorView mImageEditorView;
 
-    private OverlaysAdapter mAdapter;
     private List<Overlay> mOverlayList = Overlay.getOverlaysList();
 
     @Override
@@ -59,19 +57,19 @@ public class OverlaysFragment extends MvpAppCompatFragment implements OverlaysVi
 
         mUnbinder = ButterKnife.bind(this, view);
 
-        mAdapter = new OverlaysAdapter(mOverlayList);
+        OverlaysAdapter adapter = new OverlaysAdapter(mOverlayList);
 
-        mAdapter.setOnOverlayClickListener(overlay -> {
+        adapter.setOnOverlayClickListener(overlay -> {
             mImageEditorView.setOverlay(overlay.getImage());
         });
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        recyclerView.setAdapter(mAdapter);
+        recyclerView.setAdapter(adapter);
 
         seekBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
             @Override
             public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
-
+                mImageEditorView.setOverlayOpacity(value);
             }
 
             @Override
@@ -108,7 +106,7 @@ public class OverlaysFragment extends MvpAppCompatFragment implements OverlaysVi
     @OnClick(R.id.overlayApply)
     void onClickApply() {
         /* TODO:
-        editorActivityView.getImageEditorView().apply(EditorCommand.OVERLAY);
+        editorActivityView.getImageEditorView().applyChanges(EditorCommand.OVERLAY);
         editorActivityView.navigateBack(true);*/
     }
 }

@@ -16,8 +16,6 @@ import net.iquesoft.iquephoto.adapter.ImagesAdapter;
 import net.iquesoft.iquephoto.mvp.models.Image;
 import net.iquesoft.iquephoto.mvp.presenters.fragment.GalleryImagesPresenter;
 import net.iquesoft.iquephoto.mvp.views.fragment.GalleryImagesView;
-import net.iquesoft.iquephoto.ui.activities.GalleryActivity;
-import net.iquesoft.iquephoto.ui.activities.PreviewActivity;
 
 import java.util.ArrayList;
 import java.util.List;

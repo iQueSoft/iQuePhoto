@@ -29,7 +29,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class PreviewActivity extends MvpAppCompatActivity implements PreviewView {
-
     @InjectPresenter
     PreviewPresenter presenter;
 

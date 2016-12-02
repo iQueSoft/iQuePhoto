@@ -36,7 +36,6 @@ import butterknife.Unbinder;
 import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.TEXT;
 
 public class AddTextFragment extends MvpAppCompatFragment implements AddTextView {
-
     @InjectPresenter
     AddTextPresenter presenter;
 
@@ -145,7 +144,7 @@ public class AddTextFragment extends MvpAppCompatFragment implements AddTextView
 
     @OnClick(R.id.textApplyButton)
     void onClickApply() {
-        // TODO: editorActivityView.getImageEditorView().apply(TEXT);
+        // TODO: editorActivityView.getImageEditorView().applyChanges(TEXT);
     }
 
     @Override

@@ -25,7 +25,6 @@ import java.util.Date;
 
 public class BitmapUtil {
 
-    // FIXME: Something wrong with this.
     public static Uri getBitmapUri(Context context, Bitmap bitmap) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
@@ -103,10 +102,14 @@ public class BitmapUtil {
         if (drawable instanceof BitmapDrawable) {
             return ((BitmapDrawable) drawable).getBitmap();
         } else if (drawable instanceof VectorDrawable) {
-            return vectorDrawable2Bitmap((VectorDrawable) drawable);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                return vectorDrawable2Bitmap((VectorDrawable) drawable);
+            }
         } else {
             throw new IllegalArgumentException("unsupported drawable type");
         }
+
+        return null;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)

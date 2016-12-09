@@ -3,6 +3,7 @@ package net.iquesoft.iquephoto.task;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
@@ -37,8 +38,8 @@ public class ImageSaveTask extends AsyncTask<Void, Void, Void> {
         mProgressDialog = new MaterialDialog.Builder(mContext)
                 .content(R.string.saving)
                 .progress(true, 0)
-                .widgetColor(mContext.getResources().getColor(android.R.color.black))
-                .contentColor(mContext.getResources().getColor(android.R.color.black))
+                .widgetColor(Color.BLACK)
+                .contentColor(Color.BLACK)
                 .canceledOnTouchOutside(false)
                 .build();
     }
@@ -47,12 +48,10 @@ public class ImageSaveTask extends AsyncTask<Void, Void, Void> {
     protected void onPreExecute() {
         super.onPreExecute();
         mProgressDialog.show();
-
     }
 
     @Override
     protected Void doInBackground(Void... voids) {
-
         File file = getOutputMediaFile();
         if (file == null) {
             Log.d(TAG,
@@ -87,12 +86,6 @@ public class ImageSaveTask extends AsyncTask<Void, Void, Void> {
     }
 
     private File getOutputMediaFile() {
-        // TODO: Change output file name.
-        long date;
-        int seconds;
-
-        SimpleDateFormat format;
-
         File mediaStorageDir = new File(IMAGE_STORAGE_PATH);
 
         if (!mediaStorageDir.exists()) {
@@ -100,11 +93,10 @@ public class ImageSaveTask extends AsyncTask<Void, Void, Void> {
                 return null;
             }
         }
-        String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmm").format(new Date());
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         File mediaFile;
         String mImageName = "iQuePhoto_" + timeStamp + ".jpg";
         mediaFile = new File(mediaStorageDir.getPath() + File.separator + mImageName);
         return mediaFile;
     }
-
 }

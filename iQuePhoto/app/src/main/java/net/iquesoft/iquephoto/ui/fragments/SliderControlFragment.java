@@ -12,9 +12,11 @@ import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.R;
+import net.iquesoft.iquephoto.core.editor.ImageEditorView;
 import net.iquesoft.iquephoto.core.editor.enums.EditorCommand;
 import net.iquesoft.iquephoto.mvp.presenters.fragment.SliderControlPresenter;
 import net.iquesoft.iquephoto.mvp.views.fragment.SliderControlView;
+import net.iquesoft.iquephoto.ui.activities.EditorActivity;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
@@ -46,6 +48,8 @@ public class SliderControlFragment extends MvpAppCompatFragment implements Slide
 
     private Unbinder mUnbinder;
 
+    private ImageEditorView mImageEditorView;
+
     public static SliderControlFragment newInstance(EditorCommand editorCommand) {
         SliderControlFragment fragment = new SliderControlFragment();
 
@@ -61,11 +65,10 @@ public class SliderControlFragment extends MvpAppCompatFragment implements Slide
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        if (getArguments() != null) {
-            presenter.setupTool(getArguments());
-        }
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mImageEditorView =
+                (ImageEditorView) getActivity().findViewById(R.id.editorImageView);
     }
 
     @Override
@@ -126,15 +129,27 @@ public class SliderControlFragment extends MvpAppCompatFragment implements Slide
     }
 
     @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (getArguments() != null) {
+            presenter.setupTool(getArguments());
+        }
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
-        // TODO: editorActivityView.getImageEditorView().setupTool(mCommand);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         mUnbinder.unbind();
+    }
+
+    @Override
+    public void setupImageEditorCommand(EditorCommand command) {
+        mImageEditorView.setCommand(command);
     }
 
     @Override
@@ -156,12 +171,12 @@ public class SliderControlFragment extends MvpAppCompatFragment implements Slide
 
     @OnClick(R.id.toolCancelButton)
     void onClickBack() {
-        // TODO: editorActivityView.navigateBack(true);
+        ((EditorActivity) getActivity()).navigateBack(true);
     }
 
     @OnClick(R.id.toolApplyButton)
     void onClickApply() {
         // TODO: editorActivityView.getImageEditorView().applyChanges(mCommand);
-        // TODO: editorActivityView.navigateBack(true);
+        onClickBack();
     }
 }

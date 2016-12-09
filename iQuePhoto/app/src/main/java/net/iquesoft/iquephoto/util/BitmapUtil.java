@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v8.renderscript.Allocation;
 import android.support.v8.renderscript.Element;
@@ -20,19 +19,15 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class BitmapUtil {
 
-    public static Uri getBitmapUri(Context context, Bitmap bitmap) {
+    public static Uri getUriOfBitmap(Context context, Bitmap bitmap) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
 
-        String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmm").format(new Date());
-        String title = "iQuePhoto_" + timeStamp;
         String path = MediaStore.Images.Media.
-                insertImage(context.getContentResolver(), bitmap, title, null);
+                insertImage(context.getContentResolver(), bitmap, "iQuePhoto", null);
 
         return Uri.parse(path);
     }

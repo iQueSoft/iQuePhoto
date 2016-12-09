@@ -75,22 +75,18 @@ public class ImageEditorView extends ImageView {
 
     private Paint mImagePaint;
     private Paint mFilterPaint;
-    private Paint mContrastPaint;
-    private Paint mWarmthPaint;
-    private Paint mBrightnessPaint;
-    private Paint mSaturationPaint;
-    private Paint mExposurePaint;
-    private Paint mTintPaint;
+    private Paint mAdjustPaint;
     private Paint mOverlayPaint;
     private Paint mDrawingPaint;
     private Paint mDrawingCirclePaint;
     private Paint mGuidelinesPaint;
+
     private Path mDrawingPath;
     private Path mOriginalDrawingPath;
     private Path mDrawingCirclePath;
 
     private Matrix mMatrix = null;
-    private Matrix mOverlayMatrix;
+    private Matrix mSupportMatrix;
     private Matrix mTransformMatrix;
 
     private float mHorizontalTransformValue = 0;
@@ -145,14 +141,7 @@ public class ImageEditorView extends ImageView {
 
         mImagePaint = new Paint();
         mFilterPaint = new Paint();
-
-        mWarmthPaint = new Paint();
-        mContrastPaint = new Paint();
-        mBrightnessPaint = new Paint();
-        mSaturationPaint = new Paint();
-        mExposurePaint = new Paint();
-        mTintPaint = new Paint();
-
+        mAdjustPaint = new Paint();
         mOverlayPaint = new Paint();
 
         mGuidelinesPaint = new Paint();
@@ -172,7 +161,7 @@ public class ImageEditorView extends ImageView {
 
         mMatrix = new Matrix();
         mTransformMatrix = new Matrix();
-        mOverlayMatrix = new Matrix();
+        mSupportMatrix = new Matrix();
 
         mScale = 1.0f;
 
@@ -230,7 +219,7 @@ public class ImageEditorView extends ImageView {
         }
 
         canvas.drawRect(mBitmapRect, mEditorFrame.getFramePaint());
-
+        
         // TODO: Remove comment canvas.clipRect(mBitmapRect);
 
         switch (mCommand) {
@@ -246,40 +235,49 @@ public class ImageEditorView extends ImageView {
                 if (!mDrawingPath.isEmpty())
                     canvas.drawPath(mDrawingPath, mDrawingPaint);
                 break;
-            case BRIGHTNESS:
-                if (mBrightnessValue != 0)
-                    canvas.drawBitmap(bitmap, mMatrix, mBrightnessPaint);
-                break;
             case VIGNETTE:
                 mEditorVignette.draw(canvas);
                 break;
             case OVERLAY:
                 if (mOverlayImageBitmap != null)
-                    canvas.drawBitmap(mOverlayImageBitmap, mOverlayMatrix, mOverlayPaint);
-                break;
-            case CONTRAST:
-                if (mContrastValue != 0)
-                    canvas.drawBitmap(bitmap, mMatrix, mContrastPaint);
+                    canvas.drawBitmap(mOverlayImageBitmap, mSupportMatrix, mOverlayPaint);
                 break;
             case FRAMES:
                 if (mFrameImageBitmap != null)
-                    canvas.drawBitmap(mFrameImageBitmap, mMatrix, mImagePaint);
+                    canvas.drawBitmap(mFrameImageBitmap, mSupportMatrix, mImagePaint);
+                break;
+            case BRIGHTNESS:
+                if (mBrightnessValue != 0) {
+                    canvas.drawBitmap(bitmap, mMatrix, mAdjustPaint);
+                }
+                //canvas.drawBitmap(bitmap, mMatrix, mBrightnessPaint);
+                break;
+            case CONTRAST:
+                if (mContrastValue != 0) {
+                    canvas.drawBitmap(bitmap, mMatrix, mAdjustPaint);
+                }
+                //canvas.drawBitmap(bitmap, mMatrix, mContrastPaint);
                 break;
             case WARMTH:
-                if (mWarmthValue != 0)
-                    canvas.drawBitmap(bitmap, mMatrix, mWarmthPaint);
+                if (mWarmthValue != 0) {
+                    canvas.drawBitmap(bitmap, mMatrix, mAdjustPaint);
+                }
+                //canvas.drawBitmap(bitmap, mMatrix, mWarmthPaint);
                 break;
             case SATURATION:
-                if (mSaturationValue != 0)
-                    canvas.drawBitmap(bitmap, mMatrix, mSaturationPaint);
+                if (mSaturationValue != 0) {
+                    canvas.drawBitmap(bitmap, mMatrix, mAdjustPaint);
+                }
+                //canvas.drawBitmap(bitmap, mMatrix, mSaturationPaint);
                 break;
             case EXPOSURE:
                 if (mExposureValue != 0)
-                    canvas.drawBitmap(bitmap, mMatrix, mExposurePaint);
+                    canvas.drawBitmap(bitmap, mMatrix, mAdjustPaint);
                 break;
             case TINT:
                 if (mTintValue != 0) {
-                    canvas.drawBitmap(bitmap, mMatrix, mTintPaint);
+                    canvas.drawBitmap(bitmap, mMatrix, mAdjustPaint);
+                    //canvas.drawBitmap(bitmap, mMatrix, mTintPaint);
                 }
                 break;
             case TRANSFORM:
@@ -291,7 +289,6 @@ public class ImageEditorView extends ImageView {
                         getStraightenTransformMatrix(mTransformStraightenValue),
                         mImagePaint
                 );
-
                 // TODO: Off guidelines when click on this view.
                 drawGuidelines(canvas);
                 break;
@@ -856,14 +853,27 @@ public class ImageEditorView extends ImageView {
         mFrameImageBitmap = BitmapUtil.drawable2Bitmap(mContext, drawable);
 
         BitmapUtil.logBitmapInfo("Frame", mFrameImageBitmap);
+
+        float bitmapWidth = mBitmapRect.width();
+        float bitmapHeight = mBitmapRect.height();
+
+        float overlayWidth = mFrameImageBitmap.getWidth();
+        float overlayHeight = mFrameImageBitmap.getHeight();
+
+        float sX = bitmapWidth / overlayWidth;
+        float sY = bitmapHeight / overlayHeight;
+
+        mSupportMatrix.reset();
+        mSupportMatrix.setTranslate(mBitmapRect.left, mBitmapRect.top);
+        mSupportMatrix.postScale(sX, sY);
+
+        invalidate();
     }
 
     public void setOverlay(@DrawableRes int drawable) {
         mOverlayImageBitmap = BitmapUtil.drawable2Bitmap(mContext, drawable);
 
         BitmapUtil.logBitmapInfo("Overlay", mOverlayImageBitmap);
-
-        mOverlayPaint.setAlpha(125);
 
         float bitmapWidth = mBitmapRect.width();
         float bitmapHeight = mBitmapRect.height();
@@ -874,17 +884,11 @@ public class ImageEditorView extends ImageView {
         float sX = bitmapWidth / overlayWidth;
         float sY = bitmapHeight / overlayHeight;
 
-        mOverlayMatrix.reset();
-        mOverlayMatrix.setTranslate(mBitmapRect.left, mBitmapRect.top);
-        mOverlayMatrix.postScale(sX, sY);
+        mSupportMatrix.reset();
+        mSupportMatrix.setTranslate(mBitmapRect.left, mBitmapRect.top);
+        mSupportMatrix.postScale(sX, sY);
 
         invalidate();
-
-        /* TODO: If this method return exception use it:
-        new BitmapScaleTask(mContext, this, R.string.prepare_overlay,
-                mSourceImageBitmap.getWidth(),
-                mSourceImageBitmap.getHeight())
-                .execute(drawableRes);*/
     }
 
     public void setOverlayOpacity(int value) {
@@ -913,7 +917,7 @@ public class ImageEditorView extends ImageView {
         if (value != 0) {
             mBrightnessValue = value;
 
-            mBrightnessPaint.setColorFilter(getBrightnessColorFilter(mBrightnessValue));
+            mAdjustPaint.setColorFilter(getBrightnessColorFilter(mBrightnessValue));
 
             invalidate();
         }
@@ -923,7 +927,7 @@ public class ImageEditorView extends ImageView {
         if (value != 0) {
             mContrastValue = value / 2;
 
-            mContrastPaint.setColorFilter(getContrastColorFilter(mContrastValue));
+            mAdjustPaint.setColorFilter(getContrastColorFilter(mContrastValue));
 
             invalidate();
         }
@@ -933,7 +937,7 @@ public class ImageEditorView extends ImageView {
         if (value != 0) {
             mTintValue = value;
 
-            mTintPaint.setColorFilter(getTintColorFilter(value));
+            mAdjustPaint.setColorFilter(getTintColorFilter(value));
 
             invalidate();
         }
@@ -943,7 +947,7 @@ public class ImageEditorView extends ImageView {
         if (value != 0) {
             mExposureValue = value;
 
-            mExposurePaint.setColorFilter(getExposureColorFilter(mExposureValue));
+            mAdjustPaint.setColorFilter(getExposureColorFilter(mExposureValue));
             invalidate();
         }
     }
@@ -952,7 +956,7 @@ public class ImageEditorView extends ImageView {
         if (value != 0) {
             mWarmthValue = value;
 
-            mWarmthPaint.setColorFilter(getWarmthColorFilter(mWarmthValue));
+            mAdjustPaint.setColorFilter(getWarmthColorFilter(mWarmthValue));
 
             invalidate();
         }
@@ -966,7 +970,7 @@ public class ImageEditorView extends ImageView {
         if (value != 0) {
             mSaturationValue = value;
 
-            mSaturationPaint.setColorFilter(getSaturationColorFilter(mSaturationValue));
+            mAdjustPaint.setColorFilter(getSaturationColorFilter(mSaturationValue));
 
             invalidate();
         }
@@ -1311,10 +1315,10 @@ public class ImageEditorView extends ImageView {
                     mCanvas.drawBitmap(mOverlayImageBitmap, 0, 0, mOverlayPaint);
                     break;
                 case BRIGHTNESS:
-                    mCanvas.drawBitmap(mBitmap, 0, 0, mBrightnessPaint);
+                    mCanvas.drawBitmap(mBitmap, 0, 0, mAdjustPaint);
                     break;
                 case CONTRAST:
-                    mCanvas.drawBitmap(mBitmap, 0, 0, mContrastPaint);
+                    mCanvas.drawBitmap(mBitmap, 0, 0, mAdjustPaint);
                     break;
                 case STICKERS:
                     drawStickers(mCanvas);
@@ -1334,13 +1338,13 @@ public class ImageEditorView extends ImageView {
                     mEditorVignette.draw(mCanvas);
                     break;
                 case SATURATION:
-                    mCanvas.drawBitmap(mBitmap, 0, 0, mSaturationPaint);
+                    mCanvas.drawBitmap(mBitmap, 0, 0, mAdjustPaint);
                     break;
                 case WARMTH:
-                    mCanvas.drawBitmap(mBitmap, 0, 0, mWarmthPaint);
+                    mCanvas.drawBitmap(mBitmap, 0, 0, mAdjustPaint);
                     break;
                 case EXPOSURE:
-                    mCanvas.drawBitmap(mBitmap, 0, 0, mExposurePaint);
+                    mCanvas.drawBitmap(mBitmap, 0, 0, mAdjustPaint);
                     break;
                 case TRANSFORM_STRAIGHTEN:
                     mCanvas.save(Canvas.CLIP_SAVE_FLAG);

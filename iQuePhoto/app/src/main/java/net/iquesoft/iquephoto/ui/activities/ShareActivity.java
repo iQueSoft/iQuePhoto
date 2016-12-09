@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.TabLayout;
@@ -15,12 +16,13 @@ import android.widget.ImageView;
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
-import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.mvp.presenters.activity.SharePresenter;
 import net.iquesoft.iquephoto.mvp.views.activity.ShareView;
 import net.iquesoft.iquephoto.task.ImageSaveTask;
 import net.iquesoft.iquephoto.util.BitmapUtil;
+
+import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -68,7 +70,12 @@ public class ShareActivity extends MvpAppCompatActivity implements ShareView {
             }
         });
 
-        mBitmap = DataHolder.getInstance().getShareBitmap();
+        // FIXME: Exception.
+        try {
+            mBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), getIntent().getData());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         presenter.calculateSizesForCompressing(mBitmap);
 
@@ -84,7 +91,7 @@ public class ShareActivity extends MvpAppCompatActivity implements ShareView {
     void onClickBack() {
         super.onBackPressed();
     }
-
+    
     @OnClick(R.id.saveButton)
     void onClickSave() {
         new ImageSaveTask(this, mBitmap).execute();
@@ -107,7 +114,7 @@ public class ShareActivity extends MvpAppCompatActivity implements ShareView {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         intent.putExtra(Intent.EXTRA_STREAM,
-                BitmapUtil.getBitmapUri(this, mBitmap));
+                BitmapUtil.getUriOfBitmap(this, mBitmap));
 
         startActivity(Intent.createChooser(intent, getString(R.string.share_more)));
     }
@@ -126,7 +133,7 @@ public class ShareActivity extends MvpAppCompatActivity implements ShareView {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         intent.putExtra(Intent.EXTRA_STREAM,
-                BitmapUtil.getBitmapUri(this, mBitmap));
+                BitmapUtil.getUriOfBitmap(this, mBitmap));
 
         intent.setPackage(applicationId);
         startActivity(intent);

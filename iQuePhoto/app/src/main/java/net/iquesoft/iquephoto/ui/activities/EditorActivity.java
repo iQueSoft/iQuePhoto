@@ -159,9 +159,8 @@ public class EditorActivity extends BaseActivity implements EditorView {
     @OnClick(R.id.shareButton)
     void onClickShare() {
         Intent intent = new Intent(EditorActivity.this, ShareActivity.class);
-
-        // TODO: Make it without DataHolder.
-        DataHolder.getInstance().setShareBitmap(imageEditorView.getAlteredBitmap());
+        intent.putExtra(Intent.EXTRA_STREAM,
+                BitmapUtil.getUriOfBitmap(this, imageEditorView.getAlteredBitmap()));
         startActivity(intent);
     }
 

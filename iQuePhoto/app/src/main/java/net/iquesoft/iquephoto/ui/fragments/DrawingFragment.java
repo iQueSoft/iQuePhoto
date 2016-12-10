@@ -50,7 +50,7 @@ public class DrawingFragment extends MvpAppCompatFragment implements DrawingView
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mImageEditorView = (ImageEditorView) getActivity().findViewById(R.id.editorImageView);
+        mImageEditorView = (ImageEditorView) getActivity().findViewById(R.id.imageEditorView);
     }
 
     @Override
@@ -107,7 +107,7 @@ public class DrawingFragment extends MvpAppCompatFragment implements DrawingView
 
     @OnClick(R.id.drawingApplyButton)
     void onClickApply() {
-        mImageEditorView.apply(DRAWING);
+        mImageEditorView.applyChanges(DRAWING);
         onClickBack();
 
     }

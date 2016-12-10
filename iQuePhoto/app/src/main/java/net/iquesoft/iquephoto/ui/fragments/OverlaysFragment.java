@@ -47,9 +47,9 @@ public class OverlaysFragment extends MvpAppCompatFragment implements OverlaysVi
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mImageEditorView =
-                (ImageEditorView) getActivity().findViewById(R.id.editorImageView);
+                (ImageEditorView) getActivity().findViewById(R.id.imageEditorView);
     }
-    
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_overlay, container, false);
@@ -94,7 +94,10 @@ public class OverlaysFragment extends MvpAppCompatFragment implements OverlaysVi
         adapter.setOnOverlayClickListener(overlay ->
                 mImageEditorView.setOverlay(overlay.getImage()));
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        recyclerView.setLayoutManager(
+                new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false)
+        );
+
         recyclerView.setAdapter(adapter);
     }
 
@@ -105,7 +108,7 @@ public class OverlaysFragment extends MvpAppCompatFragment implements OverlaysVi
 
     @OnClick(R.id.overlayApply)
     void onClickApply() {
-        mImageEditorView.apply(OVERLAY);
+        mImageEditorView.applyChanges(OVERLAY);
         onClickBack();
     }
 }

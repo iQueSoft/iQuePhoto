@@ -54,7 +54,7 @@ public class FiltersFragment extends MvpAppCompatFragment implements FiltersView
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mImageEditorView = (ImageEditorView) getActivity().findViewById(R.id.editorImageView);
+        mImageEditorView = (ImageEditorView) getActivity().findViewById(R.id.imageEditorView);
     }
 
     @Override
@@ -118,7 +118,7 @@ public class FiltersFragment extends MvpAppCompatFragment implements FiltersView
 
     @OnClick(R.id.filterApplyImageButton)
     void onClickApply() {
-        mImageEditorView.apply(FILTERS);
+        mImageEditorView.applyChanges(FILTERS);
         onClickBack();
     }
 }

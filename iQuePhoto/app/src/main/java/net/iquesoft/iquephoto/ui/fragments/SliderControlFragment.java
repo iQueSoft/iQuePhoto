@@ -68,7 +68,7 @@ public class SliderControlFragment extends MvpAppCompatFragment implements Slide
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mImageEditorView =
-                (ImageEditorView) getActivity().findViewById(R.id.editorImageView);
+                (ImageEditorView) getActivity().findViewById(R.id.imageEditorView);
     }
 
     @Override

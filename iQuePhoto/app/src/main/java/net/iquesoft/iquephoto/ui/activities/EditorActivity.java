@@ -43,7 +43,7 @@ public class EditorActivity extends BaseActivity implements EditorView {
     @BindView(R.id.editorHeader)
     RelativeLayout editorHeader;
 
-    @BindView(R.id.editorImageView)
+    @BindView(R.id.imageEditorView)
     ImageEditorView imageEditorView;
 
     @BindView(R.id.fragmentContainer)

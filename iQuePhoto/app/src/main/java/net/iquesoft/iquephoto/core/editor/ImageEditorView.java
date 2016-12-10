@@ -39,6 +39,7 @@ import net.iquesoft.iquephoto.core.editor.model.EditorImage;
 import net.iquesoft.iquephoto.mvp.models.Sticker;
 import net.iquesoft.iquephoto.mvp.models.Text;
 import net.iquesoft.iquephoto.util.BitmapUtil;
+import net.iquesoft.iquephoto.util.LogUtil;
 import net.iquesoft.iquephoto.util.RectUtil;
 
 import java.util.ArrayList;
@@ -219,7 +220,7 @@ public class ImageEditorView extends ImageView {
         }
 
         canvas.drawRect(mBitmapRect, mEditorFrame.getFramePaint());
-        
+
         // TODO: Remove comment canvas.clipRect(mBitmapRect);
 
         switch (mCommand) {
@@ -583,7 +584,7 @@ public class ImageEditorView extends ImageView {
 
                             invalidate();
                             break;
-                        case RESIZE:
+                        case RESIZE_AND_SCALE:
                             mCurrentEditorSticker.updateRotateAndScale(
                                     getDistanceX(event),
                                     getDistanceY(event)
@@ -598,12 +599,12 @@ public class ImageEditorView extends ImageView {
 
                             invalidate();
                             break;
-                        case ROTATE:
-                            /*Matrix matrix = mCurrentEditorSticker.getMatrix();
+                        /*case ROTATE:
+                            *//*Matrix matrix = mCurrentEditorSticker.getMatrix();
                             mCurrentEditorSticker.getMatrix().postRotate((rotationToStartPoint(event, matrix) - mCurrentEditorSticker.getRotateDegree()) * 2, mCurrentEditorSticker.getPoint().x, mCurrentEditorSticker.getPoint().y);
-                            mCurrentEditorSticker.setRotateDegree(rotationToStartPoint(event, matrix));*/
+                            mCurrentEditorSticker.setRotateDegree(rotationToStartPoint(event, matrix));*//*
                             // TODO: Rotate sticker.
-                            break;
+                            break;*/
                     }
                 }
                 break;
@@ -686,8 +687,8 @@ public class ImageEditorView extends ImageView {
                     float distanceX = event.getX() - mLastX;
                     float distanceY = event.getY() - mLastY;
 
-                    int newX = mCurrentEditorText.getX() + (int) distanceX;
-                    int newY = mCurrentEditorText.getY() + (int) distanceY;
+                    float newX = mCurrentEditorText.getX() + distanceX;
+                    float newY = mCurrentEditorText.getY() + distanceY;
 
                     mCurrentEditorText.setX(newX);
                     mCurrentEditorText.setY(newY);
@@ -697,7 +698,7 @@ public class ImageEditorView extends ImageView {
 
                     invalidate();
                     break;
-                case RESIZE:
+                case RESIZE_AND_SCALE:
                     mCurrentEditorText.updateRotateAndScale(
                             getDistanceX(event),
                             getDistanceY(event)
@@ -708,14 +709,14 @@ public class ImageEditorView extends ImageView {
                     mLastX = event.getX();
                     mLastY = event.getY();
                     break;
-                case ROTATE:
+                /*case ROTATE:
                     // TODO: Texts transparency.
 
                     invalidate();
 
                     mLastX = event.getX();
                     mLastY = event.getY();
-                    break;
+                    break;*/
             }
         }
     }
@@ -797,7 +798,7 @@ public class ImageEditorView extends ImageView {
         mUndoListener = undoListener;
     }
 
-    public void apply(EditorCommand command) {
+    public void applyChanges(EditorCommand command) {
         new ImageProcessingTask().execute(command);
     }
 
@@ -809,8 +810,8 @@ public class ImageEditorView extends ImageView {
 
     public void addText(Text text) {
         EditorText editorText = new EditorText(text, mEditorFrame);
-        editorText.setX((int) mCenter.x);
-        editorText.setY((int) mCenter.y);
+        editorText.setX(mCenter.x);
+        editorText.setY(mCenter.y);
 
         mTextsList.add(editorText);
 
@@ -836,12 +837,6 @@ public class ImageEditorView extends ImageView {
     private void drawTexts(Canvas canvas) {
         for (EditorText text : mTextsList) {
             text.draw(canvas);
-        }
-    }
-
-    private void disableStickersHelperFrames() {
-        for (EditorSticker editorSticker : mStickersList) {
-            editorSticker.setDrawHelperFrame(false);
         }
     }
 
@@ -1109,7 +1104,7 @@ public class ImageEditorView extends ImageView {
                 mLastX = editorText.getRotateAndScaleHandleDstRect().centerX();
                 mLastY = editorText.getRotateAndScaleHandleDstRect().centerY();
 
-                mMode = EditorMode.RESIZE;
+                mMode = EditorMode.RESIZE_AND_SCALE;
                 return;
             } else if (editorText.isInTransparencyHandleButton(event)) {
                 mCurrentEditorText = editorText;
@@ -1153,7 +1148,7 @@ public class ImageEditorView extends ImageView {
                 return;
             } else if (editorSticker.isInResizeAndScaleHandleButton(event)) {
                 mCurrentEditorSticker = editorSticker;
-                mMode = EditorMode.RESIZE;
+                mMode = EditorMode.RESIZE_AND_SCALE;
 
                 mCurrentEditorSticker.setHelperFrameOpacity();
 
@@ -1181,6 +1176,8 @@ public class ImageEditorView extends ImageView {
         mMatrix.setTranslate(mCenter.x - mImageWidth * 0.5f, mCenter.y - mImageHeight * 0.5f);
         mMatrix.postScale(mScale, mScale, mCenter.x, mCenter.y);
         mMatrix.postRotate(mAngle, mCenter.x, mCenter.y);
+
+        LogUtil.matrixInfo("Image", mMatrix);
     }
 
     private void setupLayout(int viewW, int viewH) {
@@ -1218,14 +1215,16 @@ public class ImageEditorView extends ImageView {
 
         return scale;
     }
-
-    // FIXME: Problem with bitmap rect size.
+    
     private RectF calcImageRect(RectF rect, Matrix matrix) {
-        matrix.mapRect(rect);
-        /*RectF applied = new RectF();
+        RectF applied = new RectF();
         matrix.mapRect(applied, rect);
-        return applied;*/
-        return rect;
+
+        if (applied.left < 0) {
+            applied.offsetTo(0, applied.top);
+        }
+
+        return applied;
     }
 
     private float getDensity() {
@@ -1328,6 +1327,7 @@ public class ImageEditorView extends ImageView {
                         mCanvas.drawBitmap(mBitmap, 0, 0, mImagePaint);
                     break;
                 case TEXT:
+                    drawTexts(mCanvas);
                     break;
                 case DRAWING:
                     break;
@@ -1416,37 +1416,12 @@ public class ImageEditorView extends ImageView {
                 sticker.draw(canvas);
             }
         }
-    }
-    /*Matrix mMatrix;
 
-    if (value == 0)
-            return mMatrix;
-    else {
-        mMatrix = new Matrix(mMatrix);
-
-        float width = mImageWidth;
-        float height = mImageHeight;
-
-        if (width >= height) {
-            width = mImageHeight;
-            height = mImageWidth;
+        private void drawTexts(Canvas canvas) {
+            for (EditorText text : mTextsList) {
+                text.prepareToDraw(mBitmapRect, mSourceImageBitmap);
+                text.draw(canvas);
+            }
         }
-
-        float a = (float) Math.atan(height / width);
-
-        float length1 = (width / 2) / (float) Math.cos(a - Math.abs(Math.toRadians(value)));
-
-        float length2 = (float) Math.sqrt(Math.pow(width / 2, 2) + Math.pow(height / 2, 2));
-
-        float scale = length2 / length1;
-
-        float dX = mCenter.x * (1 - scale);
-        float dY = mCenter.y * (1 - scale);
-
-        mMatrix.postScale(scale, scale);
-        mMatrix.postTranslate(dX, dY);
-        mMatrix.postRotate(value, mCenter.x, mCenter.y);
     }
-
-    return mMatrix;*/
 }

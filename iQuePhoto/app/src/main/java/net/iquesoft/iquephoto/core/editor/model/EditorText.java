@@ -1,5 +1,6 @@
 package net.iquesoft.iquephoto.core.editor.model;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -24,8 +25,8 @@ public class EditorText {
     private int mColor;
     private int mOpacity;
 
-    private int mX;
-    private int mY;
+    private float mX;
+    private float mY;
 
     private float mScale = 1;
     private float mRotateAngle = 0;
@@ -103,11 +104,9 @@ public class EditorText {
     }
 
     public void draw(@NonNull Canvas canvas) {
-
         mTextPaint.getTextBounds(mText, 0, mText.length(), mTextRect);
 
-        // TODO: Check if can change this method to offsetTo() method.
-        mTextRect.offset(mX - (mTextRect.width() >> 1), mY);
+        mTextRect.offset((int) mX - (mTextRect.width() >> 1), (int) mY);
 
         mFrameRect.set(mTextRect.left - EDITOR_FRAME_PADDING, mTextRect.top - EDITOR_FRAME_PADDING,
                 mTextRect.right + EDITOR_FRAME_PADDING, mTextRect.bottom + EDITOR_FRAME_PADDING);
@@ -159,19 +158,19 @@ public class EditorText {
                 mFrontHandleSrcRect, mFrontHandleDstRect, null);
     }
 
-    public void setX(int x) {
+    public void setX(float x) {
         mX = x;
     }
 
-    public void setY(int y) {
+    public void setY(float y) {
         mY = y;
     }
 
-    public int getX() {
+    public float getX() {
         return mX;
     }
 
-    public int getY() {
+    public float getY() {
         return mY;
     }
 
@@ -261,5 +260,17 @@ public class EditorText {
 
     public boolean isInResizeAndScaleHandleButton(MotionEvent event) {
         return mResizeAndScaleHandleDstRect.contains(event.getX(), event.getY());
+    }
+
+    public void prepareToDraw(@NonNull RectF bitmapRect, @NonNull Bitmap bitmap) {
+        float scaleX = bitmap.getWidth() / bitmapRect.width();
+        float scaleY = bitmap.getHeight() / bitmapRect.height();
+
+        mX = bitmapRect.left - mX;
+        mY = bitmapRect.top - mY;
+
+        mScale = 0;
+
+        mIsDrawHelperFrame = false;
     }
 }

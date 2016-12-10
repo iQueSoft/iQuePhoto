@@ -54,7 +54,7 @@ public class AdjustFragment extends MvpAppCompatFragment implements AdjustView {
     @Override
     public void onResume() {
         super.onResume();
-        ((ImageEditorView) getActivity().findViewById(R.id.editorImageView))
+        ((ImageEditorView) getActivity().findViewById(R.id.imageEditorView))
                 .setCommand(NONE);
     }
 

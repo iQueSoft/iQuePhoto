@@ -86,7 +86,7 @@ public class StickersFragment extends MvpAppCompatFragment implements ShowSticke
         StickersAdapter adapter = new StickersAdapter(stickers);
         adapter.setOnStickerClickListener(sticker -> {
             ((ImageEditorView) getActivity()
-                    .findViewById(R.id.editorImageView)).addSticker(sticker);
+                    .findViewById(R.id.imageEditorView)).addSticker(sticker);
         });
 
         recyclerView.setLayoutManager(new GridLayoutManager(mContext, 4));

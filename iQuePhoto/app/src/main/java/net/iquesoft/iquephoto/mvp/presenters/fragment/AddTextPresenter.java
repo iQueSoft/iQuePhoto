@@ -14,7 +14,7 @@ public class AddTextPresenter extends MvpPresenter<AddTextView> {
         if (!text.isEmpty()) {
             int opacityValue = opacity * (int) 2.5f;
             Text texts = new Text(text, typeface, color, opacityValue);
-            // TODO: mEditorView.addTextToEditor(texts);
+            getViewState().addText(texts);
         } else
             getViewState().showToastMessage(R.string.text_is_empty);
     }

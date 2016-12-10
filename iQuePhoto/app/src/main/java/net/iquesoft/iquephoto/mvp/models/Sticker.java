@@ -21,7 +21,7 @@ public class Sticker {
             new Sticker(R.drawable.flag_germany),
             new Sticker(R.drawable.flag_brazil)
     };
-
+    
     private static Sticker emoticonsStickers[] = {
             new Sticker(R.drawable.emoticon_happy),
             new Sticker(R.drawable.emoticon_in_love),

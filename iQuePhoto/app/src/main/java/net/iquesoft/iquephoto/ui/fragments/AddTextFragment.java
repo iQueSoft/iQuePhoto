@@ -17,16 +17,15 @@ import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.mvp.views.activity.EditorView;
+import net.iquesoft.iquephoto.core.editor.ImageEditorView;
+import net.iquesoft.iquephoto.mvp.models.Text;
+import net.iquesoft.iquephoto.ui.activities.EditorActivity;
 import net.iquesoft.iquephoto.ui.dialogs.ColorPickerDialog;
 import net.iquesoft.iquephoto.ui.dialogs.FontPickerDialog;
-import net.iquesoft.iquephoto.ui.dialogs.RGBColorPickerDialog;
 import net.iquesoft.iquephoto.mvp.presenters.fragment.AddTextPresenter;
 import net.iquesoft.iquephoto.mvp.views.fragment.AddTextView;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
-
-import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -62,13 +61,16 @@ public class AddTextFragment extends MvpAppCompatFragment implements AddTextView
     private FontPickerDialog mFontPickerDialog;
     private ColorPickerDialog mColorPickerDialog;
 
+    private ImageEditorView mImageEditorView;
+
     public static AddTextFragment newInstance() {
         return new AddTextFragment();
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mImageEditorView = (ImageEditorView) getActivity().findViewById(R.id.imageEditorView);
     }
 
     @Override
@@ -80,14 +82,10 @@ public class AddTextFragment extends MvpAppCompatFragment implements AddTextView
         mContext = view.getContext();
 
         mFontPickerDialog = new FontPickerDialog(view.getContext());
-        mFontPickerDialog.setOnFontClickListener(typeface -> {
-            mTypeface = typeface;
-        });
+        mFontPickerDialog.setOnFontClickListener(typeface -> mTypeface = typeface);
 
         mColorPickerDialog = new ColorPickerDialog(mContext);
-        mColorPickerDialog.setOnColorClickListener(color -> {
-            mColor = color;
-        });
+        mColorPickerDialog.setOnColorClickListener(color -> mColor = color);
 
         opacityValueTextView.setText(String.valueOf(seekBar.getProgress()));
 
@@ -112,14 +110,30 @@ public class AddTextFragment extends MvpAppCompatFragment implements AddTextView
     }
 
     @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
+        mImageEditorView.setCommand(TEXT);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         mUnbinder.unbind();
+    }
+
+    @Override
+    public void addText(Text text) {
+        mImageEditorView.addText(text);
+    }
+
+    @Override
+    public void showToastMessage(@StringRes int messageText) {
+        Toast.makeText(mContext, getResources().getString(messageText), Toast.LENGTH_SHORT).show();
     }
 
     @OnClick(R.id.addTextButton)
@@ -139,16 +153,13 @@ public class AddTextFragment extends MvpAppCompatFragment implements AddTextView
 
     @OnClick(R.id.textBackButton)
     void onClickBack() {
-        //TODO: editorActivityView.navigateBack(true);
+        ((EditorActivity) getActivity()).navigateBack(true);
     }
 
     @OnClick(R.id.textApplyButton)
     void onClickApply() {
-        // TODO: editorActivityView.getImageEditorView().applyChanges(TEXT);
+        mImageEditorView.applyChanges(TEXT);
     }
 
-    @Override
-    public void showToastMessage(@StringRes int messageText) {
-        Toast.makeText(mContext, getResources().getString(messageText), Toast.LENGTH_SHORT).show();
-    }
+
 }

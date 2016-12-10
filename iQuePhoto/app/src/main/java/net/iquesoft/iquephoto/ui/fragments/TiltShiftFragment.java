@@ -34,7 +34,7 @@ public class TiltShiftFragment extends MvpAppCompatFragment implements TiltShift
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mImageEditorView =
-                (ImageEditorView) getActivity().findViewById(R.id.editorImageView);
+                (ImageEditorView) getActivity().findViewById(R.id.imageEditorView);
     }
 
     @Override
@@ -70,7 +70,7 @@ public class TiltShiftFragment extends MvpAppCompatFragment implements TiltShift
 
     @Override
     public void applyTiltShift(EditorCommand command) {
-        mImageEditorView.apply(command);
+        mImageEditorView.applyChanges(command);
         onClickBack();
     }
 

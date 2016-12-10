@@ -55,7 +55,7 @@ public class TransformFragment extends MvpAppCompatFragment implements Transform
     @Override
     public void onResume() {
         super.onResume();
-        ((ImageEditorView) getActivity().findViewById(R.id.editorImageView))
+        ((ImageEditorView) getActivity().findViewById(R.id.imageEditorView))
                 .setCommand(TRANSFORM);
     }
 

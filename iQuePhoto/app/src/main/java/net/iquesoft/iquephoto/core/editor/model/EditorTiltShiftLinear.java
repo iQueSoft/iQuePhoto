@@ -23,7 +23,7 @@ import net.iquesoft.iquephoto.util.RectUtil;
 
 import static net.iquesoft.iquephoto.core.editor.enums.EditorMode.MOVE;
 import static net.iquesoft.iquephoto.core.editor.enums.EditorMode.NONE;
-import static net.iquesoft.iquephoto.core.editor.enums.EditorMode.RESIZE;
+import static net.iquesoft.iquephoto.core.editor.enums.EditorMode.RESIZE_AND_SCALE;
 
 // TODO: Linear tilt shift.
 // TODO: Rotate linear tilt shift.
@@ -225,7 +225,7 @@ public class EditorTiltShiftLinear implements EditorTiltShift {
 
                 mTempTiltShiftLinearRect.offsetTo(distanceX, distanceY);
                 break;
-            case RESIZE:
+            case RESIZE_AND_SCALE:
                 float dist = MotionEventUtil.getFingersDistance(event);
                 float scale = ((dist - mPreDistance) / displayDistance());
 
@@ -267,7 +267,7 @@ public class EditorTiltShiftLinear implements EditorTiltShift {
 
     @Override
     public void actionPointerDown(MotionEvent event) {
-        mMode = RESIZE;
+        mMode = RESIZE_AND_SCALE;
     }
 
     @Override

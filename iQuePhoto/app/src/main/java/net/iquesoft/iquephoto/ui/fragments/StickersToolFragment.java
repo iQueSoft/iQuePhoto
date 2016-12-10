@@ -48,7 +48,7 @@ public class StickersToolFragment extends MvpAppCompatFragment implements Sticke
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mImageEditorView = (ImageEditorView) getActivity().findViewById(R.id.editorImageView);
+        mImageEditorView = (ImageEditorView) getActivity().findViewById(R.id.imageEditorView);
     }
 
     @Override
@@ -92,7 +92,7 @@ public class StickersToolFragment extends MvpAppCompatFragment implements Sticke
 
     @OnClick(R.id.stickersApplyImageButton)
     void onClickApply() {
-        mImageEditorView.apply(STICKERS);
+        mImageEditorView.applyChanges(STICKERS);
     }
 
     private class StickersPagerAdapter extends FragmentPagerAdapter {

@@ -41,7 +41,7 @@ public class FramesFragment extends MvpAppCompatFragment implements FramesView {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mImageEditorView = (ImageEditorView) getActivity().findViewById(R.id.editorImageView);
+        mImageEditorView = (ImageEditorView) getActivity().findViewById(R.id.imageEditorView);
     }
 
     @Override
@@ -86,7 +86,7 @@ public class FramesFragment extends MvpAppCompatFragment implements FramesView {
 
     @OnClick(R.id.framesApply)
     void onClickApply() {
-        mImageEditorView.apply(FRAMES);
+        mImageEditorView.applyChanges(FRAMES);
         onClickBack();
     }
 }

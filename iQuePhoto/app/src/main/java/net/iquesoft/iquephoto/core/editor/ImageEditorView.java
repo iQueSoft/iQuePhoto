@@ -119,6 +119,11 @@ public class ImageEditorView extends ImageView {
     private UndoListener mUndoListener;
 
     private RectF mBitmapRect;
+
+    // TODO: Remove mTestRect and mTestPaint.
+    private RectF mTestRect = new RectF(0, 0, 100, 100);
+    private Paint mTestPaint;
+
     private PointF mCenter = new PointF();
 
     private MaterialDialog mProgressDialog;
@@ -144,6 +149,7 @@ public class ImageEditorView extends ImageView {
         mFilterPaint = new Paint();
         mAdjustPaint = new Paint();
         mOverlayPaint = new Paint();
+        mOverlayPaint.setAlpha(150);
 
         mGuidelinesPaint = new Paint();
         mGuidelinesPaint.setAntiAlias(true);
@@ -152,6 +158,11 @@ public class ImageEditorView extends ImageView {
         mGuidelinesPaint.setColor(Color.WHITE);
         mGuidelinesPaint.setStrokeWidth(dp2px(getDensity(), 1));
         mGuidelinesPaint.setAlpha(125);
+
+        mTestPaint = new Paint();
+        mTestPaint.setStyle(Paint.Style.STROKE);
+        mTestPaint.setColor(Color.RED);
+        mTestPaint.setStrokeWidth(5);
 
         mEditorFrame = new EditorFrame(context);
         mEditorVignette = new EditorVignette(this);
@@ -198,8 +209,8 @@ public class ImageEditorView extends ImageView {
         mProgressDialog = new MaterialDialog.Builder(mContext)
                 .content(R.string.processing)
                 .progress(true, 0)
-                .widgetColor(getResources().getColor(android.R.color.black))
-                .contentColor(getResources().getColor(android.R.color.black))
+                .widgetColor(Color.BLACK)
+                .contentColor(Color.BLACK)
                 .canceledOnTouchOutside(false)
                 .build();
     }
@@ -207,17 +218,22 @@ public class ImageEditorView extends ImageView {
     @Override
     public void onDraw(Canvas canvas) {
         Bitmap bitmap = mSourceImageBitmap;
-
-        if (mIsInitialized) {
+        if (!mIsInitialized) {
             setMatrix();
-            if (mIsShowOriginalImage) {
-                canvas.drawBitmap(mSourceImageBitmap, mMatrix, mImagePaint);
-            } else {
-                if (mImagesList.size() > 0)
-                    bitmap = getAlteredBitmap();
-                canvas.drawBitmap(bitmap, mMatrix, mImagePaint);
-            }
         }
+
+        if (mIsShowOriginalImage) {
+            canvas.drawBitmap(mSourceImageBitmap, mMatrix, mImagePaint);
+        } else {
+            if (mImagesList.size() > 0)
+                bitmap = getAlteredBitmap();
+            canvas.drawBitmap(bitmap, mMatrix, mImagePaint);
+        }
+
+        mTestRect.offsetTo(mBitmapRect.left, mBitmapRect.top);
+
+        // TODO: Remove it!
+        canvas.drawRect(mTestRect, mTestPaint);
 
         canvas.drawRect(mBitmapRect, mEditorFrame.getFramePaint());
 
@@ -880,14 +896,23 @@ public class ImageEditorView extends ImageView {
         float sY = bitmapHeight / overlayHeight;
 
         mSupportMatrix.reset();
-        mSupportMatrix.setTranslate(mBitmapRect.left, mBitmapRect.top);
+
+        MatrixUtil.matrixInfo("mSupportMatrix - before", mSupportMatrix);
+
         mSupportMatrix.postScale(sX, sY);
+        mSupportMatrix.postTranslate(mBitmapRect.left, mBitmapRect.top);
+
+        MatrixUtil.matrixInfo("mSupportMatrix - after", mSupportMatrix);
 
         invalidate();
     }
 
+    // max opacity = 150.
     public void setOverlayOpacity(int value) {
         int alpha = (int) Math.round(value * 1.5);
+
+        Log.i("Overlay", "Opacity = " + alpha);
+
         mOverlayPaint.setAlpha(alpha);
         invalidate();
     }
@@ -1370,7 +1395,6 @@ public class ImageEditorView extends ImageView {
         }
 
         private Matrix getTransformStraightenMatrix(float value) {
-
             Matrix matrix = new Matrix();
 
             if (value == 0) return matrix;

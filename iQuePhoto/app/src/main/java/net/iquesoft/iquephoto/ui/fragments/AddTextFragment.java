@@ -159,7 +159,6 @@ public class AddTextFragment extends MvpAppCompatFragment implements AddTextView
     @OnClick(R.id.textApplyButton)
     void onClickApply() {
         mImageEditorView.applyChanges(TEXT);
+        onClickBack();
     }
-
-
 }

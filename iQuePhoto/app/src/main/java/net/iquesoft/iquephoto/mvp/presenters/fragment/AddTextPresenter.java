@@ -2,12 +2,14 @@ package net.iquesoft.iquephoto.mvp.presenters.fragment;
 
 import android.graphics.Typeface;
 
+import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.mvp.models.Text;
 import net.iquesoft.iquephoto.mvp.views.fragment.AddTextView;
 
+@InjectViewState
 public class AddTextPresenter extends MvpPresenter<AddTextView> {
 
     public void addText(String text, Typeface typeface, int color, int opacity) {

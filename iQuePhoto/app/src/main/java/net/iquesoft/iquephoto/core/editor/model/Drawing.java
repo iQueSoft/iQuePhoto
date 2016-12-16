@@ -27,6 +27,7 @@ public class Drawing {
         return mPath;
     }
 
+    // TODO: Make path for image (not for EditorImageView)
     public Path getOriginalPath() {
         return mOriginalPath;
     }

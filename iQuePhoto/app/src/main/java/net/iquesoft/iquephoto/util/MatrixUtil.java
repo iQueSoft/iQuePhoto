@@ -5,8 +5,8 @@ import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-public class LogUtil {
-    private static String TAG = LogUtil.class.getSimpleName();
+public class MatrixUtil {
+    private static String TAG = MatrixUtil.class.getSimpleName();
 
     public static void matrixInfo(@NonNull String logPrefix, @NonNull Matrix matrix) {
         float x = getMatrixValue(matrix, Matrix.MTRANS_X);
@@ -15,8 +15,6 @@ public class LogUtil {
         float rAngle = getMatrixAngle(matrix);
         Log.d(TAG, logPrefix + ": matrix + : { x: " + x + ", y: " + y + ", scale: " + rScale + ", angle: " + rAngle + " }");
     }
-
-
 
     private static float getMatrixValue(@NonNull Matrix matrix, @IntRange(from = 0, to = 9) int valueIndex) {
         float[] matrixValues = new float[9];

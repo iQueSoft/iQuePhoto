@@ -39,7 +39,7 @@ import net.iquesoft.iquephoto.core.editor.model.EditorImage;
 import net.iquesoft.iquephoto.mvp.models.Sticker;
 import net.iquesoft.iquephoto.mvp.models.Text;
 import net.iquesoft.iquephoto.util.BitmapUtil;
-import net.iquesoft.iquephoto.util.LogUtil;
+import net.iquesoft.iquephoto.util.MatrixUtil;
 import net.iquesoft.iquephoto.util.RectUtil;
 
 import java.util.ArrayList;
@@ -584,7 +584,7 @@ public class ImageEditorView extends ImageView {
 
                             invalidate();
                             break;
-                        case RESIZE_AND_SCALE:
+                        case ROTATE_AND_SCALE:
                             mCurrentEditorSticker.updateRotateAndScale(
                                     getDistanceX(event),
                                     getDistanceY(event)
@@ -698,7 +698,7 @@ public class ImageEditorView extends ImageView {
 
                     invalidate();
                     break;
-                case RESIZE_AND_SCALE:
+                case ROTATE_AND_SCALE:
                     mCurrentEditorText.updateRotateAndScale(
                             getDistanceX(event),
                             getDistanceY(event)
@@ -1104,7 +1104,7 @@ public class ImageEditorView extends ImageView {
                 mLastX = editorText.getRotateAndScaleHandleDstRect().centerX();
                 mLastY = editorText.getRotateAndScaleHandleDstRect().centerY();
 
-                mMode = EditorMode.RESIZE_AND_SCALE;
+                mMode = EditorMode.ROTATE_AND_SCALE;
                 return;
             } else if (editorText.isInTransparencyHandleButton(event)) {
                 mCurrentEditorText = editorText;
@@ -1148,7 +1148,7 @@ public class ImageEditorView extends ImageView {
                 return;
             } else if (editorSticker.isInResizeAndScaleHandleButton(event)) {
                 mCurrentEditorSticker = editorSticker;
-                mMode = EditorMode.RESIZE_AND_SCALE;
+                mMode = EditorMode.ROTATE_AND_SCALE;
 
                 mCurrentEditorSticker.setHelperFrameOpacity();
 
@@ -1177,7 +1177,7 @@ public class ImageEditorView extends ImageView {
         mMatrix.postScale(mScale, mScale, mCenter.x, mCenter.y);
         mMatrix.postRotate(mAngle, mCenter.x, mCenter.y);
 
-        LogUtil.matrixInfo("Image", mMatrix);
+        MatrixUtil.matrixInfo("Image", mMatrix);
     }
 
     private void setupLayout(int viewW, int viewH) {
@@ -1215,7 +1215,7 @@ public class ImageEditorView extends ImageView {
 
         return scale;
     }
-    
+
     private RectF calcImageRect(RectF rect, Matrix matrix) {
         RectF applied = new RectF();
         matrix.mapRect(applied, rect);
@@ -1282,7 +1282,6 @@ public class ImageEditorView extends ImageView {
 
         private Bitmap mBitmap;
         private Canvas mCanvas;
-        //private RedrawImagesTask mRedrawImagesTaskTask = new RedrawImagesTask();
 
         @Override
         protected void onPreExecute() {

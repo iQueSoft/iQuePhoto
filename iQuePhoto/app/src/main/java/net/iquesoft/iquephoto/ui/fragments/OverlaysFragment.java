@@ -100,7 +100,7 @@ public class OverlaysFragment extends MvpAppCompatFragment implements OverlaysVi
 
         recyclerView.setAdapter(adapter);
     }
-
+    
     @OnClick(R.id.overlayCancel)
     void onClickBack() {
         ((EditorActivity) getActivity()).navigateBack(true);

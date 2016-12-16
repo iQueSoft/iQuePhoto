@@ -160,7 +160,7 @@ public class EditorVignette {
 
         updateGradientMatrix(mVignetteRect);
     }
-    
+
     public void draw(@NonNull Canvas canvas) {
         if (!mVignetteRect.isEmpty()) {
             canvas.saveLayer(mBitmapRect, mPaint, Canvas.CLIP_TO_LAYER_SAVE_FLAG);
@@ -212,7 +212,7 @@ public class EditorVignette {
             if (angle > 36 && angle < 72 || angle > 108 && angle < 144) {
                 mPreDistance = MotionEventUtil.getFingersDistance(event);
 
-                mMode = RESIZE_AND_SCALE;
+                mMode = ROTATE_AND_SCALE;
             } else if (angle >= 72 && angle <= 108) {
                 // TODO: Log.i("Action", "Height");
             } else {
@@ -233,7 +233,7 @@ public class EditorVignette {
 
                 mTempVignetteRect.offset(distanceX, distanceY);
                 break;
-            case RESIZE_AND_SCALE:
+            case ROTATE_AND_SCALE:
                 float dist = MotionEventUtil.getFingersDistance(event);
                 float displayDistance = MotionEventUtil.getDisplayDistance(
                         mImageEditorView.getWidth(),

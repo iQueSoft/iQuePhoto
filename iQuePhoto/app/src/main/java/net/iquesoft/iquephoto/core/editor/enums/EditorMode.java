@@ -1,5 +1,5 @@
 package net.iquesoft.iquephoto.core.editor.enums;
 
 public enum EditorMode {
-    NONE, MOVE, RESIZE_AND_SCALE
+    NONE, MOVE, ROTATE_AND_SCALE, RESIZE_HEIGHT, RESIZE_WIDHT
 }

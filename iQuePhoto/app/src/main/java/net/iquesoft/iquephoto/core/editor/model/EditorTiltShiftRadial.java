@@ -241,7 +241,7 @@ public class EditorTiltShiftRadial implements EditorTiltShift {
 
                 mTempTiltShiftRadialRect.offset(distanceX, distanceY);
                 break;
-            case RESIZE_AND_SCALE:
+            case ROTATE_AND_SCALE:
                 float dist = MotionEventUtil.getFingersDistance(event);
                 float scale = ((dist - mPreDistance) / displayDistance());
 
@@ -279,7 +279,7 @@ public class EditorTiltShiftRadial implements EditorTiltShift {
 
         if (event.getPointerCount() == 2) {
             mPreDistance = MotionEventUtil.getFingersDistance(event);
-            mMode = RESIZE_AND_SCALE;
+            mMode = ROTATE_AND_SCALE;
         }
     }
 

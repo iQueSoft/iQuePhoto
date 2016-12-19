@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.VectorDrawable;
 import android.net.Uri;
 import android.os.Build;
+import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v8.renderscript.Allocation;
@@ -21,6 +22,7 @@ import android.util.Log;
 import com.isseiaoki.simplecropview.util.Logger;
 import com.isseiaoki.simplecropview.util.Utils;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -28,17 +30,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class BitmapUtil {
-
-    /*ublic static Uri getUriOfBitmap(Context context, Bitmap bitmap) {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
-
-        String path = MediaStore.Images.Media.
-                insertImage(context.getContentResolver(), bitmap, "iQuePhoto", null);
-
-        return Uri.parse(path);
-    }*/
-
     public static void logBitmapInfo(String bitmapName, Bitmap bitmap) {
         Log.i("Bitmap: " + bitmapName, "Height = " + String.valueOf(bitmap.getHeight()) +
                 "\nWidth = " + String.valueOf(bitmap.getWidth()) + ".");
@@ -48,7 +39,7 @@ public class BitmapUtil {
         final DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         return displayMetrics.density * dp;
     }
-
+    
     public static Uri getUriOfBitmap(Context context, Bitmap bitmap) {
         Uri uri = Uri.fromFile(new File(context.getCacheDir(), "altered"));
 
@@ -68,17 +59,6 @@ public class BitmapUtil {
         }
 
         return null;
-    }
-    
-    public static Bitmap getBitmapFromUri(Context context, Uri uri) {
-        InputStream is = null;
-        try {
-            is = context.getContentResolver().openInputStream(uri);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        return BitmapFactory.decodeStream(is);
     }
 
     public static Bitmap getBlurImage(Context context, Bitmap bitmap, int width, int height) {

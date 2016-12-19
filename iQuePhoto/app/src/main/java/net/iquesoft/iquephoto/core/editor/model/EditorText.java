@@ -9,6 +9,7 @@ import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.text.TextPaint;
+import android.util.Log;
 import android.view.MotionEvent;
 
 import net.iquesoft.iquephoto.mvp.models.Text;
@@ -29,6 +30,10 @@ public class EditorText {
     private float mY;
 
     private float mScale = 1;
+
+    private float mScaleX;
+    private float mScaleY;
+
     private float mRotateAngle = 0;
 
     private boolean mIsDrawHelperFrame = true;
@@ -190,14 +195,6 @@ public class EditorText {
         mHelperFramePaint.set(mEditorFrame.getFramePaint());
     }
 
-    public void setIsDrawHelperFrame(boolean isDrawHelperFrame) {
-        mIsDrawHelperFrame = isDrawHelperFrame;
-    }
-
-    public float getRotateDegree() {
-        return mRotateAngle;
-    }
-
     public void updateRotateAndScale(float distanceX, float distanceY) {
         float frameCenterX = mFrameRect.centerX();
         float frameCenterY = mFrameRect.centerY();
@@ -263,13 +260,16 @@ public class EditorText {
     }
 
     public void prepareToDraw(@NonNull RectF bitmapRect, @NonNull Bitmap bitmap) {
-        float scaleX = bitmap.getWidth() / bitmapRect.width();
-        float scaleY = bitmap.getHeight() / bitmapRect.height();
+        mX -= bitmapRect.left;
+        mY -= bitmapRect.top;
 
-        mX = bitmapRect.left - mX;
-        mY = bitmapRect.top - mY;
+        mScaleX = bitmap.getWidth() / bitmapRect.width();
+        mScaleY = bitmap.getHeight() / bitmapRect.height();
 
-        mScale = 0;
+        //mScale *= mScaleX;
+
+        Log.i("Text", "X = " + mX + "\nY = " + mY +
+                "\nsX = " + mScaleX + "\nsY = " + mScaleY + "\nScale = " + mScale);
 
         mIsDrawHelperFrame = false;
     }

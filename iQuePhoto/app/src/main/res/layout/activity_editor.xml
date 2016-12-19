@@ -18,7 +18,6 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:paddingLeft="5dp"
             android:src="@drawable/ic_arrow_back" />
 
         <Button

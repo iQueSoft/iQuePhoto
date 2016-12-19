@@ -24,7 +24,7 @@ public class Frame {
             new Frame("GRUNGE04", R.drawable.frame_grunge_04),
             new Frame("HL01", R.drawable.frame_h_01)
     };
-
+    
     private Frame(String title, @DrawableRes int image) {
         mTitle = title;
         mImage = image;

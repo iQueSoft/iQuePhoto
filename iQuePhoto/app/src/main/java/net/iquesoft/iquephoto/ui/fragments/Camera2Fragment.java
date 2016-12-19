@@ -44,7 +44,7 @@ public class Camera2Fragment extends MvpAppCompatFragment implements Camera2Frag
         View view = inflater.inflate(R.layout.fragment_camera_2, container, false);
 
         mUnbinder = ButterKnife.bind(this, view);
-
+        
         Log.i(Camera2Fragment.class.getSimpleName(), "USED CAMERA 2");
 
         mContext = view.getContext();

@@ -15,6 +15,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
 import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -54,7 +55,6 @@ public class ImageEditorView extends ImageView {
 
     private float mBrushSize;
 
-    private boolean mIsInitialized;
     private boolean mIsShowOriginalImage;
 
     private float mLastX;
@@ -71,8 +71,8 @@ public class ImageEditorView extends ImageView {
     private Context mContext;
 
     private Bitmap mSourceImageBitmap;
-    private Bitmap mOverlayImageBitmap;
-    private Bitmap mFrameImageBitmap;
+    private Bitmap mOverlayBitmap;
+    private Bitmap mFrameBitmap;
 
     private Paint mImagePaint;
     private Paint mFilterPaint;
@@ -120,10 +120,6 @@ public class ImageEditorView extends ImageView {
 
     private RectF mBitmapRect;
 
-    // TODO: Remove mTestRect and mTestPaint.
-    private RectF mTestRect = new RectF(0, 0, 100, 100);
-    private Paint mTestPaint;
-
     private PointF mCenter = new PointF();
 
     private MaterialDialog mProgressDialog;
@@ -158,11 +154,6 @@ public class ImageEditorView extends ImageView {
         mGuidelinesPaint.setColor(Color.WHITE);
         mGuidelinesPaint.setStrokeWidth(dp2px(getDensity(), 1));
         mGuidelinesPaint.setAlpha(125);
-
-        mTestPaint = new Paint();
-        mTestPaint.setStyle(Paint.Style.STROKE);
-        mTestPaint.setColor(Color.RED);
-        mTestPaint.setStrokeWidth(5);
 
         mEditorFrame = new EditorFrame(context);
         mEditorVignette = new EditorVignette(this);
@@ -218,9 +209,6 @@ public class ImageEditorView extends ImageView {
     @Override
     public void onDraw(Canvas canvas) {
         Bitmap bitmap = mSourceImageBitmap;
-        if (!mIsInitialized) {
-            setMatrix();
-        }
 
         if (mIsShowOriginalImage) {
             canvas.drawBitmap(mSourceImageBitmap, mMatrix, mImagePaint);
@@ -229,11 +217,6 @@ public class ImageEditorView extends ImageView {
                 bitmap = getAlteredBitmap();
             canvas.drawBitmap(bitmap, mMatrix, mImagePaint);
         }
-
-        mTestRect.offsetTo(mBitmapRect.left, mBitmapRect.top);
-
-        // TODO: Remove it!
-        canvas.drawRect(mTestRect, mTestPaint);
 
         canvas.drawRect(mBitmapRect, mEditorFrame.getFramePaint());
 
@@ -256,12 +239,12 @@ public class ImageEditorView extends ImageView {
                 mEditorVignette.draw(canvas);
                 break;
             case OVERLAY:
-                if (mOverlayImageBitmap != null)
-                    canvas.drawBitmap(mOverlayImageBitmap, mSupportMatrix, mOverlayPaint);
+                if (mOverlayBitmap != null)
+                    canvas.drawBitmap(mOverlayBitmap, mSupportMatrix, mOverlayPaint);
                 break;
             case FRAMES:
-                if (mFrameImageBitmap != null)
-                    canvas.drawBitmap(mFrameImageBitmap, mSupportMatrix, mImagePaint);
+                if (mFrameBitmap != null)
+                    canvas.drawBitmap(mFrameBitmap, mSupportMatrix, mImagePaint);
                 break;
             case BRIGHTNESS:
                 if (mBrightnessValue != 0) {
@@ -482,9 +465,10 @@ public class ImageEditorView extends ImageView {
 
     @Override
     public void setImageBitmap(Bitmap bitmap) {
-        mIsInitialized = false;
         super.setImageBitmap(bitmap);
         mSourceImageBitmap = bitmap;
+
+        BitmapUtil.logBitmapInfo("Source", mSourceImageBitmap);
 
         updateLayout();
     }
@@ -523,13 +507,10 @@ public class ImageEditorView extends ImageView {
             mEditorVignette.updateRect(mBitmapRect);
         }
 
-        if (mCommand != STICKERS) {
+        if (mCommand == NONE) {
             if (!mStickersList.isEmpty()) {
                 mStickersList.clear();
             }
-        }
-
-        if (mCommand != TEXT) {
             if (!mTextsList.isEmpty()) {
                 mTextsList.clear();
             }
@@ -608,19 +589,9 @@ public class ImageEditorView extends ImageView {
 
                             mLastX = event.getX();
                             mLastY = event.getY();
-                            /*float stickerScale = diagonalLength(event, mCurrentEditorSticker.getPoint()) / mCurrentEditorSticker.getLength();
-                            mCurrentEditorSticker.getMatrix()
-                                    .postScale(stickerScale, stickerScale, mCurrentEditorSticker.getPoint().x, mCurrentEditorSticker.getPoint().y);*/
-                            // TODO; Resize sticker.
 
                             invalidate();
                             break;
-                        /*case ROTATE:
-                            *//*Matrix matrix = mCurrentEditorSticker.getMatrix();
-                            mCurrentEditorSticker.getMatrix().postRotate((rotationToStartPoint(event, matrix) - mCurrentEditorSticker.getRotateDegree()) * 2, mCurrentEditorSticker.getPoint().x, mCurrentEditorSticker.getPoint().y);
-                            mCurrentEditorSticker.setRotateDegree(rotationToStartPoint(event, matrix));*//*
-                            // TODO: Rotate sticker.
-                            break;*/
                     }
                 }
                 break;
@@ -725,14 +696,8 @@ public class ImageEditorView extends ImageView {
                     mLastX = event.getX();
                     mLastY = event.getY();
                     break;
-                /*case ROTATE:
-                    // TODO: Texts transparency.
 
-                    invalidate();
-
-                    mLastX = event.getX();
-                    mLastY = event.getY();
-                    break;*/
+                // TODO: Texts transparency.
             }
         }
     }
@@ -861,39 +826,28 @@ public class ImageEditorView extends ImageView {
     }
 
     public void setFrame(@DrawableRes int drawable) {
-        mFrameImageBitmap = BitmapUtil.drawable2Bitmap(mContext, drawable);
+        mFrameBitmap = BitmapUtil.drawable2Bitmap(mContext, drawable);
 
-        BitmapUtil.logBitmapInfo("Frame", mFrameImageBitmap);
+        BitmapUtil.logBitmapInfo("Frame", mFrameBitmap);
 
-        float bitmapWidth = mBitmapRect.width();
-        float bitmapHeight = mBitmapRect.height();
-
-        float overlayWidth = mFrameImageBitmap.getWidth();
-        float overlayHeight = mFrameImageBitmap.getHeight();
-
-        float sX = bitmapWidth / overlayWidth;
-        float sY = bitmapHeight / overlayHeight;
-
-        mSupportMatrix.reset();
-        mSupportMatrix.setTranslate(mBitmapRect.left, mBitmapRect.top);
-        mSupportMatrix.postScale(sX, sY);
+        setupSupportMatrix(mFrameBitmap);
 
         invalidate();
     }
 
     public void setOverlay(@DrawableRes int drawable) {
-        mOverlayImageBitmap = BitmapUtil.drawable2Bitmap(mContext, drawable);
+        mOverlayBitmap = BitmapUtil.drawable2Bitmap(mContext, drawable);
 
-        BitmapUtil.logBitmapInfo("Overlay", mOverlayImageBitmap);
+        BitmapUtil.logBitmapInfo("Overlay", mOverlayBitmap);
 
-        float bitmapWidth = mBitmapRect.width();
-        float bitmapHeight = mBitmapRect.height();
+        setupSupportMatrix(mOverlayBitmap);
 
-        float overlayWidth = mOverlayImageBitmap.getWidth();
-        float overlayHeight = mOverlayImageBitmap.getHeight();
+        invalidate();
+    }
 
-        float sX = bitmapWidth / overlayWidth;
-        float sY = bitmapHeight / overlayHeight;
+    private void setupSupportMatrix(@NonNull Bitmap bitmap) {
+        float sX = mBitmapRect.width() / bitmap.getWidth();
+        float sY = mBitmapRect.height() / bitmap.getHeight();
 
         mSupportMatrix.reset();
 
@@ -903,8 +857,6 @@ public class ImageEditorView extends ImageView {
         mSupportMatrix.postTranslate(mBitmapRect.left, mBitmapRect.top);
 
         MatrixUtil.matrixInfo("mSupportMatrix - after", mSupportMatrix);
-
-        invalidate();
     }
 
     // max opacity = 150.
@@ -1218,7 +1170,6 @@ public class ImageEditorView extends ImageView {
         mTiltShiftRadial.updateRect(mBitmapRect);
         mTiltShiftLinear.updateRect(mBitmapRect);
 
-        mIsInitialized = true;
         invalidate();
     }
 
@@ -1335,7 +1286,8 @@ public class ImageEditorView extends ImageView {
                 case ADJUST:
                     break;
                 case OVERLAY:
-                    mCanvas.drawBitmap(mOverlayImageBitmap, 0, 0, mOverlayPaint);
+                    calculateSupportMatrix(mOverlayBitmap);
+                    mCanvas.drawBitmap(mOverlayBitmap, mSupportMatrix, mOverlayPaint);
                     break;
                 case BRIGHTNESS:
                     mCanvas.drawBitmap(mBitmap, 0, 0, mAdjustPaint);
@@ -1347,8 +1299,8 @@ public class ImageEditorView extends ImageView {
                     drawStickers(mCanvas);
                     break;
                 case FRAMES:
-                    if (mFrameImageBitmap != null)
-                        mCanvas.drawBitmap(mBitmap, 0, 0, mImagePaint);
+                    calculateSupportMatrix(mFrameBitmap);
+                    mCanvas.drawBitmap(mFrameBitmap, mSupportMatrix, mImagePaint);
                     break;
                 case TEXT:
                     drawTexts(mCanvas);
@@ -1445,6 +1397,27 @@ public class ImageEditorView extends ImageView {
                 text.prepareToDraw(mBitmapRect, mSourceImageBitmap);
                 text.draw(canvas);
             }
+        }
+
+        private void calculateSupportMatrix(Bitmap bitmap) {
+            float height = bitmap.getHeight();
+            float width = bitmap.getWidth();
+
+            float sX = mImageWidth / width;
+            float sY = mImageHeight / height;
+
+            BitmapUtil.logBitmapInfo("calcSupportMatrix()", bitmap);
+
+            Log.i("calcSupportMatrix", "sX = " + sX + "\nsY = " + sY);
+
+            mSupportMatrix.reset();
+
+            MatrixUtil.matrixInfo("mSupportMatrix - before", mSupportMatrix);
+
+            mSupportMatrix.postScale(sX, sY);
+            mSupportMatrix.postTranslate(0, 0);
+
+            MatrixUtil.matrixInfo("mSupportMatrix - after", mSupportMatrix);
         }
     }
 }

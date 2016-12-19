@@ -2,13 +2,13 @@ package net.iquesoft.iquephoto.util;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.VectorDrawable;
 import android.net.Uri;
 import android.os.Build;
-import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v8.renderscript.Allocation;
@@ -18,11 +18,18 @@ import android.support.v8.renderscript.ScriptIntrinsicBlur;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
-import java.io.ByteArrayOutputStream;
+import com.isseiaoki.simplecropview.util.Logger;
+import com.isseiaoki.simplecropview.util.Utils;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 public class BitmapUtil {
 
-    public static Uri getUriOfBitmap(Context context, Bitmap bitmap) {
+    /*ublic static Uri getUriOfBitmap(Context context, Bitmap bitmap) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
 
@@ -30,39 +37,6 @@ public class BitmapUtil {
                 insertImage(context.getContentResolver(), bitmap, "iQuePhoto", null);
 
         return Uri.parse(path);
-    }
-
-    /*private static int calculateInSampleSize(
-            BitmapFactory.Options options, int reqWidth, int reqHeight) {
-
-        final int height = options.outHeight;
-        final int width = options.outWidth;
-        int inSampleSize = 1;
-
-        if (height > reqHeight || width > reqWidth) {
-
-            final int halfHeight = height / 2;
-            final int halfWidth = width / 2;
-
-            while ((halfHeight / inSampleSize) > reqHeight
-                    && (halfWidth / inSampleSize) > reqWidth) {
-                inSampleSize *= 2;
-            }
-        }
-
-        return inSampleSize;
-    }
-
-    public static Bitmap decodeScaledBitmapFromResource(Resources res, int resId,
-                                                        int reqWidth, int reqHeight) {
-        final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeResource(res, resId, options);
-
-        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
-
-        options.inJustDecodeBounds = false;
-        return BitmapFactory.decodeResource(res, resId, options);
     }*/
 
     public static void logBitmapInfo(String bitmapName, Bitmap bitmap) {
@@ -73,6 +47,38 @@ public class BitmapUtil {
     public static float dp2px(Context context, float dp) {
         final DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         return displayMetrics.density * dp;
+    }
+
+    public static Uri getUriOfBitmap(Context context, Bitmap bitmap) {
+        Uri uri = Uri.fromFile(new File(context.getCacheDir(), "altered"));
+
+        OutputStream outputStream = null;
+        try {
+            outputStream = context.getContentResolver()
+                    .openOutputStream(uri);
+            if (outputStream != null) {
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+
+                return uri;
+            }
+        } catch (IOException e) {
+            Logger.e("An error occurred while saving the image: " + uri, e);
+        } finally {
+            Utils.closeQuietly(outputStream);
+        }
+
+        return null;
+    }
+    
+    public static Bitmap getBitmapFromUri(Context context, Uri uri) {
+        InputStream is = null;
+        try {
+            is = context.getContentResolver().openInputStream(uri);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return BitmapFactory.decodeStream(is);
     }
 
     public static Bitmap getBlurImage(Context context, Bitmap bitmap, int width, int height) {

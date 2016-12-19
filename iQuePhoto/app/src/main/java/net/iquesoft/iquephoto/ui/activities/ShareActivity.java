@@ -2,6 +2,7 @@ package net.iquesoft.iquephoto.ui.activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -70,12 +71,9 @@ public class ShareActivity extends MvpAppCompatActivity implements ShareView {
             }
         });
 
-        // FIXME: Exception.
-        try {
-            mBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), getIntent().getData());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        // FIXME: Get image from Uri.
+        //mBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), getIntent().getData());
+        mBitmap = BitmapUtil.getBitmapFromUri(this, getIntent().getData());
 
         presenter.calculateSizesForCompressing(mBitmap);
 
@@ -91,7 +89,7 @@ public class ShareActivity extends MvpAppCompatActivity implements ShareView {
     void onClickBack() {
         super.onBackPressed();
     }
-    
+
     @OnClick(R.id.saveButton)
     void onClickSave() {
         new ImageSaveTask(this, mBitmap).execute();

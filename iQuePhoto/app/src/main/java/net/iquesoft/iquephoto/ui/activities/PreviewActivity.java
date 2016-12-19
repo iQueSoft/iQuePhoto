@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.res.ResourcesCompat;
 import android.view.WindowManager;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -149,8 +150,8 @@ public class PreviewActivity extends MvpAppCompatActivity implements PreviewView
         mProgressDialog = new MaterialDialog.Builder(this)
                 .content(R.string.processing)
                 .progress(true, 0)
-                .widgetColor(Color.BLACK)
-                .contentColor(Color.BLACK)
+                .widgetColor(ResourcesCompat.getColor(getResources(), R.color.black, null))
+                .contentColor(ResourcesCompat.getColor(getResources(), R.color.black, null))
                 .canceledOnTouchOutside(false)
                 .show();
     }

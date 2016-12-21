@@ -23,7 +23,21 @@ public class MatrixUtil {
         return matrixValues[valueIndex];
     }
 
-    private static float getMatrixScale(@NonNull Matrix matrix) {
+    public static float getMatrixX(@NonNull Matrix matrix) {
+        float x = getMatrixValue(matrix, Matrix.MTRANS_X);
+
+        if (x < 0) {
+            return 0;
+        }
+
+        return x;
+    }
+
+    public static float getMatrixY(@NonNull Matrix matrix) {
+        return getMatrixValue(matrix, Matrix.MTRANS_Y);
+    }
+
+    public static float getMatrixScale(@NonNull Matrix matrix) {
         return (float) Math.sqrt(Math.pow(getMatrixValue(matrix, Matrix.MSCALE_X), 2)
                 + Math.pow(getMatrixValue(matrix, Matrix.MSKEW_Y), 2));
     }

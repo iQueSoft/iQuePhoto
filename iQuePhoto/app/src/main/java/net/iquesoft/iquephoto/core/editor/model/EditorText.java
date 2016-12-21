@@ -3,6 +3,7 @@ package net.iquesoft.iquephoto.core.editor.model;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -13,6 +14,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 
 import net.iquesoft.iquephoto.mvp.models.Text;
+import net.iquesoft.iquephoto.util.MatrixUtil;
 import net.iquesoft.iquephoto.util.RectUtil;
 
 import static net.iquesoft.iquephoto.core.editor.model.EditorFrame.EDITOR_FRAME_PADDING;
@@ -30,9 +32,6 @@ public class EditorText {
     private float mY;
 
     private float mScale = 1;
-
-    private float mScaleX;
-    private float mScaleY;
 
     private float mRotateAngle = 0;
 
@@ -259,17 +258,22 @@ public class EditorText {
         return mResizeAndScaleHandleDstRect.contains(event.getX(), event.getY());
     }
 
-    public void prepareToDraw(@NonNull RectF bitmapRect, @NonNull Bitmap bitmap) {
-        mX -= bitmapRect.left;
-        mY -= bitmapRect.top;
+    public void prepareToDraw(@NonNull Matrix matrix) {
+        Log.i("Text", "Before: " + "\nX = " + String.valueOf(mX) + "\nY = " + String.valueOf(mY));
 
-        mScaleX = bitmap.getWidth() / bitmapRect.width();
-        mScaleY = bitmap.getHeight() / bitmapRect.height();
+        mX -= MatrixUtil.getMatrixX(matrix);
+        mY -= MatrixUtil.getMatrixY(matrix);
 
-        //mScale *= mScaleX;
+        Log.i("Text", "After: " + "\nX = " + String.valueOf(mX) + "\nY = " + String.valueOf(mY));
 
-        Log.i("Text", "X = " + mX + "\nY = " + mY +
-                "\nsX = " + mScaleX + "\nsY = " + mScaleY + "\nScale = " + mScale);
+        float scale = MatrixUtil.getMatrixScale(matrix);
+
+        mX /= scale;
+        mY /= scale;
+
+        Log.i("Text", "Final: " + "\nX = " + String.valueOf(mX) + "\nY = " + String.valueOf(mY));
+
+        mScale /= scale;
 
         mIsDrawHelperFrame = false;
     }

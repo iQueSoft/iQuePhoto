@@ -124,7 +124,7 @@ public class EditorTiltShiftRadial implements EditorTiltShift {
 
             mTiltShiftRadialControlRect.set(mTiltShiftRadialRect);
             mTiltShiftRadialControlRect.inset(-mGradientInset, -mGradientInset);
-            
+
             if (mBlurBitmap == null) {
                 mBitmap = bitmap;
                 mBlurBitmap = BitmapUtil.getBlurImage(

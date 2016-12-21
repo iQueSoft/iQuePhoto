@@ -52,7 +52,6 @@ import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.TEXT;
 import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.VIGNETTE;
 
 public class ImageEditorView extends ImageView {
-
     private float mBrushSize;
 
     private boolean mIsShowOriginalImage;
@@ -218,9 +217,7 @@ public class ImageEditorView extends ImageView {
             canvas.drawBitmap(bitmap, mMatrix, mImagePaint);
         }
 
-        canvas.drawRect(mBitmapRect, mEditorFrame.getFramePaint());
-
-        // TODO: Remove comment canvas.clipRect(mBitmapRect);
+        canvas.clipRect(mBitmapRect);
 
         switch (mCommand) {
             case FILTERS:
@@ -1394,7 +1391,7 @@ public class ImageEditorView extends ImageView {
 
         private void drawTexts(Canvas canvas) {
             for (EditorText text : mTextsList) {
-                text.prepareToDraw(mBitmapRect, mSourceImageBitmap);
+                text.prepareToDraw(mMatrix);
                 text.draw(canvas);
             }
         }

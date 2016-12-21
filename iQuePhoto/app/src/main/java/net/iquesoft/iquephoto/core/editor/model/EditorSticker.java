@@ -183,9 +183,6 @@ public class EditorSticker {
     public void draw(@NonNull Canvas canvas) {
         canvas.drawBitmap(mBitmap, mMatrix, null);
 
-        // TODO: Doesn't draw rect.
-        canvas.drawRect(mDstRect, mEditorFrame.getFramePaint());
-
         if (mIsDrawHelperFrame) drawHelperFrame(canvas);
     }
 

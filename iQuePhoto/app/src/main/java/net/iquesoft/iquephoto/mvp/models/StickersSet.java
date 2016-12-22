@@ -10,55 +10,47 @@ import java.util.List;
 
 public class StickersSet {
     @StringRes
-    private int title;
+    private int mTitle;
 
     @DrawableRes
-    private int icon;
+    private int mIcon;
 
-    private List<Sticker> stickers;
-
+    private List<Sticker> mStickers;
+    
     private StickersSet(@StringRes int title, @DrawableRes int icon, List<Sticker> stickers) {
-        this.title = title;
-        this.icon = icon;
-        this.stickers = stickers;
+        mTitle = title;
+        mIcon = icon;
+        mStickers = stickers;
     }
 
     /**
-     * Array with stickers sets;
+     * Array with mStickers sets;
      */
     private static StickersSet stickersSets[] = {
-            new StickersSet(R.string.emoticons, R.drawable.emoticon_happy, Sticker.getEmoticonsStickersList()),
-            new StickersSet(R.string.flags, R.drawable.ic_flags, Sticker.getFlagStickersList())
+            new StickersSet(R.string.emoticons, R.drawable.s_emoji_01, Sticker.getEmoticonsStickersList()),
+            new StickersSet(R.string.flags, R.drawable.ic_flags, Sticker.getFlagStickersList()),
+            new StickersSet(R.string.halloween, R.drawable.s_halloween_01, Sticker.getHalloweenStickersList()),
+            new StickersSet(R.string.christmas, R.drawable.s_christmas_01, Sticker.getChristmasStickersList()),
+            new StickersSet(R.string.valentines_day, R.drawable.s_valentines_day_01, Sticker.getValentinesDayStickersList()),
+            new StickersSet(R.string.warnings, R.drawable.s_warning_01, Sticker.getWarningStickersList()),
     };
 
     /**
-     * @return list with stickers sets;
+     * @return list with mStickers sets;
      */
     public static List<StickersSet> getStickersSetsList() {
         return Arrays.asList(stickersSets);
     }
 
     public List<Sticker> getStickers() {
-        return stickers;
-    }
-
-    public void setStickers(List<Sticker> stickers) {
-        this.stickers = stickers;
+        return mStickers;
     }
 
     public int getTitle() {
-        return title;
-    }
-
-    public void setTitle(int title) {
-        this.title = title;
+        return mTitle;
     }
 
     public int getIcon() {
-        return icon;
-    }
-
-    public void setIcon(int icon) {
-        this.icon = icon;
+        return mIcon;
     }
 }

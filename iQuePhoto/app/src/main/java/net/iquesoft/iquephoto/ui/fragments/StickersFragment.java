@@ -32,7 +32,7 @@ public class StickersFragment extends MvpAppCompatFragment implements ShowSticke
 
     @BindView(R.id.stickersRecyclerView)
     RecyclerView recyclerView;
-    
+
     private Context mContext;
 
     private Unbinder mUnbinder;
@@ -89,7 +89,7 @@ public class StickersFragment extends MvpAppCompatFragment implements ShowSticke
                     .findViewById(R.id.imageEditorView)).addSticker(sticker);
         });
 
-        recyclerView.setLayoutManager(new GridLayoutManager(mContext, 4));
+        recyclerView.setLayoutManager(new GridLayoutManager(mContext, 5));
         recyclerView.setAdapter(adapter);
     }
 }

@@ -90,13 +90,7 @@ public class StickersToolFragment extends MvpAppCompatFragment implements Sticke
         mUnbinder.unbind();
     }
 
-    @OnClick(R.id.stickersApplyImageButton)
-    void onClickApply() {
-        mImageEditorView.applyChanges(STICKERS);
-    }
-
     private class StickersPagerAdapter extends FragmentPagerAdapter {
-
         private Context mContext;
 
         private List<StickersSet> mStickersSetsList;

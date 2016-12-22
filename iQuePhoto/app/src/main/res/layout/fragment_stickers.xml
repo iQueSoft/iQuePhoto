@@ -11,49 +11,16 @@
         android:layout_height="1dp"
         android:background="@color/colorLine" />
 
-    <LinearLayout
+    <android.support.design.widget.TabLayout
+        android:id="@+id/stickerTabLayout"
+        style="@style/TabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:paddingRight="5dp">
-
-        <ImageButton
-            android:id="@+id/stickersBackImageButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_left" />
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="30dp"
-            android:background="@color/colorLine" />
-
-        <android.support.design.widget.TabLayout
-            android:id="@+id/stickerTabLayout"
-            style="@style/TabLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            app:tabGravity="center"
-            app:tabIndicatorColor="@color/white"
-            app:tabMode="scrollable"
-            app:tabSelectedTextColor="@color/white"
-            app:tabTextColor="@android:color/darker_gray" />
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="30dp"
-            android:background="@color/colorLine" />
-
-        <ImageButton
-            android:id="@+id/stickersApplyImageButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_apply_40" />
-    </LinearLayout>
+        app:tabGravity="center"
+        app:tabIndicatorColor="@color/white"
+        app:tabMode="scrollable"
+        app:tabSelectedTextColor="@color/white"
+        app:tabTextColor="@android:color/darker_gray" />
 
     <View
         android:layout_width="fill_parent"

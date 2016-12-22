@@ -72,7 +72,11 @@
     <!-- START - Stickers. -->
     <string name="stickers">Stickers</string>
     <string name="flags">Flags</string>
+    <string name="warnings">Warnings</string>
     <string name="emoticons">Emoticons</string>
+    <string name="halloween">Halloween</string>
+    <string name="christmas">Christmas</string>
+    <string name="valentines_day">Valentines Day</string>
     <!-- Stickers - END. -->
 
     <!-- START - Orientation tool. -->

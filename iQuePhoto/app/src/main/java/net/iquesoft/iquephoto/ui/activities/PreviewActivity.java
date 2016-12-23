@@ -3,7 +3,6 @@ package net.iquesoft.iquephoto.ui.activities;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,7 +10,9 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.res.ResourcesCompat;
-import android.view.WindowManager;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.arellomobile.mvp.MvpAppCompatActivity;
@@ -33,6 +34,9 @@ public class PreviewActivity extends MvpAppCompatActivity implements PreviewView
     @InjectPresenter
     PreviewPresenter presenter;
 
+    @BindView(R.id.toolbar_preview)
+    Toolbar toolbar;
+
     @BindView(R.id.cropTabLayout)
     TabLayout tabLayout;
 
@@ -46,8 +50,6 @@ public class PreviewActivity extends MvpAppCompatActivity implements PreviewView
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.activity_preview);
 
@@ -56,6 +58,11 @@ public class PreviewActivity extends MvpAppCompatActivity implements PreviewView
         BitmapUtil.logBitmapInfo("Preview", mBitmap);
 
         ButterKnife.bind(this);
+
+        setSupportActionBar(toolbar);
+
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         presenter.initCropModes();
 
@@ -101,6 +108,30 @@ public class PreviewActivity extends MvpAppCompatActivity implements PreviewView
         cropImageView.setImageBitmap(mBitmap);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_crop, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_crop:
+                presenter.cropImage(createSaveUri(), cropImageView);
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        super.onBackPressed();
+        return super.onSupportNavigateUp();
+    }
+
     // FIXME: Flip bug.
     @OnClick(R.id.buttonFlipHorizontal)
     void onClickFlipHorizontal() {
@@ -112,11 +143,6 @@ public class PreviewActivity extends MvpAppCompatActivity implements PreviewView
         presenter.flipImageVertical(cropImageView.getImageBitmap());
     }
 
-    @OnClick(R.id.buttonCropBack)
-    void onClickBack() {
-        super.onBackPressed();
-    }
-
     @OnClick(R.id.buttonRotateLeft)
     void onClickRotateLeft() {
         cropImageView.rotateImage(CropImageView.RotateDegrees.ROTATE_M90D);
@@ -125,11 +151,6 @@ public class PreviewActivity extends MvpAppCompatActivity implements PreviewView
     @OnClick(R.id.buttonRotateRight)
     void onClickRotateRight() {
         cropImageView.rotateImage(CropImageView.RotateDegrees.ROTATE_90D);
-    }
-
-    @OnClick(R.id.buttonCrop)
-    void onClickCrop() {
-        presenter.cropImage(createSaveUri(), cropImageView);
     }
 
     public Uri createSaveUri() {

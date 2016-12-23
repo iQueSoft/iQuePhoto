@@ -27,7 +27,7 @@ import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.TRANSFORM_V
 public class TransformFragment extends MvpAppCompatFragment implements TransformView {
     @InjectPresenter
     TransformPresenter presenter;
-
+    
     private Unbinder mUnbinder;
 
     private EditorActivity mEditorActivity;
@@ -65,10 +65,10 @@ public class TransformFragment extends MvpAppCompatFragment implements Transform
         mUnbinder.unbind();
     }
 
-    @OnClick(R.id.transformBackButton)
+    /*@OnClick(R.id.transformBackButton)
     void onClickBack() {
         ((EditorActivity) getActivity()).navigateBack(true);
-    }
+    }*/
 
     @OnClick(R.id.transformHorizontalButton)
     void onClickTransformHorizontal() {

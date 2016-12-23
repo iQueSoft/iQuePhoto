@@ -33,7 +33,7 @@ public class AdjustFragment extends MvpAppCompatFragment implements AdjustView {
     AdjustPresenter presenter;
 
     private Unbinder mUnbinder;
-    
+
     @BindView(R.id.adjustRecyclerView)
     RecyclerView recyclerView;
 
@@ -64,10 +64,10 @@ public class AdjustFragment extends MvpAppCompatFragment implements AdjustView {
         mUnbinder.unbind();
     }
 
-    @OnClick(R.id.adjustBackButton)
+    /*@OnClick(R.id.adjustBackButton)
     public void onClickBack() {
         ((EditorActivity) getActivity()).navigateBack(true);
-    }
+    }*/
 
     @Override
     public void setupAdapter(List<Adjust> adjusts) {

@@ -79,7 +79,7 @@ public class FramesFragment extends MvpAppCompatFragment implements FramesView {
         recyclerView.setAdapter(adapter);
     }
 
-    @OnClick(R.id.framesBack)
+    /*@OnClick(R.id.framesBack)
     void onClickBack() {
         ((EditorActivity) getActivity()).navigateBack(true);
     }
@@ -88,5 +88,5 @@ public class FramesFragment extends MvpAppCompatFragment implements FramesView {
     void onClickApply() {
         mImageEditorView.applyChanges(FRAMES);
         onClickBack();
-    }
+    }*/
 }

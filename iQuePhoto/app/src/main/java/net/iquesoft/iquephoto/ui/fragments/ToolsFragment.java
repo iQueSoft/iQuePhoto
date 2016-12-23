@@ -52,7 +52,7 @@ public class ToolsFragment extends MvpAppCompatFragment implements ToolsView {
         );
 
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 4));
-
+        
         recyclerView.setAdapter(adapter);
 
         return view;

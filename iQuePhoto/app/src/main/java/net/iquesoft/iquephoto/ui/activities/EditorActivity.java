@@ -8,8 +8,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
@@ -37,11 +39,11 @@ public class EditorActivity extends BaseActivity implements EditorView {
     @InjectPresenter
     EditorPresenter presenter;
 
-    @BindView(R.id.undoButton)
-    Button undoButton;
+    @BindView(R.id.toolbar_editor)
+    Toolbar toolbar;
 
-    @BindView(R.id.editorHeader)
-    RelativeLayout editorHeader;
+    /*@BindView(R.id.undoButton)
+    Button undoButton;*/
 
     @BindView(R.id.imageEditorView)
     ImageEditorView imageEditorView;
@@ -55,12 +57,15 @@ public class EditorActivity extends BaseActivity implements EditorView {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
         setContentView(R.layout.activity_editor);
 
         ButterKnife.bind(this);
+
+        setSupportActionBar(toolbar);
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         try {
             mBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), getIntent().getData());
@@ -76,10 +81,10 @@ public class EditorActivity extends BaseActivity implements EditorView {
 
         imageEditorView.setUndoListener(count -> {
             if (count != 0) {
-                undoButton.setText(String.valueOf(count));
-                undoButton.setVisibility(View.VISIBLE);
+                //undoButton.setText(String.valueOf(count));
+                //undoButton.setVisibility(View.VISIBLE);
             } else {
-                undoButton.setVisibility(View.GONE);
+                //undoButton.setVisibility(View.GONE);
             }
         });
 
@@ -91,8 +96,33 @@ public class EditorActivity extends BaseActivity implements EditorView {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_editor, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_share) {
+            Intent intent = new Intent(EditorActivity.this, ShareActivity.class);
+            intent.putExtra(Intent.EXTRA_STREAM,
+                    BitmapUtil.getUriOfBitmap(this, imageEditorView.getAlteredBitmap()));
+            startActivity(intent);
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return super.onSupportNavigateUp();
     }
 
     @Override
@@ -128,7 +158,7 @@ public class EditorActivity extends BaseActivity implements EditorView {
                 .addToBackStack(null)
                 .commit();
 
-        editorHeader.setVisibility(View.INVISIBLE);
+        //editorHeader.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -145,27 +175,24 @@ public class EditorActivity extends BaseActivity implements EditorView {
                 presenter.onBackPressed(mBitmap, imageEditorView.getAlteredBitmap());
             else if (mFragmentManager.getBackStackEntryCount() == 1) {
                 super.onBackPressed();
-                editorHeader.setVisibility(View.VISIBLE);
+                //editorHeader.setVisibility(View.VISIBLE);
             }
         } else
             finish();
     }
 
-    @OnClick(R.id.editorBackButton)
+    /*@OnClick(R.id.editorBackButton)
     void onClickBack() {
         presenter.onBackPressed(mBitmap, imageEditorView.getAlteredBitmap());
     }
 
     @OnClick(R.id.shareButton)
     void onClickShare() {
-        Intent intent = new Intent(EditorActivity.this, ShareActivity.class);
-        intent.putExtra(Intent.EXTRA_STREAM,
-                BitmapUtil.getUriOfBitmap(this, imageEditorView.getAlteredBitmap()));
-        startActivity(intent);
+
     }
 
     @OnClick(R.id.undoButton)
     void onClickUndo() {
         imageEditorView.undo();
-    }
+    }*/
 }

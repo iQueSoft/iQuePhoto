@@ -110,15 +110,4 @@ public class FiltersFragment extends MvpAppCompatFragment implements FiltersView
         filtersList.setLayoutManager(new LinearLayoutManager(null, LinearLayout.HORIZONTAL, false));
         filtersList.setAdapter(adapter);
     }
-
-    @OnClick(R.id.filtersBackButton)
-    void onClickBack() {
-        ((EditorActivity) getActivity()).navigateBack(true);
-    }
-
-    @OnClick(R.id.filterApplyImageButton)
-    void onClickApply() {
-        mImageEditorView.applyChanges(FILTERS);
-        onClickBack();
-    }
 }

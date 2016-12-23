@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -33,6 +34,9 @@ public class ShareActivity extends MvpAppCompatActivity implements ShareView {
     @InjectPresenter
     SharePresenter presenter;
 
+    @BindView(R.id.toolbar_share)
+    Toolbar toolbar;
+
     @BindView(R.id.shareImageView)
     ImageView imageView;
 
@@ -45,12 +49,15 @@ public class ShareActivity extends MvpAppCompatActivity implements ShareView {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
         setContentView(R.layout.activity_share);
 
         ButterKnife.bind(this);
+
+        setSupportActionBar(toolbar);
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -80,14 +87,20 @@ public class ShareActivity extends MvpAppCompatActivity implements ShareView {
     }
 
     @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return super.onSupportNavigateUp();
+    }
+
+    @Override
     public void onBackPressed() {
         finish();
     }
 
-    @OnClick(R.id.shareBackButton)
+    /*@OnClick(R.id.shareBackButton)
     void onClickBack() {
         super.onBackPressed();
-    }
+    }*/
 
     @OnClick(R.id.saveButton)
     void onClickSave() {

@@ -1,68 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/black"
+    android:background="@color/colorBackground"
     tools:context=".ui.activities.EditorActivity">
 
-    <RelativeLayout
-        android:id="@+id/editorHeader"
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar_editor"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@android:color/black">
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.NoActionBar.AppBarOverlay">
 
-        <ImageButton
-            android:id="@+id/editorBackButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_arrow_back" />
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar_editor"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:popupTheme="@style/AppTheme.NoActionBar.PopupOverlay">
 
-        <Button
-            android:id="@+id/undoButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:drawableLeft="@drawable/ic_undo"
-            android:paddingBottom="5dp"
-            android:paddingLeft="5dp"
-            android:paddingRight="15dp"
-            android:paddingTop="5dp"
-            android:text="1"
-            android:textColor="@color/white"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            android:visibility="gone" />
+            <Button
+                android:id="@+id/undoButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:drawableLeft="@drawable/ic_undo"
+                android:text="1"
+                android:textColor="@color/white"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
 
-        <ImageButton
-            android:id="@+id/shareButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:paddingBottom="5dp"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:paddingTop="5dp"
-            android:src="@drawable/ic_share" />
-
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="1dp"
-            android:layout_alignParentBottom="true"
-            android:background="@color/colorLine" />
-    </RelativeLayout>
+        </android.support.v7.widget.Toolbar>
+    </android.support.design.widget.AppBarLayout>
 
     <net.iquesoft.iquephoto.core.editor.ImageEditorView
         android:id="@+id/imageEditorView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/fragmentContainer"
-        android:layout_below="@+id/editorHeader"
+        android:layout_below="@+id/appbar_editor"
         android:layout_centerInParent="true" />
 
     <FrameLayout

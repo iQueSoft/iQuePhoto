@@ -28,10 +28,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.activities.EditorActivity"
+            android:name=".ui.activities.GalleryActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activities.GalleryActivity"
+            android:name=".ui.activities.EditorActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".ui.activities.CameraActivity">
             <intent-filter>
@@ -52,6 +52,14 @@
         <activity
             android:name=".ui.activities.ShareActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.MainActivity"
+            android:label="@string/title_activity_main"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.activities.Main2Activity"
+            android:label="@string/title_activity_main2"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

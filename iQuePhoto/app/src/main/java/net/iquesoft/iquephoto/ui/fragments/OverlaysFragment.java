@@ -13,10 +13,12 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapter.OverlaysAdapter;
 import net.iquesoft.iquephoto.core.editor.ImageEditorView;
+import net.iquesoft.iquephoto.mvp.common.BaseToolFragment;
 import net.iquesoft.iquephoto.mvp.models.Overlay;
 import net.iquesoft.iquephoto.mvp.presenters.fragment.OverlaysPresenter;
 import net.iquesoft.iquephoto.mvp.views.fragment.OverlaysView;
 import net.iquesoft.iquephoto.ui.activities.EditorActivity;
+import net.iquesoft.iquephoto.util.ActivityUtil;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
@@ -29,7 +31,7 @@ import butterknife.Unbinder;
 
 import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.OVERLAY;
 
-public class OverlaysFragment extends MvpAppCompatFragment implements OverlaysView {
+public class OverlaysFragment extends BaseToolFragment implements OverlaysView {
     @InjectPresenter
     OverlaysPresenter presenter;
 
@@ -79,6 +81,7 @@ public class OverlaysFragment extends MvpAppCompatFragment implements OverlaysVi
     @Override
     public void onResume() {
         super.onResume();
+        ActivityUtil.updateToolbarTitle(R.string.overlay, getActivity());
         mImageEditorView.setCommand(OVERLAY);
     }
 
@@ -101,7 +104,7 @@ public class OverlaysFragment extends MvpAppCompatFragment implements OverlaysVi
         recyclerView.setAdapter(adapter);
     }
     
-    @OnClick(R.id.overlayCancel)
+    /*@OnClick(R.id.overlayCancel)
     void onClickBack() {
         ((EditorActivity) getActivity()).navigateBack(true);
     }
@@ -110,5 +113,5 @@ public class OverlaysFragment extends MvpAppCompatFragment implements OverlaysVi
     void onClickApply() {
         mImageEditorView.applyChanges(OVERLAY);
         onClickBack();
-    }
+    }*/
 }

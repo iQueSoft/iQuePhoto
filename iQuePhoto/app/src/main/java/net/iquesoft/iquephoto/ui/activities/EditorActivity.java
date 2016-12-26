@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -11,10 +12,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -33,7 +31,6 @@ import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class EditorActivity extends BaseActivity implements EditorView {
     @InjectPresenter
@@ -104,11 +101,17 @@ public class EditorActivity extends BaseActivity implements EditorView {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_share) {
-            Intent intent = new Intent(EditorActivity.this, ShareActivity.class);
-            intent.putExtra(Intent.EXTRA_STREAM,
-                    BitmapUtil.getUriOfBitmap(this, imageEditorView.getAlteredBitmap()));
-            startActivity(intent);
+        switch (item.getItemId()) {
+            case R.id.action_share:
+                Intent intent = new Intent(EditorActivity.this, ShareActivity.class);
+                intent.putExtra(Intent.EXTRA_STREAM,
+                        BitmapUtil.getUriOfBitmap(this, imageEditorView.getAlteredBitmap()));
+                startActivity(intent);
+                break;
+            case R.id.action_apply:
+                imageEditorView.applyChanges();
+                onBackPressed();
+                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -150,15 +153,12 @@ public class EditorActivity extends BaseActivity implements EditorView {
                 .show();
     }
 
-
     public void setupFragment(Fragment fragment) {
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
         fragmentTransaction.replace(fragmentContainer.getId(), fragment)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .addToBackStack(null)
                 .commit();
-
-        //editorHeader.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -177,22 +177,13 @@ public class EditorActivity extends BaseActivity implements EditorView {
                 super.onBackPressed();
                 //editorHeader.setVisibility(View.VISIBLE);
             }
-        } else
-            finish();
+        } else finish();
     }
 
-    /*@OnClick(R.id.editorBackButton)
-    void onClickBack() {
-        presenter.onBackPressed(mBitmap, imageEditorView.getAlteredBitmap());
-    }
-
-    @OnClick(R.id.shareButton)
-    void onClickShare() {
-
-    }
-
+    /*
     @OnClick(R.id.undoButton)
     void onClickUndo() {
         imageEditorView.undo();
-    }*/
+    }
+    */
 }

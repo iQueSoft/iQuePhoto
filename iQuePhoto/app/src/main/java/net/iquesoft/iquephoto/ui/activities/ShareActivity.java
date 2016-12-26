@@ -11,7 +11,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
@@ -21,7 +20,6 @@ import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.mvp.presenters.activity.SharePresenter;
 import net.iquesoft.iquephoto.mvp.views.activity.ShareView;
 import net.iquesoft.iquephoto.task.ImageSaveTask;
-import net.iquesoft.iquephoto.util.BitmapUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,7 +43,7 @@ public class ShareActivity extends MvpAppCompatActivity implements ShareView {
 
     private Bitmap mBitmap;
     private Uri mImageUri;
-
+    
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,11 +94,6 @@ public class ShareActivity extends MvpAppCompatActivity implements ShareView {
     public void onBackPressed() {
         finish();
     }
-
-    /*@OnClick(R.id.shareBackButton)
-    void onClickBack() {
-        super.onBackPressed();
-    }*/
 
     @OnClick(R.id.saveButton)
     void onClickSave() {

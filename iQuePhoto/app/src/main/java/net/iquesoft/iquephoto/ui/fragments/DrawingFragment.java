@@ -6,15 +6,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.core.editor.ImageEditorView;
+import net.iquesoft.iquephoto.mvp.common.BaseToolFragment;
 import net.iquesoft.iquephoto.mvp.presenters.fragment.DrawingPresenter;
-import net.iquesoft.iquephoto.ui.activities.EditorActivity;
 import net.iquesoft.iquephoto.ui.dialogs.ColorPickerDialog;
 import net.iquesoft.iquephoto.mvp.views.fragment.DrawingView;
+import net.iquesoft.iquephoto.util.ActivityUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -23,7 +23,7 @@ import butterknife.Unbinder;
 
 import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.DRAWING;
 
-public class DrawingFragment extends MvpAppCompatFragment implements DrawingView {
+public class DrawingFragment extends BaseToolFragment implements DrawingView {
     @InjectPresenter
     DrawingPresenter presenter;
 
@@ -92,6 +92,7 @@ public class DrawingFragment extends MvpAppCompatFragment implements DrawingView
     public void onResume() {
         super.onResume();
         mImageEditorView.setCommand(DRAWING);
+        ActivityUtil.updateToolbarTitle(R.string.drawing, getActivity());
     }
 
     @Override
@@ -103,17 +104,5 @@ public class DrawingFragment extends MvpAppCompatFragment implements DrawingView
     @OnClick(R.id.brushColorButton)
     void onClickBrushColor() {
         mColorPickerDialog.show();
-    }
-
-    @OnClick(R.id.drawingApplyButton)
-    void onClickApply() {
-        mImageEditorView.applyChanges(DRAWING);
-        onClickBack();
-
-    }
-
-    @OnClick(R.id.drawingBackButton)
-    void onClickBack() {
-        ((EditorActivity) getActivity()).navigateBack(true);
     }
 }

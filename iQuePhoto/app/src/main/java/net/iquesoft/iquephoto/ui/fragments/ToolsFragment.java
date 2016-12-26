@@ -17,6 +17,7 @@ import net.iquesoft.iquephoto.mvp.models.Tool;
 import net.iquesoft.iquephoto.mvp.presenters.fragment.ToolsPresenter;
 import net.iquesoft.iquephoto.mvp.views.fragment.ToolsView;
 import net.iquesoft.iquephoto.ui.activities.EditorActivity;
+import net.iquesoft.iquephoto.util.ActivityUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,7 +26,6 @@ import butterknife.Unbinder;
 import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.NONE;
 
 public class ToolsFragment extends MvpAppCompatFragment implements ToolsView {
-
     @InjectPresenter
     ToolsPresenter presenter;
 
@@ -52,7 +52,7 @@ public class ToolsFragment extends MvpAppCompatFragment implements ToolsView {
         );
 
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 4));
-        
+
         recyclerView.setAdapter(adapter);
 
         return view;
@@ -61,6 +61,7 @@ public class ToolsFragment extends MvpAppCompatFragment implements ToolsView {
     @Override
     public void onResume() {
         super.onResume();
+        ActivityUtil.updateToolbarTitle(R.string.app_name, getActivity());
         ((ImageEditorView) getActivity().findViewById(R.id.imageEditorView))
                 .setCommand(NONE);
     }

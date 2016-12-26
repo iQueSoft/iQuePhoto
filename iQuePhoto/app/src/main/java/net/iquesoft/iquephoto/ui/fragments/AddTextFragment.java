@@ -13,17 +13,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.core.editor.ImageEditorView;
+import net.iquesoft.iquephoto.mvp.common.BaseToolFragment;
 import net.iquesoft.iquephoto.mvp.models.Text;
-import net.iquesoft.iquephoto.ui.activities.EditorActivity;
 import net.iquesoft.iquephoto.ui.dialogs.ColorPickerDialog;
 import net.iquesoft.iquephoto.ui.dialogs.FontPickerDialog;
 import net.iquesoft.iquephoto.mvp.presenters.fragment.AddTextPresenter;
 import net.iquesoft.iquephoto.mvp.views.fragment.AddTextView;
+import net.iquesoft.iquephoto.util.ActivityUtil;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
@@ -34,7 +34,7 @@ import butterknife.Unbinder;
 
 import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.TEXT;
 
-public class AddTextFragment extends MvpAppCompatFragment implements AddTextView {
+public class AddTextFragment extends BaseToolFragment implements AddTextView {
     @InjectPresenter
     AddTextPresenter presenter;
 
@@ -118,6 +118,7 @@ public class AddTextFragment extends MvpAppCompatFragment implements AddTextView
     public void onResume() {
         super.onResume();
         mImageEditorView.setCommand(TEXT);
+        ActivityUtil.updateToolbarTitle(R.string.text, getActivity());
     }
 
     @Override
@@ -149,16 +150,5 @@ public class AddTextFragment extends MvpAppCompatFragment implements AddTextView
     @OnClick(R.id.selectFontButton)
     void onClickTextButton() {
         mFontPickerDialog.show();
-    }
-
-    @OnClick(R.id.textBackButton)
-    void onClickBack() {
-        ((EditorActivity) getActivity()).navigateBack(true);
-    }
-
-    @OnClick(R.id.textApplyButton)
-    void onClickApply() {
-        mImageEditorView.applyChanges(TEXT);
-        onClickBack();
     }
 }

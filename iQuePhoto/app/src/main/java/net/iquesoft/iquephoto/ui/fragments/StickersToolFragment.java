@@ -11,25 +11,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.core.editor.ImageEditorView;
+import net.iquesoft.iquephoto.mvp.common.BaseToolFragment;
 import net.iquesoft.iquephoto.mvp.models.StickersSet;
 import net.iquesoft.iquephoto.mvp.presenters.fragment.StickersPresenter;
 import net.iquesoft.iquephoto.mvp.views.fragment.StickersView;
+import net.iquesoft.iquephoto.util.ActivityUtil;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.Unbinder;
 
 import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.STICKERS;
 
-public class StickersToolFragment extends MvpAppCompatFragment implements StickersView {
+public class StickersToolFragment extends BaseToolFragment implements StickersView {
     @InjectPresenter
     StickersPresenter presenter;
 
@@ -82,6 +82,7 @@ public class StickersToolFragment extends MvpAppCompatFragment implements Sticke
     public void onResume() {
         super.onResume();
         mImageEditorView.setCommand(STICKERS);
+        ActivityUtil.updateToolbarTitle(R.string.stickers, getActivity());
     }
 
     @Override

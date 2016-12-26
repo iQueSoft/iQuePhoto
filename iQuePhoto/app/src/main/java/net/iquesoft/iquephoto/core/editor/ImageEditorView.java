@@ -776,8 +776,8 @@ public class ImageEditorView extends ImageView {
         mUndoListener = undoListener;
     }
 
-    public void applyChanges(EditorCommand command) {
-        new ImageProcessingTask().execute(command);
+    public void applyChanges() {
+        new ImageProcessingTask().execute(mCommand);
     }
 
     public void setBrushSize(float brushSize) {

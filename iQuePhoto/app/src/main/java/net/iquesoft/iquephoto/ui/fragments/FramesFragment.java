@@ -4,8 +4,12 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -13,10 +17,12 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapter.FramesAdapter;
 import net.iquesoft.iquephoto.core.editor.ImageEditorView;
+import net.iquesoft.iquephoto.mvp.common.BaseToolFragment;
 import net.iquesoft.iquephoto.mvp.models.Frame;
 import net.iquesoft.iquephoto.mvp.presenters.fragment.FramesPresenter;
 import net.iquesoft.iquephoto.mvp.views.fragment.FramesView;
 import net.iquesoft.iquephoto.ui.activities.EditorActivity;
+import net.iquesoft.iquephoto.util.ActivityUtil;
 
 import java.util.List;
 
@@ -27,7 +33,7 @@ import butterknife.Unbinder;
 
 import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.FRAMES;
 
-public class FramesFragment extends MvpAppCompatFragment implements FramesView {
+public class FramesFragment extends BaseToolFragment implements FramesView {
     @InjectPresenter
     FramesPresenter presenter;
 
@@ -61,6 +67,7 @@ public class FramesFragment extends MvpAppCompatFragment implements FramesView {
     @Override
     public void onResume() {
         super.onResume();
+        ActivityUtil.updateToolbarTitle(R.string.frames, getActivity());
         mImageEditorView.setCommand(FRAMES);
     }
 
@@ -69,7 +76,7 @@ public class FramesFragment extends MvpAppCompatFragment implements FramesView {
         super.onDestroyView();
         mUnbinder.unbind();
     }
-
+    
     @Override
     public void setupAdapter(List<Frame> frames) {
         FramesAdapter adapter = new FramesAdapter(frames);

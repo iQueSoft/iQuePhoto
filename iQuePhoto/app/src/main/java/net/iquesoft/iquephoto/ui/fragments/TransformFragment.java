@@ -2,6 +2,7 @@ package net.iquesoft.iquephoto.ui.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -9,11 +10,11 @@ import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.R;
-
 import net.iquesoft.iquephoto.core.editor.ImageEditorView;
 import net.iquesoft.iquephoto.mvp.presenters.fragment.TransformPresenter;
 import net.iquesoft.iquephoto.mvp.views.fragment.TransformView;
 import net.iquesoft.iquephoto.ui.activities.EditorActivity;
+import net.iquesoft.iquephoto.util.ActivityUtil;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -27,7 +28,7 @@ import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.TRANSFORM_V
 public class TransformFragment extends MvpAppCompatFragment implements TransformView {
     @InjectPresenter
     TransformPresenter presenter;
-    
+
     private Unbinder mUnbinder;
 
     private EditorActivity mEditorActivity;
@@ -35,6 +36,7 @@ public class TransformFragment extends MvpAppCompatFragment implements Transform
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         mEditorActivity = (EditorActivity) getActivity();
     }
 
@@ -57,6 +59,7 @@ public class TransformFragment extends MvpAppCompatFragment implements Transform
         super.onResume();
         ((ImageEditorView) getActivity().findViewById(R.id.imageEditorView))
                 .setCommand(TRANSFORM);
+        ActivityUtil.updateToolbarTitle(R.string.transform, getActivity());
     }
 
     @Override
@@ -65,23 +68,30 @@ public class TransformFragment extends MvpAppCompatFragment implements Transform
         mUnbinder.unbind();
     }
 
-    /*@OnClick(R.id.transformBackButton)
-    void onClickBack() {
-        ((EditorActivity) getActivity()).navigateBack(true);
-    }*/
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        menu.clear();
+        super.onPrepareOptionsMenu(menu);
+    }
 
     @OnClick(R.id.transformHorizontalButton)
     void onClickTransformHorizontal() {
-        mEditorActivity.setupFragment(SliderControlFragment.newInstance(TRANSFORM_HORIZONTAL));
+        mEditorActivity.setupFragment(
+                SliderControlFragment.newInstance(TRANSFORM_HORIZONTAL)
+        );
     }
 
     @OnClick(R.id.transformStraightenButton)
     void onClickTransformStraighten() {
-        mEditorActivity.setupFragment(SliderControlFragment.newInstance(TRANSFORM_STRAIGHTEN));
+        mEditorActivity.setupFragment(
+                SliderControlFragment.newInstance(TRANSFORM_STRAIGHTEN)
+        );
     }
 
     @OnClick(R.id.transformVerticalButton)
     void onClickTransformVertical() {
-        mEditorActivity.setupFragment(SliderControlFragment.newInstance(TRANSFORM_VERTICAL));
+        mEditorActivity.setupFragment(
+                SliderControlFragment.newInstance(TRANSFORM_VERTICAL)
+        );
     }
 }

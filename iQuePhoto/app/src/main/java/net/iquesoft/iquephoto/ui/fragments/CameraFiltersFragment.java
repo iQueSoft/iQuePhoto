@@ -72,12 +72,13 @@ public class CameraFiltersFragment extends MvpAppCompatFragment implements Camer
     @Override
     public void setupFiltersAdapter(List<Filter> filters) {
         FiltersAdapter adapter = new FiltersAdapter(filters);
+        adapter.setFiltersListener(filter ->
+                presenter.onFilterClick(filter)
+        );
 
-        adapter.setFiltersListener(filter -> {
-            presenter.onFilterClick(filter);
-        });
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(null, LinearLayout.HORIZONTAL, false));
+        recyclerView.setLayoutManager(new
+                LinearLayoutManager(null, LinearLayout.HORIZONTAL, false)
+        );
         recyclerView.setAdapter(adapter);
     }
 }

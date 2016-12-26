@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -14,10 +16,12 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapter.FiltersAdapter;
 import net.iquesoft.iquephoto.core.editor.ImageEditorView;
+import net.iquesoft.iquephoto.mvp.common.BaseToolFragment;
 import net.iquesoft.iquephoto.mvp.models.Filter;
 import net.iquesoft.iquephoto.mvp.presenters.fragment.FiltersPresenter;
 import net.iquesoft.iquephoto.mvp.views.fragment.FiltersView;
 import net.iquesoft.iquephoto.ui.activities.EditorActivity;
+import net.iquesoft.iquephoto.util.ActivityUtil;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
@@ -25,12 +29,11 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.Unbinder;
 
 import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.FILTERS;
 
-public class FiltersFragment extends MvpAppCompatFragment implements FiltersView {
+public class FiltersFragment extends BaseToolFragment implements FiltersView {
     @InjectPresenter
     FiltersPresenter presenter;
 
@@ -53,8 +56,9 @@ public class FiltersFragment extends MvpAppCompatFragment implements FiltersView
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         mImageEditorView = (ImageEditorView) getActivity().findViewById(R.id.imageEditorView);
+
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -91,6 +95,7 @@ public class FiltersFragment extends MvpAppCompatFragment implements FiltersView
     @Override
     public void onResume() {
         super.onResume();
+        ActivityUtil.updateToolbarTitle(R.string.filters, getActivity());
         mImageEditorView.setCommand(FILTERS);
     }
 

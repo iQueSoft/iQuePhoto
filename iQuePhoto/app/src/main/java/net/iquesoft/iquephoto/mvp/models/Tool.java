@@ -16,6 +16,7 @@ import net.iquesoft.iquephoto.ui.fragments.SliderControlFragment;
 import net.iquesoft.iquephoto.ui.fragments.StickersToolFragment;
 import net.iquesoft.iquephoto.ui.fragments.TiltShiftFragment;
 import net.iquesoft.iquephoto.ui.fragments.ToolsFragment;
+import net.iquesoft.iquephoto.ui.fragments.TransformFragment;
 
 import java.util.Arrays;
 import java.util.List;
@@ -41,7 +42,7 @@ public class Tool {
             new Tool(R.string.overlay, R.drawable.ic_overlay, new OverlaysFragment()),
             new Tool(R.string.stickers, R.drawable.ic_stiker, new StickersToolFragment()),
             new Tool(R.string.frames, R.drawable.ic_frame, new FramesFragment()),
-            new Tool(R.string.transform, R.drawable.ic_frame, new ToolsFragment()),
+            new Tool(R.string.transform, R.drawable.ic_frame, new TransformFragment()),
             new Tool(R.string.vignette, R.drawable.ic_vignette, SliderControlFragment.newInstance(VIGNETTE)),
             new Tool(R.string.tilt_shift, R.drawable.ic_tilt_shift, new TiltShiftFragment()),
             new Tool(R.string.drawing, R.drawable.ic_brush, new DrawingFragment()),
@@ -60,10 +61,6 @@ public class Tool {
 
     public int getTitle() {
         return mTitle;
-    }
-
-    public void setTitle(int title) {
-        mTitle = title;
     }
 
     public Fragment getFragment() {

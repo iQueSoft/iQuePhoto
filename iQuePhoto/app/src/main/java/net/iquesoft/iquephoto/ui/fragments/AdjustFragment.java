@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -18,12 +19,12 @@ import net.iquesoft.iquephoto.mvp.models.Adjust;
 import net.iquesoft.iquephoto.mvp.presenters.fragment.AdjustPresenter;
 import net.iquesoft.iquephoto.mvp.views.fragment.AdjustView;
 import net.iquesoft.iquephoto.ui.activities.EditorActivity;
+import net.iquesoft.iquephoto.util.ActivityUtil;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.Unbinder;
 
 import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.NONE;
@@ -36,6 +37,12 @@ public class AdjustFragment extends MvpAppCompatFragment implements AdjustView {
 
     @BindView(R.id.adjustRecyclerView)
     RecyclerView recyclerView;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -56,6 +63,7 @@ public class AdjustFragment extends MvpAppCompatFragment implements AdjustView {
         super.onResume();
         ((ImageEditorView) getActivity().findViewById(R.id.imageEditorView))
                 .setCommand(NONE);
+        ActivityUtil.updateToolbarTitle(R.string.adjust, getActivity());
     }
 
     @Override
@@ -64,10 +72,11 @@ public class AdjustFragment extends MvpAppCompatFragment implements AdjustView {
         mUnbinder.unbind();
     }
 
-    /*@OnClick(R.id.adjustBackButton)
-    public void onClickBack() {
-        ((EditorActivity) getActivity()).navigateBack(true);
-    }*/
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        menu.clear();
+        super.onPrepareOptionsMenu(menu);
+    }
 
     @Override
     public void setupAdapter(List<Adjust> adjusts) {
@@ -78,7 +87,6 @@ public class AdjustFragment extends MvpAppCompatFragment implements AdjustView {
         );
 
         recyclerView.setLayoutManager(new LinearLayoutManager(null, LinearLayout.HORIZONTAL, false));
-
         recyclerView.setAdapter(adapter);
     }
 }

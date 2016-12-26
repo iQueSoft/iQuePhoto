@@ -43,7 +43,7 @@ public class ShareActivity extends MvpAppCompatActivity implements ShareView {
 
     private Bitmap mBitmap;
     private Uri mImageUri;
-    
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -32,7 +32,6 @@
                 android:textSize="22sp"
                 android:textStyle="bold"
                 android:visibility="gone" />
-
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
 

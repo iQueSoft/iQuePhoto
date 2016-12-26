@@ -242,7 +242,7 @@ public class EditorText {
     public boolean isInside(MotionEvent event) {
         return mFrameRect.contains(event.getX(), event.getY());
     }
-    
+
     public boolean isInDeleteHandleButton(MotionEvent event) {
         return mDeleteHandleDstRect.contains(event.getX(), event.getY());
     }
@@ -275,7 +275,7 @@ public class EditorText {
 
         Log.i("Text", "Final: " + "\nX = " + String.valueOf(mX) + "\nY = " + String.valueOf(mY));
 
-        mScale += scale;
+        mScale /= scale;
 
         Log.i("Text", "Final scale = " + String.valueOf(mScale));
 

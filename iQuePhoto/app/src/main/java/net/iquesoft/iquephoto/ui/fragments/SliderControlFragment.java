@@ -1,31 +1,27 @@
 package net.iquesoft.iquephoto.ui.fragments;
 
 import android.os.Bundle;
-import android.support.annotation.StringRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
-import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.core.editor.ImageEditorView;
 import net.iquesoft.iquephoto.core.editor.enums.EditorCommand;
+import net.iquesoft.iquephoto.mvp.common.BaseToolFragment;
 import net.iquesoft.iquephoto.mvp.presenters.fragment.SliderControlPresenter;
 import net.iquesoft.iquephoto.mvp.views.fragment.SliderControlView;
-import net.iquesoft.iquephoto.ui.activities.EditorActivity;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.Unbinder;
 
-public class SliderControlFragment extends MvpAppCompatFragment implements SliderControlView {
+public class SliderControlFragment extends BaseToolFragment implements SliderControlView {
     public static final String ARG_PARAM = "command";
 
     @InjectPresenter
@@ -39,9 +35,6 @@ public class SliderControlFragment extends MvpAppCompatFragment implements Slide
 
     @BindView(R.id.maxValueTextView)
     TextView maxValueTextView;
-
-    @BindView(R.id.toolCancelButton)
-    Button toolCancelButton;
 
     @BindView(R.id.toolSeekBar)
     DiscreteSeekBar toolSeekBar;
@@ -153,11 +146,6 @@ public class SliderControlFragment extends MvpAppCompatFragment implements Slide
     }
 
     @Override
-    public void initializeCancelButton(@StringRes int toolTitle) {
-        toolCancelButton.setText(toolTitle);
-    }
-
-    @Override
     public void initializeSlider(int minValue, int maxValue, int value) {
         toolSeekBar.setMin(minValue);
         minValueTextView.setText(String.valueOf(minValue));
@@ -167,16 +155,5 @@ public class SliderControlFragment extends MvpAppCompatFragment implements Slide
 
         toolSeekBar.setMax(maxValue);
         maxValueTextView.setText(String.valueOf(maxValue));
-    }
-
-    @OnClick(R.id.toolCancelButton)
-    void onClickBack() {
-        ((EditorActivity) getActivity()).navigateBack(true);
-    }
-
-    @OnClick(R.id.toolApplyButton)
-    void onClickApply() {
-        // TODO: editorActivityView.getImageEditorView().applyChanges(mCommand);
-        onClickBack();
     }
 }

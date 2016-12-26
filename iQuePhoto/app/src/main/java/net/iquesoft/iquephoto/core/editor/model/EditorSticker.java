@@ -7,12 +7,13 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.MotionEvent;
 
+import net.iquesoft.iquephoto.util.MatrixUtil;
 import net.iquesoft.iquephoto.util.RectUtil;
 
 // TODO: Add opacity handle for stickers.
-// TODO: Make abstract class for this and EditorText.
 public class EditorSticker {
     private static final float MIN_SCALE = 0.15f;
     private static final int HELP_BOX_PAD = 25;
@@ -59,7 +60,7 @@ public class EditorSticker {
         initialize();
     }
 
-    public void initialize() {
+    private void initialize() {
         mSrcRect = new Rect(0, 0, mBitmap.getWidth(), mBitmap.getHeight());
 
         int stickerWidth = Math.min(mBitmap.getWidth(), (int) mImageRect.width() >> 1);
@@ -263,25 +264,36 @@ public class EditorSticker {
     public boolean isInFrontHandleButton(MotionEvent event) {
         return mFrontHandleDstRect.contains(event.getX(), event.getY());
     }
-
-    // TODO: Stickers transparency.
+    
     public boolean isInTransparencyHandleButton(MotionEvent event) {
         return mTransparencyHandleDstRect.contains(event.getX(), event.getY());
     }
 
-    public void setDrawHelperFrame(boolean isDrawHelperFrame) {
-        mIsDrawHelperFrame = isDrawHelperFrame;
-    }
+    public void prepareToDraw(@NonNull Matrix matrix) {
+        float x = MatrixUtil.getMatrixX(mMatrix);
+        float y = MatrixUtil.getMatrixY(mMatrix);
 
-    public void prepareToDraw(@NonNull RectF bitmapRect, @NonNull Bitmap bitmap) {
-        float scaleX = bitmap.getWidth() / mDstRect.width();
-        float scaleY = bitmap.getHeight() / mDstRect.height();
+        float dX = x - MatrixUtil.getMatrixX(matrix);
+        float dY = y - MatrixUtil.getMatrixY(matrix);
 
-        float distanceX = bitmapRect.left - mDstRect.left;
-        float distanceY = bitmapRect.top - mDstRect.top;
+        float scale = 1 / MatrixUtil.getMatrixScale(matrix);
+        //MatrixUtil.getMatrixScale(matrix) - MatrixUtil.getMatrixScale(mMatrix);
 
-        //mMatrix.postScale(scaleX, scaleY);
-        mMatrix.setTranslate(distanceX, distanceY);
+        dX /= scale;
+        dY /= scale;
+
+        //MatrixUtil.getMatrixScale(matrix) + MatrixUtil.getMatrixScale(mMatrix);
+
+        MatrixUtil.matrixInfo("Sticker - before", mMatrix);
+
+        //mMatrix.postScale(scale, scale);
+
+        mMatrix.postScale(scale, scale);
+        mMatrix.postTranslate(dX, dY);
+        //mMatrix.setScale();
+        //mMatrix.setScale(scale, scale);
+
+        MatrixUtil.matrixInfo("Sticker - after", mMatrix);
 
         mIsDrawHelperFrame = false;
     }

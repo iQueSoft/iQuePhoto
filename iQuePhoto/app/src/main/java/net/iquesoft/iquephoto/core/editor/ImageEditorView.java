@@ -1384,7 +1384,7 @@ public class ImageEditorView extends ImageView {
 
         private void drawStickers(Canvas canvas) {
             for (EditorSticker sticker : mStickersList) {
-                sticker.prepareToDraw(mBitmapRect, mSourceImageBitmap);
+                sticker.prepareToDraw(mMatrix);
                 sticker.draw(canvas);
             }
         }

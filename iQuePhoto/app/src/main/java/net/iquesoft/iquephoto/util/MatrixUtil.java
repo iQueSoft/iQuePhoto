@@ -24,13 +24,7 @@ public class MatrixUtil {
     }
 
     public static float getMatrixX(@NonNull Matrix matrix) {
-        float x = getMatrixValue(matrix, Matrix.MTRANS_X);
-
-        if (x < 0) {
-            return 0;
-        }
-
-        return x;
+        return getMatrixValue(matrix, Matrix.MTRANS_X);
     }
 
     public static float getMatrixY(@NonNull Matrix matrix) {

@@ -403,7 +403,7 @@ public class ImageEditorView extends ImageView {
 
         invalidate();
     }
-
+    
     private Matrix getStraightenTransformMatrix(float value) {
         Matrix matrix;
 
@@ -1161,7 +1161,7 @@ public class ImageEditorView extends ImageView {
         setMatrix();
         mBitmapRect = calcImageRect(new RectF(0f, 0f, mImageWidth, mImageHeight), mMatrix);
 
-        RectUtil.logRectInfo(mBitmapRect);
+        RectUtil.logRectInfo("Image", mBitmapRect);
 
         mEditorVignette.updateRect(mBitmapRect);
         mTiltShiftRadial.updateRect(mBitmapRect);
@@ -1308,6 +1308,7 @@ public class ImageEditorView extends ImageView {
                     break;
                 case VIGNETTE:
                     // TODO: Draw vignette on image with original size.
+                    mEditorVignette.prepareToDraw(mCanvas, mMatrix);
                     mEditorVignette.draw(mCanvas);
                     break;
                 case SATURATION:

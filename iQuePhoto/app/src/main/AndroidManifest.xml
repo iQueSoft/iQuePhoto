@@ -52,10 +52,6 @@
         <activity
             android:name=".ui.activities.ShareActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activities.MainActivity"
-            android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

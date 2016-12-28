@@ -5,10 +5,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 
+import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.mvp.common.BaseActivity;
 import net.iquesoft.iquephoto.mvp.models.ImageAlbum;
 import net.iquesoft.iquephoto.mvp.views.activity.GalleryView;
 import net.iquesoft.iquephoto.mvp.presenters.activity.GalleryPresenter;
@@ -18,7 +18,7 @@ import net.iquesoft.iquephoto.ui.fragments.GalleryImagesFragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class GalleryActivity extends BaseActivity implements GalleryView {
+public class GalleryActivity extends MvpAppCompatActivity implements GalleryView {
     @InjectPresenter
     GalleryPresenter presenter;
 

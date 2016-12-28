@@ -1,6 +1,7 @@
 package net.iquesoft.iquephoto.ui.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.StringRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import net.iquesoft.iquephoto.core.editor.enums.EditorCommand;
 import net.iquesoft.iquephoto.mvp.common.BaseToolFragment;
 import net.iquesoft.iquephoto.mvp.presenters.fragment.SliderControlPresenter;
 import net.iquesoft.iquephoto.mvp.views.fragment.SliderControlView;
+import net.iquesoft.iquephoto.util.ActivityUtil;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
@@ -74,37 +76,7 @@ public class SliderControlFragment extends BaseToolFragment implements SliderCon
             @Override
             public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
                 currentValueTextView.setText(String.valueOf(value));
-
-                /* TODO:
-                switch (mCommand) {
-                    case VIGNETTE:
-                        editorActivityView.getImageEditorView().setVignetteIntensity(value);
-                        break;
-                    case CONTRAST:
-                        editorActivityView.getImageEditorView().setContrastValue(value);
-                        break;
-                    case BRIGHTNESS:
-                        editorActivityView.getImageEditorView().setBrightnessValue(value);
-                        break;
-                    case WARMTH:
-                        editorActivityView.getImageEditorView().setWarmthValue(value);
-                        break;
-                    case SATURATION:
-                        editorActivityView.getImageEditorView().setSaturationValue(value);
-                        break;
-                    case EXPOSURE:
-                        editorActivityView.getImageEditorView().setExposureValue(value);
-                        break;
-                    case TINT:
-                        editorActivityView.getImageEditorView().setTintValue(value);
-                        break;
-                    case TRANSFORM_STRAIGHTEN:
-
-                        break;
-                    case TRANSFORM_HORIZONTAL:
-                        editorActivityView.getImageEditorView().setHorizontalTransformValue(value);
-                        break;
-                }*/
+                presenter.progressChanged(value);
             }
 
             @Override
@@ -132,12 +104,28 @@ public class SliderControlFragment extends BaseToolFragment implements SliderCon
     @Override
     public void onResume() {
         super.onResume();
+        presenter.onResume();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         mUnbinder.unbind();
+    }
+
+    @Override
+    public void changeToolbarTitle(@StringRes int title) {
+        ActivityUtil.updateToolbarTitle(title, getActivity());
+    }
+
+    @Override
+    public void onStraightenValueChanged(int value) {
+        mImageEditorView.setTransformStraightenValue(value);
+    }
+
+    @Override
+    public void onVignetteValueChanged(int value) {
+        mImageEditorView.setVignetteIntensity(value);
     }
 
     @Override

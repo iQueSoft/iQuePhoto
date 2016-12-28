@@ -3,25 +3,21 @@ package net.iquesoft.iquephoto.mvp.presenters.fragment;
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
+import net.iquesoft.iquephoto.App;
+import net.iquesoft.iquephoto.mvp.models.Tool;
 import net.iquesoft.iquephoto.mvp.views.fragment.ToolsView;
+
+import java.util.List;
+
+import javax.inject.Inject;
 
 @InjectViewState
 public class ToolsPresenter extends MvpPresenter<ToolsView> {
-    /*private ToolsView mView;
-    private EditorView mEditorView;
+    @Inject
+    List<Tool> mTools;
 
-    private List<Tool> mToolsList = Tool.getToolsList();
-
-    public ToolsPresenter(EditorView editorView) {
-        mEditorView = editorView;
+    public ToolsPresenter() {
+        App.getAppComponent().inject(this);
+        getViewState().setupTools(mTools);
     }
-
-    public void init(ToolsView view) {
-        mView = view;
-        mEditorView.setEditorCommand(NONE);
-    }
-
-    public void setupTool(Tool tool) {
-        mEditorView.setupToolFragment(tool.getCommand());
-    }*/
 }

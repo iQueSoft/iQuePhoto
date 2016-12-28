@@ -8,24 +8,19 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.WindowManager;
 
+import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.di.components.CameraComponent;
-import net.iquesoft.iquephoto.mvp.common.BaseActivity;
 import net.iquesoft.iquephoto.mvp.presenters.activity.CameraPresenter;
-import net.iquesoft.iquephoto.mvp.presenters.fragment.Camera2Presenter;
 import net.iquesoft.iquephoto.mvp.views.activity.CameraActivityView;
 import net.iquesoft.iquephoto.ui.fragments.Camera2Fragment;
-import net.iquesoft.iquephoto.ui.fragments.CameraFiltersFragment;
 import net.iquesoft.iquephoto.ui.fragments.CameraFragment;
-
-import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class CameraActivity extends BaseActivity implements CameraActivityView {
+public class CameraActivity extends MvpAppCompatActivity implements CameraActivityView {
     @InjectPresenter
     CameraPresenter presenter;
 

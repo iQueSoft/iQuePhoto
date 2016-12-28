@@ -4,14 +4,9 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.R;
@@ -21,14 +16,12 @@ import net.iquesoft.iquephoto.mvp.common.BaseToolFragment;
 import net.iquesoft.iquephoto.mvp.models.Frame;
 import net.iquesoft.iquephoto.mvp.presenters.fragment.FramesPresenter;
 import net.iquesoft.iquephoto.mvp.views.fragment.FramesView;
-import net.iquesoft.iquephoto.ui.activities.EditorActivity;
 import net.iquesoft.iquephoto.util.ActivityUtil;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.Unbinder;
 
 import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.FRAMES;
@@ -76,7 +69,7 @@ public class FramesFragment extends BaseToolFragment implements FramesView {
         super.onDestroyView();
         mUnbinder.unbind();
     }
-    
+
     @Override
     public void setupAdapter(List<Frame> frames) {
         FramesAdapter adapter = new FramesAdapter(frames);
@@ -85,15 +78,4 @@ public class FramesFragment extends BaseToolFragment implements FramesView {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         recyclerView.setAdapter(adapter);
     }
-
-    /*@OnClick(R.id.framesBack)
-    void onClickBack() {
-        ((EditorActivity) getActivity()).navigateBack(true);
-    }
-
-    @OnClick(R.id.framesApply)
-    void onClickApply() {
-        mImageEditorView.applyChanges(FRAMES);
-        onClickBack();
-    }*/
 }

@@ -17,6 +17,7 @@ import android.view.MotionEvent;
 
 import net.iquesoft.iquephoto.core.editor.ImageEditorView;
 import net.iquesoft.iquephoto.core.editor.enums.EditorMode;
+import net.iquesoft.iquephoto.util.MatrixUtil;
 import net.iquesoft.iquephoto.util.MotionEventUtil;
 import net.iquesoft.iquephoto.util.RectUtil;
 
@@ -177,23 +178,6 @@ public class EditorVignette {
         }
     }
 
-    public void drawOnImage(Canvas canvas) {
-        if (!mVignetteRect.isEmpty()) {
-            canvas.saveLayer(0, 0, canvas.getHeight(), canvas.getWidth(), mPaint, Canvas.ALL_SAVE_FLAG);
-
-            mVignetteControlRect.set(mVignetteRect);
-            mVignetteControlRect.inset(-mGradientInset, -mGradientInset);
-
-            canvas.drawRect(mBitmapRect, mVignettePaint);
-            canvas.drawOval(mVignetteControlRect, mShaderPaint);
-            canvas.restore();
-
-            mVignetteControlRect.set(mVignetteRect);
-
-            canvas.drawOval(mVignetteRect, mVignetteControlPaint);
-        }
-    }
-
     public void actionDown(MotionEvent motionEvent) {
         mMode = MOVE;
 
@@ -214,9 +198,9 @@ public class EditorVignette {
 
                 mMode = ROTATE_AND_SCALE;
             } else if (angle >= 72 && angle <= 108) {
-                // TODO: Log.i("Action", "Height");
+                mMode = RESIZE_HEIGHT;
             } else {
-                // TODO: Log.i("Action", "Width");
+                mMode = RESIZE_WIDHT;
             }
 
             Log.i("Angle", String.valueOf(angle));
@@ -226,11 +210,11 @@ public class EditorVignette {
     public void actionMove(MotionEvent event) {
         mTempVignetteRect.set(mVignetteRect);
 
+        float distanceX = event.getX() - mPreX;
+        float distanceY = event.getY() - mPreY;
+
         switch (mMode) {
             case MOVE:
-                float distanceX = event.getX() - mPreX;
-                float distanceY = event.getY() - mPreY;
-
                 mTempVignetteRect.offset(distanceX, distanceY);
                 break;
             case ROTATE_AND_SCALE:
@@ -248,21 +232,28 @@ public class EditorVignette {
                 scale *= scale;
 
                 RectUtil.scaleRect(mTempVignetteRect, scale);
-
+                break;
+            case RESIZE_HEIGHT:
+                mTempVignetteRect.inset(0, distanceY);
+                break;
+            case RESIZE_WIDHT:
+                mTempVignetteRect.inset(-distanceX, 0);
                 break;
         }
 
         if (mTempVignetteRect.width() > mControlPointTolerance
                 && mTempVignetteRect.height() > mControlPointTolerance) {
-            mVignetteRect.set(mTempVignetteRect);
+            if (isVignetteInRect()) {
+                mVignetteRect.set(mTempVignetteRect);
 
-            mPreX = event.getX();
-            mPreY = event.getY();
+                mPreX = event.getX();
+                mPreY = event.getY();
+            }
+
+            updateGradientMatrix(mVignetteRect);
+
+            mImageEditorView.invalidate();
         }
-
-        updateGradientMatrix(mVignetteRect);
-
-        mImageEditorView.invalidate();
     }
 
     public void actionUp() {
@@ -273,11 +264,38 @@ public class EditorVignette {
         mMode = MOVE;
     }
 
-    private float getFingersAngle(MotionEvent event) {
-        double delta_x = (event.getX(0) - event.getX(1));
-        double delta_y = (event.getY(0) - event.getY(1));
-        double radians = Math.atan2(delta_y, delta_x);
-        return (float) Math.toDegrees(radians);
+    public void prepareToDraw(@NonNull Canvas canvas, @NonNull Matrix matrix) {
+        // TODO: Draw vignette on final photo.
+        mBitmapRect.set(0, 0, canvas.getWidth(), canvas.getHeight());
+
+        RectUtil.logRectInfo("Vignette before", mVignetteRect);
+
+        float scale = MatrixUtil.getMatrixScale(matrix);
+
+        mVignetteRect.right /= scale;
+        mVignetteRect.bottom /= scale;
+
+        float x = MatrixUtil.getMatrixX(matrix);
+
+        if (x < 0) {
+            x = 0;
+        }
+
+        float y = MatrixUtil.getMatrixY(matrix);
+
+        float newX = (mVignetteRect.left - x) / scale;
+        float newY = (mVignetteRect.top - y) / scale;
+
+        mVignetteRect.offsetTo(newX, newY);
+
+        RectUtil.logRectInfo("Vignette after", mVignetteRect);
+    }
+
+    private boolean isVignetteInRect() {
+        return mBitmapRect.contains(
+                mTempVignetteRect.centerX(),
+                mTempVignetteRect.centerY()
+        );
     }
 
     private float dp2px(final float density, float dp) {

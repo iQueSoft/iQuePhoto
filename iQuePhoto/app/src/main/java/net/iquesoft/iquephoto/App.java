@@ -2,12 +2,11 @@ package net.iquesoft.iquephoto;
 
 import android.app.Application;
 
-import net.iquesoft.iquephoto.di.components.AppComponent;
-import net.iquesoft.iquephoto.di.components.DaggerAppComponent;
+import net.iquesoft.iquephoto.di.AppComponent;
+import net.iquesoft.iquephoto.di.DaggerAppComponent;
 import net.iquesoft.iquephoto.di.modules.AppModule;
 
 public class App extends Application {
-
     private static AppComponent sAppComponent;
 
     @Override

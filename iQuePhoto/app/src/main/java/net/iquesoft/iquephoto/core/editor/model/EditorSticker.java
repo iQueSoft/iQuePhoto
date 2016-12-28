@@ -120,6 +120,9 @@ public class EditorSticker {
         mDstRect.offset(dx, dy);
 
         mFrameRect.offset(dx, dy);
+
+        Log.i("Sticker", "Move: " + "\nX = " + MatrixUtil.getMatrixX(mMatrix) +
+                "\nY = " + MatrixUtil.getMatrixY(mMatrix));
     }
 
     public void updateRotateAndScale(final float dx, final float dy) {
@@ -264,34 +267,32 @@ public class EditorSticker {
     public boolean isInFrontHandleButton(MotionEvent event) {
         return mFrontHandleDstRect.contains(event.getX(), event.getY());
     }
-    
+
     public boolean isInTransparencyHandleButton(MotionEvent event) {
         return mTransparencyHandleDstRect.contains(event.getX(), event.getY());
     }
 
     public void prepareToDraw(@NonNull Matrix matrix) {
-        float x = MatrixUtil.getMatrixX(mMatrix);
-        float y = MatrixUtil.getMatrixY(mMatrix);
+        float imageX = MatrixUtil.getMatrixX(matrix);
+        float imageY = MatrixUtil.getMatrixY(matrix);
 
-        float dX = x - MatrixUtil.getMatrixX(matrix);
-        float dY = y - MatrixUtil.getMatrixY(matrix);
+        if (imageX < 0) {
+            imageX = 0;
+        }
 
-        float scale = 1 / MatrixUtil.getMatrixScale(matrix);
-        //MatrixUtil.getMatrixScale(matrix) - MatrixUtil.getMatrixScale(mMatrix);
+        float dX = MatrixUtil.getMatrixX(mMatrix) - imageX;
+        float dY = MatrixUtil.getMatrixY(mMatrix) - imageY;
 
-        dX /= scale;
-        dY /= scale;
+        float scale = MatrixUtil.getMatrixScale(mMatrix) / MatrixUtil.getMatrixScale(matrix);
 
-        //MatrixUtil.getMatrixScale(matrix) + MatrixUtil.getMatrixScale(mMatrix);
+        /*dX *= scale;
+        dY *= scale;*/
 
         MatrixUtil.matrixInfo("Sticker - before", mMatrix);
 
-        //mMatrix.postScale(scale, scale);
-
+        //mMatrix.reset();
         mMatrix.postScale(scale, scale);
-        mMatrix.postTranslate(dX, dY);
-        //mMatrix.setScale();
-        //mMatrix.setScale(scale, scale);
+        mMatrix.postTranslate(dX / scale, dY / scale);
 
         MatrixUtil.matrixInfo("Sticker - after", mMatrix);
 

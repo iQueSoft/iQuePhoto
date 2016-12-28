@@ -1,6 +1,7 @@
 package net.iquesoft.iquephoto.mvp.presenters.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.StringRes;
 
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
@@ -21,13 +22,19 @@ public class SliderControlPresenter extends MvpPresenter<SliderControlView> {
                 (EditorCommand) bundle.getSerializable(SliderControlFragment.ARG_PARAM);
 
         initializeUI();
-
-        getViewState().setupImageEditorCommand(mCurrentCommand);
-
     }
 
-    public void updateToolbarTitle() {
+    public void onResume() {
+        getViewState().changeToolbarTitle(getToolTitle());
+        getViewState().setupImageEditorCommand(mCurrentCommand);
+    }
 
+    public void progressChanged(int value) {
+        switch (mCurrentCommand) {
+            case TRANSFORM_STRAIGHTEN:
+                getViewState().onStraightenValueChanged(value);
+                break;
+        }
     }
 
     private void initializeUI() {
@@ -63,5 +70,20 @@ public class SliderControlPresenter extends MvpPresenter<SliderControlView> {
                 getViewState().initializeSlider(-30, 30, 0);
                 break;
         }
+    }
+
+    @StringRes
+    private int getToolTitle() {
+        int title = 0;
+
+        switch (mCurrentCommand) {
+            case TRANSFORM_STRAIGHTEN:
+                title = R.string.transform_straighten;
+                break;
+            case VIGNETTE:
+                title = R.string.vignette;
+        }
+
+        return title;
     }
 }

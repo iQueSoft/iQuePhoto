@@ -19,6 +19,8 @@ import net.iquesoft.iquephoto.mvp.views.fragment.ToolsView;
 import net.iquesoft.iquephoto.ui.activities.EditorActivity;
 import net.iquesoft.iquephoto.util.ActivityUtil;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -45,16 +47,6 @@ public class ToolsFragment extends MvpAppCompatFragment implements ToolsView {
 
         mUnbinder = ButterKnife.bind(this, view);
 
-        ToolsAdapter adapter = new ToolsAdapter(Tool.getToolsList());
-
-        adapter.setOnToolsClickListener(tool ->
-                ((EditorActivity) getActivity()).setupFragment(tool.getFragment())
-        );
-
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 4));
-
-        recyclerView.setAdapter(adapter);
-
         return view;
     }
 
@@ -70,5 +62,18 @@ public class ToolsFragment extends MvpAppCompatFragment implements ToolsView {
     public void onDestroyView() {
         super.onDestroyView();
         mUnbinder.unbind();
+    }
+
+    @Override
+    public void setupTools(List<Tool> tools) {
+        ToolsAdapter adapter = new ToolsAdapter(tools);
+
+        adapter.setOnToolsClickListener(tool ->
+                ((EditorActivity) getActivity()).setupFragment(tool.getFragment())
+        );
+
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 4));
+
+        recyclerView.setAdapter(adapter);
     }
 }

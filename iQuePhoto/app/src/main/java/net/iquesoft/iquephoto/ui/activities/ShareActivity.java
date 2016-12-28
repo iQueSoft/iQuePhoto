@@ -156,9 +156,7 @@ public class ShareActivity extends MvpAppCompatActivity implements ShareView {
             }
         });
 
-        builder.setNegativeButton(getString(R.string.dismiss), (dialogInterface, i1) -> {
-            dialogInterface.dismiss();
-        });
+        builder.setNegativeButton(getString(R.string.dismiss), (dialogInterface, i1) -> dialogInterface.dismiss());
         builder.show();
     }
 }

@@ -20,6 +20,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.core.editor.ImageEditorView;
+import net.iquesoft.iquephoto.core.editor.NewImageEditorView;
 import net.iquesoft.iquephoto.mvp.presenters.activity.EditorPresenter;
 import net.iquesoft.iquephoto.task.ImageSaveTask;
 import net.iquesoft.iquephoto.util.BitmapUtil;
@@ -42,7 +43,7 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorView {
     Button undoButton;*/
 
     @BindView(R.id.imageEditorView)
-    ImageEditorView imageEditorView;
+    NewImageEditorView imageEditorView;
 
     @BindView(R.id.fragmentContainer)
     FrameLayout fragmentContainer;
@@ -75,6 +76,7 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorView {
 
         imageEditorView.setImageBitmap(mBitmap);
 
+        /* TODO: Remove this comment.
         imageEditorView.setUndoListener(count -> {
             if (count != 0) {
                 //undoButton.setText(String.valueOf(count));
@@ -82,7 +84,7 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorView {
             } else {
                 //undoButton.setVisibility(View.GONE);
             }
-        });
+        });*/
 
         mFragmentManager = getSupportFragmentManager();
 
@@ -103,12 +105,14 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorView {
         switch (item.getItemId()) {
             case R.id.action_share:
                 Intent intent = new Intent(EditorActivity.this, ShareActivity.class);
-                intent.putExtra(Intent.EXTRA_STREAM,
-                        BitmapUtil.getUriOfBitmap(this, imageEditorView.getAlteredBitmap()));
+                // TODO: Remove this comment.
+                /*intent.putExtra(Intent.EXTRA_STREAM,
+                        BitmapUtil.getUriOfBitmap(this, imageEditorView.getAlteredBitmap()));*/
                 startActivity(intent);
                 break;
             case R.id.action_apply:
-                imageEditorView.applyChanges();
+                // TODO: Remove this comment.
+                //imageEditorView.applyChanges();
                 onBackPressed();
                 break;
         }
@@ -130,7 +134,8 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorView {
     @Override
     public void onBackPressed() {
         if (mFragmentManager.getBackStackEntryCount() == 0) {
-            presenter.onBackPressed(mBitmap, imageEditorView.getAlteredBitmap());
+            // // TODO: Remove this comment.
+            // presenter.onBackPressed(mBitmap, imageEditorView.getAlteredBitmap());
         } else if (mFragmentManager.getBackStackEntryCount() != 0) {
             navigateBack(true);
         }
@@ -144,7 +149,8 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorView {
                     finish();
                 })
                 .setNeutralButton(getString(R.string.save), ((dialogInterface1, i) -> {
-                    new ImageSaveTask(this, imageEditorView.getAlteredBitmap()).execute();
+                    // TODO: Remove this comment.
+                    // new ImageSaveTask(this, imageEditorView.getAlteredBitmap()).execute();
                 }))
                 .setNegativeButton(getString(R.string.cancel), (dialogInterface, i1) -> {
                     dialogInterface.dismiss();
@@ -171,7 +177,9 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorView {
             if (mFragmentManager.getBackStackEntryCount() > 1)
                 super.onBackPressed();
             else if (mFragmentManager.getBackStackEntryCount() == 0)
-                presenter.onBackPressed(mBitmap, imageEditorView.getAlteredBitmap());
+                // TODO: Remove this comment.
+                return;
+                // presenter.onBackPressed(mBitmap, imageEditorView.getAlteredBitmap());
             else if (mFragmentManager.getBackStackEntryCount() == 1) {
                 super.onBackPressed();
                 //editorHeader.setVisibility(View.VISIBLE);

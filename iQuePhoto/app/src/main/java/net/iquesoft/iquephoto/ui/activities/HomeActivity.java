@@ -1,11 +1,18 @@
 package net.iquesoft.iquephoto.ui.activities;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Canvas;
+import android.graphics.Point;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
+import android.view.Display;
 import android.view.WindowManager;
 import android.widget.TextView;
 
@@ -36,6 +43,8 @@ public class HomeActivity extends MvpAppCompatActivity implements HomeView {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_home);
+
+        calculateMaxBitmapSize(this);
 
         ButterKnife.bind(this);
     }
@@ -88,7 +97,7 @@ public class HomeActivity extends MvpAppCompatActivity implements HomeView {
                     }
                 });
     }
-    
+
     @Override
     public void startCamera() {
         RxPermissions.getInstance(this)
@@ -114,5 +123,40 @@ public class HomeActivity extends MvpAppCompatActivity implements HomeView {
                         builder.show();
                     }
                 });
+    }
+
+    public static int calculateMaxBitmapSize(@NonNull Context context) {
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+
+        Point size = new Point();
+        int width, height;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+            display.getSize(size);
+            width = size.x;
+            height = size.y;
+        } else {
+            width = display.getWidth();
+            height = display.getHeight();
+        }
+
+        // Twice the device screen diagonal as default
+        int maxBitmapSize = (int) Math.sqrt(Math.pow(width, 2) + Math.pow(height, 2));
+
+        // Check for max texture size via Canvas
+        Canvas canvas = new Canvas();
+        final int maxCanvasSize = Math.min(canvas.getMaximumBitmapWidth(), canvas.getMaximumBitmapHeight());
+        if (maxCanvasSize > 0) {
+            maxBitmapSize = Math.min(maxBitmapSize, maxCanvasSize);
+        }
+
+        /*// Check for max texture size via GL
+        final int maxTextureSize = EglUtils.getMaxTextureSize();
+        if (maxTextureSize > 0) {
+            maxBitmapSize = Math.min(maxBitmapSize, maxTextureSize);
+        }*/
+
+        Log.d("MAX BITMAP", "maxBitmapSize: " + maxBitmapSize);
+        return maxBitmapSize;
     }
 }

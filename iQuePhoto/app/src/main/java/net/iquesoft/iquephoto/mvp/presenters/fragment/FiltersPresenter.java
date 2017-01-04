@@ -3,18 +3,21 @@ package net.iquesoft.iquephoto.mvp.presenters.fragment;
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
+import net.iquesoft.iquephoto.App;
 import net.iquesoft.iquephoto.mvp.models.Filter;
 import net.iquesoft.iquephoto.mvp.views.fragment.FiltersView;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 @InjectViewState
 public class FiltersPresenter extends MvpPresenter<FiltersView> {
-    private List<Filter> mFilters = Filter.getFiltersList();
+    @Inject
+    List<Filter> mFilters;
 
-    @Override
-    protected void onFirstViewAttach() {
-        super.onFirstViewAttach();
+    public FiltersPresenter() {
+        App.getAppComponent().inject(this);
         getViewState().setupFiltersAdapter(mFilters);
     }
 }

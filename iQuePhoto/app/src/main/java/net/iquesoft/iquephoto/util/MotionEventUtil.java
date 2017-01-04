@@ -3,7 +3,6 @@ package net.iquesoft.iquephoto.util;
 import android.view.MotionEvent;
 
 public class MotionEventUtil {
-
     public static float getDisplayDistance(int width, int height) {
         return (float) Math.sqrt(width * width + height * height);
     }

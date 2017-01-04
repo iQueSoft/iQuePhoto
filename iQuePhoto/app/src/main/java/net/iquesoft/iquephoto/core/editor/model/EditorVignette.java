@@ -24,7 +24,6 @@ import net.iquesoft.iquephoto.util.RectUtil;
 import static net.iquesoft.iquephoto.core.editor.enums.EditorMode.*;
 
 public class EditorVignette {
-
     private float mFeather = 0.7f;
 
     private static final int FADEOUT_DELAY = 3000;
@@ -206,7 +205,7 @@ public class EditorVignette {
             Log.i("Angle", String.valueOf(angle));
         }
     }
-
+    
     public void actionMove(MotionEvent event) {
         mTempVignetteRect.set(mVignetteRect);
 

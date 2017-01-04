@@ -20,7 +20,6 @@ public class Image implements Parcelable {
         return mPath;
     }
 
-
     protected Image(Parcel in) {
         mId = in.readInt();
         mPath = in.readString();

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBackground"
+    android:orientation="vertical"
     tools:context=".ui.activities.EditorActivity">
 
     <android.support.design.widget.AppBarLayout
@@ -17,9 +17,7 @@
             android:id="@+id/toolbar_editor"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:popupTheme="@style/AppTheme.NoActionBar.PopupOverlay">
+            android:background="?attr/colorPrimary">
 
             <Button
                 android:id="@+id/undoButton"
@@ -35,18 +33,14 @@
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
 
-    <net.iquesoft.iquephoto.core.editor.ImageEditorView
+    <net.iquesoft.iquephoto.core.editor.NewImageEditorView
         android:id="@+id/imageEditorView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/fragmentContainer"
-        android:layout_below="@+id/appbar_editor"
-        android:layout_centerInParent="true" />
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
     <FrameLayout
         android:id="@+id/fragmentContainer"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_alignParentBottom="true" />
-
-</RelativeLayout>
+        android:layout_height="200dp" />
+</LinearLayout>

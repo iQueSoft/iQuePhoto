@@ -1,6 +1,5 @@
 package net.iquesoft.iquephoto.core.editor.model;
 
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
@@ -21,7 +20,7 @@ import static net.iquesoft.iquephoto.core.editor.model.EditorFrame.EDITOR_FRAME_
 
 public class EditorText {
     static final int DEFAULT_COLOR = Color.BLACK;
-    private static final float DEFAULT_TEXT_SIZE = 80;
+    private static final float DEFAULT_TEXT_SIZE = 120;
 
     private String mText;
 

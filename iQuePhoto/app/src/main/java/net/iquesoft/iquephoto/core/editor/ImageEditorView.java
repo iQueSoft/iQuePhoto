@@ -403,7 +403,7 @@ public class ImageEditorView extends ImageView {
 
         invalidate();
     }
-    
+
     private Matrix getStraightenTransformMatrix(float value) {
         Matrix matrix;
 
@@ -1188,7 +1188,7 @@ public class ImageEditorView extends ImageView {
 
         return scale;
     }
-
+    
     private RectF calcImageRect(RectF rect, Matrix matrix) {
         RectF applied = new RectF();
         matrix.mapRect(applied, rect);

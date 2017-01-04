@@ -13,7 +13,8 @@ import javax.inject.Inject;
 
 @InjectViewState
 public class CameraFiltersPresenter extends MvpPresenter<CameraFiltersView> {
-    private List<Filter> mFilters = Filter.getFiltersList();
+    /*@Inject
+    List<Filter> mFilters;*/
 
     public void onFilterClick(Filter filter) {
         // TODO: mCameraActivityView.setFilter(filter.getColorMatrix());

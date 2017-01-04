@@ -7,7 +7,6 @@ import dagger.Provides;
 
 @Module
 public class CameraModule {
-
     private CameraActivityView mView;
 
     public CameraModule(CameraActivityView view) {

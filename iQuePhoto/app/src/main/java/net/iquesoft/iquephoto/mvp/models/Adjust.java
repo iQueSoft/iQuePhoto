@@ -47,7 +47,7 @@ public class Adjust {
             new Adjust(R.string.fade, R.drawable.ic_fade, FADE,
                     -100, 100, 0),
     };
-
+    
     private Adjust(@StringRes int title, @DrawableRes int icon, @NonNull EditorCommand command,
                    int minValue, int maxValue, int value) {
         mTitle = title;

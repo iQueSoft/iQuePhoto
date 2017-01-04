@@ -15,7 +15,7 @@ import javax.inject.Inject;
 public class FramesPresenter extends MvpPresenter<FramesView> {
     @Inject
     List<Frame> mFrames;
-
+    
     public FramesPresenter() {
         App.getAppComponent().inject(this);
         getViewState().setupAdapter(mFrames);

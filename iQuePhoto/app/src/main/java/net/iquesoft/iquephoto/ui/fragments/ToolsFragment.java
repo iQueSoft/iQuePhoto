@@ -54,8 +54,9 @@ public class ToolsFragment extends MvpAppCompatFragment implements ToolsView {
     public void onResume() {
         super.onResume();
         ActivityUtil.updateToolbarTitle(R.string.app_name, getActivity());
-        ((ImageEditorView) getActivity().findViewById(R.id.imageEditorView))
-                .setCommand(NONE);
+        // TODO: Remove this comment.
+        /*((ImageEditorView) getActivity().findViewById(R.id.imageEditorView))
+                .setCommand(NONE);*/
     }
 
     @Override

@@ -21,7 +21,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.DRAWING;
+import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.DRAWING;
 
 public class DrawingFragment extends BaseToolFragment implements DrawingView {
     @InjectPresenter

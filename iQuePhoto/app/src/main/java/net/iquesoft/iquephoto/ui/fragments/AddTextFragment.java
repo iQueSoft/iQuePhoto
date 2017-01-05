@@ -32,7 +32,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.TEXT;
+import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.TEXT;
 
 public class AddTextFragment extends BaseToolFragment implements AddTextView {
     @InjectPresenter

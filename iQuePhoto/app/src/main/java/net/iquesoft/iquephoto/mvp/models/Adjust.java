@@ -5,12 +5,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.core.editor.enums.EditorCommand;
+import net.iquesoft.iquephoto.core.editor.enums.EditorTool;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.*;
+import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.*;
 
 public class Adjust {
     @StringRes
@@ -23,33 +23,10 @@ public class Adjust {
     private int mMinValue;
     private int mMaxValue;
 
-    private EditorCommand mCommand;
+    private EditorTool mCommand;
 
-    public static List<Adjust> getAdjustList() {
-        return Arrays.asList(adjusts);
-    }
-
-    private static Adjust[] adjusts = {
-            new Adjust(R.string.brightness, R.drawable.ic_brightness, BRIGHTNESS,
-                    -100, 100, 0),
-            new Adjust(R.string.contrast, R.drawable.ic_contrast, CONTRAST,
-                    -100, 100, 0),
-            new Adjust(R.string.saturation, R.drawable.ic_saturation, SATURATION,
-                    -100, 100, 0),
-            new Adjust(R.string.warmth, R.drawable.ic_warmth, WARMTH,
-                    -100, 100, 0),
-            new Adjust(R.string.shadows, R.drawable.ic_shadows, SHADOWS,
-                    -100, 100, 0),
-            new Adjust(R.string.tint, R.drawable.ic_fade, TINT,
-                    -100, 100, 0),
-            new Adjust(R.string.exposure, R.drawable.ic_exposure, EXPOSURE,
-                    -100, 100, 0),
-            new Adjust(R.string.fade, R.drawable.ic_fade, FADE,
-                    -100, 100, 0),
-    };
-    
-    private Adjust(@StringRes int title, @DrawableRes int icon, @NonNull EditorCommand command,
-                   int minValue, int maxValue, int value) {
+    public Adjust(@StringRes int title, @DrawableRes int icon, @NonNull EditorTool command,
+                  int minValue, int maxValue, int value) {
         mTitle = title;
         mIcon = icon;
         mCommand = command;
@@ -82,7 +59,7 @@ public class Adjust {
         return mMinValue;
     }
 
-    public EditorCommand getCommand() {
+    public EditorTool getCommand() {
         return mCommand;
     }
 }

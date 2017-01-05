@@ -27,7 +27,7 @@ import android.widget.ImageView;
 import com.afollestad.materialdialogs.MaterialDialog;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.core.editor.enums.EditorCommand;
+import net.iquesoft.iquephoto.core.editor.enums.EditorTool;
 import net.iquesoft.iquephoto.core.editor.enums.EditorMode;
 import net.iquesoft.iquephoto.core.editor.model.EditorSticker;
 import net.iquesoft.iquephoto.core.editor.model.EditorText;
@@ -46,10 +46,8 @@ import net.iquesoft.iquephoto.util.RectUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.NONE;
-import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.STICKERS;
-import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.TEXT;
-import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.VIGNETTE;
+import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.NONE;
+import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.VIGNETTE;
 
 public class ImageEditorView extends ImageView {
     private float mBrushSize;
@@ -113,7 +111,7 @@ public class ImageEditorView extends ImageView {
     private EditorSticker mCurrentEditorSticker;
 
     private EditorMode mMode = EditorMode.NONE;
-    private EditorCommand mCommand = NONE;
+    private EditorTool mCommand = NONE;
 
     private UndoListener mUndoListener;
 
@@ -497,7 +495,7 @@ public class ImageEditorView extends ImageView {
         return true;
     }
 
-    public void setCommand(EditorCommand command) {
+    public void setCommand(EditorTool command) {
         mCommand = command;
 
         if (mCommand == VIGNETTE) {
@@ -1188,7 +1186,7 @@ public class ImageEditorView extends ImageView {
 
         return scale;
     }
-    
+
     private RectF calcImageRect(RectF rect, Matrix matrix) {
         RectF applied = new RectF();
         matrix.mapRect(applied, rect);
@@ -1249,7 +1247,7 @@ public class ImageEditorView extends ImageView {
         mCenter = center;
     }
 
-    private class ImageProcessingTask extends AsyncTask<EditorCommand, Void, Bitmap> {
+    private class ImageProcessingTask extends AsyncTask<EditorTool, Void, Bitmap> {
         private int mImageHeight;
         private int mImageWidth;
 
@@ -1268,13 +1266,13 @@ public class ImageEditorView extends ImageView {
         }
 
         @Override
-        protected Bitmap doInBackground(EditorCommand... editorCommands) {
+        protected Bitmap doInBackground(EditorTool... editorTools) {
             mCanvas = new Canvas(mBitmap);
 
             mImageHeight = mBitmap.getHeight();
             mImageWidth = mBitmap.getWidth();
 
-            switch (editorCommands[0]) {
+            switch (editorTools[0]) {
                 case NONE:
                     break;
                 case FILTERS:

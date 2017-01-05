@@ -27,7 +27,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.STICKERS;
+import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.STICKERS;
 
 public class StickersToolFragment extends BaseToolFragment implements StickersView {
     @InjectPresenter

@@ -4,23 +4,19 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapter.FiltersAdapter;
-import net.iquesoft.iquephoto.core.editor.ImageEditorView;
+import net.iquesoft.iquephoto.core.editor.NewImageEditorView;
 import net.iquesoft.iquephoto.mvp.common.BaseToolFragment;
 import net.iquesoft.iquephoto.mvp.models.Filter;
 import net.iquesoft.iquephoto.mvp.presenters.fragment.FiltersPresenter;
 import net.iquesoft.iquephoto.mvp.views.fragment.FiltersView;
-import net.iquesoft.iquephoto.ui.activities.EditorActivity;
 import net.iquesoft.iquephoto.util.ActivityUtil;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
@@ -31,7 +27,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.FILTERS;
+import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.FILTERS;
 
 public class FiltersFragment extends BaseToolFragment implements FiltersView {
     @InjectPresenter
@@ -45,7 +41,7 @@ public class FiltersFragment extends BaseToolFragment implements FiltersView {
 
     private Unbinder mUnbinder;
 
-    private ImageEditorView mImageEditorView;
+    private NewImageEditorView mImageEditorView;
 
     public static FiltersFragment newInstance() {
         return new FiltersFragment();
@@ -56,7 +52,7 @@ public class FiltersFragment extends BaseToolFragment implements FiltersView {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        mImageEditorView = (ImageEditorView) getActivity().findViewById(R.id.imageEditorView);
+        mImageEditorView = (NewImageEditorView) getActivity().findViewById(R.id.imageEditorView);
 
         super.onCreate(savedInstanceState);
     }
@@ -96,7 +92,7 @@ public class FiltersFragment extends BaseToolFragment implements FiltersView {
     public void onResume() {
         super.onResume();
         ActivityUtil.updateToolbarTitle(R.string.filters, getActivity());
-        mImageEditorView.setCommand(FILTERS);
+        mImageEditorView.setTool(FILTERS);
     }
 
     @Override

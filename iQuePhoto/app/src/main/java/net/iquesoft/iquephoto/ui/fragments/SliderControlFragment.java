@@ -11,7 +11,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.core.editor.ImageEditorView;
-import net.iquesoft.iquephoto.core.editor.enums.EditorCommand;
+import net.iquesoft.iquephoto.core.editor.enums.EditorTool;
 import net.iquesoft.iquephoto.mvp.common.BaseToolFragment;
 import net.iquesoft.iquephoto.mvp.presenters.fragment.SliderControlPresenter;
 import net.iquesoft.iquephoto.mvp.views.fragment.SliderControlView;
@@ -45,11 +45,11 @@ public class SliderControlFragment extends BaseToolFragment implements SliderCon
 
     private ImageEditorView mImageEditorView;
 
-    public static SliderControlFragment newInstance(EditorCommand editorCommand) {
+    public static SliderControlFragment newInstance(EditorTool editorTool) {
         SliderControlFragment fragment = new SliderControlFragment();
 
         Bundle args = new Bundle();
-        args.putSerializable(ARG_PARAM, editorCommand);
+        args.putSerializable(ARG_PARAM, editorTool);
 
         fragment.setArguments(args);
 
@@ -129,7 +129,7 @@ public class SliderControlFragment extends BaseToolFragment implements SliderCon
     }
 
     @Override
-    public void setupImageEditorCommand(EditorCommand command) {
+    public void setupImageEditorCommand(EditorTool command) {
         mImageEditorView.setCommand(command);
     }
 

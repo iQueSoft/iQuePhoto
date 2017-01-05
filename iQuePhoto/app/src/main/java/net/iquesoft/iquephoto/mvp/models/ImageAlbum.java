@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class ImageAlbum {
 
     private String mName;
-    private ArrayList<Image> mImages;
+    private ArrayList<Image> mImages;// = new ArrayList<>();
 
     public ImageAlbum(String name) {
         mName = name;

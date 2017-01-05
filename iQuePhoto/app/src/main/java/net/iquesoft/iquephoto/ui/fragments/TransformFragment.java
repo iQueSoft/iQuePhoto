@@ -20,10 +20,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.TRANSFORM;
-import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.TRANSFORM_HORIZONTAL;
-import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.TRANSFORM_STRAIGHTEN;
-import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.TRANSFORM_VERTICAL;
+import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.TRANSFORM;
+import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.TRANSFORM_HORIZONTAL;
+import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.TRANSFORM_STRAIGHTEN;
+import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.TRANSFORM_VERTICAL;
 
 public class TransformFragment extends MvpAppCompatFragment implements TransformView {
     @InjectPresenter

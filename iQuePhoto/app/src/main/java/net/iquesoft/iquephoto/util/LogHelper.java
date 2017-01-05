@@ -31,7 +31,7 @@ public class LogHelper {
                 "bottom (Y1) = " + String.valueOf(rect.bottom)
         );
     }
-    
+
     public static void logRect(@NonNull String prefix, @NonNull RectF rectF) {
         Log.i(TAG, "RectF - " + prefix + " --> " + "\n" +
                 "left (X) = " + String.valueOf(rectF.left) + "\n" +

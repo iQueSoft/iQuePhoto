@@ -12,7 +12,6 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapter.ToolsAdapter;
-import net.iquesoft.iquephoto.core.editor.ImageEditorView;
 import net.iquesoft.iquephoto.mvp.models.Tool;
 import net.iquesoft.iquephoto.mvp.presenters.fragment.ToolsPresenter;
 import net.iquesoft.iquephoto.mvp.views.fragment.ToolsView;
@@ -24,8 +23,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-
-import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.NONE;
 
 public class ToolsFragment extends MvpAppCompatFragment implements ToolsView {
     @InjectPresenter

@@ -3,6 +3,7 @@ package net.iquesoft.iquephoto.di.modules;
 import android.graphics.ColorMatrix;
 
 import net.iquesoft.iquephoto.R;
+import net.iquesoft.iquephoto.mvp.models.Adjust;
 import net.iquesoft.iquephoto.mvp.models.Filter;
 import net.iquesoft.iquephoto.mvp.models.Font;
 import net.iquesoft.iquephoto.mvp.models.Frame;
@@ -25,7 +26,15 @@ import java.util.List;
 import dagger.Module;
 import dagger.Provides;
 
-import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.VIGNETTE;
+import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.BRIGHTNESS;
+import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.CONTRAST;
+import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.EXPOSURE;
+import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.FADE;
+import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.SATURATION;
+import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.SHADOWS;
+import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.TINT;
+import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.VIGNETTE;
+import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.WARMTH;
 
 @Module
 public class EditorModule {
@@ -143,6 +152,28 @@ public class EditorModule {
                         0, 0, 1, 0, 0,
                         0, 0, 1, 0, 0,
                         0, 0, 0, 1, 0}))
+        );
+    }
+
+    @Provides
+    List<Adjust> provideAdjust() {
+        return Arrays.asList(
+                new Adjust(R.string.brightness, R.drawable.ic_brightness, BRIGHTNESS,
+                        -100, 100, 0),
+                new Adjust(R.string.contrast, R.drawable.ic_contrast, CONTRAST,
+                        -100, 100, 0),
+                new Adjust(R.string.saturation, R.drawable.ic_saturation, SATURATION,
+                        -100, 100, 0),
+                new Adjust(R.string.warmth, R.drawable.ic_warmth, WARMTH,
+                        -100, 100, 0),
+                new Adjust(R.string.shadows, R.drawable.ic_shadows, SHADOWS,
+                        -100, 100, 0),
+                new Adjust(R.string.tint, R.drawable.ic_fade, TINT,
+                        -100, 100, 0),
+                new Adjust(R.string.exposure, R.drawable.ic_exposure, EXPOSURE,
+                        -100, 100, 0),
+                new Adjust(R.string.fade, R.drawable.ic_fade, FADE,
+                        -100, 100, 0)
         );
     }
 

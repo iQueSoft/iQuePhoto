@@ -24,7 +24,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.FRAMES;
+import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.FRAMES;
 
 public class FramesFragment extends BaseToolFragment implements FramesView {
     @InjectPresenter

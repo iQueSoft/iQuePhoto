@@ -7,19 +7,19 @@ import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.core.editor.enums.EditorCommand;
+import net.iquesoft.iquephoto.core.editor.enums.EditorTool;
 import net.iquesoft.iquephoto.mvp.views.fragment.SliderControlView;
 import net.iquesoft.iquephoto.ui.fragments.SliderControlFragment;
 
-import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.NONE;
+import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.NONE;
 
 @InjectViewState
 public class SliderControlPresenter extends MvpPresenter<SliderControlView> {
-    private EditorCommand mCurrentCommand = NONE;
+    private EditorTool mCurrentCommand = NONE;
 
     public void setupTool(Bundle bundle) {
         mCurrentCommand =
-                (EditorCommand) bundle.getSerializable(SliderControlFragment.ARG_PARAM);
+                (EditorTool) bundle.getSerializable(SliderControlFragment.ARG_PARAM);
 
         initializeUI();
     }

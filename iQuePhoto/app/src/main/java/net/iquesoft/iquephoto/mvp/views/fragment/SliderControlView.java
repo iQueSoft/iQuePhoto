@@ -4,7 +4,7 @@ import android.support.annotation.StringRes;
 
 import com.arellomobile.mvp.MvpView;
 
-import net.iquesoft.iquephoto.core.editor.enums.EditorCommand;
+import net.iquesoft.iquephoto.core.editor.enums.EditorTool;
 
 public interface SliderControlView extends MvpView {
     void changeToolbarTitle(@StringRes int title);
@@ -13,7 +13,7 @@ public interface SliderControlView extends MvpView {
 
     void onVignetteValueChanged(int value);
 
-    void setupImageEditorCommand(EditorCommand command);
+    void setupImageEditorCommand(EditorTool command);
 
     void initializeSlider(int minValue, int maxValue, int value);
 }

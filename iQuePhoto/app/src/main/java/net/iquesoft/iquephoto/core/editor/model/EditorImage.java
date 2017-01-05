@@ -2,18 +2,18 @@ package net.iquesoft.iquephoto.core.editor.model;
 
 import android.graphics.Bitmap;
 
-import net.iquesoft.iquephoto.core.editor.enums.EditorCommand;
+import net.iquesoft.iquephoto.core.editor.enums.EditorTool;
 
 public class EditorImage {
-    private EditorCommand mCommand;
+    private EditorTool mCommand;
     private Bitmap mBitmap;
 
-    public EditorImage(EditorCommand command, Bitmap bitmap) {
+    public EditorImage(EditorTool command, Bitmap bitmap) {
         mCommand = command;
         mBitmap = bitmap;
     }
 
-    public EditorCommand getCommand() {
+    public EditorTool getCommand() {
         return mCommand;
     }
 

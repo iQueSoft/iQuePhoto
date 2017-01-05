@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.R;
@@ -17,7 +16,6 @@ import net.iquesoft.iquephoto.mvp.common.BaseToolFragment;
 import net.iquesoft.iquephoto.mvp.models.Overlay;
 import net.iquesoft.iquephoto.mvp.presenters.fragment.OverlaysPresenter;
 import net.iquesoft.iquephoto.mvp.views.fragment.OverlaysView;
-import net.iquesoft.iquephoto.ui.activities.EditorActivity;
 import net.iquesoft.iquephoto.util.ActivityUtil;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
@@ -26,10 +24,9 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.Unbinder;
 
-import static net.iquesoft.iquephoto.core.editor.enums.EditorCommand.OVERLAY;
+import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.OVERLAY;
 
 public class OverlaysFragment extends BaseToolFragment implements OverlaysView {
     @InjectPresenter

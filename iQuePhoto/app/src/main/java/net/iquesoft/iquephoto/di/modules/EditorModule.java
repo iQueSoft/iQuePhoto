@@ -8,6 +8,8 @@ import net.iquesoft.iquephoto.models.Filter;
 import net.iquesoft.iquephoto.models.Font;
 import net.iquesoft.iquephoto.models.Frame;
 import net.iquesoft.iquephoto.models.Overlay;
+import net.iquesoft.iquephoto.models.Sticker;
+import net.iquesoft.iquephoto.models.StickersSet;
 import net.iquesoft.iquephoto.models.Tool;
 import net.iquesoft.iquephoto.ui.fragments.AddTextFragment;
 import net.iquesoft.iquephoto.ui.fragments.AdjustFragment;
@@ -16,7 +18,7 @@ import net.iquesoft.iquephoto.ui.fragments.FiltersFragment;
 import net.iquesoft.iquephoto.ui.fragments.FramesFragment;
 import net.iquesoft.iquephoto.ui.fragments.OverlaysFragment;
 import net.iquesoft.iquephoto.ui.fragments.SliderControlFragment;
-import net.iquesoft.iquephoto.ui.fragments.StickersToolFragment;
+import net.iquesoft.iquephoto.ui.fragments.StickersSetFragment;
 import net.iquesoft.iquephoto.ui.fragments.TiltShiftFragment;
 import net.iquesoft.iquephoto.ui.fragments.TransformFragment;
 
@@ -44,7 +46,7 @@ public class EditorModule {
                 new Tool(R.string.filters, R.drawable.ic_filter, FiltersFragment.newInstance()),
                 new Tool(R.string.adjust, R.drawable.ic_adjust, new AdjustFragment()),
                 new Tool(R.string.overlay, R.drawable.ic_overlay, new OverlaysFragment()),
-                new Tool(R.string.stickers, R.drawable.ic_stiker, new StickersToolFragment()),
+                new Tool(R.string.stickers, R.drawable.ic_stiker, new StickersSetFragment()),
                 new Tool(R.string.frames, R.drawable.ic_frame, new FramesFragment()),
                 new Tool(R.string.transform, R.drawable.ic_frame, new TransformFragment()),
                 new Tool(R.string.vignette, R.drawable.ic_vignette, SliderControlFragment.newInstance(VIGNETTE)),
@@ -174,6 +176,18 @@ public class EditorModule {
                         -100, 100, 0),
                 new Adjust(R.string.fade, R.drawable.ic_fade, FADE,
                         -100, 100, 0)
+        );
+    }
+
+    @Provides
+    List<StickersSet> provideStickersSet() {
+        return Arrays.asList(
+                new StickersSet(R.string.emoticons, R.drawable.s_emoji_01, Sticker.getEmoticonsStickersList()),
+                new StickersSet(R.string.flags, R.drawable.ic_flags, Sticker.getFlagStickersList()),
+                new StickersSet(R.string.halloween, R.drawable.s_halloween_01, Sticker.getHalloweenStickersList()),
+                new StickersSet(R.string.christmas, R.drawable.s_christmas_01, Sticker.getChristmasStickersList()),
+                new StickersSet(R.string.valentines_day, R.drawable.s_valentines_day_01, Sticker.getValentinesDayStickersList()),
+                new StickersSet(R.string.warnings, R.drawable.s_warning_01, Sticker.getWarningStickersList())
         );
     }
 

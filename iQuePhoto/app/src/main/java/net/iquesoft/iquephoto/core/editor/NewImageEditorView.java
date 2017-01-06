@@ -323,7 +323,7 @@ public class NewImageEditorView extends View {
 
         invalidate();
     }
-
+    
     private void brushUp() {
         Log.i("Drawing", "Brush up");
 

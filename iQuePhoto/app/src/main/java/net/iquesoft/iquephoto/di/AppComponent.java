@@ -4,11 +4,12 @@ import android.content.Context;
 
 import net.iquesoft.iquephoto.di.modules.AppModule;
 import net.iquesoft.iquephoto.di.modules.EditorModule;
-import net.iquesoft.iquephoto.models.Filter;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.AdjustPresenter;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.FiltersPresenter;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.FramesPresenter;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.OverlaysPresenter;
+import net.iquesoft.iquephoto.presentation.presenters.fragment.StickersPresenter;
+import net.iquesoft.iquephoto.presentation.presenters.fragment.StickersSetPresenter;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.ToolsPresenter;
 
 import javax.inject.Singleton;
@@ -29,4 +30,8 @@ public interface AppComponent {
     void inject(OverlaysPresenter overlaysPresenter);
 
     void inject(FramesPresenter framesPresenter);
+
+    void inject(StickersSetPresenter stickersSetPresenter);
+
+    void inject(StickersPresenter stickersPresenter);
 }

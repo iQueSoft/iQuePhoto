@@ -17,7 +17,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class ToolsAdapter extends RecyclerView.Adapter<ToolsAdapter.ViewHolder> {
-
     private Context mContext;
 
     private List<Tool> mToolsList;

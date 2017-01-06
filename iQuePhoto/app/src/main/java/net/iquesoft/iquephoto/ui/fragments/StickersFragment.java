@@ -15,8 +15,8 @@ import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapter.StickersAdapter;
 import net.iquesoft.iquephoto.core.editor.ImageEditorView;
 import net.iquesoft.iquephoto.models.Sticker;
-import net.iquesoft.iquephoto.presentation.presenters.fragment.ShowStickersFragmentPresenter;
-import net.iquesoft.iquephoto.presentation.views.fragment.ShowStickersView;
+import net.iquesoft.iquephoto.presentation.presenters.fragment.StickersPresenter;
+import net.iquesoft.iquephoto.presentation.views.fragment.StickersView;
 
 import java.util.List;
 
@@ -24,11 +24,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class StickersFragment extends MvpAppCompatFragment implements ShowStickersView {
+public class StickersFragment extends MvpAppCompatFragment implements StickersView {
     private static final String ARG_PARAM = "position";
 
     @InjectPresenter
-    ShowStickersFragmentPresenter presenter;
+    StickersPresenter presenter;
 
     @BindView(R.id.stickersRecyclerView)
     RecyclerView recyclerView;

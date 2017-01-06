@@ -10,6 +10,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
+import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
@@ -21,8 +22,8 @@ import net.iquesoft.iquephoto.core.editor.enums.EditorTool;
 import net.iquesoft.iquephoto.core.editor.model.Drawing;
 import net.iquesoft.iquephoto.core.editor.model.EditorSticker;
 import net.iquesoft.iquephoto.core.editor.model.EditorText;
-import net.iquesoft.iquephoto.mvp.models.Sticker;
-import net.iquesoft.iquephoto.mvp.models.Text;
+import net.iquesoft.iquephoto.models.Sticker;
+import net.iquesoft.iquephoto.models.Text;
 import net.iquesoft.iquephoto.util.LogHelper;
 import net.iquesoft.iquephoto.util.MatrixUtil;
 
@@ -32,6 +33,9 @@ import java.util.List;
 import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.NONE;
 
 public class NewImageEditorView extends View {
+    private float mLastX;
+    private float mLastY;
+
     private Bitmap mImageBitmap;
     private Bitmap mSupportBitmap;
 
@@ -61,6 +65,7 @@ public class NewImageEditorView extends View {
     public NewImageEditorView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initializePaintsStyle();
+        initDrawingPaint();
     }
 
     @Override
@@ -106,13 +111,20 @@ public class NewImageEditorView extends View {
                 break;
         }
     }
-
+    
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         switch (MotionEventCompat.getActionMasked(event)) {
             case MotionEvent.ACTION_DOWN:
                 break;
-
+            case MotionEvent.ACTION_POINTER_DOWN:
+                break;
+            case MotionEvent.ACTION_MOVE:
+                break;
+            case MotionEvent.ACTION_UP:
+                break;
+            case MotionEvent.ACTION_POINTER_UP:
+                break;
         }
 
         return super.onTouchEvent(event);
@@ -161,6 +173,8 @@ public class NewImageEditorView extends View {
     public void setFrame(@NonNull Bitmap bitmap) {
         mSupportBitmap = bitmap;
 
+        setupSupportMatrix(mSupportBitmap);
+
         invalidate();
     }
 
@@ -184,12 +198,28 @@ public class NewImageEditorView extends View {
         invalidate();
     }
 
+    public void setBrushColor(@ColorInt int color) {
+        mDrawingPaint.setColor(color);
+    }
+
+    public void setBrushSize(float size) {
+        mDrawingPaint.setStrokeWidth(size);
+    }
+
     private void initializePaintsStyle() {
         mDebugPaint.setStyle(Paint.Style.STROKE);
         mDebugPaint.setColor(Color.RED);
         mDebugPaint.setStrokeWidth(5);
 
         mOverlayPaint.setAlpha(125);
+    }
+
+    private void initDrawingPaint() {
+        mDrawingPaint.setStyle(Paint.Style.STROKE);
+        mDrawingPaint.setColor(Drawing.DEFAULT_COLOR);
+        mDrawingPaint.setStrokeJoin(Paint.Join.ROUND);
+        mDrawingPaint.setStrokeCap(Paint.Cap.ROUND);
+        mDrawingPaint.setStrokeWidth(Drawing.DEFAULT_STROKE_WIDTH);
     }
 
     private void drawTexts(Canvas canvas) {
@@ -224,5 +254,38 @@ public class NewImageEditorView extends View {
 
     private void findCheckedSticker(MotionEvent event) {
         // for ()
+    }
+
+
+    // TODO: Not invalidate all.
+    private void brushDown(MotionEvent event) {
+        mLastX = event.getX();
+        mLastY = event.getY();
+
+        mDrawingPath.reset();
+        mDrawingPath.moveTo(mLastX, mLastY);
+
+        invalidate();
+    }
+
+    private void brushMove(MotionEvent event) {
+        float dX = event.getX() + mLastX;
+        float dY = event.getY() + mLastY;
+
+        mDrawingPath.quadTo(mLastX, mLastY, dX, dY);
+
+        mLastX = event.getX();
+        mLastY = event.getY();
+
+        invalidate();
+    }
+
+    private void brushUp() {
+        mDrawingPath.lineTo(mLastX, mLastY);
+        mDrawings.add(new Drawing(new Paint(mDrawingPaint), mDrawingPath, null));
+
+        mDrawingPath.reset();
+
+        invalidate();
     }
 }

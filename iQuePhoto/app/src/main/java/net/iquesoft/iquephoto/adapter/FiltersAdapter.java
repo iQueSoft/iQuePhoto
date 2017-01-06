@@ -14,7 +14,7 @@ import com.squareup.picasso.Picasso;
 
 import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.mvp.models.Filter;
+import net.iquesoft.iquephoto.models.Filter;
 
 import java.util.List;
 
@@ -22,9 +22,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class FiltersAdapter extends RecyclerView.Adapter<FiltersAdapter.ViewHolder> {
-
     private int mCurrentPosition = 0;
-
 
     private Context mContext;
 

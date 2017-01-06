@@ -4,18 +4,11 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Window;
 
-import net.iquesoft.iquephoto.App;
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.adapter.FontsAdapter;
-import net.iquesoft.iquephoto.mvp.models.Font;
-
-import java.util.List;
-
-import javax.inject.Inject;
+import net.iquesoft.iquephoto.models.Font;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

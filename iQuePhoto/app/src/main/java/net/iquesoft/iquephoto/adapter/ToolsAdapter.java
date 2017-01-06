@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.mvp.models.Tool;
+import net.iquesoft.iquephoto.models.Tool;
 
 import java.util.List;
 

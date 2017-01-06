@@ -20,8 +20,8 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.isseiaoki.simplecropview.CropImageView;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.mvp.presenters.activity.PreviewPresenter;
-import net.iquesoft.iquephoto.mvp.views.activity.PreviewView;
+import net.iquesoft.iquephoto.presentation.presenters.activity.PreviewPresenter;
+import net.iquesoft.iquephoto.presentation.views.activity.PreviewView;
 import net.iquesoft.iquephoto.util.BitmapUtil;
 
 import java.io.File;

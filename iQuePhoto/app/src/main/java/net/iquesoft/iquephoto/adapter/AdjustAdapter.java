@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.mvp.models.Adjust;
+import net.iquesoft.iquephoto.models.Adjust;
 
 import java.util.List;
 
@@ -17,7 +17,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class AdjustAdapter extends RecyclerView.Adapter<AdjustAdapter.ViewHolder> {
-
     private Context mContext;
 
     private List<Adjust> mAdjustList;

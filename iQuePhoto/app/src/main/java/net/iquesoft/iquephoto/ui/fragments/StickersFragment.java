@@ -14,9 +14,9 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapter.StickersAdapter;
 import net.iquesoft.iquephoto.core.editor.ImageEditorView;
-import net.iquesoft.iquephoto.mvp.models.Sticker;
-import net.iquesoft.iquephoto.mvp.presenters.fragment.ShowStickersFragmentPresenter;
-import net.iquesoft.iquephoto.mvp.views.fragment.ShowStickersView;
+import net.iquesoft.iquephoto.models.Sticker;
+import net.iquesoft.iquephoto.presentation.presenters.fragment.ShowStickersFragmentPresenter;
+import net.iquesoft.iquephoto.presentation.views.fragment.ShowStickersView;
 
 import java.util.List;
 

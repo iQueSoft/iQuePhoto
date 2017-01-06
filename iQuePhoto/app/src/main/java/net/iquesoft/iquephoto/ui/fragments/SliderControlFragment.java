@@ -12,9 +12,9 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.core.editor.ImageEditorView;
 import net.iquesoft.iquephoto.core.editor.enums.EditorTool;
-import net.iquesoft.iquephoto.mvp.common.BaseToolFragment;
-import net.iquesoft.iquephoto.mvp.presenters.fragment.SliderControlPresenter;
-import net.iquesoft.iquephoto.mvp.views.fragment.SliderControlView;
+import net.iquesoft.iquephoto.presentation.common.BaseToolFragment;
+import net.iquesoft.iquephoto.presentation.presenters.fragment.SliderControlPresenter;
+import net.iquesoft.iquephoto.presentation.views.fragment.SliderControlView;
 import net.iquesoft.iquephoto.util.ActivityUtil;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;

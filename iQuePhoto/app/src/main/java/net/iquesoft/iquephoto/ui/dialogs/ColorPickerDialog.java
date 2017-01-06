@@ -3,6 +3,7 @@ package net.iquesoft.iquephoto.ui.dialogs;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.ColorRes;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,14 +11,14 @@ import android.view.Window;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapter.ColorAdapter;
-import net.iquesoft.iquephoto.mvp.models.EditorColor;
+import net.iquesoft.iquephoto.models.EditorColor;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class ColorPickerDialog extends Dialog {
-    private int mColor;
+    private EditorColor mColor;
     private Context mContext;
 
     private RGBColorPickerDialog mRGBColorPickerDialog;
@@ -26,7 +27,7 @@ public class ColorPickerDialog extends Dialog {
     private OnColorClickListener mOnColorClickListener;
 
     public interface OnColorClickListener {
-        void onClick(int color);
+        void onClick(EditorColor editorColor);
     }
 
     private ColorAdapter mAdapter;
@@ -51,10 +52,9 @@ public class ColorPickerDialog extends Dialog {
         ButterKnife.bind(this);
 
         mAdapter = new ColorAdapter(EditorColor.getColorsList());
-
-        mAdapter.setOnColorClickListener(editorColor -> {
-            mColor = ResourcesCompat.getColor(mContext.getResources(), editorColor.getColor(), null);
-        });
+        mAdapter.setOnColorClickListener(editorColor ->
+                mColor = editorColor
+        );
 
         recyclerView.setLayoutManager(new GridLayoutManager(mContext, 4));
         recyclerView.setAdapter(mAdapter);

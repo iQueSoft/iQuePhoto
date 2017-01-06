@@ -1,6 +1,5 @@
 package net.iquesoft.iquephoto.ui.activities;
 
-import android.animation.Animator;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -12,7 +11,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewAnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -21,12 +19,10 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.core.editor.ImageEditorView;
 import net.iquesoft.iquephoto.core.editor.NewImageEditorView;
-import net.iquesoft.iquephoto.mvp.presenters.activity.EditorPresenter;
-import net.iquesoft.iquephoto.task.ImageSaveTask;
+import net.iquesoft.iquephoto.presentation.presenters.activity.EditorPresenter;
 import net.iquesoft.iquephoto.util.BitmapUtil;
-import net.iquesoft.iquephoto.mvp.views.activity.EditorView;
+import net.iquesoft.iquephoto.presentation.views.activity.EditorView;
 import net.iquesoft.iquephoto.ui.fragments.ToolsFragment;
 
 import java.io.IOException;
@@ -93,6 +89,24 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorView {
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
         fragmentTransaction.add(fragmentContainer.getId(), new ToolsFragment())
                 .commit();
+
+        /*fragmentContainer.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View view, int i, int i1, int i2, int i3, int i4, int i5, int i6, int i7) {
+                view.removeOnLayoutChangeListener(this);
+
+                int centerX = (fragmentContainer.getLeft() + fragmentContainer.getRight()) / 2;
+                int centerY = (fragmentContainer.getTop() + fragmentContainer.getBottom()) / 2;
+
+                int endRadius = Math.max(fragmentContainer.getWidth(), fragmentContainer.getHeight());
+
+                Animator animator = ViewAnimationUtils.createCircularReveal(
+                        fragmentContainer, centerX, centerY, 0, endRadius);
+
+                animator.setDuration(200);
+                animator.start();
+            }
+        });*/
     }
 
     @Override
@@ -165,16 +179,6 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorView {
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .addToBackStack(null)
                 .commit();
-
-        int centerX = (fragmentContainer.getLeft() + fragmentContainer.getRight()) / 2;
-        int centerY = (fragmentContainer.getTop() + fragmentContainer.getBottom()) / 2;
-
-        int endRadius = Math.max(fragmentContainer.getWidth(), fragmentContainer.getHeight());
-
-        Animator animator = ViewAnimationUtils.createCircularReveal(
-                fragmentContainer, centerX, centerY, 0, endRadius);
-
-        animator.start();
     }
 
     @Override

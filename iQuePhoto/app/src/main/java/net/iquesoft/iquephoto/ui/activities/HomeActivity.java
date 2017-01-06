@@ -21,8 +21,8 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.mvp.views.activity.HomeView;
-import net.iquesoft.iquephoto.mvp.presenters.activity.HomePresenter;
+import net.iquesoft.iquephoto.presentation.views.activity.HomeView;
+import net.iquesoft.iquephoto.presentation.presenters.activity.HomePresenter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

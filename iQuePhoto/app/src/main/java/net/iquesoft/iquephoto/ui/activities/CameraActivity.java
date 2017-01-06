@@ -13,8 +13,8 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.core.camera.CameraModule;
 import net.iquesoft.iquephoto.core.camera.CameraView;
-import net.iquesoft.iquephoto.mvp.presenters.activity.CameraPresenter;
-import net.iquesoft.iquephoto.mvp.views.activity.CameraActivityView;
+import net.iquesoft.iquephoto.presentation.presenters.activity.CameraPresenter;
+import net.iquesoft.iquephoto.presentation.views.activity.CameraActivityView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

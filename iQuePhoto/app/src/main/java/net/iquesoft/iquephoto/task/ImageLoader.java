@@ -5,8 +5,8 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
 
-import net.iquesoft.iquephoto.mvp.models.Image;
-import net.iquesoft.iquephoto.mvp.models.ImageAlbum;
+import net.iquesoft.iquephoto.models.Image;
+import net.iquesoft.iquephoto.models.ImageAlbum;
 
 import java.io.File;
 import java.util.ArrayList;

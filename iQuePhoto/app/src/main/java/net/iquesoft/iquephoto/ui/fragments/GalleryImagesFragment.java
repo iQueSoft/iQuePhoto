@@ -13,9 +13,9 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapter.ImagesAdapter;
-import net.iquesoft.iquephoto.mvp.models.Image;
-import net.iquesoft.iquephoto.mvp.presenters.fragment.GalleryImagesPresenter;
-import net.iquesoft.iquephoto.mvp.views.fragment.GalleryImagesView;
+import net.iquesoft.iquephoto.models.Image;
+import net.iquesoft.iquephoto.presentation.presenters.fragment.GalleryImagesPresenter;
+import net.iquesoft.iquephoto.presentation.views.fragment.GalleryImagesView;
 
 import java.util.ArrayList;
 import java.util.List;

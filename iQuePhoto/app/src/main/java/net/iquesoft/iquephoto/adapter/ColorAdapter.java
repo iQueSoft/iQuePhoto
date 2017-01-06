@@ -10,7 +10,7 @@ import android.widget.ImageView;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.common.ColorCircleDrawable;
-import net.iquesoft.iquephoto.mvp.models.EditorColor;
+import net.iquesoft.iquephoto.models.EditorColor;
 
 import java.util.List;
 

@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     android:layout_gravity="bottom"
     android:background="@color/colorPrimary"
+    android:elevation="8dp"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -39,8 +40,4 @@
             android:textSize="16sp"
             android:textStyle="bold" />
     </RelativeLayout>
-
-
 </LinearLayout>
-
-

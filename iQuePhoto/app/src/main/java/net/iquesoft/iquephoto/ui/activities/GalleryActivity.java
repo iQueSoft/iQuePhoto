@@ -9,9 +9,9 @@ import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.mvp.models.ImageAlbum;
-import net.iquesoft.iquephoto.mvp.views.activity.GalleryView;
-import net.iquesoft.iquephoto.mvp.presenters.activity.GalleryPresenter;
+import net.iquesoft.iquephoto.models.ImageAlbum;
+import net.iquesoft.iquephoto.presentation.views.activity.GalleryView;
+import net.iquesoft.iquephoto.presentation.presenters.activity.GalleryPresenter;
 import net.iquesoft.iquephoto.ui.fragments.GalleryAlbumsFragment;
 import net.iquesoft.iquephoto.ui.fragments.GalleryImagesFragment;
 

@@ -3,12 +3,12 @@ package net.iquesoft.iquephoto.di.modules;
 import android.graphics.ColorMatrix;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.mvp.models.Adjust;
-import net.iquesoft.iquephoto.mvp.models.Filter;
-import net.iquesoft.iquephoto.mvp.models.Font;
-import net.iquesoft.iquephoto.mvp.models.Frame;
-import net.iquesoft.iquephoto.mvp.models.Overlay;
-import net.iquesoft.iquephoto.mvp.models.Tool;
+import net.iquesoft.iquephoto.models.Adjust;
+import net.iquesoft.iquephoto.models.Filter;
+import net.iquesoft.iquephoto.models.Font;
+import net.iquesoft.iquephoto.models.Frame;
+import net.iquesoft.iquephoto.models.Overlay;
+import net.iquesoft.iquephoto.models.Tool;
 import net.iquesoft.iquephoto.ui.fragments.AddTextFragment;
 import net.iquesoft.iquephoto.ui.fragments.AdjustFragment;
 import net.iquesoft.iquephoto.ui.fragments.DrawingFragment;

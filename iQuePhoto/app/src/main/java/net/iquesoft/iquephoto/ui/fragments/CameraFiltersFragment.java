@@ -13,9 +13,9 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapter.FiltersAdapter;
-import net.iquesoft.iquephoto.mvp.models.Filter;
-import net.iquesoft.iquephoto.mvp.presenters.fragment.CameraFiltersPresenter;
-import net.iquesoft.iquephoto.mvp.views.fragment.CameraFiltersView;
+import net.iquesoft.iquephoto.models.Filter;
+import net.iquesoft.iquephoto.presentation.presenters.fragment.CameraFiltersPresenter;
+import net.iquesoft.iquephoto.presentation.views.fragment.CameraFiltersView;
 
 import java.util.List;
 

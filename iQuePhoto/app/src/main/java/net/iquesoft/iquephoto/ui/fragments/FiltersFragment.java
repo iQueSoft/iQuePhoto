@@ -13,10 +13,10 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapter.FiltersAdapter;
 import net.iquesoft.iquephoto.core.editor.NewImageEditorView;
-import net.iquesoft.iquephoto.mvp.common.BaseToolFragment;
-import net.iquesoft.iquephoto.mvp.models.Filter;
-import net.iquesoft.iquephoto.mvp.presenters.fragment.FiltersPresenter;
-import net.iquesoft.iquephoto.mvp.views.fragment.FiltersView;
+import net.iquesoft.iquephoto.presentation.common.BaseToolFragment;
+import net.iquesoft.iquephoto.models.Filter;
+import net.iquesoft.iquephoto.presentation.presenters.fragment.FiltersPresenter;
+import net.iquesoft.iquephoto.presentation.views.fragment.FiltersView;
 import net.iquesoft.iquephoto.util.ActivityUtil;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;

@@ -17,16 +17,16 @@ import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.mvp.presenters.activity.SharePresenter;
-import net.iquesoft.iquephoto.mvp.views.activity.ShareView;
+import net.iquesoft.iquephoto.presentation.presenters.activity.SharePresenter;
+import net.iquesoft.iquephoto.presentation.views.activity.ShareView;
 import net.iquesoft.iquephoto.task.ImageSaveTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static net.iquesoft.iquephoto.mvp.presenters.activity.SharePresenter.FACEBOOK_ID;
-import static net.iquesoft.iquephoto.mvp.presenters.activity.SharePresenter.INSTAGRAM_ID;
+import static net.iquesoft.iquephoto.presentation.presenters.activity.SharePresenter.FACEBOOK_ID;
+import static net.iquesoft.iquephoto.presentation.presenters.activity.SharePresenter.INSTAGRAM_ID;
 
 public class ShareActivity extends MvpAppCompatActivity implements ShareView {
     @InjectPresenter

@@ -10,9 +10,9 @@ import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.core.editor.ImageEditorView;
-import net.iquesoft.iquephoto.mvp.presenters.fragment.TransformPresenter;
-import net.iquesoft.iquephoto.mvp.views.fragment.TransformView;
+import net.iquesoft.iquephoto.core.editor.NewImageEditorView;
+import net.iquesoft.iquephoto.presentation.presenters.fragment.TransformPresenter;
+import net.iquesoft.iquephoto.presentation.views.fragment.TransformView;
 import net.iquesoft.iquephoto.ui.activities.EditorActivity;
 import net.iquesoft.iquephoto.util.ActivityUtil;
 
@@ -57,8 +57,8 @@ public class TransformFragment extends MvpAppCompatFragment implements Transform
     @Override
     public void onResume() {
         super.onResume();
-        ((ImageEditorView) getActivity().findViewById(R.id.imageEditorView))
-                .setCommand(TRANSFORM);
+        ((NewImageEditorView) getActivity().findViewById(R.id.imageEditorView))
+                .changeTool(TRANSFORM);
         ActivityUtil.updateToolbarTitle(R.string.transform, getActivity());
     }
 

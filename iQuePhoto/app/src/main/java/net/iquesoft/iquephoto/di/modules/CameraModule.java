@@ -1,6 +1,6 @@
 package net.iquesoft.iquephoto.di.modules;
 
-import net.iquesoft.iquephoto.mvp.views.activity.CameraActivityView;
+import net.iquesoft.iquephoto.presentation.views.activity.CameraActivityView;
 
 import dagger.Module;
 import dagger.Provides;

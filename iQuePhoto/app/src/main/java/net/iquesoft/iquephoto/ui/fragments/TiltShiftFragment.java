@@ -9,10 +9,11 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.core.editor.ImageEditorView;
+import net.iquesoft.iquephoto.core.editor.NewImageEditorView;
 import net.iquesoft.iquephoto.core.editor.enums.EditorTool;
-import net.iquesoft.iquephoto.mvp.common.BaseToolFragment;
-import net.iquesoft.iquephoto.mvp.presenters.fragment.TiltShiftFragmentPresenter;
-import net.iquesoft.iquephoto.mvp.views.fragment.TiltShiftView;
+import net.iquesoft.iquephoto.presentation.common.BaseToolFragment;
+import net.iquesoft.iquephoto.presentation.presenters.fragment.TiltShiftFragmentPresenter;
+import net.iquesoft.iquephoto.presentation.views.fragment.TiltShiftView;
 import net.iquesoft.iquephoto.util.ActivityUtil;
 
 import butterknife.ButterKnife;
@@ -28,13 +29,13 @@ public class TiltShiftFragment extends BaseToolFragment implements TiltShiftView
 
     private Unbinder mUnbinder;
 
-    private ImageEditorView mImageEditorView;
+    private NewImageEditorView mImageEditorView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mImageEditorView =
-                (ImageEditorView) getActivity().findViewById(R.id.imageEditorView);
+                (NewImageEditorView) getActivity().findViewById(R.id.imageEditorView);
     }
 
     @Override
@@ -54,7 +55,7 @@ public class TiltShiftFragment extends BaseToolFragment implements TiltShiftView
     @Override
     public void onResume() {
         super.onResume();
-        mImageEditorView.setCommand(TILT_SHIFT_RADIAL);
+        mImageEditorView.changeTool(TILT_SHIFT_RADIAL);
         ActivityUtil.updateToolbarTitle(R.string.tilt_shift, getActivity());
     }
 
@@ -66,7 +67,7 @@ public class TiltShiftFragment extends BaseToolFragment implements TiltShiftView
 
     @Override
     public void onTiltShiftChanged(EditorTool command) {
-        mImageEditorView.setCommand(command);
+        mImageEditorView.changeTool(command);
     }
 
     @Override

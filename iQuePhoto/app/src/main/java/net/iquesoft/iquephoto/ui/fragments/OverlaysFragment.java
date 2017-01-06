@@ -13,10 +13,10 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapter.OverlaysAdapter;
 import net.iquesoft.iquephoto.core.editor.NewImageEditorView;
-import net.iquesoft.iquephoto.mvp.common.BaseToolFragment;
-import net.iquesoft.iquephoto.mvp.models.Overlay;
-import net.iquesoft.iquephoto.mvp.presenters.fragment.OverlaysPresenter;
-import net.iquesoft.iquephoto.mvp.views.fragment.OverlaysView;
+import net.iquesoft.iquephoto.presentation.common.BaseToolFragment;
+import net.iquesoft.iquephoto.models.Overlay;
+import net.iquesoft.iquephoto.presentation.presenters.fragment.OverlaysPresenter;
+import net.iquesoft.iquephoto.presentation.views.fragment.OverlaysView;
 import net.iquesoft.iquephoto.util.ActivityUtil;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;

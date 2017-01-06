@@ -15,9 +15,9 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import net.iquesoft.iquephoto.adapter.AdjustAdapter;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.core.editor.NewImageEditorView;
-import net.iquesoft.iquephoto.mvp.models.Adjust;
-import net.iquesoft.iquephoto.mvp.presenters.fragment.AdjustPresenter;
-import net.iquesoft.iquephoto.mvp.views.fragment.AdjustView;
+import net.iquesoft.iquephoto.models.Adjust;
+import net.iquesoft.iquephoto.presentation.presenters.fragment.AdjustPresenter;
+import net.iquesoft.iquephoto.presentation.views.fragment.AdjustView;
 import net.iquesoft.iquephoto.ui.activities.EditorActivity;
 import net.iquesoft.iquephoto.util.ActivityUtil;
 

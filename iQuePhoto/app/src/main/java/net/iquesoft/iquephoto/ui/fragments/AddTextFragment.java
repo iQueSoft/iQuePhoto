@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
 import android.support.annotation.StringRes;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,12 +18,13 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.core.editor.ImageEditorView;
-import net.iquesoft.iquephoto.mvp.common.BaseToolFragment;
-import net.iquesoft.iquephoto.mvp.models.Text;
+import net.iquesoft.iquephoto.core.editor.NewImageEditorView;
+import net.iquesoft.iquephoto.presentation.common.BaseToolFragment;
+import net.iquesoft.iquephoto.models.Text;
 import net.iquesoft.iquephoto.ui.dialogs.ColorPickerDialog;
 import net.iquesoft.iquephoto.ui.dialogs.FontPickerDialog;
-import net.iquesoft.iquephoto.mvp.presenters.fragment.AddTextPresenter;
-import net.iquesoft.iquephoto.mvp.views.fragment.AddTextView;
+import net.iquesoft.iquephoto.presentation.presenters.fragment.AddTextPresenter;
+import net.iquesoft.iquephoto.presentation.views.fragment.AddTextView;
 import net.iquesoft.iquephoto.util.ActivityUtil;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
@@ -61,7 +63,7 @@ public class AddTextFragment extends BaseToolFragment implements AddTextView {
     private FontPickerDialog mFontPickerDialog;
     private ColorPickerDialog mColorPickerDialog;
 
-    private ImageEditorView mImageEditorView;
+    private NewImageEditorView mImageEditorView;
 
     public static AddTextFragment newInstance() {
         return new AddTextFragment();
@@ -70,7 +72,7 @@ public class AddTextFragment extends BaseToolFragment implements AddTextView {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mImageEditorView = (ImageEditorView) getActivity().findViewById(R.id.imageEditorView);
+        mImageEditorView = (NewImageEditorView) getActivity().findViewById(R.id.imageEditorView);
     }
 
     @Override
@@ -85,7 +87,9 @@ public class AddTextFragment extends BaseToolFragment implements AddTextView {
         mFontPickerDialog.setOnFontClickListener(typeface -> mTypeface = typeface);
 
         mColorPickerDialog = new ColorPickerDialog(mContext);
-        mColorPickerDialog.setOnColorClickListener(color -> mColor = color);
+        mColorPickerDialog.setOnColorClickListener(color ->
+                presenter.changeTextColor(getContext(), color)
+        );
 
         opacityValueTextView.setText(String.valueOf(seekBar.getProgress()));
 
@@ -117,7 +121,7 @@ public class AddTextFragment extends BaseToolFragment implements AddTextView {
     @Override
     public void onResume() {
         super.onResume();
-        mImageEditorView.setCommand(TEXT);
+        mImageEditorView.changeTool(TEXT);
         ActivityUtil.updateToolbarTitle(R.string.text, getActivity());
     }
 
@@ -130,6 +134,11 @@ public class AddTextFragment extends BaseToolFragment implements AddTextView {
     @Override
     public void addText(Text text) {
         mImageEditorView.addText(text);
+    }
+
+    @Override
+    public void onTextColorChanged(@ColorInt int color) {
+
     }
 
     @Override

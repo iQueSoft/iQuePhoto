@@ -1,6 +1,7 @@
 package net.iquesoft.iquephoto.ui.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,11 +10,11 @@ import android.widget.LinearLayout;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.core.editor.ImageEditorView;
-import net.iquesoft.iquephoto.mvp.common.BaseToolFragment;
-import net.iquesoft.iquephoto.mvp.presenters.fragment.DrawingPresenter;
+import net.iquesoft.iquephoto.core.editor.NewImageEditorView;
+import net.iquesoft.iquephoto.presentation.common.BaseToolFragment;
+import net.iquesoft.iquephoto.presentation.presenters.fragment.DrawingPresenter;
 import net.iquesoft.iquephoto.ui.dialogs.ColorPickerDialog;
-import net.iquesoft.iquephoto.mvp.views.fragment.DrawingView;
+import net.iquesoft.iquephoto.presentation.views.fragment.DrawingView;
 import net.iquesoft.iquephoto.util.ActivityUtil;
 
 import butterknife.BindView;
@@ -35,7 +36,7 @@ public class DrawingFragment extends BaseToolFragment implements DrawingView {
 
     private Unbinder mUnbinder;
 
-    private ImageEditorView mImageEditorView;
+    private NewImageEditorView mImageEditorView;
 
     private ColorPickerDialog mColorPickerDialog;
 
@@ -50,7 +51,7 @@ public class DrawingFragment extends BaseToolFragment implements DrawingView {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mImageEditorView = (ImageEditorView) getActivity().findViewById(R.id.imageEditorView);
+        mImageEditorView = (NewImageEditorView) getActivity().findViewById(R.id.imageEditorView);
     }
 
     @Override
@@ -60,8 +61,9 @@ public class DrawingFragment extends BaseToolFragment implements DrawingView {
         mUnbinder = ButterKnife.bind(this, view);
 
         mColorPickerDialog = new ColorPickerDialog(view.getContext());
-
-        mColorPickerDialog.setOnColorClickListener(color -> mImageEditorView.setBrushColor(color));
+        mColorPickerDialog.setOnColorClickListener(color ->
+                presenter.changeBrushColor(getContext(), color)
+        );
 
         /*brashSizeSeekBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
             @Override
@@ -91,7 +93,7 @@ public class DrawingFragment extends BaseToolFragment implements DrawingView {
     @Override
     public void onResume() {
         super.onResume();
-        mImageEditorView.setCommand(DRAWING);
+        mImageEditorView.changeTool(DRAWING);
         ActivityUtil.updateToolbarTitle(R.string.drawing, getActivity());
     }
 
@@ -104,5 +106,10 @@ public class DrawingFragment extends BaseToolFragment implements DrawingView {
     @OnClick(R.id.brushColorButton)
     void onClickBrushColor() {
         mColorPickerDialog.show();
+    }
+
+    @Override
+    public void onBrushColorChanged(@ColorInt int color) {
+        mImageEditorView.setBrushColor(color);
     }
 }

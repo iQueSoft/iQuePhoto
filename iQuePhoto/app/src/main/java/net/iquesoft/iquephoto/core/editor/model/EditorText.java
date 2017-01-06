@@ -12,7 +12,7 @@ import android.text.TextPaint;
 import android.util.Log;
 import android.view.MotionEvent;
 
-import net.iquesoft.iquephoto.mvp.models.Text;
+import net.iquesoft.iquephoto.models.Text;
 import net.iquesoft.iquephoto.util.MatrixUtil;
 import net.iquesoft.iquephoto.util.RectUtil;
 

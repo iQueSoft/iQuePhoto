@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="@dimen/tool_layout_height"
     android:layout_gravity="bottom"
     android:background="@color/colorPrimary"
+    android:elevation="8dp"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -53,5 +54,3 @@
             android:textStyle="bold" />
     </RelativeLayout>
 </LinearLayout>
-
-

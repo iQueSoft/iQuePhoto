@@ -92,6 +92,7 @@ public class NewImageEditorView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+
         canvas.clipRect(mSrcRect);
 
         canvas.drawBitmap(mImageBitmap, mImageMatrix, mBitmapPaint);
@@ -109,25 +110,32 @@ public class NewImageEditorView extends View {
             case FRAMES:
                 canvas.drawBitmap(mSupportBitmap, mSupportMatrix, mBitmapPaint);
                 break;
+            case DRAWING:
+                drawing(canvas);
+                break;
         }
     }
-    
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         switch (MotionEventCompat.getActionMasked(event)) {
             case MotionEvent.ACTION_DOWN:
+                actionDown(event);
                 break;
             case MotionEvent.ACTION_POINTER_DOWN:
+                actionPointerDown(event);
                 break;
             case MotionEvent.ACTION_MOVE:
+                actionMove(event);
                 break;
             case MotionEvent.ACTION_UP:
+                actionUp(event);
                 break;
             case MotionEvent.ACTION_POINTER_UP:
                 break;
         }
 
-        return super.onTouchEvent(event);
+        return true; //TODO: Check this! super.onTouchEvent(event);
     }
 
     public void setImageBitmap(@NonNull Bitmap bitmap) {
@@ -234,6 +242,38 @@ public class NewImageEditorView extends View {
         }
     }
 
+    private void actionDown(MotionEvent event) {
+        switch (mCurrentTool) {
+            case DRAWING:
+                brushDown(event);
+                break;
+        }
+    }
+
+    private void actionPointerDown(MotionEvent event) {
+        switch (mCurrentTool) {
+            case DRAWING:
+
+                break;
+        }
+    }
+
+    private void actionMove(MotionEvent event) {
+        switch (mCurrentTool) {
+            case DRAWING:
+                brushMove(event);
+                break;
+        }
+    }
+
+    private void actionUp(MotionEvent event) {
+        switch (mCurrentTool) {
+            case DRAWING:
+                brushUp();
+                break;
+        }
+    }
+
     private void setupSupportMatrix(@NonNull Bitmap bitmap) {
         float sX = mSrcRect.width() / bitmap.getWidth();
         float sY = mSrcRect.height() / bitmap.getHeight();
@@ -256,11 +296,13 @@ public class NewImageEditorView extends View {
         // for ()
     }
 
-
     // TODO: Not invalidate all.
     private void brushDown(MotionEvent event) {
+        Log.i("Drawing", "Brush down");
         mLastX = event.getX();
         mLastY = event.getY();
+
+        mDrawingPath.reset();
 
         mDrawingPath.reset();
         mDrawingPath.moveTo(mLastX, mLastY);
@@ -269,10 +311,12 @@ public class NewImageEditorView extends View {
     }
 
     private void brushMove(MotionEvent event) {
+        Log.i("Drawing", "Brush move");
+
         float dX = event.getX() + mLastX;
         float dY = event.getY() + mLastY;
 
-        mDrawingPath.quadTo(mLastX, mLastY, dX, dY);
+        mDrawingPath.quadTo(mLastX, mLastY, dX / 2, dY / 2);
 
         mLastX = event.getX();
         mLastY = event.getY();
@@ -281,11 +325,23 @@ public class NewImageEditorView extends View {
     }
 
     private void brushUp() {
+        Log.i("Drawing", "Brush up");
+
         mDrawingPath.lineTo(mLastX, mLastY);
         mDrawings.add(new Drawing(new Paint(mDrawingPaint), mDrawingPath, null));
 
         mDrawingPath.reset();
 
         invalidate();
+    }
+
+    private void drawing(Canvas canvas) {
+        if (mDrawings.size() > 0) {
+            for (Drawing drawing : mDrawings) {
+                canvas.drawPath(drawing.getPath(), drawing.getPaint());
+            }
+        }
+        if (!mDrawingPath.isEmpty())
+            canvas.drawPath(mDrawingPath, mDrawingPaint);
     }
 }

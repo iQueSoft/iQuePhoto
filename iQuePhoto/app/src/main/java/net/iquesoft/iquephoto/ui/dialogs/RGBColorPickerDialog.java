@@ -82,7 +82,7 @@ public class RGBColorPickerDialog extends Dialog implements DiscreteSeekBar.OnPr
     @OnClick(R.id.rgbApplyButton)
     void onClickApplyButton() {
         mColor = Color.rgb(mR, mG, mB);
-        mOnColorClickListener.onClick(mColor);
+        //mOnColorClickListener.onClick(mColor);
         dismiss();
     }
 

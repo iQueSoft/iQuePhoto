@@ -87,7 +87,7 @@ public class ARGBColorPickerDialog extends Dialog implements DiscreteSeekBar.OnP
     @OnClick(R.id.argbApplyButton)
     public void onClickApplyButton() {
         mColor = Color.argb(mA, mR, mG, mB);
-        mOnColorClickListener.onClick(mColor);
+       // mOnColorClickListener.onClick(mColor);
         dismiss();
     }
 

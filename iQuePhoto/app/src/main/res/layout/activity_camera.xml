@@ -9,12 +9,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <FrameLayout
-            android:id="@+id/cameraFrameLayout"
+        <net.iquesoft.iquephoto.core.camera.CameraView
+            android:id="@+id/cameraView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/transparency" />
-        
+            android:layout_height="match_parent" />
+
         <ImageButton
             android:id="@+id/cameraCloseImageButton"
             android:layout_width="wrap_content"

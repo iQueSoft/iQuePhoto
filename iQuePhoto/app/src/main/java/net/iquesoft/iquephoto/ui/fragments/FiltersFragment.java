@@ -92,7 +92,7 @@ public class FiltersFragment extends BaseToolFragment implements FiltersView {
     public void onResume() {
         super.onResume();
         ActivityUtil.updateToolbarTitle(R.string.filters, getActivity());
-        mImageEditorView.setTool(FILTERS);
+        mImageEditorView.changeTool(FILTERS);
     }
 
     @Override

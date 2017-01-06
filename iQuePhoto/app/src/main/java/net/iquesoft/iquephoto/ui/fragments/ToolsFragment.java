@@ -1,7 +1,7 @@
 package net.iquesoft.iquephoto.ui.fragments;
 
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +12,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapter.ToolsAdapter;
+import net.iquesoft.iquephoto.core.editor.NewImageEditorView;
 import net.iquesoft.iquephoto.mvp.models.Tool;
 import net.iquesoft.iquephoto.mvp.presenters.fragment.ToolsPresenter;
 import net.iquesoft.iquephoto.mvp.views.fragment.ToolsView;
@@ -23,6 +24,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+
+import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.NONE;
 
 public class ToolsFragment extends MvpAppCompatFragment implements ToolsView {
     @InjectPresenter
@@ -51,9 +54,8 @@ public class ToolsFragment extends MvpAppCompatFragment implements ToolsView {
     public void onResume() {
         super.onResume();
         ActivityUtil.updateToolbarTitle(R.string.app_name, getActivity());
-        // TODO: Remove this comment.
-        /*((ImageEditorView) getActivity().findViewById(R.id.imageEditorView))
-                .setCommand(NONE);*/
+        ((NewImageEditorView) getActivity().findViewById(R.id.imageEditorView))
+                .changeTool(NONE);
     }
 
     @Override
@@ -65,12 +67,13 @@ public class ToolsFragment extends MvpAppCompatFragment implements ToolsView {
     @Override
     public void setupTools(List<Tool> tools) {
         ToolsAdapter adapter = new ToolsAdapter(tools);
-
         adapter.setOnToolsClickListener(tool ->
                 ((EditorActivity) getActivity()).setupFragment(tool.getFragment())
         );
 
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 4));
+        recyclerView.setLayoutManager(
+                new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false)
+        );
 
         recyclerView.setAdapter(adapter);
     }

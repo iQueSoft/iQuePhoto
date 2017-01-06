@@ -38,9 +38,10 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
-
+    
     <FrameLayout
         android:id="@+id/fragmentContainer"
         android:layout_width="match_parent"
-        android:layout_height="200dp" />
+        android:layout_height="150dp"
+        android:background="@color/colorPrimaryDark" />
 </LinearLayout>

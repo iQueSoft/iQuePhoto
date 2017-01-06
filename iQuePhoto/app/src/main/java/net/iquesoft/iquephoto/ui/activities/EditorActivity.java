@@ -1,5 +1,6 @@
 package net.iquesoft.iquephoto.ui.activities;
 
+import android.animation.Animator;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewAnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -111,8 +113,7 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorView {
                 startActivity(intent);
                 break;
             case R.id.action_apply:
-                // TODO: Remove this comment.
-                //imageEditorView.applyChanges();
+                imageEditorView.applyChanges();
                 onBackPressed();
                 break;
         }
@@ -164,6 +165,16 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorView {
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .addToBackStack(null)
                 .commit();
+
+        int centerX = (fragmentContainer.getLeft() + fragmentContainer.getRight()) / 2;
+        int centerY = (fragmentContainer.getTop() + fragmentContainer.getBottom()) / 2;
+
+        int endRadius = Math.max(fragmentContainer.getWidth(), fragmentContainer.getHeight());
+
+        Animator animator = ViewAnimationUtils.createCircularReveal(
+                fragmentContainer, centerX, centerY, 0, endRadius);
+
+        animator.start();
     }
 
     @Override

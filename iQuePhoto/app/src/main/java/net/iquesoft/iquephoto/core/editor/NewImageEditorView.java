@@ -13,6 +13,7 @@ import android.graphics.RectF;
 import android.support.annotation.NonNull;
 import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -46,6 +47,7 @@ public class NewImageEditorView extends View {
 
     private Paint mBitmapPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Paint mFilterPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private Paint mOverlayPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Paint mAdjustPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Paint mDrawingPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Paint mDebugPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -90,8 +92,17 @@ public class NewImageEditorView extends View {
         canvas.drawBitmap(mImageBitmap, mImageMatrix, mBitmapPaint);
 
         switch (mCurrentTool) {
+            case NONE:
+
+                break;
             case FILTERS:
                 canvas.drawBitmap(mImageBitmap, mImageMatrix, mFilterPaint);
+                break;
+            case OVERLAY:
+                canvas.drawBitmap(mSupportBitmap, mSupportMatrix, mOverlayPaint);
+                break;
+            case FRAMES:
+                canvas.drawBitmap(mSupportBitmap, mSupportMatrix, mBitmapPaint);
                 break;
         }
     }
@@ -113,8 +124,12 @@ public class NewImageEditorView extends View {
         mSrcRect.set(0, 0, bitmap.getWidth(), bitmap.getHeight());
     }
 
-    public void setTool(EditorTool tool) {
+    public void changeTool(EditorTool tool) {
         mCurrentTool = tool;
+
+        invalidate();
+
+        Log.i("ImageEditor", "Tool changed: " + mCurrentTool.name());
     }
 
     public void applyChanges() {
@@ -143,20 +158,38 @@ public class NewImageEditorView extends View {
         invalidate();
     }
 
+    public void setFrame(@NonNull Bitmap bitmap) {
+        mSupportBitmap = bitmap;
+
+        invalidate();
+    }
+
+    public void setOverlay(@NonNull Bitmap bitmap) {
+        mSupportBitmap = bitmap;
+
+        setupSupportMatrix(mSupportBitmap);
+
+        invalidate();
+    }
+
     public void setFilterIntensity(int value) {
         mFilterPaint.setAlpha(value);
 
         invalidate();
     }
 
-    public void setFrame() {
+    public void setOverlayIntensity(int value) {
+        mOverlayPaint.setAlpha(value);
 
+        invalidate();
     }
 
     private void initializePaintsStyle() {
         mDebugPaint.setStyle(Paint.Style.STROKE);
         mDebugPaint.setColor(Color.RED);
         mDebugPaint.setStrokeWidth(5);
+
+        mOverlayPaint.setAlpha(125);
     }
 
     private void drawTexts(Canvas canvas) {

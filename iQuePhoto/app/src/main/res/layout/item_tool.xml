@@ -1,21 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<Button xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/toolButton"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackgroundBorderless"
+    android:drawableTop="@drawable/ic_brightness"
     android:gravity="center"
-    android:orientation="vertical"
-    android:paddingBottom="5dp"
-    android:paddingTop="5dp">
-
-    <Button
-        android:id="@+id/toolButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:drawableTop="@drawable/ic_brightness"
-        android:text="@string/tool_brightness"
-        android:textAllCaps="false"
-        android:textColor="@color/white"
-        android:textSize="14sp"
-        android:textStyle="bold" />
-</LinearLayout>
+    android:text="@string/tool_brightness"
+    android:textAllCaps="false"
+    android:textColor="@color/white"
+    android:textSize="14sp"
+    android:textStyle="bold" />

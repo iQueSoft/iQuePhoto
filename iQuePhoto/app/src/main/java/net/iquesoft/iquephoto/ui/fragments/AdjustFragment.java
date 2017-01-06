@@ -62,7 +62,7 @@ public class AdjustFragment extends MvpAppCompatFragment implements AdjustView {
     public void onResume() {
         super.onResume();
         ((NewImageEditorView) getActivity().findViewById(R.id.imageEditorView))
-                .setTool(NONE);
+                .changeTool(NONE);
         ActivityUtil.updateToolbarTitle(R.string.adjust, getActivity());
     }
 

@@ -1,243 +1,133 @@
 package net.iquesoft.iquephoto.core.camera;
 
 import android.content.Context;
-import android.content.res.Configuration;
-import android.graphics.Canvas;
-import android.hardware.Camera;
-import android.hardware.Camera.PictureCallback;
-import android.hardware.Camera.ShutterCallback;
-import android.hardware.Camera.Size;
+import android.graphics.SurfaceTexture;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.util.Size;
 import android.view.KeyEvent;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
+import android.view.TextureView;
 import android.view.View;
 
-import java.io.IOException;
-import java.util.List;
+import java.util.Comparator;
 
 import static android.view.KeyEvent.ACTION_DOWN;
 import static android.view.KeyEvent.ACTION_UP;
 
-public class CameraView extends SurfaceView implements SurfaceHolder.Callback,
-        Camera.PictureCallback, Camera.PreviewCallback, Camera.AutoFocusCallback, View.OnKeyListener {
+public class CameraView extends TextureView implements CameraListener,
+        TextureView.SurfaceTextureListener,
+        TextureView.OnKeyListener,
+        Comparator<Size> {
 
-    private Camera mCamera;
+    private int mRatioWidth = 0;
+    private int mRatioHeight = 0;
 
-    private Size mSize;
+    private Context mContext;
 
-    private SurfaceHolder mSurfaceHolder;
-
-    private List<Size> mSupportedSizes;
+    private CameraModule mCameraModule;
 
     public CameraView(Context context) {
         super(context);
-
-        initialize();
+        initialize(context);
     }
 
     public CameraView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-
-        initialize();
+        this(context, attrs, 0);
+        initialize(context);
     }
 
-    public CameraView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-
-        initialize();
+    public CameraView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        initialize(context);
     }
 
-    private void initialize() {
-        mSurfaceHolder = getHolder();
-        mSurfaceHolder.addCallback(this);
+    private void initialize(Context context) {
+        mContext = context;
 
-        mSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+        setSurfaceTextureListener(this);
 
-        setKeepScreenOn(true);
+        Log.i("Camera 2", "initialized");
     }
 
-    @Override
-    public void draw(Canvas canvas) {
-        super.draw(canvas);
-        // TODO: Draw guidelines here.
+    public void setCameraModule(CameraModule cameraModule) {
+        mCameraModule = cameraModule;
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        /*final int width = resolveSize(getSuggestedMinimumWidth(), widthMeasureSpec);
-        final int height = resolveSize(getSuggestedMinimumHeight(), heightMeasureSpec);
-        setMeasuredDimension(width, height);*/
+        int width = MeasureSpec.getSize(widthMeasureSpec);
+        int height = MeasureSpec.getSize(heightMeasureSpec);
 
-        if (mSupportedSizes != null) {
-            mSize = getOptimalPreviewSize(mSupportedSizes, widthMeasureSpec, heightMeasureSpec);
-        }
-    }
-
-    @Override
-    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        super.onLayout(changed, left, top, right, bottom);
-        /*if (changed) {
-            final int width = right - left;
-            final int height = bottom - top;
-
-            int previewWidth = width;
-            int previewHeight = height;
-
-            if (mSize != null) {
-                previewWidth = mSize.width;
-                previewHeight = mSize.height;
-            }
-
-            if (width * previewHeight > height * previewWidth) {
-                final int scaledChildWidth = previewWidth * height / previewHeight;
-                child.layout((width - scaledChildWidth) / 2, 0,
-                        (width + scaledChildWidth) / 2, height);
-            } else {
-                final int scaledChildHeight = previewHeight * width / previewWidth;
-                child.layout(0, (height - scaledChildHeight) / 2,
-                        width, (height + scaledChildHeight) / 2);
-            }
+        //if (0 == mRatioWidth || 0 == mRatioHeight)
+        setMeasuredDimension(width, height);
+        /*else {
+            if (width < height * mRatioWidth / mRatioHeight)
+                setMeasuredDimension(width, width * mRatioHeight / mRatioWidth);
+            else
+                setMeasuredDimension(height * mRatioWidth / mRatioHeight, height);
         }*/
     }
 
     @Override
-    public void surfaceCreated(SurfaceHolder surfaceHolder) {
-        try {
-            if (mCamera != null) {
-
-                if (getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE) {
-                    mCamera.setDisplayOrientation(90);
-                } else {
-                    mCamera.setDisplayOrientation(0);
-                }
-
-                mCamera.setPreviewDisplay(surfaceHolder);
-                mCamera.setPreviewCallback(this);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    
-    @Override
-    public void surfaceChanged(SurfaceHolder surfaceHolder, int format, int w, int h) {
-        if (mCamera != null) {
-            Camera.Parameters parameters = mCamera.getParameters();
-            parameters.setPreviewSize(mSize.width, mSize.height);
-            requestLayout();
-
-            mCamera.setParameters(parameters);
-            mCamera.startPreview();
-        }
+    public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int width, int height) {
+        mCameraModule.openCamera(width, height);
     }
 
     @Override
-    public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
-        if (mCamera != null) mCamera.stopPreview();
+    public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture, int width, int height) {
+        mCameraModule.configureTransform(width, height);
     }
 
-    public void setCamera(Camera camera) {
-        if (mCamera == camera) return;
-
-        stopPreviewAndFreeCamera();
-
-        mCamera = camera;
-
-        if (mCamera != null) {
-            Camera.Parameters parameters = mCamera.getParameters();
-
-            mSupportedSizes = parameters.getSupportedPreviewSizes();
-
-            requestLayout();
-
-            try {
-                mCamera.setPreviewDisplay(mSurfaceHolder);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            List<String> focusModes = parameters.getSupportedFocusModes();
-            if (focusModes.contains(Camera.Parameters.FOCUS_MODE_AUTO)) {
-                parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
-
-                mCamera.setParameters(parameters);
-            }
-
-            mCamera.startPreview();
-        }
+    @Override
+    public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
+        return false;
     }
 
-    private void stopPreviewAndFreeCamera() {
-        if (mCamera != null) {
+    @Override
+    public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
 
-            mCamera.stopPreview();
-
-            mCamera.release();
-
-            mCamera = null;
-        }
     }
 
-    private Size getOptimalPreviewSize(List<Size> sizes, int w, int h) {
-        final double ASPECT_TOLERANCE = 0.1;
-        double targetRatio = (double) w / h;
-        if (sizes == null) return null;
-
-        Size optimalSize = null;
-        double minDiff = Double.MAX_VALUE;
-
-        int targetHeight = h;
-
-        for (Size size : sizes) {
-            double ratio = (double) size.width / size.height;
-            if (Math.abs(ratio - targetRatio) > ASPECT_TOLERANCE) continue;
-            if (Math.abs(size.height - targetHeight) < minDiff) {
-                optimalSize = size;
-                minDiff = Math.abs(size.height - targetHeight);
-            }
+    public void setAspectRatio(int width, int height) {
+        if (width < 0 || height < 0) {
+            throw new IllegalArgumentException("Size cannot be negative.");
         }
+        mRatioWidth = width;
+        mRatioHeight = height;
+        requestLayout();
+    }
 
-        if (optimalSize == null) {
-            minDiff = Double.MAX_VALUE;
-            for (Size size : sizes) {
-                if (Math.abs(size.height - targetHeight) < minDiff) {
-                    optimalSize = size;
-                    minDiff = Math.abs(size.height - targetHeight);
-                }
-            }
-        }
-        return optimalSize;
+    @Override
+    public void onScreenStateChanged(int screenState) {
+        super.onScreenStateChanged(screenState);
+    }
+
+    @Override
+    public int compare(Size size, Size t1) {
+        return Long.signum((long) size.getWidth() * size.getHeight() -
+                (long) t1.getWidth() * t1.getHeight());
     }
 
     @Override
     public boolean onKey(View view, int i, KeyEvent keyEvent) {
-        // TODO: Camera 2 zoom.
-
         switch (keyEvent.getAction()) {
-            case ACTION_UP:
-                break;
             case ACTION_DOWN:
+                // mCamera.
+                break;
+            case ACTION_UP:
                 break;
         }
         return false;
     }
 
-    @Override
-    public void onPictureTaken(byte[] bytes, Camera camera) {
+    static class CompareSizesByArea implements Comparator<Size> {
 
-    }
-
-    @Override
-    public void onPreviewFrame(byte[] bytes, Camera camera) {
-
-    }
-
-    @Override
-    public void onAutoFocus(boolean b, Camera camera) {
-        if (b) {
-            // TODO: Auto focus.
+        @Override
+        public int compare(Size lhs, Size rhs) {
+            // We cast here to ensure the multiplications won't overflow
+            return Long.signum((long) lhs.getWidth() * lhs.getHeight() -
+                    (long) rhs.getWidth() * rhs.getHeight());
         }
+
     }
 }

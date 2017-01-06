@@ -1,5 +1,6 @@
 package net.iquesoft.iquephoto.ui.fragments;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,7 +12,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapter.OverlaysAdapter;
-import net.iquesoft.iquephoto.core.editor.ImageEditorView;
+import net.iquesoft.iquephoto.core.editor.NewImageEditorView;
 import net.iquesoft.iquephoto.mvp.common.BaseToolFragment;
 import net.iquesoft.iquephoto.mvp.models.Overlay;
 import net.iquesoft.iquephoto.mvp.presenters.fragment.OverlaysPresenter;
@@ -40,13 +41,13 @@ public class OverlaysFragment extends BaseToolFragment implements OverlaysView {
 
     private Unbinder mUnbinder;
 
-    private ImageEditorView mImageEditorView;
+    private NewImageEditorView mImageEditorView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mImageEditorView =
-                (ImageEditorView) getActivity().findViewById(R.id.imageEditorView);
+                (NewImageEditorView) getActivity().findViewById(R.id.imageEditorView);
     }
 
     @Override
@@ -58,7 +59,7 @@ public class OverlaysFragment extends BaseToolFragment implements OverlaysView {
         seekBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
             @Override
             public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
-                mImageEditorView.setOverlayOpacity(value);
+                mImageEditorView.setOverlayIntensity(value);
             }
 
             @Override
@@ -79,7 +80,7 @@ public class OverlaysFragment extends BaseToolFragment implements OverlaysView {
     public void onResume() {
         super.onResume();
         ActivityUtil.updateToolbarTitle(R.string.overlay, getActivity());
-        mImageEditorView.setCommand(OVERLAY);
+        mImageEditorView.changeTool(OVERLAY);
     }
 
     @Override
@@ -92,23 +93,17 @@ public class OverlaysFragment extends BaseToolFragment implements OverlaysView {
     public void setupAdapter(List<Overlay> overlays) {
         OverlaysAdapter adapter = new OverlaysAdapter(overlays);
         adapter.setOnOverlayClickListener(overlay ->
-                mImageEditorView.setOverlay(overlay.getImage()));
+                presenter.changeOverlay(getContext(), overlay)
+        );
 
         recyclerView.setLayoutManager(
                 new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false)
         );
-
         recyclerView.setAdapter(adapter);
     }
-    
-    /*@OnClick(R.id.overlayCancel)
-    void onClickBack() {
-        ((EditorActivity) getActivity()).navigateBack(true);
-    }
 
-    @OnClick(R.id.overlayApply)
-    void onClickApply() {
-        mImageEditorView.applyChanges(OVERLAY);
-        onClickBack();
-    }*/
+    @Override
+    public void onOverlayChanged(Bitmap bitmap) {
+        mImageEditorView.setOverlay(bitmap);
+    }
 }

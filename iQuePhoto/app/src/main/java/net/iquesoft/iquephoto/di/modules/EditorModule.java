@@ -11,7 +11,7 @@ import net.iquesoft.iquephoto.models.Overlay;
 import net.iquesoft.iquephoto.models.Sticker;
 import net.iquesoft.iquephoto.models.StickersSet;
 import net.iquesoft.iquephoto.models.Tool;
-import net.iquesoft.iquephoto.ui.fragments.AddTextFragment;
+import net.iquesoft.iquephoto.ui.fragments.TextFragment;
 import net.iquesoft.iquephoto.ui.fragments.AdjustFragment;
 import net.iquesoft.iquephoto.ui.fragments.DrawingFragment;
 import net.iquesoft.iquephoto.ui.fragments.FiltersFragment;
@@ -52,7 +52,7 @@ public class EditorModule {
                 new Tool(R.string.vignette, R.drawable.ic_vignette, SliderControlFragment.newInstance(VIGNETTE)),
                 new Tool(R.string.tilt_shift, R.drawable.ic_tilt_shift, new TiltShiftFragment()),
                 new Tool(R.string.drawing, R.drawable.ic_brush, new DrawingFragment()),
-                new Tool(R.string.text, R.drawable.ic_letters, new AddTextFragment())
+                new Tool(R.string.text, R.drawable.ic_letters, new TextFragment())
         );
     }
 

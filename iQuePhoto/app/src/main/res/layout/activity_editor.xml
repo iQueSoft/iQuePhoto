@@ -42,6 +42,6 @@
     <FrameLayout
         android:id="@+id/fragmentContainer"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/tool_layout_height"
+        android:layout_height="@dimen/tool_height"
         android:background="@color/colorPrimaryDark" />
 </LinearLayout>

@@ -10,6 +10,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
+import android.os.AsyncTask;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.v4.view.MotionEventCompat;
@@ -22,9 +23,11 @@ import net.iquesoft.iquephoto.core.editor.enums.EditorMode;
 import net.iquesoft.iquephoto.core.editor.enums.EditorTool;
 import net.iquesoft.iquephoto.core.editor.model.Drawing;
 import net.iquesoft.iquephoto.core.editor.model.EditorFrame;
+import net.iquesoft.iquephoto.core.editor.model.EditorImage;
 import net.iquesoft.iquephoto.core.editor.model.EditorSticker;
 import net.iquesoft.iquephoto.core.editor.model.EditorText;
 import net.iquesoft.iquephoto.models.Text;
+import net.iquesoft.iquephoto.util.BitmapUtil;
 import net.iquesoft.iquephoto.util.LogHelper;
 import net.iquesoft.iquephoto.util.MatrixUtil;
 
@@ -36,6 +39,8 @@ import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.NONE;
 public class NewImageEditorView extends View {
     private float mLastX;
     private float mLastY;
+
+    private boolean mIsOriginalImageDisplayed;
 
     private Bitmap mImageBitmap;
     private Bitmap mSupportBitmap;
@@ -65,6 +70,7 @@ public class NewImageEditorView extends View {
     private List<Drawing> mDrawings = new ArrayList<>();
     private List<EditorText> mTexts = new ArrayList<>();
     private List<EditorSticker> mStickers = new ArrayList<>();
+    private List<EditorImage> mImages = new ArrayList<>();
 
     private UndoListener mUndoListener;
 
@@ -100,16 +106,23 @@ public class NewImageEditorView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        Bitmap bitmap;
 
+        if (!mIsOriginalImageDisplayed) {
+            bitmap = getAlteredBitmap();
+        } else {
+            bitmap = mImageBitmap;
+        }
+        
         canvas.clipRect(mSrcRect);
 
-        canvas.drawBitmap(mImageBitmap, mImageMatrix, mBitmapPaint);
+        canvas.drawBitmap(bitmap, mImageMatrix, mBitmapPaint);
 
         switch (mCurrentTool) {
             case NONE:
                 break;
             case FILTERS:
-                canvas.drawBitmap(mImageBitmap, mImageMatrix, mFilterPaint);
+                canvas.drawBitmap(bitmap, mImageMatrix, mFilterPaint);
                 break;
             case OVERLAY:
                 canvas.drawBitmap(mSupportBitmap, mSupportMatrix, mOverlayPaint);
@@ -154,6 +167,14 @@ public class NewImageEditorView extends View {
         mSrcRect.set(0, 0, bitmap.getWidth(), bitmap.getHeight());
     }
 
+    public Bitmap getAlteredBitmap() {
+        if (!mImages.isEmpty()) {
+            return mImages.get(mImages.size() - 1).getBitmap();
+        }
+
+        return mImageBitmap;
+    }
+
     public void changeTool(EditorTool tool) {
         mCurrentTool = tool;
 
@@ -163,7 +184,7 @@ public class NewImageEditorView extends View {
     }
 
     public void applyChanges() {
-
+        new ImageProcessingTask().execute(mCurrentTool);
     }
 
     public void setUndoListener(UndoListener undoListener) {
@@ -254,6 +275,9 @@ public class NewImageEditorView extends View {
 
     private void actionDown(MotionEvent event) {
         switch (mCurrentTool) {
+            case NONE:
+                setIsOriginalImageDisplayed(true);
+                break;
             case DRAWING:
                 brushDown(event);
                 break;
@@ -262,6 +286,7 @@ public class NewImageEditorView extends View {
                 break;
         }
     }
+
 
     private void actionPointerDown(MotionEvent event) {
         switch (mCurrentTool) {
@@ -286,9 +311,10 @@ public class NewImageEditorView extends View {
     }
 
     private void actionUp(MotionEvent event) {
-        mCurrentMode = EditorMode.NONE;
-
         switch (mCurrentTool) {
+            case NONE:
+                setIsOriginalImageDisplayed(false);
+                break;
             case DRAWING:
                 brushUp();
                 break;
@@ -298,6 +324,8 @@ public class NewImageEditorView extends View {
                 }
                 break;
         }
+
+        mCurrentMode = EditorMode.NONE;
     }
 
     private void setupSupportMatrix(@NonNull Bitmap bitmap) {
@@ -370,8 +398,8 @@ public class NewImageEditorView extends View {
         switch (mCurrentMode) {
             case MOVE:
                 mCurrentCheckedSticker.actionMove(
-                        getDX(event),
-                        getDY(event)
+                        getDeltaX(event),
+                        getDeltaY(event)
                 );
 
                 mLastX = event.getX();
@@ -381,8 +409,8 @@ public class NewImageEditorView extends View {
                 break;
             case ROTATE_AND_SCALE:
                 mCurrentCheckedSticker.updateRotateAndScale(
-                        getDX(event),
-                        getDY(event)
+                        getDeltaX(event),
+                        getDeltaY(event)
                 );
 
                 mLastX = event.getX();
@@ -393,11 +421,11 @@ public class NewImageEditorView extends View {
         }
     }
 
-    private float getDX(MotionEvent event) {
+    private float getDeltaX(MotionEvent event) {
         return event.getX() - mLastX;
     }
 
-    private float getDY(MotionEvent event) {
+    private float getDeltaY(MotionEvent event) {
         return event.getY() - mLastY;
     }
 
@@ -420,7 +448,7 @@ public class NewImageEditorView extends View {
 
         float dX = event.getX() + mLastX;
         float dY = event.getY() + mLastY;
-        
+
         mDrawingPath.quadTo(mLastX, mLastY, dX / 2, dY / 2);
 
         mLastX = event.getX();
@@ -448,5 +476,139 @@ public class NewImageEditorView extends View {
         }
         if (!mDrawingPath.isEmpty())
             canvas.drawPath(mDrawingPath, mDrawingPaint);
+    }
+
+    private void setIsOriginalImageDisplayed(boolean isOriginalImageDisplayed) {
+        mIsOriginalImageDisplayed = isOriginalImageDisplayed;
+
+        invalidate();
+    }
+
+    private class ImageProcessingTask extends AsyncTask<EditorTool, Void, Bitmap> {
+        private int mImageHeight;
+        private int mImageWidth;
+
+        private Bitmap mBitmap;
+        private Canvas mCanvas;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            //mProgressDialog.show();
+
+            mBitmap = getAlteredBitmap().copy(getAlteredBitmap().getConfig(), true);
+        }
+
+        @Override
+        protected Bitmap doInBackground(EditorTool... editorTools) {
+            mCanvas = new Canvas(mBitmap);
+
+            mImageHeight = mBitmap.getHeight();
+            mImageWidth = mBitmap.getWidth();
+
+            switch (editorTools[0]) {
+                case NONE:
+                    break;
+                case FILTERS:
+                    mCanvas.drawBitmap(mBitmap, 0, 0, mFilterPaint);
+                    break;
+                /*case ADJUST:
+                    break;*/
+                case OVERLAY:
+                    calculateSupportMatrix(mSupportBitmap);
+                    mCanvas.drawBitmap(mSupportBitmap, mSupportMatrix, mOverlayPaint);
+                    break;
+                case BRIGHTNESS:
+                    mCanvas.drawBitmap(mBitmap, 0, 0, mAdjustPaint);
+                    break;
+                case CONTRAST:
+                    mCanvas.drawBitmap(mBitmap, 0, 0, mAdjustPaint);
+                    break;
+                case STICKERS:
+                    drawStickers(mCanvas);
+                    break;
+                case FRAMES:
+                    calculateSupportMatrix(mSupportBitmap);
+                    mCanvas.drawBitmap(mSupportBitmap, mSupportMatrix, mBitmapPaint);
+                    break;
+                /*case TEXT:
+                    drawTexts(mCanvas);
+                    break;
+                case DRAWING:
+                    break;
+                case TILT_SHIFT_RADIAL:
+                    break;
+                case VIGNETTE:
+                    // TODO: Draw vignette on image with original size.
+                    mEditorVignette.prepareToDraw(mCanvas, mMatrix);
+                    mEditorVignette.draw(mCanvas);
+                    break;
+                case SATURATION:
+                    mCanvas.drawBitmap(mBitmap, 0, 0, mAdjustPaint);
+                    break;
+                case WARMTH:
+                    mCanvas.drawBitmap(mBitmap, 0, 0, mAdjustPaint);
+                    break;
+                case EXPOSURE:
+                    mCanvas.drawBitmap(mBitmap, 0, 0, mAdjustPaint);
+                    break;
+                case TRANSFORM_STRAIGHTEN:
+                    mCanvas.save(Canvas.CLIP_SAVE_FLAG);
+                    mCanvas.setMatrix(getTransformStraightenMatrix(mTransformStraightenValue));
+                    mCanvas.drawBitmap(mBitmap, 0, 0,
+//                            getTransformStraightenMatrix(mTransformStraightenValue),
+                            mImagePaint);
+                    mCanvas.restore();
+                    break;*/
+            }
+
+            return mBitmap;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            super.onPostExecute(bitmap);
+            mImages.add(new EditorImage(mCurrentTool, bitmap));
+
+            // mUndoListener.hasChanged(mImages.size());
+
+            invalidate();
+            // mProgressDialog.dismiss();
+        }
+
+        private void drawStickers(Canvas canvas) {
+            for (EditorSticker sticker : mStickers) {
+                sticker.prepareToDraw(mImageMatrix);
+                sticker.draw(canvas);
+            }
+        }
+
+       /* private void drawTexts(Canvas canvas) {
+            for (EditorText text : mTextsList) {
+                text.prepareToDraw(mMatrix);
+                text.draw(canvas);
+            }
+        }*/
+
+        private void calculateSupportMatrix(Bitmap bitmap) {
+            float height = bitmap.getHeight();
+            float width = bitmap.getWidth();
+
+            float sX = mImageWidth / width;
+            float sY = mImageHeight / height;
+
+            BitmapUtil.logBitmapInfo("calcSupportMatrix()", bitmap);
+
+            Log.i("calcSupportMatrix", "sX = " + sX + "\nsY = " + sY);
+
+            mSupportMatrix.reset();
+
+            MatrixUtil.matrixInfo("mSupportMatrix - before", mSupportMatrix);
+
+            mSupportMatrix.postScale(sX, sY);
+            mSupportMatrix.postTranslate(0, 0);
+
+            MatrixUtil.matrixInfo("mSupportMatrix - after", mSupportMatrix);
+        }
     }
 }

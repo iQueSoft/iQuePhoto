@@ -19,8 +19,6 @@ import net.iquesoft.iquephoto.presentation.presenters.fragment.OverlaysPresenter
 import net.iquesoft.iquephoto.presentation.views.fragment.OverlaysView;
 import net.iquesoft.iquephoto.util.ActivityUtil;
 
-import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
-
 import java.util.List;
 
 import butterknife.BindView;
@@ -32,9 +30,6 @@ import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.OVERLAY;
 public class OverlaysFragment extends ToolFragment implements OverlaysView {
     @InjectPresenter
     OverlaysPresenter presenter;
-
-    @BindView(R.id.overlaySeekBar)
-    DiscreteSeekBar seekBar;
 
     @BindView(R.id.overlayRecyclerView)
     RecyclerView recyclerView;
@@ -55,23 +50,6 @@ public class OverlaysFragment extends ToolFragment implements OverlaysView {
         View view = inflater.inflate(R.layout.fragment_overlay, container, false);
 
         mUnbinder = ButterKnife.bind(this, view);
-
-        seekBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
-            @Override
-            public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
-                mImageEditorView.setOverlayIntensity(value);
-            }
-
-            @Override
-            public void onStartTrackingTouch(DiscreteSeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(DiscreteSeekBar seekBar) {
-
-            }
-        });
 
         return view;
     }

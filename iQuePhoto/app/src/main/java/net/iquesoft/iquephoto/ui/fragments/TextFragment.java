@@ -35,15 +35,9 @@ import butterknife.Unbinder;
 
 import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.TEXT;
 
-public class AddTextFragment extends ToolFragment implements AddTextView {
+public class TextFragment extends ToolFragment implements AddTextView {
     @InjectPresenter
     AddTextPresenter presenter;
-
-    @BindView(R.id.textOpacityValue)
-    TextView opacityValueTextView;
-
-    @BindView(R.id.textOpacitySeekBar)
-    DiscreteSeekBar seekBar;
 
     @BindView(R.id.textSettingsLayout)
     LinearLayout textSettingsLayout;
@@ -64,8 +58,8 @@ public class AddTextFragment extends ToolFragment implements AddTextView {
 
     private NewImageEditorView mImageEditorView;
 
-    public static AddTextFragment newInstance() {
-        return new AddTextFragment();
+    public static TextFragment newInstance() {
+        return new TextFragment();
     }
 
     @Override
@@ -90,24 +84,6 @@ public class AddTextFragment extends ToolFragment implements AddTextView {
                 presenter.changeTextColor(getContext(), color)
         );
 
-        opacityValueTextView.setText(String.valueOf(seekBar.getProgress()));
-
-        seekBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
-            @Override
-            public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
-                opacityValueTextView.setText(String.valueOf(value));
-            }
-
-            @Override
-            public void onStartTrackingTouch(DiscreteSeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(DiscreteSeekBar seekBar) {
-
-            }
-        });
 
         return view;
     }
@@ -147,7 +123,7 @@ public class AddTextFragment extends ToolFragment implements AddTextView {
 
     @OnClick(R.id.addTextButton)
     void onClickAddText() {
-        presenter.addText(editText.getText().toString(), mTypeface, mColor, seekBar.getProgress());
+        presenter.addText(editText.getText().toString(), mTypeface, mColor, 255);
     }
 
     @OnClick(R.id.selectTextColorButton)

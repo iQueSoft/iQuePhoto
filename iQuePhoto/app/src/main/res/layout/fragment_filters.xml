@@ -1,24 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/tool_layout_height"
+    android:layout_height="@dimen/tool_height"
     android:layout_gravity="bottom"
     android:background="@color/colorPrimary"
     android:elevation="8dp"
+    android:gravity="center"
     android:orientation="vertical">
-
-    <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
-        android:id="@+id/filterSeekBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:dsb_indicatorColor="@android:color/white"
-        app:dsb_indicatorTextAppearance="@android:color/black"
-        app:dsb_max="100"
-        app:dsb_progressColor="@android:color/white"
-        app:dsb_rippleColor="@android:color/white"
-        app:dsb_trackColor="@android:color/white"
-        app:dsb_value="100" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/filtersRecyclerView"

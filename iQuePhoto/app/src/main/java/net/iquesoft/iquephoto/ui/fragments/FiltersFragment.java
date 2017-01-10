@@ -19,8 +19,6 @@ import net.iquesoft.iquephoto.presentation.presenters.fragment.FiltersPresenter;
 import net.iquesoft.iquephoto.presentation.views.fragment.FiltersView;
 import net.iquesoft.iquephoto.util.ActivityUtil;
 
-import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
-
 import java.util.List;
 
 import butterknife.BindView;
@@ -32,9 +30,6 @@ import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.FILTERS;
 public class FiltersFragment extends ToolFragment implements FiltersView {
     @InjectPresenter
     FiltersPresenter presenter;
-
-    @BindView(R.id.filterSeekBar)
-    DiscreteSeekBar seekBar;
 
     @BindView(R.id.filtersRecyclerView)
     RecyclerView filtersList;
@@ -62,23 +57,6 @@ public class FiltersFragment extends ToolFragment implements FiltersView {
         View view = inflater.inflate(R.layout.fragment_filters, container, false);
 
         mUnbinder = ButterKnife.bind(this, view);
-
-        seekBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
-            @Override
-            public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
-                mImageEditorView.setFilterIntensity(value);
-            }
-
-            @Override
-            public void onStartTrackingTouch(DiscreteSeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(DiscreteSeekBar seekBar) {
-
-            }
-        });
 
         return view;
     }

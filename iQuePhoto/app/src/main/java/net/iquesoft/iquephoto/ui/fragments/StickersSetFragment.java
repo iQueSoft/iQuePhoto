@@ -13,12 +13,14 @@ import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapter.StickerSetAdapter;
 import net.iquesoft.iquephoto.core.editor.NewImageEditorView;
 import net.iquesoft.iquephoto.models.Sticker;
-import net.iquesoft.iquephoto.presentation.common.BaseToolFragment;
+import net.iquesoft.iquephoto.presentation.common.ToolFragment;
 import net.iquesoft.iquephoto.models.StickersSet;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.StickersSetPresenter;
 import net.iquesoft.iquephoto.presentation.views.fragment.StickersSetView;
+import net.iquesoft.iquephoto.ui.activities.EditorActivity;
 import net.iquesoft.iquephoto.util.ActivityUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -27,7 +29,7 @@ import butterknife.Unbinder;
 
 import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.STICKERS;
 
-public class StickersSetFragment extends BaseToolFragment implements StickersSetView {
+public class StickersSetFragment extends ToolFragment implements StickersSetView {
     @InjectPresenter
     StickersSetPresenter presenter;
 
@@ -74,9 +76,7 @@ public class StickersSetFragment extends BaseToolFragment implements StickersSet
     @Override
     public void setupAdapter(List<StickersSet> stickersSets) {
         StickerSetAdapter adapter = new StickerSetAdapter(stickersSets);
-        adapter.setStickerSetClickListener(stickersSet ->
-                presenter.stickersSetClicked(stickersSet)
-        );
+        adapter.setStickerSetClickListener(stickersSet -> presenter.stickersSetClicked(stickersSet));
 
         recyclerView.setLayoutManager(
                 new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false)
@@ -85,7 +85,7 @@ public class StickersSetFragment extends BaseToolFragment implements StickersSet
     }
 
     @Override
-    public void showStickers(List<Sticker> stickers) {
-        // TODO: Show stickers.
+    public void showStickers(ArrayList<Sticker> stickers) {
+        ((EditorActivity) getActivity()).setupFragment(StickersFragment.newInstance(stickers));
     }
 }

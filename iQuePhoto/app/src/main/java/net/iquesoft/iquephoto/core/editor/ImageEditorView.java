@@ -795,11 +795,11 @@ public class ImageEditorView extends ImageView {
     }
 
     public void addSticker(Sticker sticker) {
-        sticker.setBitmap(BitmapUtil.drawable2Bitmap(mContext, sticker.getImage()));
+        /*sticker.setBitmap(BitmapUtil.drawable2Bitmap(mContext, sticker.getImage()));
 
         mStickersList.add(
                 new EditorSticker(sticker.getBitmap(), mBitmapRect, mEditorFrame)
-        );
+        );*/
 
         invalidate();
     }

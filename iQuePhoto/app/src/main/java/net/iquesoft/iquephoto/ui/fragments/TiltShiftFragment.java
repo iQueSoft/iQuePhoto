@@ -8,10 +8,9 @@ import android.view.ViewGroup;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.core.editor.ImageEditorView;
 import net.iquesoft.iquephoto.core.editor.NewImageEditorView;
 import net.iquesoft.iquephoto.core.editor.enums.EditorTool;
-import net.iquesoft.iquephoto.presentation.common.BaseToolFragment;
+import net.iquesoft.iquephoto.presentation.common.ToolFragment;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.TiltShiftFragmentPresenter;
 import net.iquesoft.iquephoto.presentation.views.fragment.TiltShiftView;
 import net.iquesoft.iquephoto.util.ActivityUtil;
@@ -23,7 +22,7 @@ import butterknife.Unbinder;
 import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.TILT_SHIFT_LINEAR;
 import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.TILT_SHIFT_RADIAL;
 
-public class TiltShiftFragment extends BaseToolFragment implements TiltShiftView {
+public class TiltShiftFragment extends ToolFragment implements TiltShiftView {
     @InjectPresenter
     TiltShiftFragmentPresenter presenter;
 

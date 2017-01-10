@@ -18,11 +18,12 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
+import net.iquesoft.iquephoto.core.editor.enums.EditorMode;
 import net.iquesoft.iquephoto.core.editor.enums.EditorTool;
 import net.iquesoft.iquephoto.core.editor.model.Drawing;
+import net.iquesoft.iquephoto.core.editor.model.EditorFrame;
 import net.iquesoft.iquephoto.core.editor.model.EditorSticker;
 import net.iquesoft.iquephoto.core.editor.model.EditorText;
-import net.iquesoft.iquephoto.models.Sticker;
 import net.iquesoft.iquephoto.models.Text;
 import net.iquesoft.iquephoto.util.LogHelper;
 import net.iquesoft.iquephoto.util.MatrixUtil;
@@ -40,6 +41,7 @@ public class NewImageEditorView extends View {
     private Bitmap mSupportBitmap;
 
     private EditorTool mCurrentTool = NONE;
+    private EditorMode mCurrentMode = EditorMode.NONE;
 
     private Matrix mImageMatrix = new Matrix();
     private Matrix mSupportMatrix = new Matrix();
@@ -56,6 +58,10 @@ public class NewImageEditorView extends View {
     private Paint mDrawingPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Paint mDebugPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
+    private EditorSticker mCurrentCheckedSticker;
+
+    private EditorFrame mEditorFrame;
+
     private List<Drawing> mDrawings = new ArrayList<>();
     private List<EditorText> mTexts = new ArrayList<>();
     private List<EditorSticker> mStickers = new ArrayList<>();
@@ -66,6 +72,8 @@ public class NewImageEditorView extends View {
         super(context, attrs);
         initializePaintsStyle();
         initDrawingPaint();
+
+        mEditorFrame = new EditorFrame(context);
     }
 
     @Override
@@ -99,7 +107,6 @@ public class NewImageEditorView extends View {
 
         switch (mCurrentTool) {
             case NONE:
-
                 break;
             case FILTERS:
                 canvas.drawBitmap(mImageBitmap, mImageMatrix, mFilterPaint);
@@ -112,6 +119,9 @@ public class NewImageEditorView extends View {
                 break;
             case DRAWING:
                 drawing(canvas);
+                break;
+            case STICKERS:
+                drawStickers(canvas);
                 break;
         }
     }
@@ -166,8 +176,8 @@ public class NewImageEditorView extends View {
         invalidate();
     }
 
-    public void addSticker(Sticker sticker) {
-        //mStickers.add();
+    public void addSticker(Bitmap bitmap) {
+        mStickers.add(new EditorSticker(bitmap, mSrcRect, mEditorFrame));
 
         invalidate();
     }
@@ -247,6 +257,9 @@ public class NewImageEditorView extends View {
             case DRAWING:
                 brushDown(event);
                 break;
+            case STICKERS:
+                findCheckedSticker(event);
+                break;
         }
     }
 
@@ -263,13 +276,26 @@ public class NewImageEditorView extends View {
             case DRAWING:
                 brushMove(event);
                 break;
+            case STICKERS:
+                if (mCurrentCheckedSticker != null) {
+                    moveSticker(event);
+                }
+                break;
+
         }
     }
 
     private void actionUp(MotionEvent event) {
+        mCurrentMode = EditorMode.NONE;
+
         switch (mCurrentTool) {
             case DRAWING:
                 brushUp();
+                break;
+            case STICKERS:
+                if (mCurrentCheckedSticker != null) {
+                    mCurrentCheckedSticker.resetHelperFrameOpacity();
+                }
                 break;
         }
     }
@@ -293,7 +319,86 @@ public class NewImageEditorView extends View {
     }
 
     private void findCheckedSticker(MotionEvent event) {
-        // for ()
+        for (int i = mStickers.size() - 1; i >= 0; i--) {
+            EditorSticker editorSticker = mStickers.get(i);
+
+            if (editorSticker.isInside(event)) {
+                mCurrentCheckedSticker = editorSticker;
+                mCurrentMode = EditorMode.MOVE;
+
+                mCurrentCheckedSticker.setHelperFrameOpacity();
+
+                mLastX = event.getX();
+                mLastY = event.getY();
+
+                return;
+            } else if (editorSticker.isInDeleteHandleButton(event)) {
+                mCurrentCheckedSticker = null;
+
+                mCurrentMode = EditorMode.NONE;
+
+                mStickers.remove(i);
+
+                invalidate();
+                return;
+            } else if (editorSticker.isInResizeAndScaleHandleButton(event)) {
+                mCurrentCheckedSticker = editorSticker;
+                mCurrentMode = EditorMode.ROTATE_AND_SCALE;
+
+                mCurrentCheckedSticker.setHelperFrameOpacity();
+
+                mLastX = event.getX();
+                mLastY = event.getY();
+                return;
+            } else if (editorSticker.isInFrontHandleButton(event)) {
+                mCurrentMode = EditorMode.NONE;
+
+                EditorSticker sticker = mStickers.remove(i);
+                mStickers.add(sticker);
+
+                invalidate();
+                return;
+            }
+        }
+
+        mCurrentCheckedSticker = null;
+
+        mCurrentMode = EditorMode.NONE;
+    }
+
+    private void moveSticker(MotionEvent event) {
+        switch (mCurrentMode) {
+            case MOVE:
+                mCurrentCheckedSticker.actionMove(
+                        getDX(event),
+                        getDY(event)
+                );
+
+                mLastX = event.getX();
+                mLastY = event.getY();
+
+                invalidate();
+                break;
+            case ROTATE_AND_SCALE:
+                mCurrentCheckedSticker.updateRotateAndScale(
+                        getDX(event),
+                        getDY(event)
+                );
+
+                mLastX = event.getX();
+                mLastY = event.getY();
+
+                invalidate();
+                break;
+        }
+    }
+
+    private float getDX(MotionEvent event) {
+        return event.getX() - mLastX;
+    }
+
+    private float getDY(MotionEvent event) {
+        return event.getY() - mLastY;
     }
 
     // TODO: Not invalidate all.
@@ -315,7 +420,7 @@ public class NewImageEditorView extends View {
 
         float dX = event.getX() + mLastX;
         float dY = event.getY() + mLastY;
-
+        
         mDrawingPath.quadTo(mLastX, mLastY, dX / 2, dY / 2);
 
         mLastX = event.getX();
@@ -323,7 +428,7 @@ public class NewImageEditorView extends View {
 
         invalidate();
     }
-    
+
     private void brushUp() {
         Log.i("Drawing", "Brush up");
 

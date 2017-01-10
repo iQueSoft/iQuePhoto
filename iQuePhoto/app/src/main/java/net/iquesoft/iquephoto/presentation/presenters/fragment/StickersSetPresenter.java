@@ -5,9 +5,11 @@ import com.arellomobile.mvp.MvpPresenter;
 
 import net.iquesoft.iquephoto.App;
 import net.iquesoft.iquephoto.models.Filter;
+import net.iquesoft.iquephoto.models.Sticker;
 import net.iquesoft.iquephoto.models.StickersSet;
 import net.iquesoft.iquephoto.presentation.views.fragment.StickersSetView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -23,6 +25,6 @@ public class StickersSetPresenter extends MvpPresenter<StickersSetView> {
     }
 
     public void stickersSetClicked(StickersSet stickersSet) {
-        getViewState().showStickers(stickersSet.getStickers());
+        getViewState().showStickers(new ArrayList<>(stickersSet.getStickers()));
     }
 }

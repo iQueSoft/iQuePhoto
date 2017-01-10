@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.models.Filter;
 import net.iquesoft.iquephoto.models.StickersSet;
 
 import java.util.List;
@@ -24,14 +23,14 @@ public class StickerSetAdapter extends RecyclerView.Adapter<StickerSetAdapter.Vi
 
     private List<StickersSet> mStickersSets;
 
-    private OnStickerSetClickListener mOnFilterClickListener;
+    private OnStickerSetClickListener mOnStickersSetClickListener;
 
     public interface OnStickerSetClickListener {
         void onClick(StickersSet stickersSet);
     }
 
-    public void setStickerSetClickListener(OnStickerSetClickListener onFilterClickListener) {
-        mOnFilterClickListener = onFilterClickListener;
+    public void setStickerSetClickListener(OnStickerSetClickListener onStickerSetClickListener) {
+        mOnStickersSetClickListener = onStickerSetClickListener;
     }
 
     public StickerSetAdapter(List<StickersSet> stickersSets) {
@@ -51,18 +50,16 @@ public class StickerSetAdapter extends RecyclerView.Adapter<StickerSetAdapter.Vi
     public void onBindViewHolder(StickerSetAdapter.ViewHolder holder, int position) {
         final StickersSet stickersSet = mStickersSets.get(position);
 
-        holder.filterTitle.setText(stickersSet.getTitle());
+        holder.title.setText(stickersSet.getTitle());
 
         Picasso.with(mContext)
                 .load(stickersSet.getIcon())
                 .fit()
                 .centerCrop()
                 .noPlaceholder()
-                .into(holder.filterImageView);
+                .into(holder.image);
 
-        holder.filterImageView.setOnClickListener(view -> {
-
-        });
+        holder.itemView.setOnClickListener(view -> mOnStickersSetClickListener.onClick(stickersSet));
     }
 
     @Override
@@ -72,10 +69,10 @@ public class StickerSetAdapter extends RecyclerView.Adapter<StickerSetAdapter.Vi
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.stickerSetTitle)
-        TextView filterTitle;
+        TextView title;
 
         @BindView(R.id.stickerSetImage)
-        ImageView filterImageView;
+        ImageView image;
 
         public ViewHolder(View itemView) {
             super(itemView);

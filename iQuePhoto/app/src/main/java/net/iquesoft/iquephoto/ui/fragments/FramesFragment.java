@@ -12,9 +12,8 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapter.FramesAdapter;
-import net.iquesoft.iquephoto.core.editor.ImageEditorView;
 import net.iquesoft.iquephoto.core.editor.NewImageEditorView;
-import net.iquesoft.iquephoto.presentation.common.BaseToolFragment;
+import net.iquesoft.iquephoto.presentation.common.ToolFragment;
 import net.iquesoft.iquephoto.models.Frame;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.FramesPresenter;
 import net.iquesoft.iquephoto.presentation.views.fragment.FramesView;
@@ -28,7 +27,7 @@ import butterknife.Unbinder;
 
 import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.FRAMES;
 
-public class FramesFragment extends BaseToolFragment implements FramesView {
+public class FramesFragment extends ToolFragment implements FramesView {
     @InjectPresenter
     FramesPresenter presenter;
 

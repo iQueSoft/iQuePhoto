@@ -1,31 +1,32 @@
 package net.iquesoft.iquephoto.ui.fragments;
 
-import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapter.StickersAdapter;
-import net.iquesoft.iquephoto.core.editor.ImageEditorView;
+import net.iquesoft.iquephoto.core.editor.NewImageEditorView;
 import net.iquesoft.iquephoto.models.Sticker;
+import net.iquesoft.iquephoto.presentation.common.ToolFragment;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.StickersPresenter;
 import net.iquesoft.iquephoto.presentation.views.fragment.StickersView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class StickersFragment extends MvpAppCompatFragment implements StickersView {
-    private static final String ARG_PARAM = "position";
+public class StickersFragment extends ToolFragment implements StickersView {
+    public static final String ARG_PARAM = "stickers";
 
     @InjectPresenter
     StickersPresenter presenter;
@@ -33,15 +34,13 @@ public class StickersFragment extends MvpAppCompatFragment implements StickersVi
     @BindView(R.id.stickersRecyclerView)
     RecyclerView recyclerView;
 
-    private Context mContext;
-
     private Unbinder mUnbinder;
 
-    public static StickersFragment newInstance(int position) {
+    public static StickersFragment newInstance(ArrayList<Sticker> stickers) {
         StickersFragment fragment = new StickersFragment();
 
         Bundle args = new Bundle();
-        args.putInt(ARG_PARAM, position);
+        args.putParcelableArrayList(ARG_PARAM, stickers);
 
         fragment.setArguments(args);
 
@@ -54,9 +53,7 @@ public class StickersFragment extends MvpAppCompatFragment implements StickersVi
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (getArguments() != null) {
-            presenter.setupStickersSet(getArguments().getInt(ARG_PARAM));
-        }
+        presenter.setupStickersSet(getArguments());
     }
 
     @Override
@@ -70,8 +67,6 @@ public class StickersFragment extends MvpAppCompatFragment implements StickersVi
 
         mUnbinder = ButterKnife.bind(this, view);
 
-        mContext = view.getContext();
-
         return view;
     }
 
@@ -84,12 +79,19 @@ public class StickersFragment extends MvpAppCompatFragment implements StickersVi
     @Override
     public void setupAdapter(List<Sticker> stickers) {
         StickersAdapter adapter = new StickersAdapter(stickers);
-        adapter.setOnStickerClickListener(sticker -> {
-            ((ImageEditorView) getActivity()
-                    .findViewById(R.id.imageEditorView)).addSticker(sticker);
-        });
+        adapter.setOnStickerClickListener(sticker ->
+                presenter.stickerClicked(getContext(), sticker)
+        );
 
-        recyclerView.setLayoutManager(new GridLayoutManager(mContext, 5));
+        recyclerView.setLayoutManager(
+                new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false)
+        );
         recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void addSticker(Bitmap bitmap) {
+        ((NewImageEditorView) getActivity()
+                .findViewById(R.id.imageEditorView)).addSticker(bitmap);
     }
 }

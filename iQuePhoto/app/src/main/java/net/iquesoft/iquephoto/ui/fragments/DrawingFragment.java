@@ -11,7 +11,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.core.editor.NewImageEditorView;
-import net.iquesoft.iquephoto.presentation.common.BaseToolFragment;
+import net.iquesoft.iquephoto.presentation.common.ToolFragment;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.DrawingPresenter;
 import net.iquesoft.iquephoto.ui.dialogs.ColorPickerDialog;
 import net.iquesoft.iquephoto.presentation.views.fragment.DrawingView;
@@ -24,7 +24,7 @@ import butterknife.Unbinder;
 
 import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.DRAWING;
 
-public class DrawingFragment extends BaseToolFragment implements DrawingView {
+public class DrawingFragment extends ToolFragment implements DrawingView {
     @InjectPresenter
     DrawingPresenter presenter;
 

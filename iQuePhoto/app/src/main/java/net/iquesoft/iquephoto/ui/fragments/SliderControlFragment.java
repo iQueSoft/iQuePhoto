@@ -12,7 +12,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.core.editor.ImageEditorView;
 import net.iquesoft.iquephoto.core.editor.enums.EditorTool;
-import net.iquesoft.iquephoto.presentation.common.BaseToolFragment;
+import net.iquesoft.iquephoto.presentation.common.ToolFragment;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.SliderControlPresenter;
 import net.iquesoft.iquephoto.presentation.views.fragment.SliderControlView;
 import net.iquesoft.iquephoto.util.ActivityUtil;
@@ -23,7 +23,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class SliderControlFragment extends BaseToolFragment implements SliderControlView {
+public class SliderControlFragment extends ToolFragment implements SliderControlView {
     public static final String ARG_PARAM = "command";
 
     @InjectPresenter

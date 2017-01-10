@@ -3,6 +3,7 @@ package net.iquesoft.iquephoto.models;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class StickersSet {

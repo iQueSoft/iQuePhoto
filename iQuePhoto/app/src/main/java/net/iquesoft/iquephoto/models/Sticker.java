@@ -1,18 +1,18 @@
 package net.iquesoft.iquephoto.models;
 
-import android.graphics.Bitmap;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.DrawableRes;
 
 import net.iquesoft.iquephoto.R;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Sticker {
+public class Sticker implements Parcelable {
     @DrawableRes
     private int mImage;
-
-    private Bitmap mBitmap;
 
     private static Sticker flagStickers[] = {
             new Sticker(R.drawable.s_flag_01),
@@ -104,13 +104,31 @@ public class Sticker {
         return Arrays.asList(valentinesDayStickers);
     }
 
-    public Bitmap getBitmap() {
-        return mBitmap;
+    protected Sticker(Parcel in) {
+        mImage = in.readInt();
     }
 
-    public void setBitmap(Bitmap bitmap) {
-        mBitmap = bitmap;
+    @Override
+    public int describeContents() {
+        return 0;
     }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(mImage);
+    }
+
+    public static final Parcelable.Creator<Sticker> CREATOR = new Parcelable.Creator<Sticker>() {
+        @Override
+        public Sticker createFromParcel(Parcel in) {
+            return new Sticker(in);
+        }
+
+        @Override
+        public Sticker[] newArray(int size) {
+            return new Sticker[size];
+        }
+    };
 }
 
 

@@ -8,7 +8,7 @@ import com.arellomobile.mvp.MvpAppCompatFragment;
 
 import net.iquesoft.iquephoto.R;
 
-public abstract class BaseToolFragment extends MvpAppCompatFragment {
+public abstract class ToolFragment extends MvpAppCompatFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

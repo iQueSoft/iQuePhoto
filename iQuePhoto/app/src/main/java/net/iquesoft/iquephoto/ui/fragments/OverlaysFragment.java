@@ -13,7 +13,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapter.OverlaysAdapter;
 import net.iquesoft.iquephoto.core.editor.NewImageEditorView;
-import net.iquesoft.iquephoto.presentation.common.BaseToolFragment;
+import net.iquesoft.iquephoto.presentation.common.ToolFragment;
 import net.iquesoft.iquephoto.models.Overlay;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.OverlaysPresenter;
 import net.iquesoft.iquephoto.presentation.views.fragment.OverlaysView;
@@ -29,7 +29,7 @@ import butterknife.Unbinder;
 
 import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.OVERLAY;
 
-public class OverlaysFragment extends BaseToolFragment implements OverlaysView {
+public class OverlaysFragment extends ToolFragment implements OverlaysView {
     @InjectPresenter
     OverlaysPresenter presenter;
 

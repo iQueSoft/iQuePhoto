@@ -2,6 +2,7 @@ package net.iquesoft.iquephoto.ui.fragments;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.annotation.StringRes;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import net.iquesoft.iquephoto.models.Sticker;
 import net.iquesoft.iquephoto.presentation.common.ToolFragment;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.StickersPresenter;
 import net.iquesoft.iquephoto.presentation.views.fragment.StickersView;
+import net.iquesoft.iquephoto.util.ActivityUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +28,8 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 public class StickersFragment extends ToolFragment implements StickersView {
-    public static final String ARG_PARAM = "stickers";
+    public static final String ARG_TITLE = "stickers_title";
+    public static final String ARG_STICKERS = "stickers";
 
     @InjectPresenter
     StickersPresenter presenter;
@@ -36,11 +39,12 @@ public class StickersFragment extends ToolFragment implements StickersView {
 
     private Unbinder mUnbinder;
 
-    public static StickersFragment newInstance(ArrayList<Sticker> stickers) {
+    public static StickersFragment newInstance(@StringRes int title, ArrayList<Sticker> stickers) {
         StickersFragment fragment = new StickersFragment();
 
         Bundle args = new Bundle();
-        args.putParcelableArrayList(ARG_PARAM, stickers);
+        args.putInt(ARG_TITLE, title);
+        args.putParcelableArrayList(ARG_STICKERS, stickers);
 
         fragment.setArguments(args);
 
@@ -87,6 +91,11 @@ public class StickersFragment extends ToolFragment implements StickersView {
                 new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false)
         );
         recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void setupToolbarSubtitle(@StringRes int subtitle) {
+        ActivityUtil.updateToolbatSubtitle(subtitle, getActivity());
     }
 
     @Override

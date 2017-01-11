@@ -1,6 +1,7 @@
 package net.iquesoft.iquephoto.ui.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.StringRes;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -76,7 +77,13 @@ public class StickersSetFragment extends ToolFragment implements StickersSetView
     @Override
     public void setupAdapter(List<StickersSet> stickersSets) {
         StickerSetAdapter adapter = new StickerSetAdapter(stickersSets);
-        adapter.setStickerSetClickListener(stickersSet -> presenter.stickersSetClicked(stickersSet));
+        adapter.setStickerSetClickListener(stickersSet ->
+                        // FIXME:
+                        presenter.stickersSetClicked(stickersSet)
+                /*((EditorActivity) getActivity()).setupFragment(
+                        StickersFragment.newInstance(stickersSet.getTitle(), new ArrayList<>(stickersSet.getStickers()))
+                )*/
+        );
 
         recyclerView.setLayoutManager(
                 new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false)
@@ -85,7 +92,7 @@ public class StickersSetFragment extends ToolFragment implements StickersSetView
     }
 
     @Override
-    public void showStickers(ArrayList<Sticker> stickers) {
-        ((EditorActivity) getActivity()).setupFragment(StickersFragment.newInstance(stickers));
+    public void showStickers(@StringRes int title, ArrayList<Sticker> stickers) {
+        ((EditorActivity) getActivity()).setupFragment(StickersFragment.newInstance(title, stickers));
     }
 }

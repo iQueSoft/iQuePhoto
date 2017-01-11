@@ -13,4 +13,11 @@ public class ActivityUtil {
             editorActivity.getSupportActionBar().setTitle(title);
         }
     }
+
+    public static void updateToolbatSubtitle(@StringRes int subtitle, @NonNull FragmentActivity fragmentActivity) {
+        EditorActivity editorActivity = (EditorActivity) fragmentActivity;
+        if (editorActivity.getSupportActionBar() != null) {
+            editorActivity.getSupportActionBar().setSubtitle(subtitle);
+        }
+    }
 }

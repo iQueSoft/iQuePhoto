@@ -29,9 +29,10 @@ public class StickersPresenter extends MvpPresenter<StickersView> {
     }
 
     public void setupStickersSet(@NonNull Bundle bundle) {
-        List<Sticker> stickers = bundle.getParcelableArrayList(StickersFragment.ARG_PARAM);
+        List<Sticker> stickers = bundle.getParcelableArrayList(StickersFragment.ARG_STICKERS);
 
         getViewState().setupAdapter(stickers);
+        getViewState().setupToolbarSubtitle(bundle.getInt(StickersFragment.ARG_TITLE));
     }
 
     public void stickerClicked(@NonNull Context context, Sticker sticker) {

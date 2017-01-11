@@ -11,8 +11,8 @@ public class MatrixUtil {
     public static void matrixInfo(@NonNull String logPrefix, @NonNull Matrix matrix) {
         float x = getMatrixValue(matrix, Matrix.MTRANS_X);
         float y = getMatrixValue(matrix, Matrix.MTRANS_Y);
-        float rScale = getMatrixScale(matrix);
-        float rAngle = getMatrixAngle(matrix);
+        float rScale = getScale(matrix);
+        float rAngle = getAngle(matrix);
         Log.d(TAG, logPrefix + ": matrix + : { x: " + x + ", y: " + y + ", scale: " + rScale + ", angle: " + rAngle + " }");
     }
 
@@ -31,12 +31,12 @@ public class MatrixUtil {
         return getMatrixValue(matrix, Matrix.MTRANS_Y);
     }
 
-    public static float getMatrixScale(@NonNull Matrix matrix) {
+    public static float getScale(@NonNull Matrix matrix) {
         return (float) Math.sqrt(Math.pow(getMatrixValue(matrix, Matrix.MSCALE_X), 2)
                 + Math.pow(getMatrixValue(matrix, Matrix.MSKEW_Y), 2));
     }
 
-    private static float getMatrixAngle(@NonNull Matrix matrix) {
+    public static float getAngle(@NonNull Matrix matrix) {
         return (float) -(Math.atan2(getMatrixValue(matrix, Matrix.MSKEW_X),
                 getMatrixValue(matrix, Matrix.MSCALE_X)) * (180 / Math.PI));
     }

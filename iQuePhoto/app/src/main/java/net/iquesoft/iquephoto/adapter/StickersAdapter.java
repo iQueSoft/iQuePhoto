@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.squareup.picasso.Picasso;
+
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.models.Sticker;
 
@@ -17,7 +19,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class StickersAdapter extends RecyclerView.Adapter<StickersAdapter.ViewHolder> {
-
     private Context mContext;
 
     private List<Sticker> mStickersList;
@@ -49,9 +50,12 @@ public class StickersAdapter extends RecyclerView.Adapter<StickersAdapter.ViewHo
     public void onBindViewHolder(StickersAdapter.ViewHolder holder, int position) {
         final Sticker sticker = mStickersList.get(position);
 
-        holder.stickerImage.setImageDrawable(
-                ResourcesCompat.getDrawable(mContext.getResources(), sticker.getImage(), null)
-        );
+        Picasso.with(mContext)
+                .load(sticker.getImage())
+                .fit()
+                .centerCrop()
+                .noPlaceholder()
+                .into(holder.stickerImage);
 
         holder.stickerImage.setOnClickListener(view -> mOnStickerClickListener.onClick(sticker));
     }

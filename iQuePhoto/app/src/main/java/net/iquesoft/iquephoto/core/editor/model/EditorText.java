@@ -25,7 +25,7 @@ public class EditorText {
     private String mText;
 
     private int mColor;
-    private int mOpacity;
+    private int mOpacity = 255;
 
     private float mX;
     private float mY;
@@ -63,7 +63,6 @@ public class EditorText {
         mTypeface = text.getTypeface();
 
         mColor = text.getColor();
-        mOpacity = text.getOpacity();
 
         mEditorFrame = editorFrame;
 
@@ -267,7 +266,7 @@ public class EditorText {
 
         Log.i("Text", "After: " + "\nX = " + String.valueOf(mX) + "\nY = " + String.valueOf(mY));
 
-        float scale = MatrixUtil.getMatrixScale(matrix);
+        float scale = MatrixUtil.getScale(matrix);
 
         mX /= scale;
         mY /= scale;

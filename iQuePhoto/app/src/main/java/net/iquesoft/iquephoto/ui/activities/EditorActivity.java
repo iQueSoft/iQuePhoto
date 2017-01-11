@@ -9,8 +9,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -29,6 +32,7 @@ import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class EditorActivity extends MvpAppCompatActivity implements EditorView {
     @InjectPresenter
@@ -37,8 +41,8 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorView {
     @BindView(R.id.toolbar_editor)
     Toolbar toolbar;
 
-    /*@BindView(R.id.undoButton)
-    Button undoButton;*/
+    @BindView(R.id.undoButton)
+    Button undoButton;
 
     @BindView(R.id.imageEditorView)
     NewImageEditorView imageEditorView;
@@ -74,15 +78,14 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorView {
 
         imageEditorView.setImageBitmap(mBitmap);
 
-        /* TODO: Remove this comment.
         imageEditorView.setUndoListener(count -> {
             if (count != 0) {
-                //undoButton.setText(String.valueOf(count));
-                //undoButton.setVisibility(View.VISIBLE);
+                undoButton.setText(String.valueOf(count));
+                undoButton.setVisibility(View.VISIBLE);
             } else {
-                //undoButton.setVisibility(View.GONE);
+                undoButton.setVisibility(View.GONE);
             }
-        });*/
+        });
 
         mFragmentManager = getSupportFragmentManager();
 
@@ -146,15 +149,14 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorView {
         return super.onSupportNavigateUp();
     }
 
-    @Override
+    /*@Override
     public void onBackPressed() {
         if (mFragmentManager.getBackStackEntryCount() == 0) {
-            // // TODO: Remove this comment.
-            // presenter.onBackPressed(mBitmap, imageEditorView.getAlteredBitmap());
+            presenter.onBackPressed(mBitmap, imageEditorView.getAlteredBitmap());
         } else if (mFragmentManager.getBackStackEntryCount() != 0) {
             navigateBack(true);
         }
-    }
+    }*/
 
     @Override
     public void showAlertDialog() {
@@ -179,6 +181,8 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorView {
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .addToBackStack(null)
                 .commit();
+
+        Log.i("BackStack", String.valueOf(mFragmentManager.getBackStackEntryCount()));
     }
 
     @Override
@@ -186,26 +190,22 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorView {
         Toast.makeText(getApplicationContext(), getString(stringResource), Toast.LENGTH_SHORT).show();
     }
 
-    @Override
+   /* @Override
     public void navigateBack(boolean isFragment) {
         if (isFragment) {
             if (mFragmentManager.getBackStackEntryCount() > 1)
                 super.onBackPressed();
             else if (mFragmentManager.getBackStackEntryCount() == 0)
-                // TODO: Remove this comment.
-                return;
-                // presenter.onBackPressed(mBitmap, imageEditorView.getAlteredBitmap());
+
+                presenter.onBackPressed(mBitmap, imageEditorView.getAlteredBitmap());
             else if (mFragmentManager.getBackStackEntryCount() == 1) {
                 super.onBackPressed();
-                //editorHeader.setVisibility(View.VISIBLE);
             }
         } else finish();
-    }
+    }*/
 
-    /*
     @OnClick(R.id.undoButton)
     void onClickUndo() {
         imageEditorView.undo();
     }
-    */
 }

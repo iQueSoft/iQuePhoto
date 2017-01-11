@@ -18,14 +18,11 @@ public class AddTextPresenter extends MvpPresenter<AddTextView> {
 
     public void changeTextColor(@NonNull Context context, EditorColor editorColor) {
         int color = ResourcesCompat.getColor(context.getResources(), editorColor.getColor(), null);
-
-
     }
 
-    public void addText(String text, Typeface typeface, int color, int opacity) {
+    public void addText(String text, Typeface typeface, int color) {
         if (!text.isEmpty()) {
-            int opacityValue = opacity * (int) 2.5f;
-            Text texts = new Text(text, typeface, color, opacityValue);
+            Text texts = new Text(text, typeface, color);
             getViewState().addText(texts);
         } else
             getViewState().showToastMessage(R.string.text_is_empty);

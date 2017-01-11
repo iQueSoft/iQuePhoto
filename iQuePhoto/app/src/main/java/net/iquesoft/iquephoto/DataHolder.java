@@ -6,8 +6,6 @@ import android.net.Uri;
 public class DataHolder {
     private Bitmap mBitmap;
 
-    private Bitmap mShareBitmap;
-
     private Uri mImageUri;
 
     private static DataHolder ourInstance = new DataHolder();
@@ -17,14 +15,6 @@ public class DataHolder {
     }
 
     private DataHolder() {
-    }
-
-    public Bitmap getShareBitmap() {
-        return mShareBitmap;
-    }
-
-    public void setShareBitmap(Bitmap shareBitmap) {
-        mShareBitmap = shareBitmap;
     }
 
     public void setBitmap(Bitmap bitmap) {

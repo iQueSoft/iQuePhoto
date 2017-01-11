@@ -45,7 +45,7 @@ public class StickerSetAdapter extends RecyclerView.Adapter<StickerSetAdapter.Vi
 
         return new ViewHolder(view);
     }
-
+    
     @Override
     public void onBindViewHolder(StickerSetAdapter.ViewHolder holder, int position) {
         final StickersSet stickersSet = mStickersSets.get(position);

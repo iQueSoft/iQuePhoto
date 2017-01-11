@@ -8,5 +8,5 @@ public interface EditorView extends MvpView {
 
     void showToastMessage(int stringResource);
 
-    void navigateBack(boolean isFragment);
+    //void navigateBack(boolean isFragment);
 }

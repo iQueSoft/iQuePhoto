@@ -123,7 +123,7 @@ public class TextFragment extends ToolFragment implements AddTextView {
 
     @OnClick(R.id.addTextButton)
     void onClickAddText() {
-        presenter.addText(editText.getText().toString(), mTypeface, mColor, 255);
+        presenter.addText(editText.getText().toString(), mTypeface, mColor);
     }
 
     @OnClick(R.id.selectTextColorButton)

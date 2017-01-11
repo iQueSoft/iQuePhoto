@@ -269,7 +269,7 @@ public class EditorVignette {
 
         RectUtil.logRectInfo("Vignette before", mVignetteRect);
 
-        float scale = MatrixUtil.getMatrixScale(matrix);
+        float scale = MatrixUtil.getScale(matrix);
 
         mVignetteRect.right /= scale;
         mVignetteRect.bottom /= scale;

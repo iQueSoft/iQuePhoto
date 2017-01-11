@@ -37,6 +37,8 @@ import java.util.List;
 import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.NONE;
 
 public class NewImageEditorView extends View {
+    private static final String TAG = "Image Editor";
+
     private float mLastX;
     private float mLastY;
 
@@ -83,11 +85,6 @@ public class NewImageEditorView extends View {
     }
 
     @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-    }
-
-    @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
 
@@ -113,7 +110,7 @@ public class NewImageEditorView extends View {
         } else {
             bitmap = mImageBitmap;
         }
-        
+
         canvas.clipRect(mSrcRect);
 
         canvas.drawBitmap(bitmap, mImageMatrix, mBitmapPaint);
@@ -135,6 +132,9 @@ public class NewImageEditorView extends View {
                 break;
             case STICKERS:
                 drawStickers(canvas);
+                break;
+            case TEXT:
+                drawTexts(canvas);
                 break;
         }
     }
@@ -175,6 +175,13 @@ public class NewImageEditorView extends View {
         return mImageBitmap;
     }
 
+    public void undo() {
+        mImages.remove(mImages.size() - 1);
+        mUndoListener.hasChanged(mImages.size());
+
+        invalidate();
+    }
+
     public void changeTool(EditorTool tool) {
         mCurrentTool = tool;
 
@@ -192,13 +199,19 @@ public class NewImageEditorView extends View {
     }
 
     public void addText(Text text) {
-        //mTexts.add();
+        EditorText editorText = new EditorText(text, mEditorFrame);
+        editorText.setX(mSrcRect.centerX());
+        editorText.setY(mSrcRect.centerY());
+
+        mTexts.add(editorText);
 
         invalidate();
     }
 
     public void addSticker(Bitmap bitmap) {
         mStickers.add(new EditorSticker(bitmap, mSrcRect, mEditorFrame));
+
+        Log.i(TAG, "Sticker added! (" + String.valueOf(mStickers.size()) + ")");
 
         invalidate();
     }
@@ -286,7 +299,6 @@ public class NewImageEditorView extends View {
                 break;
         }
     }
-
 
     private void actionPointerDown(MotionEvent event) {
         switch (mCurrentTool) {
@@ -568,6 +580,13 @@ public class NewImageEditorView extends View {
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             super.onPostExecute(bitmap);
+
+            switch (mCurrentTool) {
+                case STICKERS:
+                    mStickers.clear();
+                    break;
+            }
+
             mImages.add(new EditorImage(mCurrentTool, bitmap));
 
             // mUndoListener.hasChanged(mImages.size());

@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.MotionEvent;
 
+import net.iquesoft.iquephoto.util.LogHelper;
 import net.iquesoft.iquephoto.util.MatrixUtil;
 import net.iquesoft.iquephoto.util.RectUtil;
 
@@ -32,7 +33,7 @@ public class EditorSticker {
 
     private RectF mImageRect;
 
-    private Rect mSrcRect;
+    //private Rect mSrcRect;
     private RectF mDstRect;
 
     private RectF mFrameRect;
@@ -61,7 +62,7 @@ public class EditorSticker {
     }
 
     private void initialize() {
-        mSrcRect = new Rect(0, 0, mBitmap.getWidth(), mBitmap.getHeight());
+        //mSrcRect = new Rect(0, 0, mBitmap.getWidth(), mBitmap.getHeight());
 
         int stickerWidth = Math.min(mBitmap.getWidth(), (int) mImageRect.width() >> 1);
         int stickerHeight = stickerWidth * mBitmap.getHeight() / mBitmap.getWidth();
@@ -182,6 +183,9 @@ public class EditorSticker {
                 mDstRect.centerY(), mRotateAngle);
         RectUtil.rotateRect(mDeleteHandleDstRect, mDstRect.centerX(),
                 mDstRect.centerY(), mRotateAngle);
+
+        Log.i("Sticker", "Scale = " + MatrixUtil.getScale(mMatrix) + "\n" +
+                "Angle = " + MatrixUtil.getAngle(mMatrix));
     }
 
     public void draw(@NonNull Canvas canvas) {
@@ -276,25 +280,23 @@ public class EditorSticker {
         float imageX = MatrixUtil.getMatrixX(matrix);
         float imageY = MatrixUtil.getMatrixY(matrix);
 
-        if (imageX < 0) {
-            imageX = 0;
-        }
-
         float dX = MatrixUtil.getMatrixX(mMatrix) - imageX;
         float dY = MatrixUtil.getMatrixY(mMatrix) - imageY;
 
-        float scale = MatrixUtil.getMatrixScale(mMatrix) / MatrixUtil.getMatrixScale(matrix);
+        float imageScale = MatrixUtil.getScale(matrix);
 
-        /*dX *= scale;
-        dY *= scale;*/
+        float scale = MatrixUtil.getScale(mMatrix) / imageScale;
 
-        MatrixUtil.matrixInfo("Sticker - before", mMatrix);
+        float angle = MatrixUtil.getAngle(mMatrix);
 
-        //mMatrix.reset();
-        mMatrix.postScale(scale, scale);
-        mMatrix.postTranslate(dX / scale, dY / scale);
+        LogHelper.logMatrix("Sticker - before", mMatrix);
 
-        MatrixUtil.matrixInfo("Sticker - after", mMatrix);
+        mMatrix.reset();
+        mMatrix.setRotate(angle);
+        mMatrix.preScale(scale, scale);
+        mMatrix.postTranslate(dX / imageScale, dY / imageScale);
+
+        LogHelper.logMatrix("Sticker - after", mMatrix);
 
         mIsDrawHelperFrame = false;
     }

@@ -4,15 +4,13 @@ import android.graphics.Typeface;
 
 public class Text {
     private String mText;
-    private int mOpacity;
     private Typeface mTypeface;
     private int mColor;
 
-    public Text(String text, Typeface typeface, int color, int opacity) {
+    public Text(String text, Typeface typeface, int color) {
         mText = text;
         mTypeface = typeface;
         mColor = color;
-        mOpacity = opacity;
     }
 
     public String getText() {
@@ -21,14 +19,6 @@ public class Text {
 
     public void setText(String text) {
         mText = text;
-    }
-
-    public int getOpacity() {
-        return mOpacity;
-    }
-
-    public void setOpacity(int opacity) {
-        mOpacity = opacity;
     }
 
     public Typeface getTypeface() {

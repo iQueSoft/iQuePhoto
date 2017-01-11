@@ -8,14 +8,12 @@
     <ImageView
         android:id="@+id/stickerSetImage"
         android:layout_width="75dp"
-        android:layout_height="75dp"
-        android:src="@drawable/s_christmas_01" />
+        android:layout_height="75dp" />
 
     <TextView
         android:id="@+id/stickerSetTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Christmas"
         android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="14sp"

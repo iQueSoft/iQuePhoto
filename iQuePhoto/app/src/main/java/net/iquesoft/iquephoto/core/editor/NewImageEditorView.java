@@ -36,6 +36,7 @@ import java.util.List;
 
 import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.NONE;
 
+// TODO: CustomViews as MvpView {@link https://github.com/Arello-Mobile/Moxy/wiki/CustomView-as-MvpView}
 public class NewImageEditorView extends View {
     private static final String TAG = "Image Editor";
 

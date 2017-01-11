@@ -21,7 +21,8 @@ public class EditorSticker {
     private static final int BUTTON_WIDTH = 30;
 
     private float mRotateAngle = 0;
-    private float initWidth;
+
+    private float mInitWidth;
 
     private boolean mIsDrawHelperFrame = true;
 
@@ -33,7 +34,6 @@ public class EditorSticker {
 
     private RectF mImageRect;
 
-    //private Rect mSrcRect;
     private RectF mDstRect;
 
     private RectF mFrameRect;
@@ -62,8 +62,6 @@ public class EditorSticker {
     }
 
     private void initialize() {
-        //mSrcRect = new Rect(0, 0, mBitmap.getWidth(), mBitmap.getHeight());
-
         int stickerWidth = Math.min(mBitmap.getWidth(), (int) mImageRect.width() >> 1);
         int stickerHeight = stickerWidth * mBitmap.getHeight() / mBitmap.getWidth();
 
@@ -78,7 +76,7 @@ public class EditorSticker {
                 (float) stickerHeight / mBitmap.getHeight(), mDstRect.left,
                 mDstRect.top);
 
-        initWidth = mDstRect.width();
+        mInitWidth = mDstRect.width();
 
         mFrameRect = new RectF(mDstRect);
         updateFrameRect();
@@ -122,8 +120,8 @@ public class EditorSticker {
 
         mFrameRect.offset(dx, dy);
 
-        Log.i("Sticker", "Move: " + "\nX = " + MatrixUtil.getMatrixX(mMatrix) +
-                "\nY = " + MatrixUtil.getMatrixY(mMatrix));
+        Log.i("Sticker", "Move: " + "\n" + "X = " + MatrixUtil.getMatrixX(mMatrix) +
+                "\n" + "Y = " + MatrixUtil.getMatrixY(mMatrix));
     }
 
     public void updateRotateAndScale(final float dx, final float dy) {
@@ -148,7 +146,7 @@ public class EditorSticker {
         float scale = curLen / srcLen;
 
         float newWidth = mDstRect.width() * scale;
-        if (newWidth / initWidth < MIN_SCALE) {
+        if (newWidth / mInitWidth < MIN_SCALE) {
             return;
         }
 

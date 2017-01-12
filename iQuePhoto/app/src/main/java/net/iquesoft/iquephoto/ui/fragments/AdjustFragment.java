@@ -18,7 +18,7 @@ import net.iquesoft.iquephoto.presentation.common.ToolFragment;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.AdjustPresenter;
 import net.iquesoft.iquephoto.presentation.views.fragment.AdjustView;
 import net.iquesoft.iquephoto.ui.activities.EditorActivity;
-import net.iquesoft.iquephoto.util.ActivityUtil;
+import net.iquesoft.iquephoto.util.ToolbarUtil;
 
 import java.util.List;
 
@@ -51,7 +51,8 @@ public class AdjustFragment extends ToolFragment implements AdjustView {
         super.onResume();
         ((NewImageEditorView) getActivity().findViewById(R.id.imageEditorView))
                 .changeTool(NONE);
-        ActivityUtil.updateToolbarTitle(R.string.adjust, getActivity());
+        ToolbarUtil.updateTitle(R.string.adjust, getActivity());
+        ToolbarUtil.updateSubtitle(null, getActivity());
     }
 
     @Override
@@ -65,7 +66,7 @@ public class AdjustFragment extends ToolFragment implements AdjustView {
         AdjustAdapter adapter = new AdjustAdapter(adjusts);
         adapter.setOnAdjustClickListener(adjust ->
                 ((EditorActivity) getActivity())
-                        .setupFragment(SliderControlFragment.newInstance(adjust.getCommand()))
+                        .setupFragment(AdjustmentFragment.newInstance(adjust.getCommand()))
         );
 
         recyclerView.setLayoutManager(new LinearLayoutManager(null, LinearLayout.HORIZONTAL, false));

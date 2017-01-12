@@ -26,6 +26,8 @@ import net.iquesoft.iquephoto.core.editor.model.EditorFrame;
 import net.iquesoft.iquephoto.core.editor.model.EditorImage;
 import net.iquesoft.iquephoto.core.editor.model.EditorSticker;
 import net.iquesoft.iquephoto.core.editor.model.EditorText;
+import net.iquesoft.iquephoto.core.editor.model.EditorTiltShiftRadial;
+import net.iquesoft.iquephoto.core.editor.model.EditorVignette;
 import net.iquesoft.iquephoto.models.Text;
 import net.iquesoft.iquephoto.util.BitmapUtil;
 import net.iquesoft.iquephoto.util.LogHelper;
@@ -53,6 +55,7 @@ public class NewImageEditorView extends View {
 
     private Matrix mImageMatrix = new Matrix();
     private Matrix mSupportMatrix = new Matrix();
+    private Matrix mTransformMatrix = new Matrix();
 
     private RectF mSrcRect = new RectF();
     private RectF mDstRect = new RectF();
@@ -69,6 +72,8 @@ public class NewImageEditorView extends View {
     private EditorSticker mCurrentCheckedSticker;
 
     private EditorFrame mEditorFrame;
+    private EditorVignette mVignette;
+    private EditorTiltShiftRadial mRadialTiltShift;
 
     private List<Drawing> mDrawings = new ArrayList<>();
     private List<EditorText> mTexts = new ArrayList<>();
@@ -83,6 +88,8 @@ public class NewImageEditorView extends View {
         initDrawingPaint();
 
         mEditorFrame = new EditorFrame(context);
+        mVignette = new EditorVignette(this);
+        mRadialTiltShift = new EditorTiltShiftRadial(this);
     }
 
     @Override
@@ -96,6 +103,8 @@ public class NewImageEditorView extends View {
         mImageMatrix.reset();
         mImageMatrix.setRectToRect(mSrcRect, mDstRect, Matrix.ScaleToFit.CENTER);
         mImageMatrix.mapRect(mSrcRect);
+
+        mTransformMatrix.set(mImageMatrix);
 
         LogHelper.logRect("mSrcRect", mSrcRect);
         LogHelper.logMatrix("mImageMatrix", mImageMatrix);
@@ -122,6 +131,12 @@ public class NewImageEditorView extends View {
             case FILTERS:
                 canvas.drawBitmap(bitmap, mImageMatrix, mFilterPaint);
                 break;
+            /*case BRIGHTNESS:
+                canvas.drawBitmap(bitmap, mImageMatrix, mAdjustPaint);
+                break;
+            case CONTRAST:
+                canvas.drawBitmap(bitmap, mImageMatrix, mAdjustPaint);
+                break;*/
             case OVERLAY:
                 canvas.drawBitmap(mSupportBitmap, mSupportMatrix, mOverlayPaint);
                 break;
@@ -136,6 +151,18 @@ public class NewImageEditorView extends View {
                 break;
             case TEXT:
                 drawTexts(canvas);
+                break;
+            case VIGNETTE:
+                mVignette.draw(canvas);
+                break;
+            case TRANSFORM_STRAIGHTEN:
+                canvas.drawBitmap(bitmap, mTransformMatrix, mBitmapPaint);
+                break;
+            case TILT_SHIFT_RADIAL:
+                mRadialTiltShift.draw(canvas, bitmap, mImageMatrix, mBitmapPaint);
+                break;
+            default:
+                canvas.drawBitmap(bitmap, mImageMatrix, mAdjustPaint);
                 break;
         }
     }
@@ -185,6 +212,15 @@ public class NewImageEditorView extends View {
 
     public void changeTool(EditorTool tool) {
         mCurrentTool = tool;
+
+        switch (mCurrentTool) {
+            case VIGNETTE:
+                mVignette.updateRect(mSrcRect);
+                break;
+            case TILT_SHIFT_RADIAL:
+                mRadialTiltShift.updateRect(mSrcRect);
+                return;
+        }
 
         invalidate();
 
@@ -245,10 +281,80 @@ public class NewImageEditorView extends View {
         invalidate();
     }
 
+    public void setVignetteIntensity(int value) {
+        mVignette.updateMask(value);
+
+        invalidate();
+    }
+
     public void setOverlayIntensity(int value) {
         mOverlayPaint.setAlpha(value);
 
         invalidate();
+    }
+
+    public void setBrightnessValue(int value) {
+        if (value != 0) {
+            mAdjustPaint.setColorFilter(
+                    new ColorMatrixColorFilter(AdjustColorFilter.getBrightnessMatrix(value))
+            );
+
+            invalidate();
+        }
+    }
+
+    public void setContrastValue(int value) {
+        if (value != 0) {
+            mAdjustPaint.setColorFilter(
+                    new ColorMatrixColorFilter(AdjustColorFilter.getContrastMatrix(value))
+            );
+
+            invalidate();
+        }
+    }
+
+    public void setWarmthValue(int value) {
+        if (value != 0) {
+            mAdjustPaint.setColorFilter(
+                    new ColorMatrixColorFilter(AdjustColorFilter.getWarmthMatrix(value))
+            );
+
+            invalidate();
+        }
+    }
+
+    public void setStraightenTransformValue(int value) {
+        if (value != 0) {
+            mTransformMatrix.set(mImageMatrix);
+
+            float width = mSrcRect.width();
+            float height = mSrcRect.height();
+
+            if (width >= height) {
+                width = mSrcRect.height();
+                height = mSrcRect.width();
+            }
+
+            float alpha = (float) Math.atan(height / width);
+
+            float length1 = (width / 2) / (float) Math.cos(alpha - Math.abs(Math.toRadians(value)));
+
+            float length2 = (float) Math.sqrt(Math.pow(width / 2, 2) + Math.pow(height / 2, 2));
+
+            float scale = length2 / length1;
+
+            float centerX = mSrcRect.centerX();
+            float centerY = mSrcRect.centerY();
+
+            float dX = centerX * (1 - scale);
+            float dY = centerY * (1 - scale);
+
+            mTransformMatrix.postScale(scale, scale);
+            mTransformMatrix.postTranslate(dX, dY);
+            mTransformMatrix.postRotate(value, centerX, centerY);
+
+            invalidate();
+        }
     }
 
     public void setBrushColor(@ColorInt int color) {
@@ -298,6 +404,12 @@ public class NewImageEditorView extends View {
             case STICKERS:
                 findCheckedSticker(event);
                 break;
+            case VIGNETTE:
+                mVignette.actionDown(event);
+                break;
+            case TILT_SHIFT_RADIAL:
+                mRadialTiltShift.actionDown(event);
+                break;
         }
     }
 
@@ -305,6 +417,11 @@ public class NewImageEditorView extends View {
         switch (mCurrentTool) {
             case DRAWING:
 
+                break;
+            case VIGNETTE:
+                mVignette.actionPointerDown(event);
+            case TILT_SHIFT_RADIAL:
+                mRadialTiltShift.actionPointerDown(event);
                 break;
         }
     }
@@ -318,6 +435,12 @@ public class NewImageEditorView extends View {
                 if (mCurrentCheckedSticker != null) {
                     moveSticker(event);
                 }
+                break;
+            case VIGNETTE:
+                mVignette.actionMove(event);
+                break;
+            case TILT_SHIFT_RADIAL:
+                mRadialTiltShift.actionMove(event);
                 break;
 
         }
@@ -335,6 +458,12 @@ public class NewImageEditorView extends View {
                 if (mCurrentCheckedSticker != null) {
                     mCurrentCheckedSticker.resetHelperFrameOpacity();
                 }
+                break;
+            case VIGNETTE:
+                mVignette.actionUp();
+                break;
+            case TILT_SHIFT_RADIAL:
+                mRadialTiltShift.actionUp();
                 break;
         }
 
@@ -531,18 +660,19 @@ public class NewImageEditorView extends View {
                     calculateSupportMatrix(mSupportBitmap);
                     mCanvas.drawBitmap(mSupportBitmap, mSupportMatrix, mOverlayPaint);
                     break;
-                case BRIGHTNESS:
-                    mCanvas.drawBitmap(mBitmap, 0, 0, mAdjustPaint);
-                    break;
-                case CONTRAST:
-                    mCanvas.drawBitmap(mBitmap, 0, 0, mAdjustPaint);
-                    break;
                 case STICKERS:
                     drawStickers(mCanvas);
                     break;
                 case FRAMES:
                     calculateSupportMatrix(mSupportBitmap);
                     mCanvas.drawBitmap(mSupportBitmap, mSupportMatrix, mBitmapPaint);
+                    break;
+                case VIGNETTE:
+                    mVignette.prepareToDraw(mCanvas, mImageMatrix);
+                    mVignette.draw(mCanvas);
+                    break;
+                default:
+                    mCanvas.drawBitmap(mBitmap, 0, 0, mAdjustPaint);
                     break;
                 /*case TEXT:
                     drawTexts(mCanvas);
@@ -556,15 +686,7 @@ public class NewImageEditorView extends View {
                     mEditorVignette.prepareToDraw(mCanvas, mMatrix);
                     mEditorVignette.draw(mCanvas);
                     break;
-                case SATURATION:
-                    mCanvas.drawBitmap(mBitmap, 0, 0, mAdjustPaint);
-                    break;
-                case WARMTH:
-                    mCanvas.drawBitmap(mBitmap, 0, 0, mAdjustPaint);
-                    break;
-                case EXPOSURE:
-                    mCanvas.drawBitmap(mBitmap, 0, 0, mAdjustPaint);
-                    break;
+
                 case TRANSFORM_STRAIGHTEN:
                     mCanvas.save(Canvas.CLIP_SAVE_FLAG);
                     mCanvas.setMatrix(getTransformStraightenMatrix(mTransformStraightenValue));

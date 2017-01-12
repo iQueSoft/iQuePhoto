@@ -66,12 +66,12 @@ public class FontsAdapter extends RecyclerView.Adapter<FontsAdapter.ViewHolder> 
             notifyItemChanged(position);
         });
 
-        if (mSelectedFontPosition == position) {
+        /*if (mSelectedFontPosition == position) {
             mOnFontClickListener.onClick(font);
             holder.fontSelectedImageView.setVisibility(View.VISIBLE);
         } else {
             holder.fontSelectedImageView.setVisibility(View.GONE);
-        }
+        }*/
 
     }
 
@@ -90,9 +90,6 @@ public class FontsAdapter extends RecyclerView.Adapter<FontsAdapter.ViewHolder> 
 
         @BindView(R.id.fontFamilyTextView)
         TextView fontFamilyTextView;
-
-        @BindView(R.id.fontSelectedImageView)
-        ImageView fontSelectedImageView;
 
         public ViewHolder(View itemView) {
             super(itemView);

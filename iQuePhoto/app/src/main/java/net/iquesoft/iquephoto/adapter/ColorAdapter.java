@@ -26,7 +26,7 @@ public class ColorAdapter extends RecyclerView.Adapter<ColorAdapter.ViewHolder> 
     private List<EditorColor> mEditorColorsList;
 
     private OnColorClickListener mOnColorClickListener;
-
+    
     public interface OnColorClickListener {
         void onClick(EditorColor editorColor);
     }
@@ -57,7 +57,7 @@ public class ColorAdapter extends RecyclerView.Adapter<ColorAdapter.ViewHolder> 
         );
 
         if (mSelectedColorPosition == holder.getAdapterPosition()) {
-            mOnColorClickListener.onClick(color);
+            // mOnColorClickListener.onClick(color);
             holder.colorSelected.setVisibility(View.VISIBLE);
         } else {
             holder.colorSelected.setVisibility(View.GONE);

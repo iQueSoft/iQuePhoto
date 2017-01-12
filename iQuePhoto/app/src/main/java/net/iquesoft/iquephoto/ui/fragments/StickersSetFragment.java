@@ -19,7 +19,7 @@ import net.iquesoft.iquephoto.models.StickersSet;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.StickersSetPresenter;
 import net.iquesoft.iquephoto.presentation.views.fragment.StickersSetView;
 import net.iquesoft.iquephoto.ui.activities.EditorActivity;
-import net.iquesoft.iquephoto.util.ActivityUtil;
+import net.iquesoft.iquephoto.util.ToolbarUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +65,8 @@ public class StickersSetFragment extends ToolFragment implements StickersSetView
     public void onResume() {
         super.onResume();
         mImageEditorView.changeTool(STICKERS);
-        ActivityUtil.updateToolbarTitle(R.string.stickers, getActivity());
+        ToolbarUtil.updateTitle(R.string.stickers, getActivity());
+        ToolbarUtil.updateSubtitle(null, getActivity());
     }
 
     @Override
@@ -79,10 +80,10 @@ public class StickersSetFragment extends ToolFragment implements StickersSetView
         StickerSetAdapter adapter = new StickerSetAdapter(stickersSets);
         adapter.setStickerSetClickListener(stickersSet ->
                         // FIXME:
-                        presenter.stickersSetClicked(stickersSet)
-                /*((EditorActivity) getActivity()).setupFragment(
+                       // presenter.stickersSetClicked(stickersSet)
+                ((EditorActivity) getActivity()).setupFragment(
                         StickersFragment.newInstance(stickersSet.getTitle(), new ArrayList<>(stickersSet.getStickers()))
-                )*/
+                )
         );
 
         recyclerView.setLayoutManager(

@@ -18,7 +18,7 @@ import net.iquesoft.iquephoto.models.Sticker;
 import net.iquesoft.iquephoto.presentation.common.ToolFragment;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.StickersPresenter;
 import net.iquesoft.iquephoto.presentation.views.fragment.StickersView;
-import net.iquesoft.iquephoto.util.ActivityUtil;
+import net.iquesoft.iquephoto.util.ToolbarUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,7 +95,7 @@ public class StickersFragment extends ToolFragment implements StickersView {
 
     @Override
     public void setupToolbarSubtitle(@StringRes int subtitle) {
-        ActivityUtil.updateToolbatSubtitle(subtitle, getActivity());
+        ToolbarUtil.updateSubtitle(subtitle, getActivity());
     }
 
     @Override

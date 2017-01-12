@@ -15,7 +15,7 @@ import net.iquesoft.iquephoto.presentation.common.ToolFragment;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.DrawingPresenter;
 import net.iquesoft.iquephoto.ui.dialogs.ColorPickerDialog;
 import net.iquesoft.iquephoto.presentation.views.fragment.DrawingView;
-import net.iquesoft.iquephoto.util.ActivityUtil;
+import net.iquesoft.iquephoto.util.ToolbarUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -94,7 +94,7 @@ public class DrawingFragment extends ToolFragment implements DrawingView {
     public void onResume() {
         super.onResume();
         mImageEditorView.changeTool(DRAWING);
-        ActivityUtil.updateToolbarTitle(R.string.drawing, getActivity());
+        ToolbarUtil.updateTitle(R.string.drawing, getActivity());
     }
 
     @Override

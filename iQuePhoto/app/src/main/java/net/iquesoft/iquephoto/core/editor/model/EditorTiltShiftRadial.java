@@ -18,6 +18,7 @@ import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 
 import net.iquesoft.iquephoto.core.editor.ImageEditorView;
+import net.iquesoft.iquephoto.core.editor.NewImageEditorView;
 import net.iquesoft.iquephoto.core.editor.enums.EditorMode;
 import net.iquesoft.iquephoto.util.BitmapUtil;
 import net.iquesoft.iquephoto.util.MotionEventUtil;
@@ -63,9 +64,9 @@ public class EditorTiltShiftRadial implements EditorTiltShift {
 
     private EditorMode mMode = NONE;
 
-    private ImageEditorView mImageEditorView;
+    private NewImageEditorView mImageEditorView;
 
-    public EditorTiltShiftRadial(ImageEditorView imageEditorView) {
+    public EditorTiltShiftRadial(NewImageEditorView imageEditorView) {
         mImageEditorView = imageEditorView;
 
         mContext = mImageEditorView.getContext();

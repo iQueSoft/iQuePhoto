@@ -15,7 +15,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 
-import net.iquesoft.iquephoto.core.editor.ImageEditorView;
+import net.iquesoft.iquephoto.core.editor.NewImageEditorView;
 import net.iquesoft.iquephoto.core.editor.enums.EditorMode;
 import net.iquesoft.iquephoto.util.MatrixUtil;
 import net.iquesoft.iquephoto.util.MotionEventUtil;
@@ -55,9 +55,9 @@ public class EditorVignette {
 
     private EditorMode mMode = NONE;
 
-    private ImageEditorView mImageEditorView;
+    private NewImageEditorView mImageEditorView;
 
-    public EditorVignette(ImageEditorView imageEditorView) {
+    public EditorVignette(NewImageEditorView imageEditorView) {
         mImageEditorView = imageEditorView;
 
         initializeVignette(imageEditorView.getContext());
@@ -132,31 +132,11 @@ public class EditorVignette {
         mRadialGradient.setLocalMatrix(mGradientMatrix);
     }
 
-    public void updateRect(RectF bitmapRectF) {
-        RectF rect = bitmapRectF;
-        final boolean rect_changed = !mBitmapRect.equals(rect);
+    public void updateRect(RectF bitmapRect) {
+        mVignetteRect.set(bitmapRect);
+        mVignetteRect.inset(mControlPointTolerance, mControlPointTolerance);
 
-        if (null != rect) {
-            if (rect_changed) {
-                if (!mBitmapRect.isEmpty()) {
-                    float old_left = mBitmapRect.left;
-                    float old_top = mBitmapRect.top;
-                    float old_width = mBitmapRect.width();
-                    float old_height = mBitmapRect.height();
-
-                    mVignetteRect.inset(-(rect.width() - old_width) / 2, -(rect.height() - old_height) / 2);
-                    mVignetteRect.offset(rect.left - old_left, rect.top - old_top);
-                    mVignetteRect.offset((rect.width() - old_width) / 2, (rect.height() - old_height) / 2);
-                } else {
-                    mVignetteRect.set(rect);
-                    mVignetteRect.inset(mControlPointTolerance, mControlPointTolerance);
-                }
-            }
-            mBitmapRect.set(rect);
-        } else {
-            mBitmapRect.setEmpty();
-            mVignetteRect.setEmpty();
-        }
+        mBitmapRect.set(bitmapRect);
 
         updateGradientMatrix(mVignetteRect);
     }
@@ -205,7 +185,7 @@ public class EditorVignette {
             Log.i("Angle", String.valueOf(angle));
         }
     }
-    
+
     public void actionMove(MotionEvent event) {
         mTempVignetteRect.set(mVignetteRect);
 
@@ -264,7 +244,6 @@ public class EditorVignette {
     }
 
     public void prepareToDraw(@NonNull Canvas canvas, @NonNull Matrix matrix) {
-        // TODO: Draw vignette on final photo.
         mBitmapRect.set(0, 0, canvas.getWidth(), canvas.getHeight());
 
         RectUtil.logRectInfo("Vignette before", mVignetteRect);
@@ -273,17 +252,12 @@ public class EditorVignette {
 
         mVignetteRect.right /= scale;
         mVignetteRect.bottom /= scale;
-
+        
         float x = MatrixUtil.getMatrixX(matrix);
-
-        if (x < 0) {
-            x = 0;
-        }
-
         float y = MatrixUtil.getMatrixY(matrix);
 
-        float newX = (mVignetteRect.left - x) / scale;
-        float newY = (mVignetteRect.top - y) / scale;
+        float newX = (mVignetteRect.left - x); // scale;
+        float newY = (mVignetteRect.top - y); // scale;
 
         mVignetteRect.offsetTo(newX, newY);
 

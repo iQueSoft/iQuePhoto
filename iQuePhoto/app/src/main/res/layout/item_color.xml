@@ -5,16 +5,16 @@
     android:padding="5dp">
 
     <ImageView
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:id="@+id/rgbFrameLayout" />
+        android:id="@+id/rgbFrameLayout"
+        android:layout_width="40dp"
+        android:layout_height="40dp" />
 
     <ImageView
         android:id="@+id/colorSelected"
         android:layout_width="25dp"
         android:layout_height="25dp"
-        android:src="@drawable/ic_check"
-        android:visibility="gone"
+        android:layout_gravity="center"
         android:scaleType="fitEnd"
-        android:layout_gravity="center" />
+        android:src="@drawable/ic_check"
+        android:visibility="gone" />
 </FrameLayout>

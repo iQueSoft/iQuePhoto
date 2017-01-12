@@ -153,8 +153,8 @@ public class ImageEditorView extends ImageView {
         mGuidelinesPaint.setAlpha(125);
 
         mEditorFrame = new EditorFrame(context);
-        mEditorVignette = new EditorVignette(this);
-        mTiltShiftRadial = new EditorTiltShiftRadial(this);
+        //mEditorVignette = new EditorVignette(this);
+        //mTiltShiftRadial = new EditorTiltShiftRadial(this);
         mTiltShiftLinear = new EditorTiltShiftLinear(this);
 
         mImagePaint.setFilterBitmap(true);
@@ -401,7 +401,7 @@ public class ImageEditorView extends ImageView {
 
         invalidate();
     }
-
+    
     private Matrix getStraightenTransformMatrix(float value) {
         Matrix matrix;
 

@@ -14,7 +14,7 @@ import net.iquesoft.iquephoto.core.editor.NewImageEditorView;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.TransformPresenter;
 import net.iquesoft.iquephoto.presentation.views.fragment.TransformView;
 import net.iquesoft.iquephoto.ui.activities.EditorActivity;
-import net.iquesoft.iquephoto.util.ActivityUtil;
+import net.iquesoft.iquephoto.util.ToolbarUtil;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -59,7 +59,8 @@ public class TransformFragment extends MvpAppCompatFragment implements Transform
         super.onResume();
         ((NewImageEditorView) getActivity().findViewById(R.id.imageEditorView))
                 .changeTool(TRANSFORM);
-        ActivityUtil.updateToolbarTitle(R.string.transform, getActivity());
+        ToolbarUtil.updateTitle(R.string.transform, getActivity());
+        ToolbarUtil.updateSubtitle(null, getActivity());
     }
 
     @Override
@@ -77,21 +78,21 @@ public class TransformFragment extends MvpAppCompatFragment implements Transform
     @OnClick(R.id.transformHorizontalButton)
     void onClickTransformHorizontal() {
         mEditorActivity.setupFragment(
-                SliderControlFragment.newInstance(TRANSFORM_HORIZONTAL)
+                AdjustmentFragment.newInstance(TRANSFORM_HORIZONTAL)
         );
     }
 
     @OnClick(R.id.transformStraightenButton)
     void onClickTransformStraighten() {
         mEditorActivity.setupFragment(
-                SliderControlFragment.newInstance(TRANSFORM_STRAIGHTEN)
+                AdjustmentFragment.newInstance(TRANSFORM_STRAIGHTEN)
         );
     }
 
     @OnClick(R.id.transformVerticalButton)
     void onClickTransformVertical() {
         mEditorActivity.setupFragment(
-                SliderControlFragment.newInstance(TRANSFORM_VERTICAL)
+                AdjustmentFragment.newInstance(TRANSFORM_VERTICAL)
         );
     }
 }

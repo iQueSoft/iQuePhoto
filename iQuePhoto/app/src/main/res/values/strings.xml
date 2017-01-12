@@ -47,6 +47,7 @@
     <string name="vignette">Vignette</string>
 
     <string name="select_color">Select a color</string>
+    <string name="color">Color</string>
 
     <string name="tool_brightness">Brightness</string>
 
@@ -54,6 +55,8 @@
 
     <string name="save_image">Save Image</string>
     <string name="successfully_saved">Image successfully saved!</string>
+
+    <string name="intensity">Intensity</string>
 
     <!-- START - Crop. -->
     <string name="crop">Crop</string>
@@ -141,7 +144,7 @@
     <string name="font">Font</string>
     <string name="start_typing">Start typing…</string>
     <string name="select_font">Select a font</string>
-    <string name="preview_text">AaBbCcDdEeFf</string>
+    <string name="preview_text">Abc</string>
     <string-array name="formats_array">
         <item>Normal</item>
         <item>Bold</item>

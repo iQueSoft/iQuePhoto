@@ -2,6 +2,7 @@ package net.iquesoft.iquephoto.ui.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.StringRes;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,12 +11,12 @@ import android.widget.TextView;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.core.editor.ImageEditorView;
+import net.iquesoft.iquephoto.core.editor.NewImageEditorView;
 import net.iquesoft.iquephoto.core.editor.enums.EditorTool;
 import net.iquesoft.iquephoto.presentation.common.ToolFragment;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.SliderControlPresenter;
-import net.iquesoft.iquephoto.presentation.views.fragment.SliderControlView;
-import net.iquesoft.iquephoto.util.ActivityUtil;
+import net.iquesoft.iquephoto.presentation.views.fragment.AdjustmentView;
+import net.iquesoft.iquephoto.util.ToolbarUtil;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
@@ -23,7 +24,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class SliderControlFragment extends ToolFragment implements SliderControlView {
+public class AdjustmentFragment extends ToolFragment implements AdjustmentView {
     public static final String ARG_PARAM = "command";
 
     @InjectPresenter
@@ -43,10 +44,10 @@ public class SliderControlFragment extends ToolFragment implements SliderControl
 
     private Unbinder mUnbinder;
 
-    private ImageEditorView mImageEditorView;
+    private NewImageEditorView mImageEditorView;
 
-    public static SliderControlFragment newInstance(EditorTool editorTool) {
-        SliderControlFragment fragment = new SliderControlFragment();
+    public static AdjustmentFragment newInstance(EditorTool editorTool) {
+        AdjustmentFragment fragment = new AdjustmentFragment();
 
         Bundle args = new Bundle();
         args.putSerializable(ARG_PARAM, editorTool);
@@ -56,14 +57,14 @@ public class SliderControlFragment extends ToolFragment implements SliderControl
         return fragment;
     }
 
-    public SliderControlFragment() {
+    public AdjustmentFragment() {
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mImageEditorView =
-                (ImageEditorView) getActivity().findViewById(R.id.imageEditorView);
+                (NewImageEditorView) getActivity().findViewById(R.id.imageEditorView);
     }
 
     @Override
@@ -115,12 +116,41 @@ public class SliderControlFragment extends ToolFragment implements SliderControl
 
     @Override
     public void changeToolbarTitle(@StringRes int title) {
-        ActivityUtil.updateToolbarTitle(title, getActivity());
+        ToolbarUtil.updateTitle(title, getActivity());
+    }
+
+    @Override
+    public void changeToolbarSubtitle(@StringRes int subtitle) {
+        ToolbarUtil.updateSubtitle(subtitle, getActivity());
+    }
+
+    @Override
+    public void onIntensityValueChanged(int value) {
+        Log.i("Adjustment", "Filter intensity = " + String.valueOf(value));
+
+        mImageEditorView.setFilterIntensity(value);
+    }
+
+    @Override
+    public void onBrightnessValueChanged(int value) {
+        Log.i("Adjustment", "Brightness = " + String.valueOf(value));
+
+        mImageEditorView.setBrightnessValue(value);
+    }
+
+    @Override
+    public void onContrastValueChanged(int value) {
+        mImageEditorView.setContrastValue(value);
+    }
+
+    @Override
+    public void onWarmthValueChanged(int value) {
+        mImageEditorView.setWarmthValue(value);
     }
 
     @Override
     public void onStraightenValueChanged(int value) {
-        mImageEditorView.setTransformStraightenValue(value);
+        mImageEditorView.setStraightenTransformValue(value);
     }
 
     @Override
@@ -130,7 +160,7 @@ public class SliderControlFragment extends ToolFragment implements SliderControl
 
     @Override
     public void setupImageEditorCommand(EditorTool command) {
-        mImageEditorView.setCommand(command);
+        mImageEditorView.changeTool(command);
     }
 
     @Override

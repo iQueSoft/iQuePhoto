@@ -39,7 +39,7 @@ public class EditorColor {
 
     };
 
-    private EditorColor(@ColorRes int color) {
+    public EditorColor(@ColorRes int color) {
         mColor = color;
     }
 

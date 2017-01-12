@@ -4,17 +4,27 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Window;
 
+import net.iquesoft.iquephoto.App;
 import net.iquesoft.iquephoto.R;
+import net.iquesoft.iquephoto.adapter.FontsAdapter;
 import net.iquesoft.iquephoto.models.Font;
+
+import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class FontPickerDialog extends Dialog {
+    @Inject
+    List<Font> mFonts;
+
     @BindView(R.id.fontsRecyclerView)
     RecyclerView fontsList;
 
@@ -45,6 +55,8 @@ public class FontPickerDialog extends Dialog {
 
         ButterKnife.bind(this);
 
+        App.getAppComponent().inject(this);
+
         initFontsList();
     }
 
@@ -60,16 +72,14 @@ public class FontPickerDialog extends Dialog {
     }
 
     private void initFontsList() {
-        // TODO: Fonts.
-        /*FontsAdapter fontsAdapter = new FontsAdapter(mFonts);
+        FontsAdapter fontsAdapter = new FontsAdapter(mFonts);
+        fontsList.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 
-        fontsList.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        fontsAdapter.setOnFontClickListener(font ->
+                mTypeface = Typeface.createFromAsset(mContext.getAssets(), font.getPath())
+        );
 
-        fontsAdapter.setOnFontClickListener(font -> {
-            mTypeface = Typeface.createFromAsset(mContext.getAssets(), font.getPath());
-        });
-
-        fontsList.setAdapter(fontsAdapter);*/
+        fontsList.setAdapter(fontsAdapter);
     }
 
     public void setOnFontClickListener(OnFontClickListener onFontClickListener) {

@@ -1,43 +1,34 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="1dp">
+    android:layout_width="75dp"
+    android:layout_height="75dp"
+    android:layout_margin="5dp"
+    card_view:cardBackgroundColor="@color/colorBackground"
+    card_view:cardCornerRadius="4dp">
 
-    <android.support.v7.widget.CardView
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        card_view:cardCornerRadius="4dp">
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="1dp">
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/fontPreviewTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:padding="5dp">
+            android:text="@string/preview_text"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
 
-            <TextView
-                android:id="@+id/fontPreviewTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/preview_text"
-                android:textColor="@android:color/black"
-                android:textSize="22sp" />
-
-            <TextView
-                android:id="@+id/fontFamilyTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Font title" />
-        </LinearLayout>
-
-        <ImageView
-            android:id="@+id/fontSelectedImageView"
+        <TextView
+            android:id="@+id/fontFamilyTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:padding="5dp"
-            android:src="@drawable/ic_check_black_40dp" />
-    </android.support.v7.widget.CardView>
-</FrameLayout>
+            android:text="Font title"
+            android:textAlignment="center"
+            android:textSize="12sp" />
+    </LinearLayout>
+</android.support.v7.widget.CardView>

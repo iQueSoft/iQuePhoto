@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -20,13 +19,10 @@ import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.core.editor.NewImageEditorView;
 import net.iquesoft.iquephoto.presentation.common.ToolFragment;
 import net.iquesoft.iquephoto.models.Text;
-import net.iquesoft.iquephoto.ui.dialogs.ColorPickerDialog;
-import net.iquesoft.iquephoto.ui.dialogs.FontPickerDialog;
+import net.iquesoft.iquephoto.ui.activities.EditorActivity;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.AddTextPresenter;
 import net.iquesoft.iquephoto.presentation.views.fragment.AddTextView;
-import net.iquesoft.iquephoto.util.ActivityUtil;
-
-import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
+import net.iquesoft.iquephoto.util.ToolbarUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -53,9 +49,6 @@ public class TextFragment extends ToolFragment implements AddTextView {
 
     private Unbinder mUnbinder;
 
-    private FontPickerDialog mFontPickerDialog;
-    private ColorPickerDialog mColorPickerDialog;
-
     private NewImageEditorView mImageEditorView;
 
     public static TextFragment newInstance() {
@@ -76,15 +69,6 @@ public class TextFragment extends ToolFragment implements AddTextView {
 
         mContext = view.getContext();
 
-        mFontPickerDialog = new FontPickerDialog(view.getContext());
-        mFontPickerDialog.setOnFontClickListener(typeface -> mTypeface = typeface);
-
-        mColorPickerDialog = new ColorPickerDialog(mContext);
-        mColorPickerDialog.setOnColorClickListener(color ->
-                presenter.changeTextColor(getContext(), color)
-        );
-
-
         return view;
     }
 
@@ -97,7 +81,7 @@ public class TextFragment extends ToolFragment implements AddTextView {
     public void onResume() {
         super.onResume();
         mImageEditorView.changeTool(TEXT);
-        ActivityUtil.updateToolbarTitle(R.string.text, getActivity());
+        ToolbarUtil.updateTitle(R.string.text, getActivity());
     }
 
     @Override
@@ -128,11 +112,11 @@ public class TextFragment extends ToolFragment implements AddTextView {
 
     @OnClick(R.id.selectTextColorButton)
     void onClickTextColorButton() {
-        mColorPickerDialog.show();
+        ((EditorActivity) getActivity()).setupFragment(ColorsFragment.newInstance());
     }
 
     @OnClick(R.id.selectFontButton)
     void onClickTextButton() {
-        mFontPickerDialog.show();
+        ((EditorActivity) getActivity()).setupFragment(FontsFragment.newInstance());
     }
 }

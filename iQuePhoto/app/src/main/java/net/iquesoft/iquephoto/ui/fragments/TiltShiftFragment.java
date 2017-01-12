@@ -13,7 +13,7 @@ import net.iquesoft.iquephoto.core.editor.enums.EditorTool;
 import net.iquesoft.iquephoto.presentation.common.ToolFragment;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.TiltShiftFragmentPresenter;
 import net.iquesoft.iquephoto.presentation.views.fragment.TiltShiftView;
-import net.iquesoft.iquephoto.util.ActivityUtil;
+import net.iquesoft.iquephoto.util.ToolbarUtil;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -55,7 +55,8 @@ public class TiltShiftFragment extends ToolFragment implements TiltShiftView {
     public void onResume() {
         super.onResume();
         mImageEditorView.changeTool(TILT_SHIFT_RADIAL);
-        ActivityUtil.updateToolbarTitle(R.string.tilt_shift, getActivity());
+        ToolbarUtil.updateTitle(R.string.tilt_shift, getActivity());
+        ToolbarUtil.updateSubtitle(R.string.tilt_shift_radial, getActivity());
     }
 
     @Override

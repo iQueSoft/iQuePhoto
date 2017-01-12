@@ -17,7 +17,7 @@ import net.iquesoft.iquephoto.presentation.common.ToolFragment;
 import net.iquesoft.iquephoto.models.Filter;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.FiltersPresenter;
 import net.iquesoft.iquephoto.presentation.views.fragment.FiltersView;
-import net.iquesoft.iquephoto.util.ActivityUtil;
+import net.iquesoft.iquephoto.util.ToolbarUtil;
 
 import java.util.List;
 
@@ -69,7 +69,7 @@ public class FiltersFragment extends ToolFragment implements FiltersView {
     @Override
     public void onResume() {
         super.onResume();
-        ActivityUtil.updateToolbarTitle(R.string.filters, getActivity());
+        ToolbarUtil.updateTitle(R.string.filters, getActivity());
         mImageEditorView.changeTool(FILTERS);
     }
 

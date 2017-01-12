@@ -17,7 +17,7 @@ import net.iquesoft.iquephoto.models.Tool;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.ToolsPresenter;
 import net.iquesoft.iquephoto.presentation.views.fragment.ToolsView;
 import net.iquesoft.iquephoto.ui.activities.EditorActivity;
-import net.iquesoft.iquephoto.util.ActivityUtil;
+import net.iquesoft.iquephoto.util.ToolbarUtil;
 
 import java.util.List;
 
@@ -53,7 +53,9 @@ public class ToolsFragment extends MvpAppCompatFragment implements ToolsView {
     @Override
     public void onResume() {
         super.onResume();
-        ActivityUtil.updateToolbarTitle(R.string.app_name, getActivity());
+        ToolbarUtil.updateTitle(R.string.app_name, getActivity());
+        ToolbarUtil.updateSubtitle(null, getActivity());
+
         ((NewImageEditorView) getActivity().findViewById(R.id.imageEditorView))
                 .changeTool(NONE);
     }

@@ -4,6 +4,7 @@ import android.graphics.ColorMatrix;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.models.Adjust;
+import net.iquesoft.iquephoto.models.EditorColor;
 import net.iquesoft.iquephoto.models.Filter;
 import net.iquesoft.iquephoto.models.Font;
 import net.iquesoft.iquephoto.models.Frame;
@@ -17,7 +18,7 @@ import net.iquesoft.iquephoto.ui.fragments.DrawingFragment;
 import net.iquesoft.iquephoto.ui.fragments.FiltersFragment;
 import net.iquesoft.iquephoto.ui.fragments.FramesFragment;
 import net.iquesoft.iquephoto.ui.fragments.OverlaysFragment;
-import net.iquesoft.iquephoto.ui.fragments.SliderControlFragment;
+import net.iquesoft.iquephoto.ui.fragments.AdjustmentFragment;
 import net.iquesoft.iquephoto.ui.fragments.StickersSetFragment;
 import net.iquesoft.iquephoto.ui.fragments.TiltShiftFragment;
 import net.iquesoft.iquephoto.ui.fragments.TransformFragment;
@@ -49,7 +50,7 @@ public class EditorModule {
                 new Tool(R.string.stickers, R.drawable.ic_stiker, new StickersSetFragment()),
                 new Tool(R.string.frames, R.drawable.ic_frame, new FramesFragment()),
                 new Tool(R.string.transform, R.drawable.ic_frame, new TransformFragment()),
-                new Tool(R.string.vignette, R.drawable.ic_vignette, SliderControlFragment.newInstance(VIGNETTE)),
+                new Tool(R.string.vignette, R.drawable.ic_vignette, AdjustmentFragment.newInstance(VIGNETTE)),
                 new Tool(R.string.tilt_shift, R.drawable.ic_tilt_shift, new TiltShiftFragment()),
                 new Tool(R.string.drawing, R.drawable.ic_brush, new DrawingFragment()),
                 new Tool(R.string.text, R.drawable.ic_letters, new TextFragment())
@@ -225,4 +226,29 @@ public class EditorModule {
                 new Font("Abys", "Abys-Regular.otf"),
                 new Font("Reis", "REIS-Regular.ttf"));
     }
+
+    @Provides
+    List<EditorColor> provideColors() {
+        return Arrays.asList(new EditorColor(R.color.brown),
+                new EditorColor(R.color.red),
+                new EditorColor(R.color.crimson),
+                new EditorColor(R.color.indian_red),
+                new EditorColor(R.color.khaki),
+                new EditorColor(R.color.yellow),
+                new EditorColor(R.color.gold),
+                new EditorColor(R.color.orange),
+                new EditorColor(R.color.green_yellow),
+                new EditorColor(R.color.spring_green),
+                new EditorColor(R.color.lime),
+                new EditorColor(R.color.olive_drab),
+                new EditorColor(R.color.aqua),
+                new EditorColor(R.color.sky_blue),
+                new EditorColor(R.color.blue),
+                new EditorColor(R.color.cyan),
+                new EditorColor(R.color.magenta),
+                new EditorColor(R.color.purple),
+                new EditorColor(R.color.dark_violet),
+                new EditorColor(R.color.indigo));
+    }
+
 }

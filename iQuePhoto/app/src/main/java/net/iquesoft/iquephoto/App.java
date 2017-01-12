@@ -6,6 +6,8 @@ import net.iquesoft.iquephoto.di.AppComponent;
 import net.iquesoft.iquephoto.di.DaggerAppComponent;
 import net.iquesoft.iquephoto.di.modules.AppModule;
 
+// TODO: Load image in sampled size to works with image most effective.
+// https://developer.android.com/training/displaying-bitmaps/load-bitmap.html
 public class App extends Application {
     private static AppComponent sAppComponent;
 

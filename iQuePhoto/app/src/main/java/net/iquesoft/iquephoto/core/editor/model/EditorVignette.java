@@ -17,6 +17,7 @@ import android.view.MotionEvent;
 
 import net.iquesoft.iquephoto.core.editor.NewImageEditorView;
 import net.iquesoft.iquephoto.core.editor.enums.EditorMode;
+import net.iquesoft.iquephoto.util.LogHelper;
 import net.iquesoft.iquephoto.util.MatrixUtil;
 import net.iquesoft.iquephoto.util.MotionEventUtil;
 import net.iquesoft.iquephoto.util.RectUtil;
@@ -24,9 +25,9 @@ import net.iquesoft.iquephoto.util.RectUtil;
 import static net.iquesoft.iquephoto.core.editor.enums.EditorMode.*;
 
 public class EditorVignette {
-    private float mFeather = 0.7f;
-
     private static final int FADEOUT_DELAY = 3000;
+
+    private float mFeather = 0.7f;
 
     private float mPreX;
     private float mPreY;
@@ -35,6 +36,8 @@ public class EditorVignette {
 
     private float mGradientInset = 100;
     private float mControlPointTolerance = 20;
+
+    private boolean mIsShowHelpOval = true;
 
     private final RectF mBitmapRect = new RectF();
 
@@ -68,7 +71,8 @@ public class EditorVignette {
 
         mVignetteControlPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mVignetteControlPaint.setColor(Color.WHITE);
-        mVignetteControlPaint.setStrokeWidth(dp2px(metrics.density, 3.5f));
+        mVignetteControlPaint.setStrokeWidth(5f);
+        //mVignetteControlPaint.setStrokeWidth(dp2px(metrics.density, 3.5f));
         mVignetteControlPaint.setStyle(Paint.Style.STROKE);
         mVignetteControlPaint.setAlpha(125);
         mVignetteControlPaint.setDither(true);
@@ -93,7 +97,9 @@ public class EditorVignette {
 
         mControlPointTolerance = mControlPointTolerance * 1.5f;
 
-        mGradientInset = dp2px(metrics.density, 0);
+        mGradientInset = 0;
+
+        //mGradientInset = dp2px(metrics.density, 0);
     }
 
     public void updateMask(int value) {
@@ -125,7 +131,7 @@ public class EditorVignette {
         updateGradientMatrix(mVignetteRect);
     }
 
-    public void updateGradientMatrix(RectF rectF) {
+    private void updateGradientMatrix(RectF rectF) {
         mGradientMatrix.reset();
         mGradientMatrix.postTranslate(rectF.centerX(), rectF.centerY());
         mGradientMatrix.postScale(rectF.width() / 2, rectF.height() / 2, rectF.centerX(), rectF.centerY());
@@ -153,7 +159,9 @@ public class EditorVignette {
 
             canvas.restore();
 
-            canvas.drawOval(mVignetteControlRect, mVignetteControlPaint);
+            if (mIsShowHelpOval) {
+                canvas.drawOval(mVignetteControlRect, mVignetteControlPaint);
+            }
         }
     }
 
@@ -166,14 +174,14 @@ public class EditorVignette {
 
     public void actionPointerDown(MotionEvent event) {
         if (event.getPointerCount() == 2) {
-            float angle = MotionEventUtil.getFingersAngle(event);
+            float angle = MotionEventUtil.getAngle(event);
 
             if (angle < 0) {
                 angle += 180;
             }
 
             if (angle > 36 && angle < 72 || angle > 108 && angle < 144) {
-                mPreDistance = MotionEventUtil.getFingersDistance(event);
+                mPreDistance = MotionEventUtil.getDelta(event);
 
                 mMode = ROTATE_AND_SCALE;
             } else if (angle >= 72 && angle <= 108) {
@@ -197,7 +205,7 @@ public class EditorVignette {
                 mTempVignetteRect.offset(distanceX, distanceY);
                 break;
             case ROTATE_AND_SCALE:
-                float dist = MotionEventUtil.getFingersDistance(event);
+                float dist = MotionEventUtil.getDelta(event);
                 float displayDistance = MotionEventUtil.getDisplayDistance(
                         mImageEditorView.getWidth(),
                         mImageEditorView.getHeight()
@@ -219,7 +227,7 @@ public class EditorVignette {
                 mTempVignetteRect.inset(-distanceX, 0);
                 break;
         }
-
+        
         if (mTempVignetteRect.width() > mControlPointTolerance
                 && mTempVignetteRect.height() > mControlPointTolerance) {
             if (isVignetteInRect()) {
@@ -244,24 +252,28 @@ public class EditorVignette {
     }
 
     public void prepareToDraw(@NonNull Canvas canvas, @NonNull Matrix matrix) {
-        mBitmapRect.set(0, 0, canvas.getWidth(), canvas.getHeight());
-
-        RectUtil.logRectInfo("Vignette before", mVignetteRect);
+        LogHelper.logRect("Vignette - before", mVignetteRect);
 
         float scale = MatrixUtil.getScale(matrix);
 
-        mVignetteRect.right /= scale;
-        mVignetteRect.bottom /= scale;
-        
         float x = MatrixUtil.getMatrixX(matrix);
         float y = MatrixUtil.getMatrixY(matrix);
 
-        float newX = (mVignetteRect.left - x); // scale;
-        float newY = (mVignetteRect.top - y); // scale;
+        float newLeft = (mVignetteRect.left - x) / scale;
+        float newTop = (mVignetteRect.top - y) / scale;
 
-        mVignetteRect.offsetTo(newX, newY);
+        mVignetteRect.offsetTo(newLeft, newTop);
 
-        RectUtil.logRectInfo("Vignette after", mVignetteRect);
+        mVignetteRect.right /= scale;
+        mVignetteRect.bottom /= scale;
+
+        updateGradientMatrix(mVignetteRect);
+
+        mIsShowHelpOval = false;
+
+        mBitmapRect.set(0, 0, canvas.getWidth(), canvas.getHeight()); // To save layer.
+
+        LogHelper.logRect("Vignette - after", mVignetteRect);
     }
 
     private boolean isVignetteInRect() {

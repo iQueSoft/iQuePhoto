@@ -28,7 +28,7 @@
         <item name="colorButtonNormal">@color/white</item>
     </style>
 
-    <style name="AlertMaterialDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+    <style name="AlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
         <!-- Used for the buttons -->
         <item name="colorAccent">#FFFFFF</item>
         <!-- Used for the title and text -->

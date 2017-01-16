@@ -226,7 +226,7 @@ public class EditorTiltShiftLinear implements EditorTiltShift {
                 mTempTiltShiftLinearRect.offsetTo(distanceX, distanceY);
                 break;
             case ROTATE_AND_SCALE:
-                float dist = MotionEventUtil.getFingersDistance(event);
+                float dist = MotionEventUtil.getDelta(event);
                 float scale = ((dist - mPreDistance) / displayDistance());
 
                 mPreDistance = dist;

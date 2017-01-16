@@ -2,7 +2,6 @@ package net.iquesoft.iquephoto.ui.activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,6 +16,7 @@ import android.view.MenuItem;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.isseiaoki.simplecropview.CropImageView;
 
 import net.iquesoft.iquephoto.R;
@@ -32,66 +32,40 @@ import butterknife.OnClick;
 
 public class PreviewActivity extends MvpAppCompatActivity implements PreviewView {
     @InjectPresenter
-    PreviewPresenter presenter;
+    PreviewPresenter mPresenter;
+
+    @ProvidePresenter
+    PreviewPresenter providePreviewPresenter() {
+        return new PreviewPresenter(getIntent());
+    }
 
     @BindView(R.id.toolbar_preview)
-    Toolbar toolbar;
+    Toolbar mToolbar;
 
     @BindView(R.id.cropTabLayout)
-    TabLayout tabLayout;
+    TabLayout mTabLayout;
 
     @BindView(R.id.cropImageView)
-    CropImageView cropImageView;
-
-    private Bitmap mBitmap;
+    CropImageView mCropImageView;
 
     private MaterialDialog mProgressDialog;
-
+    
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_preview);
-
-        mBitmap = BitmapFactory.decodeFile(getIntent().getStringExtra("Image"));
-
-        BitmapUtil.logBitmapInfo("Preview", mBitmap);
 
         ButterKnife.bind(this);
 
-        setSupportActionBar(toolbar);
+        setSupportActionBar(mToolbar);
 
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        presenter.initCropModes();
-
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                switch (tab.getPosition()) {
-                    case 0:
-                        cropImageView.setCropMode(CropImageView.CropMode.FREE);
-                        break;
-                    case 1:
-                        cropImageView.setCropMode(CropImageView.CropMode.FIT_IMAGE);
-                        break;
-                    case 2:
-                        cropImageView.setCropMode(CropImageView.CropMode.SQUARE);
-                        break;
-                    case 3:
-                        cropImageView.setCropMode(CropImageView.CropMode.RATIO_3_4);
-                        break;
-                    case 4:
-                        cropImageView.setCropMode(CropImageView.CropMode.RATIO_4_3);
-                        break;
-                    case 5:
-                        cropImageView.setCropMode(CropImageView.CropMode.RATIO_9_16);
-                        break;
-                    case 6:
-                        cropImageView.setCropMode(CropImageView.CropMode.RATIO_16_9);
-                        break;
-                }
+                mPresenter.changeCropMode(tab);
             }
 
             @Override
@@ -104,8 +78,6 @@ public class PreviewActivity extends MvpAppCompatActivity implements PreviewView
 
             }
         });
-
-        cropImageView.setImageBitmap(mBitmap);
     }
 
     @Override
@@ -119,7 +91,7 @@ public class PreviewActivity extends MvpAppCompatActivity implements PreviewView
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_crop:
-                presenter.cropImage(createSaveUri(), cropImageView);
+                mPresenter.cropImage(createSaveUri(), mCropImageView);
                 break;
         }
 
@@ -135,26 +107,38 @@ public class PreviewActivity extends MvpAppCompatActivity implements PreviewView
     // FIXME: Flip bug.
     @OnClick(R.id.buttonFlipHorizontal)
     void onClickFlipHorizontal() {
-        presenter.flipImageHorizontal(cropImageView.getImageBitmap());
+        mPresenter.flipImageHorizontal(mCropImageView.getImageBitmap());
     }
 
     @OnClick(R.id.buttonFlipVertical)
     void onClickFlipVertical() {
-        presenter.flipImageVertical(cropImageView.getImageBitmap());
+        mPresenter.flipImageVertical(mCropImageView.getImageBitmap());
     }
 
     @OnClick(R.id.buttonRotateLeft)
     void onClickRotateLeft() {
-        cropImageView.rotateImage(CropImageView.RotateDegrees.ROTATE_M90D);
+        mCropImageView.rotateImage(CropImageView.RotateDegrees.ROTATE_M90D);
     }
 
     @OnClick(R.id.buttonRotateRight)
     void onClickRotateRight() {
-        cropImageView.rotateImage(CropImageView.RotateDegrees.ROTATE_90D);
+        mCropImageView.rotateImage(CropImageView.RotateDegrees.ROTATE_90D);
     }
 
     public Uri createSaveUri() {
         return Uri.fromFile(new File(getCacheDir(), "cropped"));
+    }
+
+    @Override
+    public void setupImage(Bitmap bitmap) {
+        mCropImageView.setImageBitmap(bitmap);
+
+        BitmapUtil.logBitmapInfo("Preview", bitmap);
+    }
+
+    @Override
+    public void onCropModeChanged(CropImageView.CropMode cropMode) {
+        mCropImageView.setCropMode(cropMode);
     }
 
     @Override
@@ -179,7 +163,7 @@ public class PreviewActivity extends MvpAppCompatActivity implements PreviewView
 
     @Override
     public void flipImage(Drawable drawable) {
-        cropImageView.setImageDrawable(drawable);
+        mCropImageView.setImageDrawable(drawable);
     }
 
     @Override
@@ -189,6 +173,6 @@ public class PreviewActivity extends MvpAppCompatActivity implements PreviewView
 
     @Override
     public void createTab(@StringRes int title, boolean selected) {
-        tabLayout.addTab(tabLayout.newTab().setText(title), selected);
+        mTabLayout.addTab(mTabLayout.newTab().setText(title), selected);
     }
 }

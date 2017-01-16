@@ -401,7 +401,7 @@ public class ImageEditorView extends ImageView {
 
         invalidate();
     }
-    
+
     private Matrix getStraightenTransformMatrix(float value) {
         Matrix matrix;
 
@@ -1159,7 +1159,7 @@ public class ImageEditorView extends ImageView {
         setMatrix();
         mBitmapRect = calcImageRect(new RectF(0f, 0f, mImageWidth, mImageHeight), mMatrix);
 
-        RectUtil.logRectInfo("Image", mBitmapRect);
+        //RectUtil.logRectInfo("Image", mBitmapRect);
 
         mEditorVignette.updateRect(mBitmapRect);
         mTiltShiftRadial.updateRect(mBitmapRect);

@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.arellomobile.mvp.presenter.ProvidePresenter;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapter.StickersAdapter;
@@ -32,13 +33,18 @@ public class StickersFragment extends ToolFragment implements StickersView {
     public static final String ARG_STICKERS = "stickers";
 
     @InjectPresenter
-    StickersPresenter presenter;
+    StickersPresenter mPresenter;
+
+    @ProvidePresenter
+    StickersPresenter provideStickersPresenter() {
+        return new StickersPresenter(getArguments());
+    }
 
     @BindView(R.id.stickersRecyclerView)
-    RecyclerView recyclerView;
+    RecyclerView mRecyclerView;
 
     private Unbinder mUnbinder;
-
+    
     public static StickersFragment newInstance(@StringRes int title, ArrayList<Sticker> stickers) {
         StickersFragment fragment = new StickersFragment();
 
@@ -57,7 +63,6 @@ public class StickersFragment extends ToolFragment implements StickersView {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        presenter.setupStickersSet(getArguments());
     }
 
     @Override
@@ -84,13 +89,13 @@ public class StickersFragment extends ToolFragment implements StickersView {
     public void setupAdapter(List<Sticker> stickers) {
         StickersAdapter adapter = new StickersAdapter(stickers);
         adapter.setOnStickerClickListener(sticker ->
-                presenter.stickerClicked(getContext(), sticker)
+                mPresenter.stickerClicked(getContext(), sticker)
         );
 
-        recyclerView.setLayoutManager(
+        mRecyclerView.setLayoutManager(
                 new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false)
         );
-        recyclerView.setAdapter(adapter);
+        mRecyclerView.setAdapter(adapter);
     }
 
     @Override

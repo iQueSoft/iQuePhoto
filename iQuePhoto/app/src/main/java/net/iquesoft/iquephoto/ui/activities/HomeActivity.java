@@ -33,7 +33,7 @@ public class HomeActivity extends MvpAppCompatActivity implements HomeView {
     private static final int REQ_CAMERA = 1;
 
     @InjectPresenter
-    HomePresenter presenter;
+    HomePresenter mPresenter;
 
     @BindView(R.id.applicationName)
     TextView applicationTextView;
@@ -51,12 +51,12 @@ public class HomeActivity extends MvpAppCompatActivity implements HomeView {
 
     @OnClick(R.id.cameraButton)
     void onClickCamera() {
-        presenter.openCamera();
+        mPresenter.openCamera();
     }
 
     @OnClick(R.id.galleryButton)
     void onClickGallery() {
-        presenter.openGallery();
+        mPresenter.openGallery();
     }
 
     @Override
@@ -80,7 +80,7 @@ public class HomeActivity extends MvpAppCompatActivity implements HomeView {
                         Intent intent = new Intent(HomeActivity.this, GalleryActivity.class);
                         startActivity(intent);
                     } else {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AlertMaterialDialog)
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AlertDialog)
                                 .setTitle(getString(R.string.permission_denied))
                                 .setMessage(getString(R.string.read_storage_permission))
                                 .setPositiveButton(getString(R.string.go_to_app_settings), (dialogInterface, i) -> {
@@ -107,7 +107,7 @@ public class HomeActivity extends MvpAppCompatActivity implements HomeView {
                         Intent intent = new Intent(HomeActivity.this, CameraActivity.class);
                         startActivity(intent);
                     } else {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AlertMaterialDialog)
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AlertDialog)
                                 .setTitle(getString(R.string.permission_denied))
                                 .setMessage(getString(R.string.camera_storage_permission))
                                 .setPositiveButton(getString(R.string.go_to_app_settings), (dialogInterface, i) -> {

@@ -10,11 +10,13 @@ import android.view.ViewGroup;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.arellomobile.mvp.presenter.ProvidePresenter;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapter.ImagesAdapter;
 import net.iquesoft.iquephoto.models.Image;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.GalleryImagesPresenter;
+import net.iquesoft.iquephoto.presentation.presenters.fragment.StickersPresenter;
 import net.iquesoft.iquephoto.presentation.views.fragment.GalleryImagesView;
 
 import java.util.ArrayList;
@@ -28,10 +30,15 @@ public class GalleryImagesFragment extends MvpAppCompatFragment implements Galle
     public static final String ARG_PARAM = "images";
 
     @InjectPresenter
-    GalleryImagesPresenter presenter;
+    GalleryImagesPresenter mPresenter;
+
+    @ProvidePresenter
+    GalleryImagesPresenter provideGalleryImagesPresenter() {
+        return new GalleryImagesPresenter(getArguments());
+    }
 
     @BindView(R.id.imagesRecyclerView)
-    RecyclerView recyclerView;
+    RecyclerView mRecyclerView;
 
     private Unbinder mUnbinder;
 
@@ -47,12 +54,6 @@ public class GalleryImagesFragment extends MvpAppCompatFragment implements Galle
     }
 
     public GalleryImagesFragment() {
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        presenter.setupAlbumImages(getArguments());
     }
 
     @Override
@@ -80,11 +81,11 @@ public class GalleryImagesFragment extends MvpAppCompatFragment implements Galle
         ImagesAdapter adapter = new ImagesAdapter(images);
 
         adapter.setOnImageClickListener(image -> {
-            presenter.setImageForEdit(image);
+            mPresenter.setImageForEdit(image);
         });
 
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
-        recyclerView.setAdapter(adapter);
+        mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
+        mRecyclerView.setAdapter(adapter);
     }
 
     @Override

@@ -24,11 +24,12 @@ public class StickersPresenter extends MvpPresenter<StickersView> {
     @Inject
     List<StickersSet> stickersSets;
 
-    public StickersPresenter() {
+    public StickersPresenter(@NonNull Bundle bundle) {
+        setupStickersSet(bundle);
         App.getAppComponent().inject(this);
     }
 
-    public void setupStickersSet(@NonNull Bundle bundle) {
+    private void setupStickersSet(Bundle bundle) {
         List<Sticker> stickers = bundle.getParcelableArrayList(StickersFragment.ARG_STICKERS);
 
         getViewState().setupAdapter(stickers);

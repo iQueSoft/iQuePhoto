@@ -29,10 +29,10 @@ import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.OVERLAY;
 
 public class OverlaysFragment extends ToolFragment implements OverlaysView {
     @InjectPresenter
-    OverlaysPresenter presenter;
+    OverlaysPresenter mPresenter;
 
     @BindView(R.id.overlayRecyclerView)
-    RecyclerView recyclerView;
+    RecyclerView mRecyclerView;
 
     private Unbinder mUnbinder;
 
@@ -71,13 +71,13 @@ public class OverlaysFragment extends ToolFragment implements OverlaysView {
     public void setupAdapter(List<Overlay> overlays) {
         OverlaysAdapter adapter = new OverlaysAdapter(overlays);
         adapter.setOnOverlayClickListener(overlay ->
-                presenter.changeOverlay(getContext(), overlay)
+                mPresenter.changeOverlay(getContext(), overlay)
         );
 
-        recyclerView.setLayoutManager(
+        mRecyclerView.setLayoutManager(
                 new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false)
         );
-        recyclerView.setAdapter(adapter);
+        mRecyclerView.setAdapter(adapter);
     }
 
     @Override

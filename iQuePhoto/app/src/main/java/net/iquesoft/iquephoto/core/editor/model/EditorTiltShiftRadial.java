@@ -17,7 +17,6 @@ import android.support.v4.view.ViewCompat;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 
-import net.iquesoft.iquephoto.core.editor.ImageEditorView;
 import net.iquesoft.iquephoto.core.editor.NewImageEditorView;
 import net.iquesoft.iquephoto.core.editor.enums.EditorMode;
 import net.iquesoft.iquephoto.util.BitmapUtil;
@@ -243,7 +242,7 @@ public class EditorTiltShiftRadial implements EditorTiltShift {
                 mTempTiltShiftRadialRect.offset(distanceX, distanceY);
                 break;
             case ROTATE_AND_SCALE:
-                float dist = MotionEventUtil.getFingersDistance(event);
+                float dist = MotionEventUtil.getDelta(event);
                 float scale = ((dist - mPreDistance) / displayDistance());
 
                 mPreDistance = dist;
@@ -279,7 +278,7 @@ public class EditorTiltShiftRadial implements EditorTiltShift {
     public void actionPointerDown(MotionEvent event) {
 
         if (event.getPointerCount() == 2) {
-            mPreDistance = MotionEventUtil.getFingersDistance(event);
+            mPreDistance = MotionEventUtil.getDelta(event);
             mMode = ROTATE_AND_SCALE;
         }
     }

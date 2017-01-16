@@ -99,6 +99,6 @@ public class CameraActivity extends MvpAppCompatActivity implements CameraActivi
 
     @OnClick(R.id.cameraFiltersImageButton)
     void onClickFiltersButton() {
-        // TODO: presenter.showFilters(cameraFiltersFragment);
+        // TODO: mPresenter.showFilters(cameraFiltersFragment);
     }
 }

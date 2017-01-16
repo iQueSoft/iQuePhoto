@@ -45,6 +45,8 @@ public class NewImageEditorView extends View {
     private float mLastX;
     private float mLastY;
 
+    private int mStraightenTransformValue = 0;
+
     private boolean mIsOriginalImageDisplayed;
 
     private Bitmap mImageBitmap;
@@ -235,6 +237,10 @@ public class NewImageEditorView extends View {
         mUndoListener = undoListener;
     }
 
+    public boolean hasChanged() {
+        return mImages.size() != 0;
+    }
+
     public void addText(Text text) {
         EditorText editorText = new EditorText(text, mEditorFrame);
         editorText.setX(mSrcRect.centerX());
@@ -325,6 +331,8 @@ public class NewImageEditorView extends View {
 
     public void setStraightenTransformValue(int value) {
         if (value != 0) {
+            mStraightenTransformValue = value;
+
             mTransformMatrix.set(mImageMatrix);
 
             float width = mSrcRect.width();
@@ -654,8 +662,6 @@ public class NewImageEditorView extends View {
                 case FILTERS:
                     mCanvas.drawBitmap(mBitmap, 0, 0, mFilterPaint);
                     break;
-                /*case ADJUST:
-                    break;*/
                 case OVERLAY:
                     calculateSupportMatrix(mSupportBitmap);
                     mCanvas.drawBitmap(mSupportBitmap, mSupportMatrix, mOverlayPaint);
@@ -670,6 +676,9 @@ public class NewImageEditorView extends View {
                 case VIGNETTE:
                     mVignette.prepareToDraw(mCanvas, mImageMatrix);
                     mVignette.draw(mCanvas);
+                    break;
+                case TRANSFORM_STRAIGHTEN:
+                    mCanvas.drawBitmap(mBitmap, mTransformMatrix, mBitmapPaint);
                     break;
                 default:
                     mCanvas.drawBitmap(mBitmap, 0, 0, mAdjustPaint);
@@ -712,7 +721,7 @@ public class NewImageEditorView extends View {
 
             mImages.add(new EditorImage(mCurrentTool, bitmap));
 
-            // mUndoListener.hasChanged(mImages.size());
+            mUndoListener.hasChanged(mImages.size());
 
             invalidate();
             // mProgressDialog.dismiss();

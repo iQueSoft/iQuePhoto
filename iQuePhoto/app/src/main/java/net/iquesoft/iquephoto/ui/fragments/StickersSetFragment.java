@@ -32,10 +32,10 @@ import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.STICKERS;
 
 public class StickersSetFragment extends ToolFragment implements StickersSetView {
     @InjectPresenter
-    StickersSetPresenter presenter;
+    StickersSetPresenter mPresenter;
 
     @BindView(R.id.stickersSetRecyclerView)
-    RecyclerView recyclerView;
+    RecyclerView mRecyclerView;
 
     private Unbinder mUnbinder;
 
@@ -79,17 +79,13 @@ public class StickersSetFragment extends ToolFragment implements StickersSetView
     public void setupAdapter(List<StickersSet> stickersSets) {
         StickerSetAdapter adapter = new StickerSetAdapter(stickersSets);
         adapter.setStickerSetClickListener(stickersSet ->
-                        // FIXME:
-                       // presenter.stickersSetClicked(stickersSet)
-                ((EditorActivity) getActivity()).setupFragment(
-                        StickersFragment.newInstance(stickersSet.getTitle(), new ArrayList<>(stickersSet.getStickers()))
-                )
+                mPresenter.stickersSetClicked(stickersSet)
         );
 
-        recyclerView.setLayoutManager(
+        mRecyclerView.setLayoutManager(
                 new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false)
         );
-        recyclerView.setAdapter(adapter);
+        mRecyclerView.setAdapter(adapter);
     }
 
     @Override

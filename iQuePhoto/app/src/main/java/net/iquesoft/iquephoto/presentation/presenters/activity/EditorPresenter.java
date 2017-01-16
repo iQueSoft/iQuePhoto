@@ -11,7 +11,7 @@ import net.iquesoft.iquephoto.presentation.views.activity.EditorView;
 @InjectViewState
 public class EditorPresenter extends MvpPresenter<EditorView> {
 
-    /*public void onBackPressed(Bitmap bitmap, @Nullable Bitmap alteredBitmap) {
+    public void onBackPressed(Bitmap bitmap, @Nullable Bitmap alteredBitmap) {
         if (alteredBitmap != null) {
             if (!bitmap.sameAs(alteredBitmap)) {
                 getViewState().showAlertDialog();
@@ -21,5 +21,5 @@ public class EditorPresenter extends MvpPresenter<EditorView> {
         } else {
             getViewState().navigateBack(false);
         }
-    }*/
+    }
 }

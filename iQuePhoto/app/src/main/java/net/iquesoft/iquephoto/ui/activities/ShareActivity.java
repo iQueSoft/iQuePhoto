@@ -76,8 +76,6 @@ public class ShareActivity extends MvpAppCompatActivity implements ShareView {
 
         mImageUri = getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
 
-        Log.i("Uri of Bitmap", mImageUri.toString());
-
         mBitmap = BitmapFactory.decodeFile(mImageUri.getPath());
 
         presenter.calculateSizesForCompressing(mBitmap);
@@ -142,7 +140,7 @@ public class ShareActivity extends MvpAppCompatActivity implements ShareView {
 
     @Override
     public void showAlert(@StringRes int messageBody, String applicationId) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AlertMaterialDialog);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AlertDialog);
         builder.setTitle(getString(R.string.application_does_not_exist));
         builder.setMessage(getString(messageBody));
 

@@ -16,8 +16,8 @@ import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapter.ImagesAdapter;
 import net.iquesoft.iquephoto.models.Image;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.GalleryImagesPresenter;
-import net.iquesoft.iquephoto.presentation.presenters.fragment.StickersPresenter;
 import net.iquesoft.iquephoto.presentation.views.fragment.GalleryImagesView;
+import net.iquesoft.iquephoto.ui.activities.PreviewActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,11 +66,6 @@ public class GalleryImagesFragment extends MvpAppCompatFragment implements Galle
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
     public void onDestroyView() {
         super.onDestroyView();
         mUnbinder.unbind();
@@ -91,7 +86,7 @@ public class GalleryImagesFragment extends MvpAppCompatFragment implements Galle
     @Override
     public void editImage(String imagePath) {
         Intent intent = new Intent("app.intent.action.Preview");
-        intent.putExtra("Image", imagePath);
+        intent.putExtra(PreviewActivity.IMAGE_PATH, imagePath);
         startActivity(intent);
         getActivity().finish();
     }

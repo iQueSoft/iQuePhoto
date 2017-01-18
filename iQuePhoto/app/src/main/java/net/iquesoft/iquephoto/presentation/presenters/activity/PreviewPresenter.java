@@ -19,6 +19,7 @@ import com.isseiaoki.simplecropview.callback.SaveCallback;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.presentation.views.activity.PreviewView;
+import net.iquesoft.iquephoto.ui.activities.PreviewActivity;
 
 import static com.isseiaoki.simplecropview.CropImageView.CropMode.*;
 
@@ -26,7 +27,7 @@ import static com.isseiaoki.simplecropview.CropImageView.CropMode.*;
 public class PreviewPresenter extends MvpPresenter<PreviewView> {
 
     public PreviewPresenter(@NonNull Intent intent) {
-        Bitmap bitmap = BitmapFactory.decodeFile(intent.getStringExtra("Image"));
+        Bitmap bitmap = BitmapFactory.decodeFile(intent.getStringExtra(PreviewActivity.IMAGE_PATH));
 
         getViewState().setupImage(bitmap);
         initCropModes();

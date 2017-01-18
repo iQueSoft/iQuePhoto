@@ -10,8 +10,8 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.models.ImageAlbum;
-import net.iquesoft.iquephoto.presentation.views.activity.GalleryView;
 import net.iquesoft.iquephoto.presentation.presenters.activity.GalleryPresenter;
+import net.iquesoft.iquephoto.presentation.views.activity.GalleryView;
 import net.iquesoft.iquephoto.ui.fragments.GalleryAlbumsFragment;
 import net.iquesoft.iquephoto.ui.fragments.GalleryImagesFragment;
 
@@ -20,10 +20,10 @@ import butterknife.ButterKnife;
 
 public class GalleryActivity extends MvpAppCompatActivity implements GalleryView {
     @InjectPresenter
-    GalleryPresenter presenter;
+    GalleryPresenter mPresenter;
 
     @BindView(R.id.toolbar)
-    Toolbar toolbar;
+    Toolbar mToolbar;
 
     private FragmentManager mFragmentManager;
 
@@ -34,10 +34,11 @@ public class GalleryActivity extends MvpAppCompatActivity implements GalleryView
 
         ButterKnife.bind(this);
 
-        setSupportActionBar(toolbar);
+        setSupportActionBar(mToolbar);
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            mToolbar.setNavigationIcon(R.drawable.ic_close);
         }
 
         mFragmentManager = getSupportFragmentManager();
@@ -57,7 +58,8 @@ public class GalleryActivity extends MvpAppCompatActivity implements GalleryView
     public void onBackPressed() {
         if (mFragmentManager.getBackStackEntryCount() == 1) {
             super.onBackPressed();
-            toolbar.setTitle(R.string.gallery);
+            mToolbar.setNavigationIcon(R.drawable.ic_close);
+            mToolbar.setTitle(R.string.gallery);
         } else {
             finish();
         }
@@ -65,7 +67,8 @@ public class GalleryActivity extends MvpAppCompatActivity implements GalleryView
 
     @Override
     public void showImages(ImageAlbum imageAlbum) {
-        toolbar.setTitle(imageAlbum.getName());
+        mToolbar.setTitle(imageAlbum.getName());
+        mToolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
 
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.galleryFragmentFrameLayout, GalleryImagesFragment.newInstance(imageAlbum.getImages()))
@@ -78,5 +81,4 @@ public class GalleryActivity extends MvpAppCompatActivity implements GalleryView
     public void editImage(String imagePath) {
 
     }
-
 }

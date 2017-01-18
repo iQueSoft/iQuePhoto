@@ -64,6 +64,7 @@
                 android:layout_marginRight="10dp"
                 android:layout_weight="1"
                 android:hint="@string/start_typing"
+                android:imeOptions="actionDone"
                 android:textColor="@android:color/white"
                 android:textColorHint="@android:color/white"
                 android:theme="@style/MyEditText" />

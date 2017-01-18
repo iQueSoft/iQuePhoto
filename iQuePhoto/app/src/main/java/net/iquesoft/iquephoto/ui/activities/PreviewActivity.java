@@ -31,6 +31,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class PreviewActivity extends MvpAppCompatActivity implements PreviewView {
+    public static final String IMAGE_PATH = "image path";
+
     @InjectPresenter
     PreviewPresenter mPresenter;
 
@@ -49,7 +51,7 @@ public class PreviewActivity extends MvpAppCompatActivity implements PreviewView
     CropImageView mCropImageView;
 
     private MaterialDialog mProgressDialog;
-    
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +63,8 @@ public class PreviewActivity extends MvpAppCompatActivity implements PreviewView
 
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        mToolbar.setNavigationIcon(R.drawable.ic_close);
 
         mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override

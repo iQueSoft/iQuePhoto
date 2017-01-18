@@ -24,8 +24,6 @@ import android.view.MotionEvent;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
-import com.afollestad.materialdialogs.MaterialDialog;
-
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.core.editor.enums.EditorTool;
 import net.iquesoft.iquephoto.core.editor.enums.EditorMode;
@@ -41,7 +39,6 @@ import net.iquesoft.iquephoto.models.Sticker;
 import net.iquesoft.iquephoto.models.Text;
 import net.iquesoft.iquephoto.util.BitmapUtil;
 import net.iquesoft.iquephoto.util.MatrixUtil;
-import net.iquesoft.iquephoto.util.RectUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -119,8 +116,6 @@ public class ImageEditorView extends ImageView {
 
     private PointF mCenter = new PointF();
 
-    private MaterialDialog mProgressDialog;
-
     public ImageEditorView(Context context) {
         this(context, null);
     }
@@ -166,7 +161,6 @@ public class ImageEditorView extends ImageView {
         mScale = 1.0f;
 
         initializeDrawing();
-        initializeProgressDialog();
     }
 
     private void initializeDrawing() {
@@ -191,16 +185,6 @@ public class ImageEditorView extends ImageView {
         mDrawingCirclePaint.setStyle(Paint.Style.STROKE);
         mDrawingCirclePaint.setStrokeJoin(Paint.Join.MITER);
         mDrawingCirclePaint.setStrokeWidth(10f);
-    }
-
-    private void initializeProgressDialog() {
-        mProgressDialog = new MaterialDialog.Builder(mContext)
-                .content(R.string.processing)
-                .progress(true, 0)
-                .widgetColor(Color.BLACK)
-                .contentColor(Color.BLACK)
-                .canceledOnTouchOutside(false)
-                .build();
     }
 
     @Override
@@ -1257,7 +1241,6 @@ public class ImageEditorView extends ImageView {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            mProgressDialog.show();
 
             if (mImagesList.size() > 0)
                 mBitmap = getAlteredBitmap().copy(getAlteredBitmap().getConfig(), true);
@@ -1339,7 +1322,6 @@ public class ImageEditorView extends ImageView {
             mUndoListener.hasChanged(mImagesList.size());
 
             invalidate();
-            mProgressDialog.dismiss();
         }
 
         private Matrix getTransformStraightenMatrix(float value) {

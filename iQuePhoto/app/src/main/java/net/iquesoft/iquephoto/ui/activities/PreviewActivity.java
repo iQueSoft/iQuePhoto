@@ -8,12 +8,10 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.TabLayout;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
@@ -22,6 +20,7 @@ import com.isseiaoki.simplecropview.CropImageView;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.presentation.presenters.activity.PreviewPresenter;
 import net.iquesoft.iquephoto.presentation.views.activity.PreviewView;
+import net.iquesoft.iquephoto.ui.dialogs.LoadingDialog;
 import net.iquesoft.iquephoto.util.BitmapUtil;
 
 import java.io.File;
@@ -50,7 +49,7 @@ public class PreviewActivity extends MvpAppCompatActivity implements PreviewView
     @BindView(R.id.cropImageView)
     CropImageView mCropImageView;
 
-    private MaterialDialog mProgressDialog;
+    private LoadingDialog mLoadingDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,6 +62,8 @@ public class PreviewActivity extends MvpAppCompatActivity implements PreviewView
 
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        mLoadingDialog = new LoadingDialog(this);
 
         mToolbar.setNavigationIcon(R.drawable.ic_close);
 
@@ -150,19 +151,13 @@ public class PreviewActivity extends MvpAppCompatActivity implements PreviewView
         Intent intent = new Intent(PreviewActivity.this, EditorActivity.class);
         intent.setData(uri);
         startActivity(intent);
-        mProgressDialog.dismiss();
+        mLoadingDialog.dismiss();
         finish();
     }
 
     @Override
     public void showProgress() {
-        mProgressDialog = new MaterialDialog.Builder(this)
-                .content(R.string.processing)
-                .progress(true, 0)
-                .widgetColor(ResourcesCompat.getColor(getResources(), R.color.black, null))
-                .contentColor(ResourcesCompat.getColor(getResources(), R.color.black, null))
-                .canceledOnTouchOutside(false)
-                .show();
+        mLoadingDialog.show();
     }
 
     @Override
@@ -172,7 +167,7 @@ public class PreviewActivity extends MvpAppCompatActivity implements PreviewView
 
     @Override
     public void dismissProgress() {
-        mProgressDialog.dismiss();
+        //mProgressDialog.dismiss();
     }
 
     @Override

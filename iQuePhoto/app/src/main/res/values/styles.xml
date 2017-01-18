@@ -70,4 +70,7 @@
         <item name="textSize">22sp</item>
     </style>
 
+    <style name="CircularProgress" parent="@android:style/Widget.Material.Light.ProgressBar.Large">
+        <item name="colorAccent">@color/white</item>
+    </style>
 </resources>

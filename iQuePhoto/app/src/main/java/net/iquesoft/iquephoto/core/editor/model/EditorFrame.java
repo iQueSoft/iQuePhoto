@@ -7,6 +7,7 @@ import android.graphics.Paint;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.util.BitmapUtil;
+import net.iquesoft.iquephoto.util.SizeUtil;
 
 public class EditorFrame {
     static final int EDITOR_FRAME_PADDING = 25;
@@ -29,7 +30,7 @@ public class EditorFrame {
         mFramePaint.setAntiAlias(true);
         mFramePaint.setDither(true);
         mFramePaint.setStyle(Paint.Style.STROKE);
-        mFramePaint.setStrokeWidth(5.5f);
+        mFramePaint.setStrokeWidth(SizeUtil.dp2px(3.5f));
         mFramePaint.setAlpha(175);
     }
 

@@ -9,10 +9,9 @@ import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.MaterialDialog;
-
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.ui.activities.EditorActivity;
+import net.iquesoft.iquephoto.ui.dialogs.LoadingDialog;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -29,25 +28,20 @@ public class ImageSaveTask extends AsyncTask<Void, Void, Void> {
 
     private Bitmap mBitmap;
     private Context mContext;
-    private MaterialDialog mProgressDialog;
+
+    private LoadingDialog mLoadingDialog;
 
     public ImageSaveTask(Context context, Bitmap bitmap) {
         mBitmap = bitmap;
         mContext = context;
 
-        mProgressDialog = new MaterialDialog.Builder(mContext)
-                .content(R.string.saving)
-                .progress(true, 0)
-                .widgetColor(Color.BLACK)
-                .contentColor(Color.BLACK)
-                .canceledOnTouchOutside(false)
-                .build();
+        mLoadingDialog = new LoadingDialog(context);
     }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        mProgressDialog.show();
+        mLoadingDialog.show();
     }
 
     @Override
@@ -74,7 +68,7 @@ public class ImageSaveTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        mProgressDialog.dismiss();
+        mLoadingDialog.dismiss();
         Toast.makeText(mContext, R.string.image_saved, Toast.LENGTH_SHORT).show();
 
         if (mContext.getClass()

@@ -47,6 +47,8 @@ public class NewImageEditorView extends View {
 
     private int mStraightenTransformValue = 0;
 
+    private boolean mIsInitiazed;
+
     private boolean mIsOriginalImageDisplayed;
 
     private Bitmap mImageBitmap;
@@ -98,18 +100,9 @@ public class NewImageEditorView extends View {
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
 
-        mDstRect.set(0, 0, getWidth(), getHeight());
-
-        LogHelper.logRect("mDstRect", mDstRect);
-
-        mImageMatrix.reset();
-        mImageMatrix.setRectToRect(mSrcRect, mDstRect, Matrix.ScaleToFit.CENTER);
-        mImageMatrix.mapRect(mSrcRect);
-
-        mTransformMatrix.set(mImageMatrix);
-
-        LogHelper.logRect("mSrcRect", mSrcRect);
-        LogHelper.logMatrix("mImageMatrix", mImageMatrix);
+        if (!mIsInitiazed) {
+            setupImageMatrix();
+        }
     }
 
     @Override
@@ -632,6 +625,23 @@ public class NewImageEditorView extends View {
         mIsOriginalImageDisplayed = isOriginalImageDisplayed;
 
         invalidate();
+    }
+
+    private void setupImageMatrix() {
+        mDstRect.set(0, 0, getWidth(), getHeight());
+
+        LogHelper.logRect("mDstRect", mDstRect);
+
+        mImageMatrix.reset();
+        mImageMatrix.setRectToRect(mSrcRect, mDstRect, Matrix.ScaleToFit.CENTER);
+        mImageMatrix.mapRect(mSrcRect);
+
+        mTransformMatrix.set(mImageMatrix);
+
+        LogHelper.logRect("mSrcRect", mSrcRect);
+        LogHelper.logMatrix("mImageMatrix", mImageMatrix);
+
+        mIsInitiazed = true;
     }
 
     private class ImageProcessingTask extends AsyncTask<EditorTool, Void, Bitmap> {

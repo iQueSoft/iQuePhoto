@@ -15,6 +15,7 @@ import android.view.MotionEvent;
 import net.iquesoft.iquephoto.models.Text;
 import net.iquesoft.iquephoto.util.MatrixUtil;
 import net.iquesoft.iquephoto.util.RectUtil;
+import net.iquesoft.iquephoto.util.SizeUtil;
 
 import static net.iquesoft.iquephoto.core.editor.model.EditorFrame.EDITOR_FRAME_PADDING;
 
@@ -100,7 +101,7 @@ public class EditorText {
         mTextPaint.setColor(mColor);
         mTextPaint.setAlpha(mOpacity);
 
-        mTextPaint.setTextSize(DEFAULT_TEXT_SIZE);
+        mTextPaint.setTextSize(SizeUtil.dp2px(DEFAULT_TEXT_SIZE));
         mTextPaint.setTypeface(mTypeface);
         mTextPaint.setTextAlign(Paint.Align.CENTER);
     }
@@ -110,8 +111,8 @@ public class EditorText {
 
         mTextRect.offset((int) mX - (mTextRect.width() >> 1), (int) mY);
 
-        mFrameRect.set(mTextRect.left - EDITOR_FRAME_PADDING, mTextRect.top - EDITOR_FRAME_PADDING,
-                mTextRect.right + EDITOR_FRAME_PADDING, mTextRect.bottom + EDITOR_FRAME_PADDING);
+        mFrameRect.set(mTextRect.left - SizeUtil.dp2px(EDITOR_FRAME_PADDING), mTextRect.top - SizeUtil.dp2px(EDITOR_FRAME_PADDING),
+                mTextRect.right + SizeUtil.dp2px(EDITOR_FRAME_PADDING), mTextRect.bottom + SizeUtil.dp2px(EDITOR_FRAME_PADDING));
         RectUtil.scaleRect(mFrameRect, mScale);
 
         canvas.save();

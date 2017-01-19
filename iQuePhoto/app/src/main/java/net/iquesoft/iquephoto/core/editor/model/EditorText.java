@@ -96,7 +96,6 @@ public class EditorText {
 
     private void initTextPaint() {
         mTextPaint = new TextPaint();
-
         mTextPaint.setAntiAlias(true);
         mTextPaint.setColor(mColor);
         mTextPaint.setAlpha(mOpacity);
@@ -234,14 +233,12 @@ public class EditorText {
         angle = flag * angle;
 
         mRotateAngle += angle;
-
-        Log.i("Text", "Scale = " + String.valueOf(mScale));
     }
 
     public boolean isInside(MotionEvent event) {
         return mFrameRect.contains(event.getX(), event.getY());
     }
-
+    
     public boolean isInDeleteHandleButton(MotionEvent event) {
         return mDeleteHandleDstRect.contains(event.getX(), event.getY());
     }
@@ -260,23 +257,31 @@ public class EditorText {
     }
 
     public void prepareToDraw(@NonNull Matrix matrix) {
-        Log.i("Text", "Before: " + "\nX = " + String.valueOf(mX) + "\nY = " + String.valueOf(mY));
+        Log.i("Text", "Before: " + "\n" +
+                "X = " + String.valueOf(mX) + "\n" +
+                "Y = " + String.valueOf(mY) + "\n" +
+                "Scale = " + String.valueOf(mScale)
+        );
 
-        mX -= MatrixUtil.getMatrixX(matrix);
-        mY -= MatrixUtil.getMatrixY(matrix);
+        float imageX = MatrixUtil.getMatrixX(matrix);
+        float imageY = MatrixUtil.getMatrixY(matrix);
+        float imageScale = MatrixUtil.getScale(matrix);
 
-        Log.i("Text", "After: " + "\nX = " + String.valueOf(mX) + "\nY = " + String.valueOf(mY));
+        float dX = mX - imageX;
+        float dY = mY - imageY;
 
-        float scale = MatrixUtil.getScale(matrix);
+        float scale = mScale / imageScale;
 
-        mX /= scale;
-        mY /= scale;
+        mX = dX / imageScale;
+        mY = dY / imageScale;
 
-        Log.i("Text", "Final: " + "\nX = " + String.valueOf(mX) + "\nY = " + String.valueOf(mY));
+        mScale = scale;
 
-        mScale /= scale;
-
-        Log.i("Text", "Final scale = " + String.valueOf(mScale));
+        Log.i("Text", "After: " + "\n" +
+                "X = " + String.valueOf(mX) + "\n" +
+                "Y = " + String.valueOf(mY) + "\n" +
+                "Scale = " + String.valueOf(mScale)
+        );
 
         mIsDrawHelperFrame = false;
     }

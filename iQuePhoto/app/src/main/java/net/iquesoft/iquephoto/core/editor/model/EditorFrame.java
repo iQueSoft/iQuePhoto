@@ -7,6 +7,7 @@ import android.graphics.Paint;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.util.BitmapUtil;
+import net.iquesoft.iquephoto.util.LogHelper;
 import net.iquesoft.iquephoto.util.SizeUtil;
 
 public class EditorFrame {
@@ -35,11 +36,17 @@ public class EditorFrame {
     }
 
     private void initializeHandlesBitmap(Context context) {
-        mDeleteHandleBitmap = BitmapUtil.drawable2Bitmap(context, R.drawable.ic_handle_delete);
+        //mDeleteHandleBitmap = BitmapUtil.drawable2Bitmap(context, R.drawable.ic_handle_delete);
+        mDeleteHandleBitmap = BitmapUtil.drawable2Bitmap(context, R.drawable.cancel);
         mResizeHandleBitmap = BitmapUtil.drawable2Bitmap(context, R.drawable.ic_handle_resize);
         mFrontHandleBitmap = BitmapUtil.drawable2Bitmap(context, R.drawable.ic_handle_front);
         mTransparencyHandleBitmap =
                 BitmapUtil.drawable2Bitmap(context, R.drawable.ic_handle_transparency);
+
+        LogHelper.logBitmap("mDeleteHandleBitmap", mDeleteHandleBitmap);
+        LogHelper.logBitmap("mResizeHandleBitmap", mResizeHandleBitmap);
+        LogHelper.logBitmap("mFrontHandleBitmap", mFrontHandleBitmap);
+        LogHelper.logBitmap("mTransparencyHandleBitmap", mTransparencyHandleBitmap);
     }
 
     public Paint getFramePaint() {

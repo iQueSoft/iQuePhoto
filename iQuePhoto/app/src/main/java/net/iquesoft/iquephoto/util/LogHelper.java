@@ -1,5 +1,6 @@
 package net.iquesoft.iquephoto.util;
 
+import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -10,12 +11,20 @@ import android.util.Log;
 public class LogHelper {
     private static final String TAG = LogHelper.class.getSimpleName();
 
+    public static void logBitmap(@NonNull String prefix, @NonNull Bitmap bitmap) {
+        Log.i(TAG, "Bitmap - " + prefix + " -->" + "\n" +
+                "Height = " + bitmap.getHeight() + "\n" +
+                "Width = " + bitmap.getWidth() + "\n" +
+                "Density = " + bitmap.getDensity()
+        );
+    }
+
     public static void logMatrix(@NonNull String prefix, @NonNull Matrix matrix) {
         float x = getMatrixValue(matrix, Matrix.MTRANS_X);
         float y = getMatrixValue(matrix, Matrix.MTRANS_Y);
         float rScale = getMatrixScale(matrix);
         float rAngle = getMatrixAngle(matrix);
-        Log.d(TAG, "Matrix - " + prefix + " -->" + "\n" +
+        Log.i(TAG, "Matrix - " + prefix + " -->" + "\n" +
                 "X = " + x + "\n" +
                 "Y = " + y + "\n" +
                 "Scale = " + rScale + "\n" +

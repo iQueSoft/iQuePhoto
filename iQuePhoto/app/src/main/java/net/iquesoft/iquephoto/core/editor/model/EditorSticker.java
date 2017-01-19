@@ -14,7 +14,6 @@ import net.iquesoft.iquephoto.util.LogHelper;
 import net.iquesoft.iquephoto.util.MatrixUtil;
 import net.iquesoft.iquephoto.util.RectUtil;
 
-// TODO: Add opacity handle for stickers.
 public class EditorSticker {
     private static final float MIN_SCALE = 0.15f;
     private static final int HELP_BOX_PAD = 25;

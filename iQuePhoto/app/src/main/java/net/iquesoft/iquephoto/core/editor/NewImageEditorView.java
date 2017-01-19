@@ -29,9 +29,11 @@ import net.iquesoft.iquephoto.core.editor.model.EditorText;
 import net.iquesoft.iquephoto.core.editor.model.EditorTiltShiftRadial;
 import net.iquesoft.iquephoto.core.editor.model.EditorVignette;
 import net.iquesoft.iquephoto.models.Text;
+import net.iquesoft.iquephoto.ui.dialogs.LoadingDialog;
 import net.iquesoft.iquephoto.util.BitmapUtil;
 import net.iquesoft.iquephoto.util.LogHelper;
 import net.iquesoft.iquephoto.util.MatrixUtil;
+import net.iquesoft.iquephoto.util.MotionEventUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,6 +75,7 @@ public class NewImageEditorView extends View {
     private Paint mDrawingPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Paint mDebugPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
+    private EditorText mCurrentCheckedText;
     private EditorSticker mCurrentCheckedSticker;
 
     private EditorFrame mEditorFrame;
@@ -84,6 +87,8 @@ public class NewImageEditorView extends View {
     private List<EditorSticker> mStickers = new ArrayList<>();
     private List<EditorImage> mImages = new ArrayList<>();
 
+    private LoadingDialog mLoadingDialog;
+
     private UndoListener mUndoListener;
 
     public NewImageEditorView(Context context, AttributeSet attrs) {
@@ -91,6 +96,7 @@ public class NewImageEditorView extends View {
         initializePaintsStyle();
         initDrawingPaint();
 
+        mLoadingDialog = new LoadingDialog(context);
         mEditorFrame = new EditorFrame(context);
         mVignette = new EditorVignette(this);
         mRadialTiltShift = new EditorTiltShiftRadial(this);
@@ -402,6 +408,9 @@ public class NewImageEditorView extends View {
             case DRAWING:
                 brushDown(event);
                 break;
+            case TEXT:
+                findCheckedText(event);
+                break;
             case STICKERS:
                 findCheckedSticker(event);
                 break;
@@ -432,10 +441,11 @@ public class NewImageEditorView extends View {
             case DRAWING:
                 brushMove(event);
                 break;
+            case TEXT:
+                moveText(event);
+                break;
             case STICKERS:
-                if (mCurrentCheckedSticker != null) {
-                    moveSticker(event);
-                }
+                moveSticker(event);
                 break;
             case VIGNETTE:
                 mVignette.actionMove(event);
@@ -448,12 +458,19 @@ public class NewImageEditorView extends View {
     }
 
     private void actionUp(MotionEvent event) {
+        mCurrentMode = EditorMode.NONE;
+
         switch (mCurrentTool) {
             case NONE:
                 setIsOriginalImageDisplayed(false);
                 break;
             case DRAWING:
                 brushUp();
+                break;
+            case TEXT:
+                if (mCurrentCheckedText != null) {
+                    mCurrentCheckedText.resetHelperFrameOpacity();
+                }
                 break;
             case STICKERS:
                 if (mCurrentCheckedSticker != null) {
@@ -468,7 +485,7 @@ public class NewImageEditorView extends View {
                 break;
         }
 
-        mCurrentMode = EditorMode.NONE;
+
     }
 
     private void setupSupportMatrix(@NonNull Bitmap bitmap) {
@@ -486,7 +503,54 @@ public class NewImageEditorView extends View {
     }
 
     private void findCheckedText(MotionEvent event) {
+        for (int i = mTexts.size() - 1; i >= 0; i--) {
+            EditorText editorText = mTexts.get(i);
 
+            if (editorText.isInside(event)) {
+                mCurrentCheckedText = editorText;
+                mCurrentMode = EditorMode.MOVE;
+
+                mCurrentCheckedText.setHelperFrameOpacity();
+
+                mLastX = event.getX();
+                mLastY = event.getY();
+
+                return;
+            } else if (editorText.isInDeleteHandleButton(event)) {
+                mCurrentCheckedText = null;
+                mCurrentMode = EditorMode.NONE;
+
+                mTexts.remove(i);
+                invalidate();
+                return;
+            } else if (editorText.isInResizeAndScaleHandleButton(event)) {
+                mCurrentCheckedText = editorText;
+
+                mCurrentCheckedText.setHelperFrameOpacity();
+
+                mLastX = editorText.getRotateAndScaleHandleDstRect().centerX();
+                mLastY = editorText.getRotateAndScaleHandleDstRect().centerY();
+
+                mCurrentMode = EditorMode.ROTATE_AND_SCALE;
+                return;
+            } else if (editorText.isInTransparencyHandleButton(event)) {
+                mCurrentCheckedText = editorText;
+
+                mLastX = editorText.getResizeHandleDstRect().centerX();
+                mLastY = editorText.getResizeHandleDstRect().centerY();
+
+                mCurrentMode = EditorMode.NONE;
+                return;
+            } else if (editorText.isInFrontHandleButton(event)) {
+                EditorText temp = mTexts.remove(i);
+                mTexts.add(temp);
+
+                invalidate();
+                return;
+            }
+        }
+        mCurrentCheckedText = null;
+        mCurrentMode = EditorMode.NONE;
     }
 
     private void findCheckedSticker(MotionEvent event) {
@@ -537,30 +601,67 @@ public class NewImageEditorView extends View {
         mCurrentMode = EditorMode.NONE;
     }
 
+    private void moveText(MotionEvent event) {
+        if (mCurrentCheckedText != null) {
+            switch (mCurrentMode) {
+                case MOVE:
+                    float distanceX = event.getX() - mLastX;
+                    float distanceY = event.getY() - mLastY;
+
+                    float newX = mCurrentCheckedText.getX() + distanceX;
+                    float newY = mCurrentCheckedText.getY() + distanceY;
+
+                    mCurrentCheckedText.setX(newX);
+                    mCurrentCheckedText.setY(newY);
+
+                    mLastX = event.getX();
+                    mLastY = event.getY();
+
+                    invalidate();
+                    break;
+                case ROTATE_AND_SCALE:
+                    mCurrentCheckedText.updateRotateAndScale(
+                            getDeltaX(event),
+                            getDeltaY(event)
+                    );
+
+                    invalidate();
+
+                    mLastX = event.getX();
+                    mLastY = event.getY();
+                    break;
+
+                // TODO: Texts transparency.
+            }
+        }
+    }
+
     private void moveSticker(MotionEvent event) {
-        switch (mCurrentMode) {
-            case MOVE:
-                mCurrentCheckedSticker.actionMove(
-                        getDeltaX(event),
-                        getDeltaY(event)
-                );
+        if (mCurrentCheckedSticker != null) {
+            switch (mCurrentMode) {
+                case MOVE:
+                    mCurrentCheckedSticker.actionMove(
+                            getDeltaX(event),
+                            getDeltaY(event)
+                    );
 
-                mLastX = event.getX();
-                mLastY = event.getY();
+                    mLastX = event.getX();
+                    mLastY = event.getY();
 
-                invalidate();
-                break;
-            case ROTATE_AND_SCALE:
-                mCurrentCheckedSticker.updateRotateAndScale(
-                        getDeltaX(event),
-                        getDeltaY(event)
-                );
+                    invalidate();
+                    break;
+                case ROTATE_AND_SCALE:
+                    mCurrentCheckedSticker.updateRotateAndScale(
+                            getDeltaX(event),
+                            getDeltaY(event)
+                    );
 
-                mLastX = event.getX();
-                mLastY = event.getY();
+                    mLastX = event.getX();
+                    mLastY = event.getY();
 
-                invalidate();
-                break;
+                    invalidate();
+                    break;
+            }
         }
     }
 
@@ -654,7 +755,7 @@ public class NewImageEditorView extends View {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            //mProgressDialog.show();
+            mLoadingDialog.show();
 
             mBitmap = getAlteredBitmap().copy(getAlteredBitmap().getConfig(), true);
         }
@@ -675,6 +776,9 @@ public class NewImageEditorView extends View {
                 case OVERLAY:
                     calculateSupportMatrix(mSupportBitmap);
                     mCanvas.drawBitmap(mSupportBitmap, mSupportMatrix, mOverlayPaint);
+                    break;
+                case TEXT:
+                    drawTexts(mCanvas);
                     break;
                 case STICKERS:
                     drawStickers(mCanvas);
@@ -723,10 +827,13 @@ public class NewImageEditorView extends View {
         protected void onPostExecute(Bitmap bitmap) {
             super.onPostExecute(bitmap);
 
-            switch (mCurrentTool) {
-                case STICKERS:
-                    mStickers.clear();
-                    break;
+            Log.i("Editor", mCurrentTool.name());
+
+            if (!mTexts.isEmpty()) {
+                mTexts.clear();
+            }
+            if (!mStickers.isEmpty()) {
+                mStickers.clear();
             }
 
             mImages.add(new EditorImage(mCurrentTool, bitmap));
@@ -734,7 +841,7 @@ public class NewImageEditorView extends View {
             mUndoListener.hasChanged(mImages.size());
 
             invalidate();
-            // mProgressDialog.dismiss();
+            mLoadingDialog.dismiss();
         }
 
         private void drawStickers(Canvas canvas) {
@@ -744,12 +851,12 @@ public class NewImageEditorView extends View {
             }
         }
 
-       /* private void drawTexts(Canvas canvas) {
-            for (EditorText text : mTextsList) {
-                text.prepareToDraw(mMatrix);
+        private void drawTexts(Canvas canvas) {
+            for (EditorText text : mTexts) {
+                text.prepareToDraw(mImageMatrix);
                 text.draw(canvas);
             }
-        }*/
+        }
 
         private void calculateSupportMatrix(Bitmap bitmap) {
             float height = bitmap.getHeight();

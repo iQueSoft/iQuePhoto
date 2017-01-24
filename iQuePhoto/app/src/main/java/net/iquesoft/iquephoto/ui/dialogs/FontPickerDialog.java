@@ -3,6 +3,7 @@ package net.iquesoft.iquephoto.ui.dialogs;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,7 +20,10 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
+
+import static android.graphics.Color.TRANSPARENT;
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
+import static android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN;
 
 public class FontPickerDialog extends Dialog {
     @Inject
@@ -47,10 +51,18 @@ public class FontPickerDialog extends Dialog {
         mContext = context;
     }
 
+    public FontPickerDialog(Context context, int themeResId) {
+        super(context, themeResId);
+        mContext = context;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
+        if (getWindow() != null) {
+            getWindow().setBackgroundDrawable(new ColorDrawable(TRANSPARENT));
+        }
         setContentView(R.layout.dialog_font_picker);
 
         ButterKnife.bind(this);
@@ -60,7 +72,7 @@ public class FontPickerDialog extends Dialog {
         initFontsList();
     }
 
-    @OnClick(R.id.applyFontButton)
+    /*@OnClick(R.id.applyFontButton)
     void onClickApply() {
         mOnFontClickListener.onClick(mTypeface);
         dismiss();
@@ -69,11 +81,11 @@ public class FontPickerDialog extends Dialog {
     @OnClick(R.id.cancelTextStyle)
     void onClickCancel() {
         dismiss();
-    }
+    }*/
 
     private void initFontsList() {
         FontsAdapter fontsAdapter = new FontsAdapter(mFonts);
-        fontsList.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        fontsList.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
         fontsAdapter.setOnFontClickListener(font ->
                 mTypeface = Typeface.createFromAsset(mContext.getAssets(), font.getPath())

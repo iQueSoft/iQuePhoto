@@ -22,6 +22,7 @@ import net.iquesoft.iquephoto.models.Text;
 import net.iquesoft.iquephoto.ui.activities.EditorActivity;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.AddTextPresenter;
 import net.iquesoft.iquephoto.presentation.views.fragment.AddTextView;
+import net.iquesoft.iquephoto.ui.dialogs.FontPickerDialog;
 import net.iquesoft.iquephoto.util.ToolbarUtil;
 
 import butterknife.BindView;
@@ -49,6 +50,7 @@ public class TextFragment extends ToolFragment implements AddTextView {
 
     private Unbinder mUnbinder;
 
+    private FontPickerDialog mFontPickerDialog;
     private NewImageEditorView mImageEditorView;
 
     public static TextFragment newInstance() {
@@ -68,6 +70,7 @@ public class TextFragment extends ToolFragment implements AddTextView {
         mUnbinder = ButterKnife.bind(this, view);
 
         mContext = view.getContext();
+        mFontPickerDialog = new FontPickerDialog(mContext);
 
         return view;
     }
@@ -117,6 +120,6 @@ public class TextFragment extends ToolFragment implements AddTextView {
 
     @OnClick(R.id.selectFontButton)
     void onClickTextButton() {
-        ((EditorActivity) getActivity()).setupFragment(FontsFragment.newInstance());
+        mFontPickerDialog.show();
     }
 }

@@ -3,6 +3,8 @@ package net.iquesoft.iquephoto.util;
 import net.iquesoft.iquephoto.App;
 
 public class SizeUtil {
+    //private static final float GESTURE_THRESHOLD_DP = 16.0f;
+
     public static float dp2px(float dp) {
         return dp * getDensity();
     }

@@ -183,22 +183,17 @@ public class EditorModule {
     @Provides
     List<StickersSet> provideStickersSet() {
         return Arrays.asList(
-                new StickersSet(R.string.emoticons, R.drawable.s_emoji_01, Sticker.getEmoticonsStickersList()),
-                new StickersSet(R.string.flags, R.drawable.ic_flags, Sticker.getFlagStickersList()),
-                new StickersSet(R.string.halloween, R.drawable.s_halloween_01, Sticker.getHalloweenStickersList()),
-                new StickersSet(R.string.christmas, R.drawable.s_christmas_01, Sticker.getChristmasStickersList()),
-                new StickersSet(R.string.valentines_day, R.drawable.s_valentines_day_01, Sticker.getValentinesDayStickersList()),
-                new StickersSet(R.string.warnings, R.drawable.s_warning_01, Sticker.getWarningStickersList())
+                new StickersSet(R.string.emoticons, R.drawable.s_emoji_01, provideEmoticonsStickers()),
+                new StickersSet(R.string.flags, R.drawable.ic_flags, provideFlagStickers()),
+                new StickersSet(R.string.halloween, R.drawable.s_halloween_01, provideHalloweenStickers()),
+                new StickersSet(R.string.christmas, R.drawable.s_christmas_01, provideChristmasStickers()),
+                new StickersSet(R.string.valentines_day, R.drawable.s_valentines_day_01, provideValentinesDayStickers())
         );
     }
 
     @Provides
     List<Overlay> provideOverlays() {
         return Arrays.asList(
-                new Overlay("C01", R.drawable.overlay_color_1),
-                new Overlay("C02", R.drawable.overlay_color_03),
-                new Overlay("C03", R.drawable.overlay_color_04),
-                new Overlay("C04", R.drawable.overlay_color_06),
                 new Overlay("D01", R.drawable.overlay_dust_02),
                 new Overlay("D02", R.drawable.overlay_dust_03),
                 new Overlay("FD01", R.drawable.overlay_fd_01),
@@ -251,4 +246,49 @@ public class EditorModule {
                 new EditorColor(R.color.indigo));
     }
 
+    private List<Sticker> provideEmoticonsStickers() {
+        return Arrays.asList(
+                new Sticker(R.drawable.s_emoji_01),
+                new Sticker(R.drawable.s_emoji_02),
+                new Sticker(R.drawable.s_emoji_03),
+                new Sticker(R.drawable.s_emoji_04),
+                new Sticker(R.drawable.s_emoji_05),
+                new Sticker(R.drawable.s_emoji_06),
+                new Sticker(R.drawable.s_emoji_07));
+    }
+
+    private List<Sticker> provideFlagStickers() {
+        return Arrays.asList(
+                new Sticker(R.drawable.s_flag_01),
+                new Sticker(R.drawable.s_flag_02),
+                new Sticker(R.drawable.s_flag_03),
+                new Sticker(R.drawable.s_flag_04),
+                new Sticker(R.drawable.s_flag_05),
+                new Sticker(R.drawable.s_flag_06));
+    }
+
+    private List<Sticker> provideChristmasStickers() {
+        return Arrays.asList(
+                new Sticker(R.drawable.s_flag_01),
+                new Sticker(R.drawable.s_flag_02),
+                new Sticker(R.drawable.s_flag_03),
+                new Sticker(R.drawable.s_flag_04),
+                new Sticker(R.drawable.s_flag_05),
+                new Sticker(R.drawable.s_flag_06));
+    }
+
+    private List<Sticker> provideHalloweenStickers() {
+        return Arrays.asList(
+                new Sticker(R.drawable.s_halloween_01),
+                new Sticker(R.drawable.s_halloween_02),
+                new Sticker(R.drawable.s_halloween_03));
+    }
+
+    private List<Sticker> provideValentinesDayStickers() {
+        return Arrays.asList(
+                new Sticker(R.drawable.s_valentines_day_01),
+                new Sticker(R.drawable.s_valentines_day_02),
+                new Sticker(R.drawable.s_valentines_day_03),
+                new Sticker(R.drawable.s_valentines_day_04));
+    }
 }

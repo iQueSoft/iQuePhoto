@@ -4,9 +4,10 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 
+import net.iquesoft.iquephoto.util.SizeUtil;
+
 public class Drawing {
-    public static final float TOUCH_TOLERANCE = 4f;
-    public static final float DEFAULT_STROKE_WIDTH = 10f;
+    public static final float DEFAULT_STROKE_WIDTH = SizeUtil.dp2px(10f);
     public static final int DEFAULT_COLOR = Color.BLACK;
 
     private Paint mPaint;

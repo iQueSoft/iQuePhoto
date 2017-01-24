@@ -24,7 +24,6 @@ import android.view.MotionEvent;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
-import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.core.editor.enums.EditorTool;
 import net.iquesoft.iquephoto.core.editor.enums.EditorMode;
 import net.iquesoft.iquephoto.core.editor.model.EditorSticker;
@@ -707,21 +706,21 @@ public class ImageEditorView extends ImageView {
         float dX = Math.abs(event.getX() - mLastX);
         float dY = Math.abs(event.getY() - mLastY);
 
-        if (dX >= Drawing.TOUCH_TOLERANCE || dY >= Drawing.TOUCH_TOLERANCE) {
-            mDrawingPath.quadTo(mLastX, mLastY,
-                    (event.getX() + mLastX) / 2,
-                    (event.getY(0) + mLastY) / 2);
 
-            mOriginalDrawingPath.quadTo(mLastX * mScale, mLastY * mScale,
-                    ((event.getX() + mLastX) / 2) * mScale,
-                    ((event.getY(0) + mLastY) / 2) * mScale);
+        mDrawingPath.quadTo(mLastX, mLastY,
+                (event.getX() + mLastX) / 2,
+                (event.getY(0) + mLastY) / 2);
 
-            mLastX = event.getX();
-            mLastY = event.getY();
+        mOriginalDrawingPath.quadTo(mLastX * mScale, mLastY * mScale,
+                ((event.getX() + mLastX) / 2) * mScale,
+                ((event.getY(0) + mLastY) / 2) * mScale);
 
-            mDrawingCirclePath.reset();
-            mDrawingCirclePath.addCircle(mLastX, mLastY, 30, Path.Direction.CW);
-        }
+        mLastX = event.getX();
+        mLastY = event.getY();
+
+        mDrawingCirclePath.reset();
+        mDrawingCirclePath.addCircle(mLastX, mLastY, 30, Path.Direction.CW);
+
 
         invalidate();
     }
@@ -1102,7 +1101,7 @@ public class ImageEditorView extends ImageView {
 
                 invalidate();
                 return;
-            } else if (editorSticker.isInResizeAndScaleHandleButton(event)) {
+            } else if (editorSticker.isInScaleAndRotateHandleButton(event)) {
                 mCurrentEditorSticker = editorSticker;
                 mMode = EditorMode.ROTATE_AND_SCALE;
 

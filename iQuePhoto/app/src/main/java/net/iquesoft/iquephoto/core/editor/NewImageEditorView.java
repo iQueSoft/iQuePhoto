@@ -19,6 +19,9 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.arellomobile.mvp.MvpDelegate;
+import com.arellomobile.mvp.presenter.InjectPresenter;
+
 import net.iquesoft.iquephoto.core.editor.enums.EditorMode;
 import net.iquesoft.iquephoto.core.editor.enums.EditorTool;
 import net.iquesoft.iquephoto.core.editor.model.Drawing;
@@ -33,15 +36,15 @@ import net.iquesoft.iquephoto.ui.dialogs.LoadingDialog;
 import net.iquesoft.iquephoto.util.BitmapUtil;
 import net.iquesoft.iquephoto.util.LogHelper;
 import net.iquesoft.iquephoto.util.MatrixUtil;
-import net.iquesoft.iquephoto.util.MotionEventUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.NONE;
 
-// TODO: CustomViews as MvpView {@link https://github.com/Arello-Mobile/Moxy/wiki/CustomView-as-MvpView}
-public class NewImageEditorView extends View {
+public class NewImageEditorView extends View implements ImageEditorViewView {
     private static final String TAG = "Image Editor";
 
     private float mLastX;
@@ -66,13 +69,14 @@ public class NewImageEditorView extends View {
     private RectF mSrcRect = new RectF();
     private RectF mDstRect = new RectF();
 
-    private Path mDrawingPath = new Path();
+    private Path mDrawingPath;
+    private Path mRealDrawingPath = new Path();
 
     private Paint mBitmapPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Paint mFilterPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Paint mOverlayPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Paint mAdjustPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private Paint mDrawingPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private Paint mDrawingPaint;
     private Paint mDebugPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
     private EditorText mCurrentCheckedText;
@@ -91,6 +95,12 @@ public class NewImageEditorView extends View {
 
     private UndoListener mUndoListener;
 
+    private MvpDelegate mParentDelegate;
+    private MvpDelegate<NewImageEditorView> mMvpDelegate;
+
+    @InjectPresenter
+    ImageEditorViewPresenter mPresenter;
+
     public NewImageEditorView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initializePaintsStyle();
@@ -99,7 +109,15 @@ public class NewImageEditorView extends View {
         mLoadingDialog = new LoadingDialog(context);
         mEditorFrame = new EditorFrame(context);
         mVignette = new EditorVignette(this);
+
         mRadialTiltShift = new EditorTiltShiftRadial(this);
+    }
+
+    public void init(MvpDelegate patentDelegate) {
+        mParentDelegate = patentDelegate;
+
+        getMvpDelegate().onCreate();
+        getMvpDelegate().onAttach();
     }
 
     @Override
@@ -170,7 +188,7 @@ public class NewImageEditorView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        switch (MotionEventCompat.getActionMasked(event)) {
+        /*switch (MotionEventCompat.getActionMasked(event)) {
             case MotionEvent.ACTION_DOWN:
                 actionDown(event);
                 break;
@@ -185,9 +203,29 @@ public class NewImageEditorView extends View {
                 break;
             case MotionEvent.ACTION_POINTER_UP:
                 break;
-        }
+        }*/
+        mPresenter.viewTouched(event);
 
         return true; //TODO: Check this! super.onTouchEvent(event);
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+
+        getMvpDelegate().onSaveInstanceState();
+        getMvpDelegate().onDetach();
+    }
+
+    public MvpDelegate<NewImageEditorView> getMvpDelegate() {
+        if (mMvpDelegate != null) {
+            return mMvpDelegate;
+        }
+
+        mMvpDelegate = new MvpDelegate<>(this);
+        mMvpDelegate.setParentDelegate(mParentDelegate, String.valueOf(getId()));
+
+        return mMvpDelegate;
     }
 
     public void setImageBitmap(@NonNull Bitmap bitmap) {
@@ -381,6 +419,7 @@ public class NewImageEditorView extends View {
     }
 
     private void initDrawingPaint() {
+        mDrawingPaint = new Paint();
         mDrawingPaint.setStyle(Paint.Style.STROKE);
         mDrawingPaint.setColor(Drawing.DEFAULT_COLOR);
         mDrawingPaint.setStrokeJoin(Paint.Join.ROUND);
@@ -576,7 +615,7 @@ public class NewImageEditorView extends View {
 
                 invalidate();
                 return;
-            } else if (editorSticker.isInResizeAndScaleHandleButton(event)) {
+            } else if (editorSticker.isInScaleAndRotateHandleButton(event)) {
                 mCurrentCheckedSticker = editorSticker;
                 mCurrentMode = EditorMode.ROTATE_AND_SCALE;
 
@@ -681,7 +720,6 @@ public class NewImageEditorView extends View {
 
         mDrawingPath.reset();
 
-        mDrawingPath.reset();
         mDrawingPath.moveTo(mLastX, mLastY);
 
         invalidate();
@@ -705,7 +743,7 @@ public class NewImageEditorView extends View {
         Log.i("Drawing", "Brush up");
 
         mDrawingPath.lineTo(mLastX, mLastY);
-        mDrawings.add(new Drawing(new Paint(mDrawingPaint), mDrawingPath, null));
+        mDrawings.add(new Drawing(new Paint(mDrawingPaint), new Path(mDrawingPath), null));
 
         mDrawingPath.reset();
 
@@ -713,13 +751,18 @@ public class NewImageEditorView extends View {
     }
 
     private void drawing(Canvas canvas) {
-        if (mDrawings.size() > 0) {
-            for (Drawing drawing : mDrawings) {
-                canvas.drawPath(drawing.getPath(), drawing.getPaint());
+        if (mDrawingPath != null) {
+            if (!mDrawings.isEmpty()) {
+                for (Drawing drawing : mDrawings) {
+                    canvas.drawPath(drawing.getPath(), drawing.getPaint());
+                }
             }
         }
-        if (!mDrawingPath.isEmpty())
-            canvas.drawPath(mDrawingPath, mDrawingPaint);
+        if (mDrawingPath != null) {
+            if (!mDrawingPath.isEmpty()) {
+                canvas.drawPath(mDrawingPath, mDrawingPaint);
+            }
+        }
     }
 
     private void setIsOriginalImageDisplayed(boolean isOriginalImageDisplayed) {
@@ -743,6 +786,27 @@ public class NewImageEditorView extends View {
         LogHelper.logMatrix("mImageMatrix", mImageMatrix);
 
         mIsInitiazed = true;
+    }
+
+    @Override
+    public void brushDown(Path path) {
+        mDrawingPath = path;
+
+        invalidate();
+    }
+
+    @Override
+    public void brushMove(Path path) {
+        mDrawingPath = path;
+
+        invalidate();
+    }
+
+    @Override
+    public void brushUp(List<Drawing> drawings) {
+        mDrawings = drawings;
+
+        invalidate();
     }
 
     private class ImageProcessingTask extends AsyncTask<EditorTool, Void, Bitmap> {
@@ -779,6 +843,15 @@ public class NewImageEditorView extends View {
                     break;
                 case TEXT:
                     drawTexts(mCanvas);
+                    break;
+                case DRAWING:
+                    for (Drawing drawing : mDrawings) {
+                        drawing.getPaint().setStrokeWidth(
+                                drawing.getPaint().
+                                        getStrokeWidth() / MatrixUtil.getScale(mImageMatrix)
+                        );
+                        mCanvas.drawPath(drawing.getPath(), drawing.getPaint());
+                    }
                     break;
                 case STICKERS:
                     drawStickers(mCanvas);
@@ -835,12 +908,18 @@ public class NewImageEditorView extends View {
             if (!mStickers.isEmpty()) {
                 mStickers.clear();
             }
+            if (!mDrawings.isEmpty()) {
+                mDrawings.clear();
+            }
 
-            mImages.add(new EditorImage(mCurrentTool, bitmap));
+            mImages.add(new
+                    EditorImage(mCurrentTool, bitmap)
+            );
 
             mUndoListener.hasChanged(mImages.size());
 
             invalidate();
+
             mLoadingDialog.dismiss();
         }
 

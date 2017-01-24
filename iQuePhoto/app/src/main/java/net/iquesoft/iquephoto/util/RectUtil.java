@@ -19,6 +19,13 @@ public class RectUtil {
         rectF.bottom += dy;
     }
 
+    public static void scaleRect2(RectF rectF, float scale) {
+        rectF.left /= scale;
+        rectF.top /= scale;
+        rectF.right /= scale;
+        rectF.bottom /= scale;
+    }
+
     public static void rotateRect(RectF rectF, float centerX, float centerY,
                                   float rotateAngle) {
         float x = rectF.centerX();

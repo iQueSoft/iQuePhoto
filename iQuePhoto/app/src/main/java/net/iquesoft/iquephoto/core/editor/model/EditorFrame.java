@@ -24,7 +24,7 @@ public class EditorFrame {
         initializeFramePaint();
         initializeHandlesBitmap(context);
     }
-
+    
     private void initializeFramePaint() {
         mFramePaint = new Paint();
         mFramePaint.setColor(Color.WHITE);
@@ -36,9 +36,8 @@ public class EditorFrame {
     }
 
     private void initializeHandlesBitmap(Context context) {
-        //mDeleteHandleBitmap = BitmapUtil.drawable2Bitmap(context, R.drawable.ic_handle_delete);
-        mDeleteHandleBitmap = BitmapUtil.drawable2Bitmap(context, R.drawable.cancel);
-        mResizeHandleBitmap = BitmapUtil.drawable2Bitmap(context, R.drawable.ic_handle_resize);
+        mDeleteHandleBitmap = BitmapUtil.drawable2Bitmap(context, R.drawable.ic_handle_delete);
+        mResizeHandleBitmap = BitmapUtil.drawable2Bitmap(context, R.drawable.ic_handle_scale_rotate);
         mFrontHandleBitmap = BitmapUtil.drawable2Bitmap(context, R.drawable.ic_handle_front);
         mTransparencyHandleBitmap =
                 BitmapUtil.drawable2Bitmap(context, R.drawable.ic_handle_transparency);
@@ -57,7 +56,7 @@ public class EditorFrame {
         return mDeleteHandleBitmap;
     }
 
-    public Bitmap getRotateHandleBitmap() {
+    public Bitmap getTransparencyHandleBitmap() {
         return mTransparencyHandleBitmap;
     }
 

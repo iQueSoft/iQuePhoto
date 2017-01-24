@@ -81,8 +81,8 @@ public class EditorText {
                 mEditorFrame.getDeleteHandleBitmap().getHeight());
         mDeleteHandleSrcRect = new Rect(0, 0, mEditorFrame.getResizeHandleBitmap().getWidth(),
                 mEditorFrame.getResizeHandleBitmap().getHeight());
-        mResizeAndScaleHandleSrcRect = new Rect(0, 0, mEditorFrame.getRotateHandleBitmap().getWidth(),
-                mEditorFrame.getRotateHandleBitmap().getHeight());
+        mResizeAndScaleHandleSrcRect = new Rect(0, 0, mEditorFrame.getTransparencyHandleBitmap().getWidth(),
+                mEditorFrame.getTransparencyHandleBitmap().getHeight());
         mFrontHandleSrcRect = new Rect(0, 0, mEditorFrame.getFrontHandleBitmap().getWidth(),
                 mEditorFrame.getFrontHandleBitmap().getHeight());
 
@@ -112,6 +112,7 @@ public class EditorText {
 
         mFrameRect.set(mTextRect.left - SizeUtil.dp2px(EDITOR_FRAME_PADDING), mTextRect.top - SizeUtil.dp2px(EDITOR_FRAME_PADDING),
                 mTextRect.right + SizeUtil.dp2px(EDITOR_FRAME_PADDING), mTextRect.bottom + SizeUtil.dp2px(EDITOR_FRAME_PADDING));
+
         RectUtil.scaleRect(mFrameRect, mScale);
 
         canvas.save();
@@ -152,7 +153,7 @@ public class EditorText {
 
         canvas.drawBitmap(mEditorFrame.getDeleteHandleBitmap(),
                 mDeleteHandleSrcRect, mDeleteHandleDstRect, null);
-        canvas.drawBitmap(mEditorFrame.getRotateHandleBitmap(),
+        canvas.drawBitmap(mEditorFrame.getTransparencyHandleBitmap(),
                 mTransparencyHandleSrcRect, mTransparencyHandleDstRect, null);
         canvas.drawBitmap(mEditorFrame.getResizeHandleBitmap(),
                 mResizeAndScaleHandleSrcRect, mResizeAndScaleHandleDstRect, null);
@@ -238,7 +239,7 @@ public class EditorText {
     public boolean isInside(MotionEvent event) {
         return mFrameRect.contains(event.getX(), event.getY());
     }
-    
+
     public boolean isInDeleteHandleButton(MotionEvent event) {
         return mDeleteHandleDstRect.contains(event.getX(), event.getY());
     }
@@ -263,19 +264,13 @@ public class EditorText {
                 "Scale = " + String.valueOf(mScale)
         );
 
-        float imageX = MatrixUtil.getMatrixX(matrix);
-        float imageY = MatrixUtil.getMatrixY(matrix);
-        float imageScale = MatrixUtil.getScale(matrix);
+        float dX = mX - MatrixUtil.getMatrixX(matrix);
+        float dY = mY - MatrixUtil.getMatrixY(matrix);
 
-        float dX = mX - imageX;
-        float dY = mY - imageY;
+        mScale /= MatrixUtil.getScale(matrix);
 
-        float scale = mScale / imageScale;
-
-        mX = dX / imageScale;
-        mY = dY / imageScale;
-
-        mScale = scale;
+        mX = dX / mScale;
+        mY = dY / mScale;
 
         Log.i("Text", "After: " + "\n" +
                 "X = " + String.valueOf(mX) + "\n" +

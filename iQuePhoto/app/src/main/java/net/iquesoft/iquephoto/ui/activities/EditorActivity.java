@@ -79,6 +79,7 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorView {
 
         BitmapUtil.logBitmapInfo("Cropped Bitmap", mBitmap);
 
+        imageEditorView.init(getMvpDelegate());
         imageEditorView.setImageBitmap(mBitmap);
 
         imageEditorView.setUndoListener(count -> {
@@ -98,7 +99,6 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorView {
                 .commit();
 
         Log.i("Backstack", String.valueOf(mFragmentManager.getBackStackEntryCount()));
-
     }
 
     @Override

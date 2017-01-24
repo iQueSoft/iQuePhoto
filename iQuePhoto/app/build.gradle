@@ -52,7 +52,6 @@ dependencies {
     compile 'com.isseiaoki:simplecropview:1.1.4'
     compile 'org.adw.library:discrete-seekbar:1.0.1'
     compile 'com.tbruyelle.rxpermissions:rxpermissions:0.7.0@aar'
-    compile 'com.jakewharton.rxbinding:rxbinding:0.4.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'io.reactivex:rxjava:1.1.6'
     compile 'io.reactivex:rxandroid:1.2.1'

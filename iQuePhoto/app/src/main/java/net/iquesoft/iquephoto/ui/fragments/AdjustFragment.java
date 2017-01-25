@@ -12,7 +12,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.adapter.AdjustAdapter;
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.core.editor.NewImageEditorView;
+import net.iquesoft.iquephoto.core.editor.ImageEditorView;
 import net.iquesoft.iquephoto.models.Adjust;
 import net.iquesoft.iquephoto.presentation.common.ToolFragment;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.AdjustPresenter;
@@ -49,7 +49,7 @@ public class AdjustFragment extends ToolFragment implements AdjustView {
     @Override
     public void onResume() {
         super.onResume();
-        ((NewImageEditorView) getActivity().findViewById(R.id.imageEditorView))
+        ((ImageEditorView) getActivity().findViewById(R.id.imageEditorView))
                 .changeTool(NONE);
         ToolbarUtil.updateTitle(R.string.adjust, getActivity());
         ToolbarUtil.updateSubtitle(null, getActivity());

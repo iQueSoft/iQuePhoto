@@ -33,7 +33,7 @@
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
 
-    <net.iquesoft.iquephoto.core.editor.NewImageEditorView
+    <net.iquesoft.iquephoto.core.editor.ImageEditorView
         android:id="@+id/imageEditorView"
         android:layout_width="match_parent"
         android:layout_height="0dp"

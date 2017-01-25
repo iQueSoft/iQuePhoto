@@ -13,7 +13,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapter.FontsAdapter;
-import net.iquesoft.iquephoto.core.editor.NewImageEditorView;
+import net.iquesoft.iquephoto.core.editor.ImageEditorView;
 import net.iquesoft.iquephoto.models.Font;
 import net.iquesoft.iquephoto.presentation.common.ToolFragment;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.FontsPresenter;
@@ -37,7 +37,7 @@ public class FontsFragment extends ToolFragment implements FontsView {
 
     private Unbinder mUnbinder;
 
-    private NewImageEditorView mImageEditorView;
+    private ImageEditorView mImageEditorView;
 
     public static FontsFragment newInstance() {
         return new FontsFragment();
@@ -46,7 +46,7 @@ public class FontsFragment extends ToolFragment implements FontsView {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mImageEditorView = (NewImageEditorView) getActivity().findViewById(R.id.imageEditorView);
+        mImageEditorView = (ImageEditorView) getActivity().findViewById(R.id.imageEditorView);
     }
 
     @Override

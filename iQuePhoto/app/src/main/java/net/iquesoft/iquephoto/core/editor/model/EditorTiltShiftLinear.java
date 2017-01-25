@@ -284,7 +284,7 @@ public class EditorTiltShiftLinear implements EditorTiltShift {
     public void setPaintAlpha(int value) {
 
     }
-    
+
     @Override
     public int getPaintAlpha() {
         return 0;

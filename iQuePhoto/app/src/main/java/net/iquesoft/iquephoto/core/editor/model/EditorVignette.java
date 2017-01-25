@@ -15,7 +15,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 
-import net.iquesoft.iquephoto.core.editor.NewImageEditorView;
+import net.iquesoft.iquephoto.core.editor.ImageEditorView;
 import net.iquesoft.iquephoto.core.editor.enums.EditorMode;
 import net.iquesoft.iquephoto.util.LogHelper;
 import net.iquesoft.iquephoto.util.MatrixUtil;
@@ -58,9 +58,9 @@ public class EditorVignette {
 
     private EditorMode mMode = NONE;
 
-    private NewImageEditorView mImageEditorView;
+    private ImageEditorView mImageEditorView;
 
-    public EditorVignette(NewImageEditorView imageEditorView) {
+    public EditorVignette(ImageEditorView imageEditorView) {
         mImageEditorView = imageEditorView;
 
         initializeVignette(imageEditorView.getContext());

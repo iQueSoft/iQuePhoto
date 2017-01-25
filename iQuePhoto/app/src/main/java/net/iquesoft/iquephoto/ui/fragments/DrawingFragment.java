@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.core.editor.NewImageEditorView;
+import net.iquesoft.iquephoto.core.editor.ImageEditorView;
 import net.iquesoft.iquephoto.presentation.common.ToolFragment;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.DrawingPresenter;
 import net.iquesoft.iquephoto.ui.dialogs.ColorPickerDialog;
@@ -36,7 +36,7 @@ public class DrawingFragment extends ToolFragment implements DrawingView {
 
     private Unbinder mUnbinder;
 
-    private NewImageEditorView mImageEditorView;
+    private ImageEditorView mImageEditorView;
 
     private ColorPickerDialog mColorPickerDialog;
 
@@ -51,7 +51,7 @@ public class DrawingFragment extends ToolFragment implements DrawingView {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mImageEditorView = (NewImageEditorView) getActivity().findViewById(R.id.imageEditorView);
+        mImageEditorView = (ImageEditorView) getActivity().findViewById(R.id.imageEditorView);
     }
 
     @Override

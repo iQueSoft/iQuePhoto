@@ -16,7 +16,7 @@ import android.widget.Toast;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.core.editor.NewImageEditorView;
+import net.iquesoft.iquephoto.core.editor.ImageEditorView;
 import net.iquesoft.iquephoto.presentation.common.ToolFragment;
 import net.iquesoft.iquephoto.models.Text;
 import net.iquesoft.iquephoto.ui.activities.EditorActivity;
@@ -51,7 +51,7 @@ public class TextFragment extends ToolFragment implements AddTextView {
     private Unbinder mUnbinder;
 
     private FontPickerDialog mFontPickerDialog;
-    private NewImageEditorView mImageEditorView;
+    private ImageEditorView mImageEditorView;
 
     public static TextFragment newInstance() {
         return new TextFragment();
@@ -60,7 +60,7 @@ public class TextFragment extends ToolFragment implements AddTextView {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mImageEditorView = (NewImageEditorView) getActivity().findViewById(R.id.imageEditorView);
+        mImageEditorView = (ImageEditorView) getActivity().findViewById(R.id.imageEditorView);
     }
 
     @Override

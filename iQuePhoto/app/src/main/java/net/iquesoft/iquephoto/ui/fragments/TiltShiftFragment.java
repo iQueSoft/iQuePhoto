@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.core.editor.NewImageEditorView;
+import net.iquesoft.iquephoto.core.editor.ImageEditorView;
 import net.iquesoft.iquephoto.core.editor.enums.EditorTool;
 import net.iquesoft.iquephoto.presentation.common.ToolFragment;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.TiltShiftFragmentPresenter;
@@ -28,13 +28,13 @@ public class TiltShiftFragment extends ToolFragment implements TiltShiftView {
 
     private Unbinder mUnbinder;
 
-    private NewImageEditorView mImageEditorView;
+    private ImageEditorView mImageEditorView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mImageEditorView =
-                (NewImageEditorView) getActivity().findViewById(R.id.imageEditorView);
+                (ImageEditorView) getActivity().findViewById(R.id.imageEditorView);
     }
 
     @Override

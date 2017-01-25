@@ -3,7 +3,6 @@ package net.iquesoft.iquephoto.ui.activities;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -19,17 +18,16 @@ import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.arellomobile.mvp.presenter.ProvidePresenter;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.core.editor.NewImageEditorView;
-import net.iquesoft.iquephoto.presentation.presenters.activity.EditorPresenter;
+import net.iquesoft.iquephoto.core.editor.ImageEditorView;
+import net.iquesoft.iquephoto.presentation.presenters.activity.EditorActivityPresenter;
 import net.iquesoft.iquephoto.task.ImageSaveTask;
 import net.iquesoft.iquephoto.util.BitmapUtil;
 import net.iquesoft.iquephoto.presentation.views.activity.EditorView;
 import net.iquesoft.iquephoto.ui.fragments.ToolsFragment;
 import net.iquesoft.iquephoto.util.ToolbarUtil;
-
-import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,21 +35,25 @@ import butterknife.OnClick;
 
 public class EditorActivity extends MvpAppCompatActivity implements EditorView {
     @InjectPresenter
-    EditorPresenter presenter;
+    EditorActivityPresenter mPresenter;
 
+    @ProvidePresenter
+    EditorActivityPresenter provideEditorPresenter() {
+        return new EditorActivityPresenter(this, getIntent());
+    }
+    
     @BindView(R.id.toolbar_editor)
-    Toolbar toolbar;
+    Toolbar mToolbar;
 
     @BindView(R.id.undoButton)
-    Button undoButton;
+    Button mUndoButton;
 
     @BindView(R.id.imageEditorView)
-    NewImageEditorView imageEditorView;
+    ImageEditorView mImageEditorView;
 
     @BindView(R.id.fragmentContainer)
-    FrameLayout fragmentContainer;
+    FrameLayout mFragmentContainer;
 
-    private Bitmap mBitmap;
     private FragmentManager mFragmentManager;
 
     @Override
@@ -61,30 +63,21 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorView {
 
         ButterKnife.bind(this);
 
-        setSupportActionBar(toolbar);
+        setSupportActionBar(mToolbar);
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            toolbar.setNavigationIcon(R.drawable.ic_close);
+            mToolbar.setNavigationIcon(R.drawable.ic_close);
         }
 
-        try {
-            mBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), getIntent().getData());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        mImageEditorView.init(getMvpDelegate());
 
-        BitmapUtil.logBitmapInfo("Cropped Bitmap", mBitmap);
-
-        imageEditorView.init(getMvpDelegate());
-        imageEditorView.setImageBitmap(mBitmap);
-
-        imageEditorView.setUndoListener(count -> {
+        mImageEditorView.setUndoListener(count -> {
             if (count != 0) {
-                undoButton.setText(String.valueOf(count));
-                undoButton.setVisibility(View.VISIBLE);
+                mUndoButton.setText(String.valueOf(count));
+                mUndoButton.setVisibility(View.VISIBLE);
             } else {
-                undoButton.setVisibility(View.GONE);
+                mUndoButton.setVisibility(View.GONE);
             }
         });
 
@@ -92,7 +85,7 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorView {
 
         mFragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-        fragmentTransaction.add(fragmentContainer.getId(), new ToolsFragment())
+        fragmentTransaction.add(mFragmentContainer.getId(), new ToolsFragment())
                 .commit();
 
         Log.i("Backstack", String.valueOf(mFragmentManager.getBackStackEntryCount()));
@@ -111,11 +104,11 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorView {
             case R.id.action_share:
                 Intent intent = new Intent(EditorActivity.this, ShareActivity.class);
                 intent.putExtra(Intent.EXTRA_STREAM,
-                        BitmapUtil.getUriOfBitmap(this, imageEditorView.getAlteredImageBitmap()));
+                        BitmapUtil.getUriOfBitmap(this, mImageEditorView.getAlteredImageBitmap()));
                 startActivity(intent);
                 break;
             case R.id.action_apply:
-                imageEditorView.applyChanges();
+                mImageEditorView.applyChanges();
                 onBackPressed();
                 break;
         }
@@ -137,13 +130,13 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorView {
     @Override
     public void onBackPressed() {
         if (mFragmentManager.getBackStackEntryCount() == 0) {
-            presenter.onBackPressed(mBitmap, imageEditorView.getAlteredImageBitmap());
+            mPresenter.onBackPressed(mImageEditorView.getAlteredImageBitmap());
         } else if (mFragmentManager.getBackStackEntryCount() == 1) {
-            toolbar.setNavigationIcon(R.drawable.ic_close);
+            mToolbar.setNavigationIcon(R.drawable.ic_close);
             ToolbarUtil.showTitle(false, this);
             navigateBack(true);
-            if (imageEditorView.hasChanges()) {
-                undoButton.setVisibility(View.VISIBLE);
+            if (mImageEditorView.hasChanges()) {
+                mUndoButton.setVisibility(View.VISIBLE);
             }
         } else if (mFragmentManager.getBackStackEntryCount() > 1) {
             ToolbarUtil.updateSubtitle(null, this);
@@ -152,12 +145,19 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorView {
     }
 
     @Override
+    public void setupEditImage(Bitmap bitmap) {
+        BitmapUtil.logBitmapInfo("Cropped Bitmap", bitmap);
+
+        mImageEditorView.setImageBitmap(bitmap);
+    }
+
+    @Override
     public void showAlertDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AlertDialog);
         builder.setMessage(getString(R.string.on_back_alert))
                 .setPositiveButton(getString(R.string.ok), (dialogInterface, i) -> finish())
                 .setNeutralButton(getString(R.string.save), ((dialogInterface1, i) ->
-                        new ImageSaveTask(this, imageEditorView.getAlteredImageBitmap()).execute())
+                        new ImageSaveTask(this, mImageEditorView.getAlteredImageBitmap()).execute())
                 )
                 .setNegativeButton(getString(R.string.cancel), (dialogInterface, i1) -> dialogInterface.dismiss())
                 .show();
@@ -165,14 +165,14 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorView {
 
     public void setupFragment(Fragment fragment) {
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-        fragmentTransaction.replace(fragmentContainer.getId(), fragment)
+        fragmentTransaction.replace(mFragmentContainer.getId(), fragment)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .addToBackStack(null)
                 .commit();
 
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+        mToolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
         ToolbarUtil.showTitle(true, this);
-        undoButton.setVisibility(View.GONE);
+        mUndoButton.setVisibility(View.GONE);
 
         Log.i("BackStack", String.valueOf(mFragmentManager.getBackStackEntryCount()));
     }
@@ -188,7 +188,7 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorView {
             if (mFragmentManager.getBackStackEntryCount() > 1)
                 super.onBackPressed();
             else if (mFragmentManager.getBackStackEntryCount() == 0)
-                presenter.onBackPressed(mBitmap, imageEditorView.getAlteredImageBitmap());
+                mPresenter.onBackPressed(mImageEditorView.getAlteredImageBitmap());
             else if (mFragmentManager.getBackStackEntryCount() == 1) {
                 super.onBackPressed();
             }
@@ -197,6 +197,6 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorView {
 
     @OnClick(R.id.undoButton)
     void onClickUndo() {
-        imageEditorView.undo();
+        mImageEditorView.undo();
     }
 }

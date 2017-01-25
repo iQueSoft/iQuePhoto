@@ -307,6 +307,8 @@ public class ImageEditorViewPresenter extends MvpPresenter<ImageEditorViewView> 
     void undo() {
         mImages.remove(mImages.size() - 1);
         mUndoListener.hasChanged(mImages.size());
+
+        getViewState().imageChanged(getAlteredBitmap());
     }
 
     private Matrix calculateSupportMatrix(Bitmap bitmap) {
@@ -494,7 +496,7 @@ public class ImageEditorViewPresenter extends MvpPresenter<ImageEditorViewView> 
 
         return mImageBitmap;
     }
-
+    
     private float getDeltaX(MotionEvent event) {
         return event.getX() - mLastX;
     }
@@ -613,6 +615,7 @@ public class ImageEditorViewPresenter extends MvpPresenter<ImageEditorViewView> 
 
             mUndoListener.hasChanged(mImages.size());
 
+            getViewState().imageChanged(getAlteredBitmap());
             getViewState().hideProgress();
         }
 

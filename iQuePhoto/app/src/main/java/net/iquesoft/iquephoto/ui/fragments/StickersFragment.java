@@ -14,7 +14,7 @@ import com.arellomobile.mvp.presenter.ProvidePresenter;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapter.StickersAdapter;
-import net.iquesoft.iquephoto.core.editor.NewImageEditorView;
+import net.iquesoft.iquephoto.core.editor.ImageEditorView;
 import net.iquesoft.iquephoto.models.Sticker;
 import net.iquesoft.iquephoto.presentation.common.ToolFragment;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.StickersPresenter;
@@ -105,7 +105,7 @@ public class StickersFragment extends ToolFragment implements StickersView {
 
     @Override
     public void addSticker(Bitmap bitmap) {
-        ((NewImageEditorView) getActivity()
+        ((ImageEditorView) getActivity()
                 .findViewById(R.id.imageEditorView)).addSticker(bitmap);
     }
 }

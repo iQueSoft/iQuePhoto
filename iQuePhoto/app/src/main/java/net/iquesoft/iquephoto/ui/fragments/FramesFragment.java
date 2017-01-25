@@ -12,7 +12,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapter.FramesAdapter;
-import net.iquesoft.iquephoto.core.editor.NewImageEditorView;
+import net.iquesoft.iquephoto.core.editor.ImageEditorView;
 import net.iquesoft.iquephoto.presentation.common.ToolFragment;
 import net.iquesoft.iquephoto.models.Frame;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.FramesPresenter;
@@ -36,12 +36,12 @@ public class FramesFragment extends ToolFragment implements FramesView {
 
     private Unbinder mUnbinder;
 
-    private NewImageEditorView mImageEditorView;
+    private ImageEditorView mImageEditorView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mImageEditorView = (NewImageEditorView) getActivity().findViewById(R.id.imageEditorView);
+        mImageEditorView = (ImageEditorView) getActivity().findViewById(R.id.imageEditorView);
     }
 
     @Override

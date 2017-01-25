@@ -15,12 +15,11 @@ import com.arellomobile.mvp.presenter.ProvidePresenter;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapter.FiltersAdapter;
-import net.iquesoft.iquephoto.core.editor.NewImageEditorView;
+import net.iquesoft.iquephoto.core.editor.ImageEditorView;
 import net.iquesoft.iquephoto.presentation.common.ToolFragment;
 import net.iquesoft.iquephoto.models.Filter;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.FiltersPresenter;
 import net.iquesoft.iquephoto.presentation.views.fragment.FiltersView;
-import net.iquesoft.iquephoto.util.BitmapUtil;
 import net.iquesoft.iquephoto.util.ToolbarUtil;
 
 import java.util.List;
@@ -47,7 +46,7 @@ public class FiltersFragment extends ToolFragment implements FiltersView {
 
     private Unbinder mUnbinder;
 
-    private NewImageEditorView mImageEditorView;
+    private ImageEditorView mImageEditorView;
 
     public static FiltersFragment newInstance() {
         return new FiltersFragment();
@@ -58,7 +57,7 @@ public class FiltersFragment extends ToolFragment implements FiltersView {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        mImageEditorView = (NewImageEditorView) getActivity().findViewById(R.id.imageEditorView);
+        mImageEditorView = (ImageEditorView) getActivity().findViewById(R.id.imageEditorView);
 
         super.onCreate(savedInstanceState);
     }

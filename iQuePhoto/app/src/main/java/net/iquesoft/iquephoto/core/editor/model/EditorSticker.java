@@ -10,9 +10,12 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.MotionEvent;
 
+import net.iquesoft.iquephoto.App;
 import net.iquesoft.iquephoto.util.LogHelper;
 import net.iquesoft.iquephoto.util.MatrixUtil;
 import net.iquesoft.iquephoto.util.RectUtil;
+
+import javax.inject.Inject;
 
 public class EditorSticker {
     private static final float MIN_SCALE = 0.15f;
@@ -47,15 +50,17 @@ public class EditorSticker {
     private RectF mTransparencyHandleDstRect;
     private RectF mScaleAndRotateHandleDstRect;
 
-    private EditorFrame mEditorFrame;
+    @Inject
+    EditorFrame mEditorFrame;
 
-    public EditorSticker(Bitmap bitmap, RectF imageRect, EditorFrame editorFrame) {
+    public EditorSticker(Bitmap bitmap, RectF imageRect) {
         mBitmap = bitmap;
 
         mImageRect = imageRect;
-        mEditorFrame = editorFrame;
 
-        mHelperFramePaint = new Paint(editorFrame.getFramePaint());
+        App.getAppComponent().inject(this);
+
+        mHelperFramePaint = new Paint(mEditorFrame.getFramePaint());
 
         initialize();
     }

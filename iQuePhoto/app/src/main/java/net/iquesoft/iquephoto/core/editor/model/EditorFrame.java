@@ -24,7 +24,7 @@ public class EditorFrame {
         initializeFramePaint();
         initializeHandlesBitmap(context);
     }
-    
+
     private void initializeFramePaint() {
         mFramePaint = new Paint();
         mFramePaint.setColor(Color.WHITE);
@@ -34,7 +34,7 @@ public class EditorFrame {
         mFramePaint.setStrokeWidth(SizeUtil.dp2px(3.5f));
         mFramePaint.setAlpha(175);
     }
-
+    
     private void initializeHandlesBitmap(Context context) {
         mDeleteHandleBitmap = BitmapUtil.drawable2Bitmap(context, R.drawable.ic_handle_delete);
         mResizeHandleBitmap = BitmapUtil.drawable2Bitmap(context, R.drawable.ic_handle_scale_rotate);

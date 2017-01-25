@@ -2,7 +2,9 @@ package net.iquesoft.iquephoto.di.modules;
 
 import android.graphics.ColorMatrix;
 
+import net.iquesoft.iquephoto.App;
 import net.iquesoft.iquephoto.R;
+import net.iquesoft.iquephoto.core.editor.model.EditorFrame;
 import net.iquesoft.iquephoto.models.Adjust;
 import net.iquesoft.iquephoto.models.EditorColor;
 import net.iquesoft.iquephoto.models.Filter;
@@ -49,7 +51,7 @@ public class EditorModule {
                 new Tool(R.string.overlay, R.drawable.ic_overlay, new OverlaysFragment()),
                 new Tool(R.string.stickers, R.drawable.ic_stiker, new StickersSetFragment()),
                 new Tool(R.string.frames, R.drawable.ic_frame, new FramesFragment()),
-                new Tool(R.string.transform, R.drawable.ic_frame, new TransformFragment()),
+                new Tool(R.string.transform, R.drawable.ic_transform, new TransformFragment()),
                 new Tool(R.string.vignette, R.drawable.ic_vignette, AdjustmentFragment.newInstance(VIGNETTE)),
                 new Tool(R.string.tilt_shift, R.drawable.ic_tilt_shift, new TiltShiftFragment()),
                 new Tool(R.string.drawing, R.drawable.ic_brush, new DrawingFragment()),
@@ -244,6 +246,11 @@ public class EditorModule {
                 new EditorColor(R.color.purple),
                 new EditorColor(R.color.dark_violet),
                 new EditorColor(R.color.indigo));
+    }
+
+    @Provides
+    EditorFrame provideEditorFrame() {
+        return new EditorFrame(App.getAppComponent().getContext());
     }
 
     private List<Sticker> provideEmoticonsStickers() {

@@ -20,7 +20,6 @@ import android.widget.Toast;
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
-import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.core.editor.NewImageEditorView;
 import net.iquesoft.iquephoto.presentation.presenters.activity.EditorPresenter;
@@ -75,8 +74,6 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorView {
             e.printStackTrace();
         }
 
-        DataHolder.getInstance().setImageUri(getIntent().getData());
-
         BitmapUtil.logBitmapInfo("Cropped Bitmap", mBitmap);
 
         imageEditorView.init(getMvpDelegate());
@@ -114,7 +111,7 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorView {
             case R.id.action_share:
                 Intent intent = new Intent(EditorActivity.this, ShareActivity.class);
                 intent.putExtra(Intent.EXTRA_STREAM,
-                        BitmapUtil.getUriOfBitmap(this, imageEditorView.getAlteredBitmap()));
+                        BitmapUtil.getUriOfBitmap(this, imageEditorView.getAlteredImageBitmap()));
                 startActivity(intent);
                 break;
             case R.id.action_apply:
@@ -140,12 +137,12 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorView {
     @Override
     public void onBackPressed() {
         if (mFragmentManager.getBackStackEntryCount() == 0) {
-            presenter.onBackPressed(mBitmap, imageEditorView.getAlteredBitmap());
+            presenter.onBackPressed(mBitmap, imageEditorView.getAlteredImageBitmap());
         } else if (mFragmentManager.getBackStackEntryCount() == 1) {
             toolbar.setNavigationIcon(R.drawable.ic_close);
             ToolbarUtil.showTitle(false, this);
             navigateBack(true);
-            if (imageEditorView.hasChanged()) {
+            if (imageEditorView.hasChanges()) {
                 undoButton.setVisibility(View.VISIBLE);
             }
         } else if (mFragmentManager.getBackStackEntryCount() > 1) {
@@ -160,7 +157,7 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorView {
         builder.setMessage(getString(R.string.on_back_alert))
                 .setPositiveButton(getString(R.string.ok), (dialogInterface, i) -> finish())
                 .setNeutralButton(getString(R.string.save), ((dialogInterface1, i) ->
-                        new ImageSaveTask(this, imageEditorView.getAlteredBitmap()).execute())
+                        new ImageSaveTask(this, imageEditorView.getAlteredImageBitmap()).execute())
                 )
                 .setNegativeButton(getString(R.string.cancel), (dialogInterface, i1) -> dialogInterface.dismiss())
                 .show();
@@ -191,8 +188,7 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorView {
             if (mFragmentManager.getBackStackEntryCount() > 1)
                 super.onBackPressed();
             else if (mFragmentManager.getBackStackEntryCount() == 0)
-
-                presenter.onBackPressed(mBitmap, imageEditorView.getAlteredBitmap());
+                presenter.onBackPressed(mBitmap, imageEditorView.getAlteredImageBitmap());
             else if (mFragmentManager.getBackStackEntryCount() == 1) {
                 super.onBackPressed();
             }

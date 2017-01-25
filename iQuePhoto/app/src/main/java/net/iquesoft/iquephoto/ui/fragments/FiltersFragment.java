@@ -1,5 +1,7 @@
 package net.iquesoft.iquephoto.ui.fragments;
 
+import android.graphics.ColorMatrix;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.arellomobile.mvp.presenter.ProvidePresenter;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapter.FiltersAdapter;
@@ -17,6 +20,7 @@ import net.iquesoft.iquephoto.presentation.common.ToolFragment;
 import net.iquesoft.iquephoto.models.Filter;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.FiltersPresenter;
 import net.iquesoft.iquephoto.presentation.views.fragment.FiltersView;
+import net.iquesoft.iquephoto.util.BitmapUtil;
 import net.iquesoft.iquephoto.util.ToolbarUtil;
 
 import java.util.List;
@@ -29,7 +33,14 @@ import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.FILTERS;
 
 public class FiltersFragment extends ToolFragment implements FiltersView {
     @InjectPresenter
-    FiltersPresenter presenter;
+    FiltersPresenter mPresenter;
+
+    @ProvidePresenter
+    FiltersPresenter provideFilterPresenter() {
+        return new FiltersPresenter(
+                getContext(), mImageEditorView.getAlteredImageBitmap()
+        );
+    }
 
     @BindView(R.id.filtersRecyclerView)
     RecyclerView filtersList;
@@ -80,13 +91,18 @@ public class FiltersFragment extends ToolFragment implements FiltersView {
     }
 
     @Override
-    public void setupFiltersAdapter(List<Filter> filters) {
-        FiltersAdapter adapter = new FiltersAdapter(filters);
+    public void setupFiltersAdapter(Uri uri, List<Filter> filters) {
+        FiltersAdapter adapter = new FiltersAdapter(uri, filters);
         adapter.setFiltersListener(filter ->
-                mImageEditorView.setFilter(filter.getColorMatrix())
+                mPresenter.changeFilter(filter)
         );
 
         filtersList.setLayoutManager(new LinearLayoutManager(null, LinearLayout.HORIZONTAL, false));
         filtersList.setAdapter(adapter);
+    }
+
+    @Override
+    public void filterChanged(ColorMatrix colorMatrix) {
+        mImageEditorView.setFilter(colorMatrix);
     }
 }

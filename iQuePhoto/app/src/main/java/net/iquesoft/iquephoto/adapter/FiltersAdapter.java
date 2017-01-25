@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import net.iquesoft.iquephoto.DataHolder;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.models.Filter;
 
@@ -26,6 +25,7 @@ public class FiltersAdapter extends RecyclerView.Adapter<FiltersAdapter.ViewHold
 
     private Context mContext;
 
+    private Uri mImageUri;
     private List<Filter> mFiltersList;
 
     private OnFilterClickListener mOnFilterClickListener;
@@ -38,9 +38,9 @@ public class FiltersAdapter extends RecyclerView.Adapter<FiltersAdapter.ViewHold
         mOnFilterClickListener = onFilterClickListener;
     }
 
-    public FiltersAdapter(List<Filter> filters) {
+    public FiltersAdapter(Uri uri, List<Filter> filters) {
+        mImageUri = uri;
         mFiltersList = filters;
-
     }
 
     @Override
@@ -58,23 +58,12 @@ public class FiltersAdapter extends RecyclerView.Adapter<FiltersAdapter.ViewHold
 
         holder.filterTitle.setText(filter.getTitle());
 
-        Uri uri = null;
-        if (DataHolder.getInstance().getImageUri() != null) {
-            uri = DataHolder.getInstance().getImageUri();
-            Picasso.with(mContext)
-                    .load(uri)
-                    .fit()
-                    .centerCrop()
-                    .noPlaceholder()
-                    .into(holder.filterImageView);
-        } else {
-            Picasso.with(mContext)
-                    .load(R.drawable.buldog)
-                    .fit()
-                    .centerCrop()
-                    .noPlaceholder()
-                    .into(holder.filterImageView);
-        }
+        Picasso.with(mContext)
+                .load(mImageUri)
+                .fit()
+                .centerCrop()
+                .noPlaceholder()
+                .into(holder.filterImageView);
 
         holder.filterImageView.setColorFilter(new ColorMatrixColorFilter(filter.getColorMatrix()));
 

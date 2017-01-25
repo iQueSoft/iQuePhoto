@@ -1,7 +1,6 @@
-package net.iquesoft.iquephoto.adapter;
+package net.iquesoft.iquephoto.adapters;
 
 import android.content.Context;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;

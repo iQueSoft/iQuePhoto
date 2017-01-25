@@ -7,6 +7,11 @@
     android:elevation="8dp"
     android:orientation="vertical">
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/colorsRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <LinearLayout
         android:id="@+id/drawingSettings"
         android:layout_width="match_parent"

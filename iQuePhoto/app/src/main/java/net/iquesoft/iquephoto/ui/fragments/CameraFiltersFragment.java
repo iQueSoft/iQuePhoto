@@ -1,18 +1,15 @@
 package net.iquesoft.iquephoto.ui.fragments;
 
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.adapter.FiltersAdapter;
 import net.iquesoft.iquephoto.models.Filter;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.CameraFiltersPresenter;
 import net.iquesoft.iquephoto.presentation.views.fragment.CameraFiltersView;
@@ -73,7 +70,7 @@ public class CameraFiltersFragment extends MvpAppCompatFragment implements Camer
     public void setupFiltersAdapter(List<Filter> filters) {
         /*FiltersAdapter adapter = new FiltersAdapter(filters);
         adapter.setFiltersListener(filter ->
-                presenter.onFilterClick(filter)
+                mPresenter.onFilterClick(filter)
         );
 
         recyclerView.setLayoutManager(new

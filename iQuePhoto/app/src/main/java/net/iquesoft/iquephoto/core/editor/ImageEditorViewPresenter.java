@@ -21,7 +21,6 @@ import com.arellomobile.mvp.MvpPresenter;
 import net.iquesoft.iquephoto.core.editor.enums.EditorMode;
 import net.iquesoft.iquephoto.core.editor.enums.EditorTool;
 import net.iquesoft.iquephoto.core.editor.model.Drawing;
-import net.iquesoft.iquephoto.core.editor.model.EditorFrame;
 import net.iquesoft.iquephoto.core.editor.model.EditorImage;
 import net.iquesoft.iquephoto.core.editor.model.EditorSticker;
 import net.iquesoft.iquephoto.core.editor.model.EditorText;
@@ -39,13 +38,11 @@ import rx.subjects.PublishSubject;
 import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.NONE;
 
 @InjectViewState
-public class ImageEditorViewPresenter extends MvpPresenter<ImageEditorViewView> {
+public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
     private float mLastX;
     private float mLastY;
 
     private boolean mIsImageSetted;
-
-    private EditorFrame mEditorFrame;
 
     private EditorText mCurrentCheckedText;
     private EditorSticker mCurrentCheckedSticker;
@@ -163,7 +160,7 @@ public class ImageEditorViewPresenter extends MvpPresenter<ImageEditorViewView> 
     }
 
     void addText(Text text) {
-        EditorText editorText = new EditorText(text, mEditorFrame);
+        EditorText editorText = new EditorText(text);
         editorText.setX(mSrcRect.centerX());
         editorText.setY(mSrcRect.centerY());
 
@@ -287,6 +284,17 @@ public class ImageEditorViewPresenter extends MvpPresenter<ImageEditorViewView> 
 
     public void changeTool(EditorTool tool) {
         mCurrentTool = tool;
+
+        if (!mTexts.isEmpty()) {
+            mTexts.clear();
+        }
+        if (!mStickers.isEmpty()) {
+            mStickers.clear();
+        }
+        //if (!mDrawingPath.isEmpty())
+        if (!mDrawings.isEmpty()) {
+            mDrawings.clear();
+        }
 
         /*switch (mCurrentTool) {
             case VIGNETTE:
@@ -496,7 +504,7 @@ public class ImageEditorViewPresenter extends MvpPresenter<ImageEditorViewView> 
 
         return mImageBitmap;
     }
-    
+
     private float getDeltaX(MotionEvent event) {
         return event.getX() - mLastX;
     }
@@ -596,18 +604,7 @@ public class ImageEditorViewPresenter extends MvpPresenter<ImageEditorViewView> 
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             super.onPostExecute(bitmap);
-
             Log.i("Editor", mCurrentTool.name());
-
-            if (!mTexts.isEmpty()) {
-                mTexts.clear();
-            }
-            if (!mStickers.isEmpty()) {
-                mStickers.clear();
-            }
-            if (!mDrawings.isEmpty()) {
-                mDrawings.clear();
-            }
 
             mImages.add(new
                     EditorImage(mCurrentTool, bitmap)

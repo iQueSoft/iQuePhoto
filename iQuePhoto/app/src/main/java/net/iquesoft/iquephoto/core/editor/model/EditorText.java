@@ -12,10 +12,13 @@ import android.text.TextPaint;
 import android.util.Log;
 import android.view.MotionEvent;
 
+import net.iquesoft.iquephoto.App;
 import net.iquesoft.iquephoto.models.Text;
 import net.iquesoft.iquephoto.util.MatrixUtil;
 import net.iquesoft.iquephoto.util.RectUtil;
 import net.iquesoft.iquephoto.util.SizeUtil;
+
+import javax.inject.Inject;
 
 import static net.iquesoft.iquephoto.core.editor.model.EditorFrame.EDITOR_FRAME_PADDING;
 
@@ -55,17 +58,18 @@ public class EditorText {
     private RectF mFrontHandleDstRect;
     private RectF mTransparencyHandleDstRect;
     private RectF mResizeAndScaleHandleDstRect;
+    
+    @Inject
+    EditorFrame mEditorFrame;
 
-    private EditorFrame mEditorFrame;
-
-    public EditorText(Text text, EditorFrame editorFrame) {
+    public EditorText(Text text) {
         mText = text.getText();
 
         mTypeface = text.getTypeface();
 
         mColor = text.getColor();
 
-        mEditorFrame = editorFrame;
+        App.getAppComponent().inject(this);
 
         mHelperFramePaint = new Paint(mEditorFrame.getFramePaint());
 

@@ -12,7 +12,7 @@ import android.widget.Toast;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.adapter.FontsAdapter;
+import net.iquesoft.iquephoto.adapters.FontsAdapter;
 import net.iquesoft.iquephoto.core.editor.ImageEditorView;
 import net.iquesoft.iquephoto.models.Font;
 import net.iquesoft.iquephoto.presentation.common.ToolFragment;

@@ -21,7 +21,6 @@ import com.arellomobile.mvp.presenter.ProvidePresenter;
 
 import net.iquesoft.iquephoto.core.editor.enums.EditorTool;
 import net.iquesoft.iquephoto.core.editor.model.Drawing;
-import net.iquesoft.iquephoto.core.editor.model.EditorFrame;
 import net.iquesoft.iquephoto.core.editor.model.EditorSticker;
 import net.iquesoft.iquephoto.core.editor.model.EditorText;
 import net.iquesoft.iquephoto.core.editor.model.EditorTiltShiftRadial;
@@ -33,7 +32,7 @@ import java.util.List;
 
 import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.NONE;
 
-public class ImageEditorView extends View implements ImageEditorViewView {
+public class ImageEditorView extends View implements EditorView {
     @InjectPresenter
     ImageEditorViewPresenter mPresenter;
 
@@ -320,8 +319,10 @@ public class ImageEditorView extends View implements ImageEditorViewView {
     }
 
     private void drawTexts(Canvas canvas) {
-        for (EditorText text : mTexts) {
-            text.draw(canvas);
+        if (mTexts != null) {
+            for (EditorText text : mTexts) {
+                text.draw(canvas);
+            }
         }
     }
 
@@ -383,8 +384,6 @@ public class ImageEditorView extends View implements ImageEditorViewView {
                 mRadialTiltShift.actionUp();
                 break;
         }
-
-
     }
 
     private void drawing(Canvas canvas) {

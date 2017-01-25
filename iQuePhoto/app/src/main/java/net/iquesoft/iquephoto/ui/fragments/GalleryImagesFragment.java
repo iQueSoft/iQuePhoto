@@ -13,7 +13,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.adapter.ImagesAdapter;
+import net.iquesoft.iquephoto.adapters.ImagesAdapter;
 import net.iquesoft.iquephoto.models.Image;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.GalleryImagesPresenter;
 import net.iquesoft.iquephoto.presentation.views.fragment.GalleryImagesView;

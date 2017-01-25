@@ -13,7 +13,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.adapter.StickersAdapter;
+import net.iquesoft.iquephoto.adapters.StickersAdapter;
 import net.iquesoft.iquephoto.core.editor.ImageEditorView;
 import net.iquesoft.iquephoto.models.Sticker;
 import net.iquesoft.iquephoto.presentation.common.ToolFragment;

@@ -8,7 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Window;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.adapter.ColorAdapter;
+import net.iquesoft.iquephoto.adapters.ColorAdapter;
 import net.iquesoft.iquephoto.models.EditorColor;
 
 import butterknife.BindView;

@@ -4,9 +4,9 @@ import android.graphics.Bitmap;
 
 import com.arellomobile.mvp.MvpView;
 
-public interface EditorView extends MvpView {
+public interface EditorActivityView extends MvpView {
 
-    void setupEditImage(Bitmap bitmap);
+    void startEditing(Bitmap bitmap);
 
     void showAlertDialog();
 

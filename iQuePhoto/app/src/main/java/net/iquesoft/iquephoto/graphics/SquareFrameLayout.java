@@ -1,4 +1,4 @@
-package net.iquesoft.iquephoto.common;
+package net.iquesoft.iquephoto.graphics;
 
 import android.content.Context;
 import android.util.AttributeSet;

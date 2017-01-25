@@ -2,6 +2,8 @@ package net.iquesoft.iquephoto.ui.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,12 +12,16 @@ import android.widget.LinearLayout;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.R;
+import net.iquesoft.iquephoto.adapters.ColorAdapter;
 import net.iquesoft.iquephoto.core.editor.ImageEditorView;
+import net.iquesoft.iquephoto.models.EditorColor;
 import net.iquesoft.iquephoto.presentation.common.ToolFragment;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.DrawingPresenter;
 import net.iquesoft.iquephoto.ui.dialogs.ColorPickerDialog;
 import net.iquesoft.iquephoto.presentation.views.fragment.DrawingView;
 import net.iquesoft.iquephoto.util.ToolbarUtil;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,10 +32,13 @@ import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.DRAWING;
 
 public class DrawingFragment extends ToolFragment implements DrawingView {
     @InjectPresenter
-    DrawingPresenter presenter;
+    DrawingPresenter mPresenter;
 
     @BindView(R.id.drawingSettings)
     LinearLayout drawingSettings;
+
+    @BindView(R.id.colorsRecyclerView)
+    RecyclerView mRecyclerView;
 
     /*@BindView(R.id.brashSizeSeekBar)
     DiscreteSeekBar brashSizeSeekBar;*/
@@ -62,7 +71,7 @@ public class DrawingFragment extends ToolFragment implements DrawingView {
 
         mColorPickerDialog = new ColorPickerDialog(view.getContext());
         mColorPickerDialog.setOnColorClickListener(color ->
-                presenter.changeBrushColor(getContext(), color)
+                mPresenter.changeBrushColor(getContext(), color)
         );
 
         /*brashSizeSeekBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
@@ -106,6 +115,18 @@ public class DrawingFragment extends ToolFragment implements DrawingView {
     @OnClick(R.id.brushColorButton)
     void onClickBrushColor() {
         mColorPickerDialog.show();
+    }
+
+    @Override
+    public void setupColorsAdapter(List<EditorColor> colors) {
+        ColorAdapter adapter = new ColorAdapter(colors);
+        adapter.setOnColorClickListener(editorColor ->
+                mPresenter.changeBrushColor(getContext(), editorColor)
+        );
+        mRecyclerView.setLayoutManager(
+                new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false)
+        );
+        mRecyclerView.setAdapter(adapter);
     }
 
     @Override

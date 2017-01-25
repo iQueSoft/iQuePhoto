@@ -1,4 +1,4 @@
-package net.iquesoft.iquephoto.adapter;
+package net.iquesoft.iquephoto.adapters;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import net.iquesoft.iquephoto.R;

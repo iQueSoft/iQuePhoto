@@ -1,0 +1,23 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/save"
+        android:icon="@drawable/ic_download"
+        android:title="@string/save"
+        app:showAsAction="collapseActionView" />
+    <item
+        android:id="@+id/instagram"
+        android:icon="@drawable/ic_instagram"
+        android:title="@string/instagram"
+        app:showAsAction="collapseActionView" />
+    <item
+        android:id="@+id/facebook"
+        android:icon="@drawable/ic_facebook"
+        android:title="@string/facebook"
+        app:showAsAction="collapseActionView" />
+    <item
+        android:id="@+id/more"
+        android:icon="@drawable/ic_more"
+        android:title="@string/more"
+        app:showAsAction="collapseActionView" />
+</menu>

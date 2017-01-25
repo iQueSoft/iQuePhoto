@@ -11,7 +11,7 @@ import android.view.Window;
 
 import net.iquesoft.iquephoto.App;
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.adapter.FontsAdapter;
+import net.iquesoft.iquephoto.adapters.FontsAdapter;
 import net.iquesoft.iquephoto.models.Font;
 
 import java.util.List;
@@ -22,8 +22,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static android.graphics.Color.TRANSPARENT;
-import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
-import static android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN;
 
 public class FontPickerDialog extends Dialog {
     @Inject

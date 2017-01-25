@@ -11,7 +11,7 @@ import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.adapter.ToolsAdapter;
+import net.iquesoft.iquephoto.adapters.ToolsAdapter;
 import net.iquesoft.iquephoto.core.editor.ImageEditorView;
 import net.iquesoft.iquephoto.models.Tool;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.ToolsPresenter;

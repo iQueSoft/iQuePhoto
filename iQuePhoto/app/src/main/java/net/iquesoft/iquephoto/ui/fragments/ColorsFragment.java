@@ -13,7 +13,7 @@ import android.widget.Toast;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.adapter.ColorAdapter;
+import net.iquesoft.iquephoto.adapters.ColorAdapter;
 import net.iquesoft.iquephoto.core.editor.ImageEditorView;
 import net.iquesoft.iquephoto.models.EditorColor;
 import net.iquesoft.iquephoto.presentation.common.ToolFragment;

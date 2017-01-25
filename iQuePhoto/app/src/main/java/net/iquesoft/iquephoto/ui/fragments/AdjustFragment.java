@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
-import net.iquesoft.iquephoto.adapter.AdjustAdapter;
+import net.iquesoft.iquephoto.adapters.AdjustAdapter;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.core.editor.ImageEditorView;
 import net.iquesoft.iquephoto.models.Adjust;

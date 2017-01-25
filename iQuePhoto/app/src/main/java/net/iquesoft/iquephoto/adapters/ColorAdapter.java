@@ -1,4 +1,4 @@
-package net.iquesoft.iquephoto.adapter;
+package net.iquesoft.iquephoto.adapters;
 
 import android.content.Context;
 import android.support.v4.content.res.ResourcesCompat;
@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.common.ColorCircleDrawable;
+import net.iquesoft.iquephoto.graphics.ColorCircleDrawable;
 import net.iquesoft.iquephoto.models.EditorColor;
 
 import java.util.List;
@@ -26,7 +26,7 @@ public class ColorAdapter extends RecyclerView.Adapter<ColorAdapter.ViewHolder> 
     private List<EditorColor> mEditorColorsList;
 
     private OnColorClickListener mOnColorClickListener;
-    
+
     public interface OnColorClickListener {
         void onClick(EditorColor editorColor);
     }
@@ -57,7 +57,7 @@ public class ColorAdapter extends RecyclerView.Adapter<ColorAdapter.ViewHolder> 
         );
 
         if (mSelectedColorPosition == holder.getAdapterPosition()) {
-            // mOnColorClickListener.onClick(color);
+            mOnColorClickListener.onClick(color);
             holder.colorSelected.setVisibility(View.VISIBLE);
         } else {
             holder.colorSelected.setVisibility(View.GONE);

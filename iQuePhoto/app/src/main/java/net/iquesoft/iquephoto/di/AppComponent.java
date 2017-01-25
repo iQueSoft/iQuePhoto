@@ -8,6 +8,7 @@ import net.iquesoft.iquephoto.di.modules.AppModule;
 import net.iquesoft.iquephoto.di.modules.EditorModule;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.AdjustPresenter;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.ColorsPresenter;
+import net.iquesoft.iquephoto.presentation.presenters.fragment.DrawingPresenter;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.FiltersPresenter;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.FontsPresenter;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.FramesPresenter;
@@ -41,6 +42,8 @@ public interface AppComponent {
     void inject(StickersPresenter stickersPresenter);
 
     void inject(ColorsPresenter colorsPresenter);
+
+    void inject(DrawingPresenter drawingPresenter);
 
     void inject(FontsPresenter fontsPresenter);
 

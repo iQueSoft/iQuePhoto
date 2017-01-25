@@ -10,12 +10,12 @@ import android.support.annotation.Nullable;
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
-import net.iquesoft.iquephoto.presentation.views.activity.EditorView;
+import net.iquesoft.iquephoto.presentation.views.activity.EditorActivityView;
 
 import java.io.IOException;
 
 @InjectViewState
-public class EditorActivityPresenter extends MvpPresenter<EditorView> {
+public class EditorActivityPresenter extends MvpPresenter<EditorActivityView> {
     private Bitmap mBitmap;
 
     public EditorActivityPresenter(@NonNull Context context, @NonNull Intent intent) {
@@ -24,7 +24,7 @@ public class EditorActivityPresenter extends MvpPresenter<EditorView> {
                     context.getContentResolver(), intent.getData()
             );
 
-            getViewState().setupEditImage(mBitmap);
+            getViewState().startEditing(mBitmap);
         } catch (IOException e) {
             e.printStackTrace();
         }

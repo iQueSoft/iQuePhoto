@@ -25,7 +25,7 @@ import net.iquesoft.iquephoto.core.editor.ImageEditorView;
 import net.iquesoft.iquephoto.presentation.presenters.activity.EditorActivityPresenter;
 import net.iquesoft.iquephoto.task.ImageSaveTask;
 import net.iquesoft.iquephoto.util.BitmapUtil;
-import net.iquesoft.iquephoto.presentation.views.activity.EditorView;
+import net.iquesoft.iquephoto.presentation.views.activity.EditorActivityView;
 import net.iquesoft.iquephoto.ui.fragments.ToolsFragment;
 import net.iquesoft.iquephoto.util.ToolbarUtil;
 
@@ -33,15 +33,15 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class EditorActivity extends MvpAppCompatActivity implements EditorView {
+public class EditorActivity extends MvpAppCompatActivity implements EditorActivityView {
     @InjectPresenter
     EditorActivityPresenter mPresenter;
-
+    
     @ProvidePresenter
     EditorActivityPresenter provideEditorPresenter() {
         return new EditorActivityPresenter(this, getIntent());
     }
-    
+
     @BindView(R.id.toolbar_editor)
     Toolbar mToolbar;
 
@@ -106,6 +106,9 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorView {
                 intent.putExtra(Intent.EXTRA_STREAM,
                         BitmapUtil.getUriOfBitmap(this, mImageEditorView.getAlteredImageBitmap()));
                 startActivity(intent);
+                /*PopupMenu popupMenu = new PopupMenu(this, mUndoButton);
+                popupMenu.inflate(R.menu.menu_share);
+                popupMenu.show();*/
                 break;
             case R.id.action_apply:
                 mImageEditorView.applyChanges();
@@ -145,7 +148,7 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorView {
     }
 
     @Override
-    public void setupEditImage(Bitmap bitmap) {
+    public void startEditing(Bitmap bitmap) {
         BitmapUtil.logBitmapInfo("Cropped Bitmap", bitmap);
 
         mImageEditorView.setImageBitmap(bitmap);

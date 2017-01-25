@@ -12,11 +12,10 @@ import net.iquesoft.iquephoto.core.editor.enums.EditorTool;
 import net.iquesoft.iquephoto.core.editor.model.Drawing;
 import net.iquesoft.iquephoto.core.editor.model.EditorSticker;
 import net.iquesoft.iquephoto.core.editor.model.EditorText;
-import net.iquesoft.iquephoto.models.Sticker;
 
 import java.util.List;
 
-interface ImageEditorViewView extends MvpView {
+interface EditorView extends MvpView {
     void setupImage(Bitmap bitmap, Matrix imageMatrix, RectF imageRect);
 
     void showOriginalImage(boolean display);

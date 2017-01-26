@@ -19,7 +19,7 @@ import net.iquesoft.iquephoto.models.Sticker;
 import net.iquesoft.iquephoto.presentation.common.ToolFragment;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.StickersPresenter;
 import net.iquesoft.iquephoto.presentation.views.fragment.StickersView;
-import net.iquesoft.iquephoto.util.ToolbarUtil;
+import net.iquesoft.iquephoto.utils.ToolbarUtil;
 
 import java.util.ArrayList;
 import java.util.List;

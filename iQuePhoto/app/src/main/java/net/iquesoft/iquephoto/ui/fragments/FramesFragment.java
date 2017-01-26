@@ -17,7 +17,7 @@ import net.iquesoft.iquephoto.presentation.common.ToolFragment;
 import net.iquesoft.iquephoto.models.Frame;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.FramesPresenter;
 import net.iquesoft.iquephoto.presentation.views.fragment.FramesView;
-import net.iquesoft.iquephoto.util.ToolbarUtil;
+import net.iquesoft.iquephoto.utils.ToolbarUtil;
 
 import java.util.List;
 

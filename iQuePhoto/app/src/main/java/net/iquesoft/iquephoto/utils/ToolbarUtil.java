@@ -1,4 +1,4 @@
-package net.iquesoft.iquephoto.util;
+package net.iquesoft.iquephoto.utils;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;

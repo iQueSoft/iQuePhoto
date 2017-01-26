@@ -14,7 +14,7 @@ import net.iquesoft.iquephoto.core.editor.ImageEditorView;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.TransformPresenter;
 import net.iquesoft.iquephoto.presentation.views.fragment.TransformView;
 import net.iquesoft.iquephoto.ui.activities.EditorActivity;
-import net.iquesoft.iquephoto.util.ToolbarUtil;
+import net.iquesoft.iquephoto.utils.ToolbarUtil;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;

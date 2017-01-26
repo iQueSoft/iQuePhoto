@@ -18,7 +18,7 @@ import net.iquesoft.iquephoto.presentation.common.ToolFragment;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.AdjustPresenter;
 import net.iquesoft.iquephoto.presentation.views.fragment.AdjustView;
 import net.iquesoft.iquephoto.ui.activities.EditorActivity;
-import net.iquesoft.iquephoto.util.ToolbarUtil;
+import net.iquesoft.iquephoto.utils.ToolbarUtil;
 
 import java.util.List;
 

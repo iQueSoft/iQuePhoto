@@ -3,18 +3,19 @@ package net.iquesoft.iquephoto.core.editor.model;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.support.annotation.NonNull;
 
-import net.iquesoft.iquephoto.util.SizeUtil;
+import net.iquesoft.iquephoto.utils.SizeUtil;
 
 public class Drawing {
-    public static final float DEFAULT_STROKE_WIDTH = SizeUtil.dp2px(10f);
+    public static final float DEFAULT_STROKE_WIDTH = 5f;
     public static final int DEFAULT_COLOR = Color.BLACK;
 
     private Paint mPaint;
     private Path mPath;
     private Path mOriginalPath;
 
-    public Drawing(Paint paint, Path path, Path originalPath) {
+    public Drawing(@NonNull Paint paint, @NonNull Path path, Path originalPath) {
         mPaint = paint;
         mPath = path;
         mOriginalPath = originalPath;

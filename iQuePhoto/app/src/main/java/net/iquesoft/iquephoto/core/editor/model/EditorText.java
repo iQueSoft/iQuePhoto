@@ -14,9 +14,9 @@ import android.view.MotionEvent;
 
 import net.iquesoft.iquephoto.App;
 import net.iquesoft.iquephoto.models.Text;
-import net.iquesoft.iquephoto.util.MatrixUtil;
-import net.iquesoft.iquephoto.util.RectUtil;
-import net.iquesoft.iquephoto.util.SizeUtil;
+import net.iquesoft.iquephoto.utils.MatrixUtil;
+import net.iquesoft.iquephoto.utils.RectUtil;
+import net.iquesoft.iquephoto.utils.SizeUtil;
 
 import javax.inject.Inject;
 

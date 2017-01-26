@@ -19,7 +19,7 @@ import net.iquesoft.iquephoto.models.EditorColor;
 import net.iquesoft.iquephoto.presentation.common.ToolFragment;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.ColorsPresenter;
 import net.iquesoft.iquephoto.presentation.views.fragment.ColorsView;
-import net.iquesoft.iquephoto.util.ToolbarUtil;
+import net.iquesoft.iquephoto.utils.ToolbarUtil;
 
 import java.util.List;
 

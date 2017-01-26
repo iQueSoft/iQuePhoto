@@ -16,7 +16,7 @@ import net.iquesoft.iquephoto.core.editor.enums.EditorTool;
 import net.iquesoft.iquephoto.presentation.common.ToolFragment;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.SliderControlPresenter;
 import net.iquesoft.iquephoto.presentation.views.fragment.AdjustmentView;
-import net.iquesoft.iquephoto.util.ToolbarUtil;
+import net.iquesoft.iquephoto.utils.ToolbarUtil;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 

@@ -10,18 +10,18 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 
 public class CircleSizeDrawable extends Drawable {
-    private int mSize;
+    private float mSize;
 
     private final Paint mPaint;
 
-    public CircleSizeDrawable(final int size) {
+    public CircleSizeDrawable(final float size) {
         mSize = size;
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setStrokeWidth(2.5f);
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setColor(Color.GRAY);
     }
-
+    
     @Override
     public void draw(@NonNull final Canvas canvas) {
         final Rect bounds = getBounds();

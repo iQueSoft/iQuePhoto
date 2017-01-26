@@ -19,7 +19,7 @@ import net.iquesoft.iquephoto.models.StickersSet;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.StickersSetPresenter;
 import net.iquesoft.iquephoto.presentation.views.fragment.StickersSetView;
 import net.iquesoft.iquephoto.ui.activities.EditorActivity;
-import net.iquesoft.iquephoto.util.ToolbarUtil;
+import net.iquesoft.iquephoto.utils.ToolbarUtil;
 
 import java.util.ArrayList;
 import java.util.List;

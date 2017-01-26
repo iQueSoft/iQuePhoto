@@ -17,10 +17,10 @@ import android.view.MotionEvent;
 
 import net.iquesoft.iquephoto.core.editor.ImageEditorView;
 import net.iquesoft.iquephoto.core.editor.enums.EditorMode;
-import net.iquesoft.iquephoto.util.LogHelper;
-import net.iquesoft.iquephoto.util.MatrixUtil;
-import net.iquesoft.iquephoto.util.MotionEventUtil;
-import net.iquesoft.iquephoto.util.RectUtil;
+import net.iquesoft.iquephoto.utils.LogHelper;
+import net.iquesoft.iquephoto.utils.MatrixUtil;
+import net.iquesoft.iquephoto.utils.MotionEventUtil;
+import net.iquesoft.iquephoto.utils.RectUtil;
 
 import static net.iquesoft.iquephoto.core.editor.enums.EditorMode.*;
 

@@ -23,7 +23,7 @@ import net.iquesoft.iquephoto.ui.activities.EditorActivity;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.AddTextPresenter;
 import net.iquesoft.iquephoto.presentation.views.fragment.AddTextView;
 import net.iquesoft.iquephoto.ui.dialogs.FontPickerDialog;
-import net.iquesoft.iquephoto.util.ToolbarUtil;
+import net.iquesoft.iquephoto.utils.ToolbarUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

@@ -13,7 +13,7 @@ import net.iquesoft.iquephoto.core.editor.enums.EditorTool;
 import net.iquesoft.iquephoto.presentation.common.ToolFragment;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.TiltShiftFragmentPresenter;
 import net.iquesoft.iquephoto.presentation.views.fragment.TiltShiftView;
-import net.iquesoft.iquephoto.util.ToolbarUtil;
+import net.iquesoft.iquephoto.utils.ToolbarUtil;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;

@@ -11,7 +11,7 @@ import com.arellomobile.mvp.MvpPresenter;
 import net.iquesoft.iquephoto.App;
 import net.iquesoft.iquephoto.models.Filter;
 import net.iquesoft.iquephoto.presentation.views.fragment.FiltersView;
-import net.iquesoft.iquephoto.util.BitmapUtil;
+import net.iquesoft.iquephoto.utils.BitmapUtil;
 
 import java.util.List;
 

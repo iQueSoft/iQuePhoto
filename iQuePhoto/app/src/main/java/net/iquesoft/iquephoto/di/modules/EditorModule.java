@@ -6,6 +6,7 @@ import net.iquesoft.iquephoto.App;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.core.editor.model.EditorFrame;
 import net.iquesoft.iquephoto.models.Adjust;
+import net.iquesoft.iquephoto.models.BrushSize;
 import net.iquesoft.iquephoto.models.EditorColor;
 import net.iquesoft.iquephoto.models.Filter;
 import net.iquesoft.iquephoto.models.Font;
@@ -216,7 +217,8 @@ public class EditorModule {
 
     @Provides
     List<Font> provideFonts() {
-        return Arrays.asList(new Font("Souses", "Souses.otf"),
+        return Arrays.asList(
+                new Font("Souses", "Souses.otf"),
                 new Font("Black Sword", "Blacksword.otf"),
                 new Font("Summer Hearts", "SummerHearts-Regular.otf"),
                 new Font("Cigarettes & Coffee", "CigarettesAndCoffee.ttf"),
@@ -226,7 +228,8 @@ public class EditorModule {
 
     @Provides
     List<EditorColor> provideColors() {
-        return Arrays.asList(new EditorColor(R.color.brown),
+        return Arrays.asList(
+                new EditorColor(R.color.brown),
                 new EditorColor(R.color.red),
                 new EditorColor(R.color.crimson),
                 new EditorColor(R.color.indian_red),
@@ -246,6 +249,22 @@ public class EditorModule {
                 new EditorColor(R.color.purple),
                 new EditorColor(R.color.dark_violet),
                 new EditorColor(R.color.indigo));
+    }
+    
+    @Provides
+    List<BrushSize> provideSizes() {
+        return Arrays.asList(
+                new BrushSize(5f),
+                new BrushSize(7.5f),
+                new BrushSize(10f),
+                new BrushSize(12.5f),
+                new BrushSize(15f),
+                new BrushSize(17.5f),
+                new BrushSize(20f),
+                new BrushSize(22.5f),
+                new BrushSize(25f),
+                new BrushSize(27.5f)
+        );
     }
 
     @Provides

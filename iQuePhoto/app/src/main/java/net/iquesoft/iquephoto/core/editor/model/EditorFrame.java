@@ -6,9 +6,9 @@ import android.graphics.Color;
 import android.graphics.Paint;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.util.BitmapUtil;
-import net.iquesoft.iquephoto.util.LogHelper;
-import net.iquesoft.iquephoto.util.SizeUtil;
+import net.iquesoft.iquephoto.utils.BitmapUtil;
+import net.iquesoft.iquephoto.utils.LogHelper;
+import net.iquesoft.iquephoto.utils.SizeUtil;
 
 public class EditorFrame {
     static final int EDITOR_FRAME_PADDING = 25;

@@ -24,10 +24,10 @@ import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.core.editor.ImageEditorView;
 import net.iquesoft.iquephoto.presentation.presenters.activity.EditorActivityPresenter;
 import net.iquesoft.iquephoto.task.ImageSaveTask;
-import net.iquesoft.iquephoto.util.BitmapUtil;
+import net.iquesoft.iquephoto.utils.BitmapUtil;
 import net.iquesoft.iquephoto.presentation.views.activity.EditorActivityView;
 import net.iquesoft.iquephoto.ui.fragments.ToolsFragment;
-import net.iquesoft.iquephoto.util.ToolbarUtil;
+import net.iquesoft.iquephoto.utils.ToolbarUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

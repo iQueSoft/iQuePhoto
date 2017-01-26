@@ -25,9 +25,9 @@ import net.iquesoft.iquephoto.core.editor.model.EditorImage;
 import net.iquesoft.iquephoto.core.editor.model.EditorSticker;
 import net.iquesoft.iquephoto.core.editor.model.EditorText;
 import net.iquesoft.iquephoto.models.Text;
-import net.iquesoft.iquephoto.util.BitmapUtil;
-import net.iquesoft.iquephoto.util.LogHelper;
-import net.iquesoft.iquephoto.util.MatrixUtil;
+import net.iquesoft.iquephoto.utils.BitmapUtil;
+import net.iquesoft.iquephoto.utils.LogHelper;
+import net.iquesoft.iquephoto.utils.MatrixUtil;
 
 import java.util.ArrayList;
 import java.util.List;

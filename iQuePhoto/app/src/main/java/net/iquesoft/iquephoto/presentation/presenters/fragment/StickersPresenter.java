@@ -13,7 +13,7 @@ import net.iquesoft.iquephoto.models.Sticker;
 import net.iquesoft.iquephoto.models.StickersSet;
 import net.iquesoft.iquephoto.presentation.views.fragment.StickersView;
 import net.iquesoft.iquephoto.ui.fragments.StickersFragment;
-import net.iquesoft.iquephoto.util.BitmapUtil;
+import net.iquesoft.iquephoto.utils.BitmapUtil;
 
 import java.util.List;
 

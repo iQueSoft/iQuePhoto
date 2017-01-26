@@ -19,9 +19,9 @@ import android.view.MotionEvent;
 
 import net.iquesoft.iquephoto.core.editor.ImageEditorView;
 import net.iquesoft.iquephoto.core.editor.enums.EditorMode;
-import net.iquesoft.iquephoto.util.BitmapUtil;
-import net.iquesoft.iquephoto.util.MotionEventUtil;
-import net.iquesoft.iquephoto.util.RectUtil;
+import net.iquesoft.iquephoto.utils.BitmapUtil;
+import net.iquesoft.iquephoto.utils.MotionEventUtil;
+import net.iquesoft.iquephoto.utils.RectUtil;
 
 import static net.iquesoft.iquephoto.core.editor.enums.EditorMode.*;
 

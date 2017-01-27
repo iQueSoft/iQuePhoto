@@ -32,15 +32,15 @@ interface EditorView extends MvpView {
 
     void stickerAdded(List<EditorSticker> stickers);
 
-    void brushDown(Paint paint, Path path);
+    void updateDrawing(Paint paint, Path path);
 
-    void brushMove(Paint paint, Path path);
-
-    void brushUp(List<Drawing> drawings);
-
+    void updateDrawing(List<Drawing> drawings);
+    
     void showProgress();
 
     void hideProgress();
 
     void imageChanged(Bitmap bitmap);
+
+    void updateView();
 }

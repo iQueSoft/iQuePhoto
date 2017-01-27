@@ -29,10 +29,10 @@ import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.FRAMES;
 
 public class FramesFragment extends ToolFragment implements FramesView {
     @InjectPresenter
-    FramesPresenter presenter;
+    FramesPresenter mPresenter;
 
     @BindView(R.id.frameRecyclerView)
-    RecyclerView recyclerView;
+    RecyclerView mRecyclerView;
 
     private Unbinder mUnbinder;
 
@@ -74,10 +74,9 @@ public class FramesFragment extends ToolFragment implements FramesView {
     @Override
     public void setupAdapter(List<Frame> frames) {
         FramesAdapter adapter = new FramesAdapter(frames);
-        adapter.setFramesListener(frame -> presenter.changeOverlay(getContext(), frame));
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        recyclerView.setAdapter(adapter);
+        adapter.setFramesListener(frame -> mPresenter.changeOverlay(getContext(), frame));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        mRecyclerView.setAdapter(adapter);
     }
 
     @Override

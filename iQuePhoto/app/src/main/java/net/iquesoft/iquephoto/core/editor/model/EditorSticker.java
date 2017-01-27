@@ -28,8 +28,9 @@ public class EditorSticker {
 
     private boolean mIsDrawHelperFrame = true;
 
-    public Bitmap mBitmap;
+    private Bitmap mBitmap;
 
+    private Paint mPaint;
     private Paint mHelperFramePaint;
 
     private Matrix mMatrix;
@@ -60,6 +61,7 @@ public class EditorSticker {
 
         App.getAppComponent().inject(this);
 
+        mPaint = new Paint();
         mHelperFramePaint = new Paint(mEditorFrame.getFramePaint());
 
         initialize();
@@ -109,12 +111,12 @@ public class EditorSticker {
         mFrameRect.bottom += HELP_BOX_PAD;
     }
 
-    public void setHelperFrameOpacity() {
-        mHelperFramePaint.setAlpha(255);
-    }
-
-    public void resetHelperFrameOpacity() {
-        mHelperFramePaint.set(mEditorFrame.getFramePaint());
+    public void setStickerTouched(boolean isTouched) {
+        if (isTouched) {
+            mHelperFramePaint.setAlpha(255);
+        } else {
+            mHelperFramePaint.set(mEditorFrame.getFramePaint());
+        }
     }
 
     public void actionMove(float dx, float dy) {
@@ -191,7 +193,7 @@ public class EditorSticker {
     }
 
     public void draw(@NonNull Canvas canvas) {
-        canvas.drawBitmap(mBitmap, mMatrix, null);
+        canvas.drawBitmap(mBitmap, mMatrix, mPaint);
 
         if (mIsDrawHelperFrame) drawHelperFrame(canvas);
     }

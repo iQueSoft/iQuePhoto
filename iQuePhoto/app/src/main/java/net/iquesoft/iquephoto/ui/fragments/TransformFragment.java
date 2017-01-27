@@ -27,7 +27,7 @@ import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.TRANSFORM_VERT
 
 public class TransformFragment extends MvpAppCompatFragment implements TransformView {
     @InjectPresenter
-    TransformPresenter presenter;
+    TransformPresenter mPresenter;
 
     private Unbinder mUnbinder;
 

@@ -33,11 +33,11 @@ public class DrawingFragment extends ToolFragment implements DrawingView {
     @InjectPresenter
     DrawingPresenter mPresenter;
 
-    @BindView(R.id.colorsRecyclerView)
-    RecyclerView mColorsRecyclerView;
-
     @BindView(R.id.sizesRecyclerView)
     RecyclerView mSizesRecyclerView;
+
+    @BindView(R.id.colorsRecyclerView)
+    RecyclerView mColorsRecyclerView;
 
     private Unbinder mUnbinder;
 

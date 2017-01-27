@@ -5,5 +5,6 @@
         android:id="@+id/action_share"
         android:icon="@drawable/ic_share"
         android:title="@string/send_and_share"
+        android:actionViewClass="android.widget.ImageView"
         app:showAsAction="ifRoom" />
 </menu>

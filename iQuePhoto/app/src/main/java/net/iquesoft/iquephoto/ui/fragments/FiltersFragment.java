@@ -42,7 +42,7 @@ public class FiltersFragment extends ToolFragment implements FiltersView {
     }
 
     @BindView(R.id.filtersRecyclerView)
-    RecyclerView filtersList;
+    RecyclerView mFiltersRecyclerView;
 
     private Unbinder mUnbinder;
 
@@ -96,8 +96,8 @@ public class FiltersFragment extends ToolFragment implements FiltersView {
                 mPresenter.changeFilter(filter)
         );
 
-        filtersList.setLayoutManager(new LinearLayoutManager(null, LinearLayout.HORIZONTAL, false));
-        filtersList.setAdapter(adapter);
+        mFiltersRecyclerView.setLayoutManager(new LinearLayoutManager(null, LinearLayout.HORIZONTAL, false));
+        mFiltersRecyclerView.setAdapter(adapter);
     }
 
     @Override

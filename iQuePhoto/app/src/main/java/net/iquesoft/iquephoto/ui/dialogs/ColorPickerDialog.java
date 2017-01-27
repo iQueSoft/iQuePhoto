@@ -19,8 +19,7 @@ public class ColorPickerDialog extends Dialog {
     private EditorColor mColor;
     private Context mContext;
 
-    private RGBColorPickerDialog mRGBColorPickerDialog;
-    private ARGBColorPickerDialog mARGBColorPickerDialog;
+    //private RGBColorPickerDialog mRGBColorPickerDialog;
 
     private OnColorClickListener mOnColorClickListener;
 
@@ -37,8 +36,7 @@ public class ColorPickerDialog extends Dialog {
         super(context);
         mContext = context;
 
-        mRGBColorPickerDialog = new RGBColorPickerDialog(context);
-        mARGBColorPickerDialog = new ARGBColorPickerDialog(context);
+        //mRGBColorPickerDialog = new RGBColorPickerDialog(context);
     }
 
     @Override
@@ -72,20 +70,18 @@ public class ColorPickerDialog extends Dialog {
     public void setOnColorClickListener(OnColorClickListener onColorClickListener) {
         mOnColorClickListener = onColorClickListener;
 
-        mRGBColorPickerDialog.setOnColorClickListener(onColorClickListener);
-        mARGBColorPickerDialog.setOnColorClickListener(onColorClickListener);
+        //mRGBColorPickerDialog.setOnColorClickListener(onColorClickListener);
     }
 
     @OnClick(R.id.rgbButton)
     void onClickRGB() {
         dismiss();
-        mRGBColorPickerDialog.show();
+        // mRGBColorPickerDialog.show();
     }
 
     @OnClick(R.id.argbButton)
     void onClikcARGB() {
         dismiss();
-        mARGBColorPickerDialog.show();
     }
 
 }

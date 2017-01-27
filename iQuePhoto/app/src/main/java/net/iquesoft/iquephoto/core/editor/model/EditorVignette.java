@@ -227,7 +227,7 @@ public class EditorVignette {
                 mTempVignetteRect.inset(-distanceX, 0);
                 break;
         }
-        
+
         if (mTempVignetteRect.width() > mControlPointTolerance
                 && mTempVignetteRect.height() > mControlPointTolerance) {
             if (isVignetteInRect()) {

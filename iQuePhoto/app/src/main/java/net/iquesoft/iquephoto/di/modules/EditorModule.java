@@ -229,6 +229,8 @@ public class EditorModule {
     @Provides
     List<EditorColor> provideColors() {
         return Arrays.asList(
+                new EditorColor(R.color.white),
+                new EditorColor(R.color.black),
                 new EditorColor(R.color.brown),
                 new EditorColor(R.color.red),
                 new EditorColor(R.color.crimson),
@@ -250,7 +252,7 @@ public class EditorModule {
                 new EditorColor(R.color.dark_violet),
                 new EditorColor(R.color.indigo));
     }
-    
+
     @Provides
     List<BrushSize> provideSizes() {
         return Arrays.asList(

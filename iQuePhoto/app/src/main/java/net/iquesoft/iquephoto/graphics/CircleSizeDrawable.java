@@ -17,11 +17,11 @@ public class CircleSizeDrawable extends Drawable {
     public CircleSizeDrawable(final float size) {
         mSize = size;
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mPaint.setStrokeWidth(2.5f);
+        mPaint.setStrokeWidth(5f);
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setColor(Color.GRAY);
     }
-    
+
     @Override
     public void draw(@NonNull final Canvas canvas) {
         final Rect bounds = getBounds();
@@ -41,5 +41,15 @@ public class CircleSizeDrawable extends Drawable {
     @Override
     public int getOpacity() {
         return PixelFormat.TRANSLUCENT;
+    }
+
+    public void setSelected(boolean isSelected) {
+        if (isSelected) {
+            mPaint.setColor(Color.RED);
+        } else {
+            mPaint.setColor(Color.GRAY);
+        }
+
+        invalidateSelf();
     }
 }

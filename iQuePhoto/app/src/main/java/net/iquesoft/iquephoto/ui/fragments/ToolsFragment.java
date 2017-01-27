@@ -28,10 +28,10 @@ import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.NONE;
 
 public class ToolsFragment extends MvpAppCompatFragment implements ToolsView {
     @InjectPresenter
-    ToolsPresenter presenter;
+    ToolsPresenter mPresenter;
 
     @BindView(R.id.toolsRecyclerView)
-    RecyclerView recyclerView;
+    RecyclerView mRecyclerView;
 
     private Unbinder mUnbinder;
 
@@ -48,7 +48,7 @@ public class ToolsFragment extends MvpAppCompatFragment implements ToolsView {
 
         return view;
     }
-
+    
     @Override
     public void onResume() {
         super.onResume();
@@ -69,10 +69,9 @@ public class ToolsFragment extends MvpAppCompatFragment implements ToolsView {
                 ((EditorActivity) getActivity()).setupFragment(tool.getFragment())
         );
 
-        recyclerView.setLayoutManager(
+        mRecyclerView.setLayoutManager(
                 new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false)
         );
-
-        recyclerView.setAdapter(adapter);
+        mRecyclerView.setAdapter(adapter);
     }
 }

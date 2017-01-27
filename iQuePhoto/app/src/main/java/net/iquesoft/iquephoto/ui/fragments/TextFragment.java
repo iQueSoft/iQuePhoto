@@ -115,7 +115,7 @@ public class TextFragment extends ToolFragment implements AddTextView {
 
     @OnClick(R.id.selectTextColorButton)
     void onClickTextColorButton() {
-        ((EditorActivity) getActivity()).setupFragment(ColorsFragment.newInstance());
+        //((EditorActivity) getActivity()).setupFragment(ColorsFragment.newInstance());
     }
 
     @OnClick(R.id.selectFontButton)

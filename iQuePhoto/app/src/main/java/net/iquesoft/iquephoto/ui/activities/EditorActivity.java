@@ -2,14 +2,20 @@ package net.iquesoft.iquephoto.ui.activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.view.menu.MenuBuilder;
+import android.support.v7.view.menu.MenuPopupHelper;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -24,7 +30,7 @@ import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.core.editor.ImageEditorView;
 import net.iquesoft.iquephoto.presentation.presenters.activity.EditorActivityPresenter;
 import net.iquesoft.iquephoto.task.ImageSaveTask;
-import net.iquesoft.iquephoto.utils.BitmapUtil;
+import net.iquesoft.iquephoto.ui.dialogs.LoadingDialog;
 import net.iquesoft.iquephoto.presentation.views.activity.EditorActivityView;
 import net.iquesoft.iquephoto.ui.fragments.ToolsFragment;
 import net.iquesoft.iquephoto.utils.ToolbarUtil;
@@ -36,7 +42,7 @@ import butterknife.OnClick;
 public class EditorActivity extends MvpAppCompatActivity implements EditorActivityView {
     @InjectPresenter
     EditorActivityPresenter mPresenter;
-    
+
     @ProvidePresenter
     EditorActivityPresenter provideEditorPresenter() {
         return new EditorActivityPresenter(this, getIntent());
@@ -54,7 +60,11 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorActivi
     @BindView(R.id.fragmentContainer)
     FrameLayout mFragmentContainer;
 
+    private MenuPopupHelper mMenuPopupHelper;
+
     private FragmentManager mFragmentManager;
+
+    private LoadingDialog mLoadingDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -69,6 +79,8 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorActivi
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             mToolbar.setNavigationIcon(R.drawable.ic_close);
         }
+
+        mLoadingDialog = new LoadingDialog(this);
 
         mImageEditorView.init(getMvpDelegate());
 
@@ -88,6 +100,7 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorActivi
         fragmentTransaction.add(mFragmentContainer.getId(), new ToolsFragment())
                 .commit();
 
+
         Log.i("Backstack", String.valueOf(mFragmentManager.getBackStackEntryCount()));
     }
 
@@ -102,13 +115,7 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorActivi
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_share:
-                Intent intent = new Intent(EditorActivity.this, ShareActivity.class);
-                intent.putExtra(Intent.EXTRA_STREAM,
-                        BitmapUtil.getUriOfBitmap(this, mImageEditorView.getAlteredImageBitmap()));
-                startActivity(intent);
-                /*PopupMenu popupMenu = new PopupMenu(this, mUndoButton);
-                popupMenu.inflate(R.menu.menu_share);
-                popupMenu.show();*/
+                showSharePopupMenu();
                 break;
             case R.id.action_apply:
                 mImageEditorView.applyChanges();
@@ -117,6 +124,47 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorActivi
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showSharePopupMenu() {
+        if (mMenuPopupHelper == null) {
+            MenuBuilder menuBuilder = new MenuBuilder(this);
+            menuBuilder.setCallback(new MenuBuilder.Callback() {
+                @Override
+                public boolean onMenuItemSelected(MenuBuilder menu, MenuItem item) {
+                    Bitmap bitmap = mImageEditorView.getAlteredImageBitmap();
+
+                    switch (item.getItemId()) {
+                        case R.id.action_save:
+                            mPresenter.save(bitmap);
+                            return true;
+                        case R.id.action_instagram:
+                            mPresenter.share(bitmap, "com.instagram.android");
+                            return true;
+                        case R.id.action_facebook:
+                            mPresenter.share(bitmap, "com.facebook.katana");
+                            return true;
+                        case R.id.action_more:
+                            mPresenter.share(bitmap, null);
+                            return true;
+                    }
+                    return false;
+                }
+
+                @Override
+                public void onMenuModeChange(MenuBuilder menu) {
+
+                }
+            });
+
+            MenuInflater menuInflater = new MenuInflater(this);
+            menuInflater.inflate(R.menu.menu_share, menuBuilder);
+            mMenuPopupHelper = new MenuPopupHelper(this, menuBuilder, findViewById(R.id.action_share));
+            mMenuPopupHelper.setForceShowIcon(true);
+            mMenuPopupHelper.show();
+        } else {
+            mMenuPopupHelper.show();
+        }
     }
 
     @Override
@@ -149,9 +197,17 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorActivi
 
     @Override
     public void startEditing(Bitmap bitmap) {
-        BitmapUtil.logBitmapInfo("Cropped Bitmap", bitmap);
-
         mImageEditorView.setImageBitmap(bitmap);
+    }
+
+    @Override
+    public void showLoading() {
+        mLoadingDialog.show();
+    }
+
+    @Override
+    public void hideLoading() {
+        mLoadingDialog.dismiss();
     }
 
     @Override
@@ -196,6 +252,21 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorActivi
                 super.onBackPressed();
             }
         } else finish();
+    }
+
+    @Override
+    public void share(@NonNull Uri uri, @Nullable String packageName) {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("image/*");
+        // intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+        intent.putExtra(Intent.EXTRA_STREAM, uri);
+        if (packageName != null) {
+            intent.setPackage(packageName);
+        }
+
+        startActivity(intent);
     }
 
     @OnClick(R.id.undoButton)

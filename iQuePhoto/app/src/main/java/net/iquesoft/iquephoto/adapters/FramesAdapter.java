@@ -19,7 +19,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class FramesAdapter extends RecyclerView.Adapter<FramesAdapter.ViewHolder> {
-
     private int mCurrentPosition = 0;
 
     private Context mContext;

@@ -206,8 +206,8 @@ public class ImageEditorView extends View implements EditorView {
         mPresenter.applyChanges();
     }
 
-    public void setUndoListener(UndoListener undoListener) {
-        mPresenter.setUndoListener(undoListener);
+    public void setUndoListener(EditorListener editorListener) {
+        mPresenter.setEditorListener(editorListener);
     }
 
     public void addText(Text text) {
@@ -336,9 +336,6 @@ public class ImageEditorView extends View implements EditorView {
 
     private void actionDown(MotionEvent event) {
         switch (mCurrentTool) {
-            case NONE:
-                setIsOriginalImageDisplayed(true);
-                break;
             case VIGNETTE:
                 mVignette.actionDown(event);
                 break;
@@ -360,7 +357,6 @@ public class ImageEditorView extends View implements EditorView {
 
     private void actionMove(MotionEvent event) {
         switch (mCurrentTool) {
-
             case VIGNETTE:
                 mVignette.actionMove(event);
                 break;
@@ -373,10 +369,6 @@ public class ImageEditorView extends View implements EditorView {
 
     private void actionUp(MotionEvent event) {
         switch (mCurrentTool) {
-            case NONE:
-                setIsOriginalImageDisplayed(false);
-                break;
-
             case VIGNETTE:
                 mVignette.actionUp();
                 break;
@@ -399,12 +391,6 @@ public class ImageEditorView extends View implements EditorView {
                 canvas.drawPath(mDrawingPath, mDrawingPaint);
             }
         }
-    }
-
-    private void setIsOriginalImageDisplayed(boolean isOriginalImageDisplayed) {
-        mIsOriginalImageDisplayed = isOriginalImageDisplayed;
-
-        invalidate();
     }
 
     @Override
@@ -441,7 +427,9 @@ public class ImageEditorView extends View implements EditorView {
 
     @Override
     public void filterChanged(Paint paint) {
-        mFilterPaint = paint;
+        if (mFilterPaint == null) {
+            mFilterPaint = paint;
+        }
 
         invalidate();
     }
@@ -456,37 +444,37 @@ public class ImageEditorView extends View implements EditorView {
 
     @Override
     public void textAdded(List<EditorText> texts) {
-        mTexts = texts;
+        if (mTexts == null) {
+            mTexts = texts;
+        }
 
         invalidate();
     }
 
     @Override
     public void stickerAdded(List<EditorSticker> stickers) {
-        mStickers = stickers;
+        if (mStickers == null) {
+            mStickers = stickers;
+        }
 
         invalidate();
     }
 
     @Override
-    public void brushDown(Paint paint, Path path) {
-        mDrawingPaint = paint;
-        mDrawingPath = path;
+    public void updateDrawing(Paint paint, Path path) {
+        if (mDrawingPaint == null && mDrawingPath == null) {
+            mDrawingPaint = paint;
+            mDrawingPath = path;
+        }
 
         invalidate();
     }
 
     @Override
-    public void brushMove(Paint paint, Path path) {
-        mDrawingPaint = paint;
-        mDrawingPath = path;
-
-        invalidate();
-    }
-
-    @Override
-    public void brushUp(List<Drawing> drawings) {
-        mDrawings = drawings;
+    public void updateDrawing(List<Drawing> drawings) {
+        if (mDrawings == null) {
+            mDrawings = drawings;
+        }
 
         invalidate();
     }
@@ -505,6 +493,11 @@ public class ImageEditorView extends View implements EditorView {
     public void imageChanged(Bitmap bitmap) {
         mAlteredImageBitmap = bitmap;
 
+        invalidate();
+    }
+
+    @Override
+    public void updateView() {
         invalidate();
     }
 }

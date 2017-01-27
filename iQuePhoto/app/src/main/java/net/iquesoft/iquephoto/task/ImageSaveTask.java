@@ -1,16 +1,13 @@
 package net.iquesoft.iquephoto.task;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.ui.activities.EditorActivity;
 import net.iquesoft.iquephoto.ui.dialogs.LoadingDialog;
 
 import java.io.File;
@@ -43,7 +40,7 @@ public class ImageSaveTask extends AsyncTask<Void, Void, Void> {
         super.onPreExecute();
         mLoadingDialog.show();
     }
-
+    
     @Override
     protected Void doInBackground(Void... voids) {
         File file = getOutputMediaFile();
@@ -69,14 +66,8 @@ public class ImageSaveTask extends AsyncTask<Void, Void, Void> {
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
         mLoadingDialog.dismiss();
-        Toast.makeText(mContext, R.string.image_saved, Toast.LENGTH_SHORT).show();
 
-        if (mContext.getClass()
-                .getSimpleName()
-                .equalsIgnoreCase(EditorActivity.class.getSimpleName())) {
-            Activity activity = (Activity) mContext;
-            activity.finish();
-        }
+        Toast.makeText(mContext, R.string.image_saved, Toast.LENGTH_SHORT).show();
     }
 
     private File getOutputMediaFile() {

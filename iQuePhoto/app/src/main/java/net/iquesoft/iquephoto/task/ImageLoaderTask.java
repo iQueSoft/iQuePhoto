@@ -14,8 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ImageLoader extends AsyncTask<Void, Void, List<ImageAlbum>> {
-
+public class ImageLoaderTask extends AsyncTask<Void, Void, List<ImageAlbum>> {
     private Context mContext;
     private List<ImageAlbum> mFoldersList;
 
@@ -35,7 +34,7 @@ public class ImageLoader extends AsyncTask<Void, Void, List<ImageAlbum>> {
         mListener = listener;
     }
 
-    public ImageLoader(Context context) {
+    public ImageLoaderTask(Context context) {
         mContext = context;
     }
 
@@ -83,7 +82,6 @@ public class ImageLoader extends AsyncTask<Void, Void, List<ImageAlbum>> {
     @Override
     protected void onPostExecute(List<ImageAlbum> imageAlba) {
         super.onPostExecute(imageAlba);
-        //Log.i(ImageLoader.class.getSimpleName(), String.valueOf(mImagesList.size() + 1));
         mListener.onImageLoaded(imageAlba);
     }
 }

@@ -1,7 +1,6 @@
 package net.iquesoft.iquephoto.adapters;
 
 import android.content.Context;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,9 +9,7 @@ import android.widget.ImageView;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.graphics.CircleSizeDrawable;
-import net.iquesoft.iquephoto.graphics.ColorCircleDrawable;
 import net.iquesoft.iquephoto.models.BrushSize;
-import net.iquesoft.iquephoto.models.EditorColor;
 
 import java.util.List;
 
@@ -20,12 +17,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class SizesAdapter extends RecyclerView.Adapter<SizesAdapter.ViewHolder> {
-
     private int mSelectedColorPosition = 0;
 
-    private Context mContext;
-
-    private List<BrushSize> mEditorColorsList;
+    private List<BrushSize> mSizes;
 
     private OnSizeClickListener mOnSizeClickListener;
 
@@ -37,51 +31,48 @@ public class SizesAdapter extends RecyclerView.Adapter<SizesAdapter.ViewHolder> 
         mOnSizeClickListener = onSizeClickListener;
     }
 
-    public SizesAdapter(List<BrushSize> editorColors) {
-        mEditorColorsList = editorColors;
+    public SizesAdapter(List<BrushSize> sizes) {
+        mSizes = sizes;
+        mSelectedColorPosition = sizes.size() / 2;
     }
 
     @Override
     public SizesAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        mContext = parent.getContext();
+        Context context = parent.getContext();
 
-        View view = LayoutInflater.from(mContext).inflate(R.layout.item_color, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_brush_size, parent, false);
 
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(SizesAdapter.ViewHolder holder, int position) {
-        final BrushSize size = mEditorColorsList.get(position);
+        final BrushSize size = mSizes.get(position);
 
-        holder.colorView.setImageDrawable(new CircleSizeDrawable(size.getSize()));
+        holder.sizeImageView.setImageDrawable(new CircleSizeDrawable(size.getSize()));
 
         if (mSelectedColorPosition == holder.getAdapterPosition()) {
             mOnSizeClickListener.onClick(size);
-            holder.colorSelected.setVisibility(View.VISIBLE);
+            ((CircleSizeDrawable) holder.sizeImageView.getDrawable()).setSelected(true);
         } else {
-            holder.colorSelected.setVisibility(View.GONE);
+            ((CircleSizeDrawable) holder.sizeImageView.getDrawable()).setSelected(false);
         }
 
-        holder.colorView.setOnClickListener(view -> {
+        holder.sizeImageView.setOnClickListener(view -> {
             notifyItemChanged(mSelectedColorPosition);
             mSelectedColorPosition = holder.getAdapterPosition();
             notifyItemChanged(holder.getAdapterPosition());
-
         });
     }
 
     @Override
     public int getItemCount() {
-        return mEditorColorsList.size();
+        return mSizes.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.rgbFrameLayout)
-        ImageView colorView;
-
-        @BindView(R.id.colorSelected)
-        ImageView colorSelected;
+        @BindView(R.id.sizeImageView)
+        ImageView sizeImageView;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -90,4 +81,3 @@ public class SizesAdapter extends RecyclerView.Adapter<SizesAdapter.ViewHolder> 
         }
     }
 }
-

@@ -18,7 +18,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class ColorAdapter extends RecyclerView.Adapter<ColorAdapter.ViewHolder> {
-
     private int mSelectedColorPosition = 0;
 
     private Context mContext;
@@ -58,9 +57,9 @@ public class ColorAdapter extends RecyclerView.Adapter<ColorAdapter.ViewHolder> 
 
         if (mSelectedColorPosition == holder.getAdapterPosition()) {
             mOnColorClickListener.onClick(color);
-            holder.colorSelected.setVisibility(View.VISIBLE);
+            ((ColorCircleDrawable) holder.colorView.getDrawable()).setSelected(true);
         } else {
-            holder.colorSelected.setVisibility(View.GONE);
+            ((ColorCircleDrawable) holder.colorView.getDrawable()).setSelected(false);
         }
 
         holder.colorView.setOnClickListener(view -> {
@@ -77,11 +76,8 @@ public class ColorAdapter extends RecyclerView.Adapter<ColorAdapter.ViewHolder> 
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.rgbFrameLayout)
+        @BindView(R.id.colorImageView)
         ImageView colorView;
-
-        @BindView(R.id.colorSelected)
-        ImageView colorSelected;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -90,4 +86,3 @@ public class ColorAdapter extends RecyclerView.Adapter<ColorAdapter.ViewHolder> 
         }
     }
 }
-

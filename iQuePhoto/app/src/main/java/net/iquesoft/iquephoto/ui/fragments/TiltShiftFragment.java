@@ -24,7 +24,7 @@ import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.TILT_SHIFT_RAD
 
 public class TiltShiftFragment extends ToolFragment implements TiltShiftView {
     @InjectPresenter
-    TiltShiftFragmentPresenter presenter;
+    TiltShiftFragmentPresenter mPresenter;
 
     private Unbinder mUnbinder;
 
@@ -78,13 +78,11 @@ public class TiltShiftFragment extends ToolFragment implements TiltShiftView {
 
     @OnClick(R.id.tiltShiftLinearButton)
     void onClickLinear() {
-        presenter.changeTiltShift(TILT_SHIFT_LINEAR);
+        mPresenter.changeTiltShift(TILT_SHIFT_LINEAR);
     }
 
     @OnClick(R.id.tiltShiftRadialButton)
     void onClickRadial() {
-        presenter.changeTiltShift(TILT_SHIFT_RADIAL);
+        mPresenter.changeTiltShift(TILT_SHIFT_RADIAL);
     }
-
-
 }

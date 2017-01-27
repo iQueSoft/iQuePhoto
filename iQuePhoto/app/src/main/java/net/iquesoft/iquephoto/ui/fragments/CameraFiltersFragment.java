@@ -73,9 +73,9 @@ public class CameraFiltersFragment extends MvpAppCompatFragment implements Camer
                 mPresenter.onFilterClick(filter)
         );
 
-        recyclerView.setLayoutManager(new
+        mRecyclerView.setLayoutManager(new
                 LinearLayoutManager(null, LinearLayout.HORIZONTAL, false)
         );
-        recyclerView.setAdapter(adapter);*/
+        mRecyclerView.setAdapter(adapter);*/
     }
 }

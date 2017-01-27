@@ -33,7 +33,7 @@ public class GalleryActivity extends MvpAppCompatActivity implements GalleryView
         setContentView(R.layout.activity_gallery);
 
         ButterKnife.bind(this);
-
+        
         setSupportActionBar(mToolbar);
 
         if (getSupportActionBar() != null) {

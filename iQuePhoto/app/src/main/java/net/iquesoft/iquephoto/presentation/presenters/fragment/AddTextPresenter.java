@@ -15,7 +15,6 @@ import net.iquesoft.iquephoto.presentation.views.fragment.AddTextView;
 
 @InjectViewState
 public class AddTextPresenter extends MvpPresenter<AddTextView> {
-
     public void changeTextColor(@NonNull Context context, EditorColor editorColor) {
         int color = ResourcesCompat.getColor(context.getResources(), editorColor.getColor(), null);
     }

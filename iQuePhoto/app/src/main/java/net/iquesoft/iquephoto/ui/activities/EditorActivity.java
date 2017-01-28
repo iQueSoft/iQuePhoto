@@ -28,9 +28,10 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
 
 import net.iquesoft.iquephoto.R;
+import net.iquesoft.iquephoto.core.editor.EditorListener;
 import net.iquesoft.iquephoto.core.editor.ImageEditorView;
 import net.iquesoft.iquephoto.presentation.presenters.activity.EditorActivityPresenter;
-import net.iquesoft.iquephoto.task.ImageSaveTask;
+import net.iquesoft.iquephoto.tasks.ImageSaveTask;
 import net.iquesoft.iquephoto.ui.dialogs.LoadingDialog;
 import net.iquesoft.iquephoto.presentation.views.activity.EditorActivityView;
 import net.iquesoft.iquephoto.ui.fragments.ToolsFragment;
@@ -88,12 +89,26 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorActivi
 
         mImageEditorView.init(getMvpDelegate());
 
-        mImageEditorView.setUndoListener(count -> {
-            if (count != 0) {
-                mUndoButton.setText(String.valueOf(count));
-                mUndoButton.setVisibility(View.VISIBLE);
-            } else {
-                mUndoButton.setVisibility(View.GONE);
+        mImageEditorView.setUndoListener(new EditorListener() {
+            @Override
+            public void imageProcessingStarted() {
+                mLoadingDialog.show();
+            }
+
+            @Override
+            public void hasChanges(int count) {
+                if (count != 0) {
+                    mUndoButton.setText(String.valueOf(count));
+                    mUndoButton.setVisibility(View.VISIBLE);
+                } else {
+                    mUndoButton.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void imageProcessingFinished() {
+                mLoadingDialog.dismiss();
+                onBackPressed();
             }
         });
 
@@ -107,7 +122,7 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorActivi
 
         Log.i("BackStack", String.valueOf(mFragmentManager.getBackStackEntryCount()));
     }
-    
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_editor, menu);
@@ -123,7 +138,6 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorActivi
                 break;
             case R.id.action_apply:
                 mImageEditorView.applyChanges();
-                onBackPressed();
                 break;
         }
 
@@ -190,6 +204,8 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorActivi
             mToolbar.setNavigationIcon(R.drawable.ic_close);
             ToolbarUtil.showTitle(false, this);
             navigateBack(true);
+
+            // TODO: Replays it to ToolsFragment.
             if (mImageEditorView.hasChanges()) {
                 mUndoButton.setVisibility(View.VISIBLE);
             }

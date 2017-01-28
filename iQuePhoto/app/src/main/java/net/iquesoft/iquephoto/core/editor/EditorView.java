@@ -35,10 +35,6 @@ interface EditorView extends MvpView {
     void updateDrawing(Paint paint, Path path);
 
     void updateDrawing(List<Drawing> drawings);
-    
-    void showProgress();
-
-    void hideProgress();
 
     void imageChanged(Bitmap bitmap);
 

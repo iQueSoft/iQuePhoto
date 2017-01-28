@@ -28,13 +28,13 @@ import butterknife.Unbinder;
 
 public class GalleryAlbumsFragment extends MvpAppCompatFragment implements GalleryAlbumsView {
     @InjectPresenter
-    GalleryAlbumsPresenter presenter;
+    GalleryAlbumsPresenter mPresenter;
 
     @BindView(R.id.albumsRecyclerView)
-    RecyclerView recyclerView;
+    RecyclerView mRecyclerView;
 
     @BindView(R.id.noImagesLinearLayout)
-    LinearLayout noImagesLinearLayout;
+    LinearLayout mNoImagesLinearLayout;
 
     private Unbinder mUnbinder;
 
@@ -60,7 +60,7 @@ public class GalleryAlbumsFragment extends MvpAppCompatFragment implements Galle
     @Override
     public void onResume() {
         super.onResume();
-        presenter.fetchImages(getContext());
+        mPresenter.fetchImages(getContext());
     }
 
     @Override
@@ -71,18 +71,20 @@ public class GalleryAlbumsFragment extends MvpAppCompatFragment implements Galle
 
     @Override
     public void showNoImages() {
-        noImagesLinearLayout.setVisibility(View.VISIBLE);
+        mNoImagesLinearLayout.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void setupAdapter(List<ImageAlbum> imageAlbums) {
-        ImageAlbumsAdapter adapter = new ImageAlbumsAdapter(imageAlbums);
+        if (mNoImagesLinearLayout.getVisibility() == View.VISIBLE) {
+            mNoImagesLinearLayout.setVisibility(View.GONE);
+        }
 
+        ImageAlbumsAdapter adapter = new ImageAlbumsAdapter(imageAlbums);
         adapter.setOnAlbumClickListener(imageAlbum ->
                 ((GalleryActivity) getActivity()).showImages(imageAlbum));
-
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
-        recyclerView.setAdapter(adapter);
+        mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
+        mRecyclerView.setAdapter(adapter);
     }
 
     @OnClick(R.id.takePhotoButton)

@@ -19,7 +19,6 @@ import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.core.editor.ImageEditorView;
 import net.iquesoft.iquephoto.presentation.common.ToolFragment;
 import net.iquesoft.iquephoto.models.Text;
-import net.iquesoft.iquephoto.ui.activities.EditorActivity;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.AddTextPresenter;
 import net.iquesoft.iquephoto.presentation.views.fragment.AddTextView;
 import net.iquesoft.iquephoto.ui.dialogs.FontPickerDialog;
@@ -34,13 +33,13 @@ import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.TEXT;
 
 public class TextFragment extends ToolFragment implements AddTextView {
     @InjectPresenter
-    AddTextPresenter presenter;
+    AddTextPresenter mPresenter;
 
     @BindView(R.id.textSettingsLayout)
     LinearLayout textSettingsLayout;
 
     @BindView(R.id.textField)
-    EditText editText;
+    EditText mEditText;
 
     private Context mContext;
 
@@ -110,7 +109,7 @@ public class TextFragment extends ToolFragment implements AddTextView {
 
     @OnClick(R.id.addTextButton)
     void onClickAddText() {
-        presenter.addText(editText.getText().toString(), mTypeface, mColor);
+        mPresenter.addText(mEditText.getText().toString(), mTypeface, mColor);
     }
 
     @OnClick(R.id.selectTextColorButton)

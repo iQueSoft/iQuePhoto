@@ -42,7 +42,7 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
     private float mLastX;
     private float mLastY;
 
-    private boolean mIsImageSetted;
+    private boolean mIsImageSet;
 
     private EditorText mCurrentCheckedText;
     private EditorSticker mCurrentCheckedSticker;
@@ -84,7 +84,7 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
     }
 
     void setupImage(float width, float height) {
-        if (!mIsImageSetted) {
+        if (!mIsImageSet) {
             mDstRect.set(0, 0, width, height);
 
             LogHelper.logRect("mDstRect", mDstRect);
@@ -98,7 +98,7 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
             LogHelper.logRect("mSrcRect", mSrcRect);
             LogHelper.logMatrix("mImageMatrix", mImageMatrix);
 
-            mIsImageSetted = true;
+            mIsImageSet = true;
 
             getViewState().setupImage(mImageBitmap, mImageMatrix, mSrcRect);
         }
@@ -115,16 +115,7 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
     }
 
     void applyChanges() {
-        new ImageProcessingTask().execute();
-        /*new AsyncTask<Void, Void, Bitmap>() {
-
-
-            @Override
-            protected Bitmap doInBackground(Void... voids) {
-
-                return null;
-            }
-        }.execute();*/
+        new ImageProcessingTask().execute(mCurrentTool);
     }
 
     public void setFilter(ColorMatrix colorMatrix) {
@@ -152,11 +143,13 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
     }
 
     public void setFrame(Bitmap bitmap) {
-        getViewState().frameChanged(bitmap, calculateSupportMatrix(bitmap));
+        getViewState().frameChanged(bitmap, getSupportMatrix(bitmap));
     }
 
     public void setOverlay(Bitmap bitmap) {
-        getViewState().overlayChanged(bitmap, calculateSupportMatrix(bitmap), mOverlayPaint);
+        mSupportBitmap = bitmap;
+
+        getViewState().overlayChanged(bitmap, getSupportMatrix(bitmap), mOverlayPaint);
     }
 
     void addText(Text text) {
@@ -174,7 +167,7 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
 
         getViewState().stickerAdded(mStickers);
     }
-
+    
     private void initDrawingPaint() {
         mDrawingPaint = new Paint();
         mDrawingPaint.setStyle(Paint.Style.STROKE);
@@ -314,24 +307,25 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
     }
 
     void undo() {
-        mImages.remove(mImages.size() - 1);
-        mEditorListener.hasChanges(mImages.size());
+        if (!mImages.isEmpty()) {
+            mImages.remove(mImages.size() - 1);
+            mEditorListener.hasChanges(mImages.size());
 
-        getViewState().imageChanged(getAlteredBitmap());
+            getViewState().imageChanged(getAlteredBitmap());
+        }
     }
 
-    private Matrix calculateSupportMatrix(Bitmap bitmap) {
+    private Matrix getSupportMatrix(Bitmap bitmap) {
         float sX = mSrcRect.width() / bitmap.getWidth();
         float sY = mSrcRect.height() / bitmap.getHeight();
 
+        LogHelper.logMatrix("mSupportMatrix before (View)", mSupportMatrix);
+
         mSupportMatrix.reset();
-
-        LogHelper.logMatrix("mSupportMatrix - before", mSupportMatrix);
-
         mSupportMatrix.postScale(sX, sY);
         mSupportMatrix.postTranslate(mSrcRect.left, mSrcRect.top);
 
-        MatrixUtil.matrixInfo("mSupportMatrix - after", mSupportMatrix);
+        LogHelper.logMatrix("mSupportMatrix after (View)", mSupportMatrix);
 
         return mSupportMatrix;
     }
@@ -489,7 +483,6 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
                     mLastX = event.getX();
                     mLastY = event.getY();
 
-                    //invalidate();
                     break;
                 case ROTATE_AND_SCALE:
                     mCurrentCheckedText.updateRotateAndScale(
@@ -497,14 +490,13 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
                             getDeltaY(event)
                     );
 
-                    //invalidate();
-
                     mLastX = event.getX();
                     mLastY = event.getY();
-                    break;
 
-                // TODO: Texts transparency.
+                    break;
             }
+
+            getViewState().updateView();
         }
     }
 
@@ -553,37 +545,47 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
         return event.getY() - mLastY;
     }
 
-    private class ImageProcessingTask extends AsyncTask<Void, Void, Bitmap> {
+    private class ImageProcessingTask extends AsyncTask<EditorTool, Void, Bitmap> {
         private int mImageHeight;
         private int mImageWidth;
 
         private Bitmap mBitmap;
         private Canvas mCanvas;
 
+        private EditorTool mExecutedTool;
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            getViewState().showProgress();
 
-            mBitmap = getAlteredBitmap().copy(getAlteredBitmap().getConfig(), true);
+            mEditorListener.imageProcessingStarted();
         }
 
         @Override
-        protected Bitmap doInBackground(Void... voids) {
+        protected Bitmap doInBackground(EditorTool... editorTools) {
+            mBitmap = getAlteredBitmap().copy(getAlteredBitmap().getConfig(), true);
+
             mCanvas = new Canvas(mBitmap);
 
             mImageHeight = mBitmap.getHeight();
             mImageWidth = mBitmap.getWidth();
 
-            switch (mCurrentTool) {
+            mExecutedTool = editorTools[0];
+
+            Log.i("ImageProcessing", "Image Processing Started with \"" + mExecutedTool.name() + "\".");
+
+            switch (mExecutedTool) {
                 case NONE:
                     break;
                 case FILTERS:
                     mCanvas.drawBitmap(mBitmap, 0, 0, mFilterPaint);
                     break;
                 case OVERLAY:
-                    calculateSupportMatrix(mSupportBitmap);
-                    mCanvas.drawBitmap(mSupportBitmap, mSupportMatrix, mOverlayPaint);
+                    mCanvas.drawBitmap(
+                            mSupportBitmap,
+                            getSupportMatrix(mSupportBitmap),
+                            mOverlayPaint
+                    );
                     break;
                 case TEXT:
                     drawTexts(mCanvas);
@@ -601,8 +603,11 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
                     drawStickers(mCanvas);
                     break;
                 case FRAMES:
-                    calculateSupportMatrix(mSupportBitmap);
-                    mCanvas.drawBitmap(mSupportBitmap, mSupportMatrix, mBitmapPaint);
+                    mCanvas.drawBitmap(
+                            mSupportBitmap,
+                            getSupportMatrix(mSupportBitmap),
+                            mBitmapPaint
+                    );
                     break;
                 case VIGNETTE:
                     //mVignette.prepareToDraw(mCanvas, mImageMatrix);
@@ -640,20 +645,19 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
             return mBitmap;
         }
 
-
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             super.onPostExecute(bitmap);
-            Log.i("Editor", mCurrentTool.name());
-
             mImages.add(new
-                    EditorImage(mCurrentTool, bitmap)
+                    EditorImage(mExecutedTool, bitmap)
             );
 
+            Log.i("ImageProcessingTask", "Image Processing Finished with \"" + mExecutedTool.name() + "\"");
+
             mEditorListener.hasChanges(mImages.size());
+            mEditorListener.imageProcessingFinished();
 
             getViewState().imageChanged(getAlteredBitmap());
-            getViewState().hideProgress();
         }
 
         private void drawStickers(Canvas canvas) {
@@ -661,6 +665,8 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
                 sticker.prepareToDraw(mImageMatrix);
                 sticker.draw(canvas);
             }
+
+            Log.i("ImageProcessing", "Draws Stickers in background (count " + mStickers.size() + ")");
         }
 
         private void drawTexts(Canvas canvas) {
@@ -670,25 +676,23 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
             }
         }
 
-        private void calculateSupportMatrix(Bitmap bitmap) {
+        private Matrix getSupportMatrix(@NonNull Bitmap bitmap) {
             float height = bitmap.getHeight();
             float width = bitmap.getWidth();
 
             float sX = mImageWidth / width;
             float sY = mImageHeight / height;
 
-            BitmapUtil.logBitmapInfo("calcSupportMatrix()", bitmap);
-
-            Log.i("calcSupportMatrix", "sX = " + sX + "\nsY = " + sY);
+            LogHelper.logBitmap("Overlay or Frame", bitmap);
+            LogHelper.logMatrix("mSupportMatrix before (InBackground)", mSupportMatrix);
 
             mSupportMatrix.reset();
-
-            MatrixUtil.matrixInfo("mSupportMatrix - before", mSupportMatrix);
-
             mSupportMatrix.postScale(sX, sY);
             mSupportMatrix.postTranslate(0, 0);
 
-            MatrixUtil.matrixInfo("mSupportMatrix - after", mSupportMatrix);
+            LogHelper.logMatrix("mSupportMatrix after (InBackground)", mSupportMatrix);
+
+            return mSupportMatrix;
         }
     }
 }

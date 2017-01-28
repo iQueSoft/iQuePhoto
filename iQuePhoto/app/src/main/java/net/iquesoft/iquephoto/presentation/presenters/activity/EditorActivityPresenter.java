@@ -14,8 +14,8 @@ import com.arellomobile.mvp.MvpPresenter;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.presentation.views.activity.EditorActivityView;
-import net.iquesoft.iquephoto.task.ImageCacheSaveTask;
-import net.iquesoft.iquephoto.task.ImageSaveTask;
+import net.iquesoft.iquephoto.tasks.ImageCacheSaveTask;
+import net.iquesoft.iquephoto.tasks.ImageSaveTask;
 import net.iquesoft.iquephoto.utils.BitmapUtil;
 
 import java.io.IOException;

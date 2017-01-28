@@ -73,11 +73,8 @@ public class ImageEditorView extends View implements EditorView {
     private List<EditorText> mTexts;
     private List<EditorSticker> mStickers;
 
-    private LoadingDialog mLoadingDialog;
-
     public ImageEditorView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        mLoadingDialog = new LoadingDialog(context);
         mVignette = new EditorVignette(this);
 
         mRadialTiltShift = new EditorTiltShiftRadial(this);
@@ -100,14 +97,10 @@ public class ImageEditorView extends View implements EditorView {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        Bitmap bitmap;
+        final Bitmap bitmap;
 
-        if (!mIsOriginalImageDisplayed) {
-            if (mAlteredImageBitmap != null) {
-                bitmap = mAlteredImageBitmap;
-            } else {
-                bitmap = mImageBitmap;
-            }
+        if (mAlteredImageBitmap != null) {
+            bitmap = mAlteredImageBitmap;
         } else {
             bitmap = mImageBitmap;
         }
@@ -118,6 +111,11 @@ public class ImageEditorView extends View implements EditorView {
 
         switch (mCurrentTool) {
             case NONE:
+                if (mIsOriginalImageDisplayed) {
+                    canvas.drawBitmap(mImageBitmap, mImageMatrix, mBitmapPaint);
+                } else {
+                    canvas.drawBitmap(bitmap, mImageMatrix, mBitmapPaint);
+                }
                 break;
             case FILTERS:
                 canvas.drawBitmap(bitmap, mImageMatrix, mFilterPaint);
@@ -477,16 +475,6 @@ public class ImageEditorView extends View implements EditorView {
         }
 
         invalidate();
-    }
-
-    @Override
-    public void showProgress() {
-        mLoadingDialog.show();
-    }
-
-    @Override
-    public void hideProgress() {
-        mLoadingDialog.dismiss();
     }
 
     @Override

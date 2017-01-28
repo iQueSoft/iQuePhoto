@@ -1,4 +1,4 @@
-package net.iquesoft.iquephoto.task;
+package net.iquesoft.iquephoto.tasks;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ImageLoaderTask extends AsyncTask<Void, Void, List<ImageAlbum>> {
+public class ImageFetchTask extends AsyncTask<Void, Void, List<ImageAlbum>> {
     private Context mContext;
     private List<ImageAlbum> mFoldersList;
 
@@ -34,7 +34,7 @@ public class ImageLoaderTask extends AsyncTask<Void, Void, List<ImageAlbum>> {
         mListener = listener;
     }
 
-    public ImageLoaderTask(Context context) {
+    public ImageFetchTask(Context context) {
         mContext = context;
     }
 
@@ -61,7 +61,7 @@ public class ImageLoaderTask extends AsyncTask<Void, Void, List<ImageAlbum>> {
                     File file = new File(path);
                     if (file.exists()) {
                         Image image = new Image(id, path);
-
+                        
                         ImageAlbum imageAlbum = folderMap.get(folderName);
                         if (imageAlbum == null) {
                             imageAlbum = new ImageAlbum(folderName);

@@ -48,7 +48,7 @@ public class ToolsFragment extends MvpAppCompatFragment implements ToolsView {
 
         return view;
     }
-    
+
     @Override
     public void onResume() {
         super.onResume();

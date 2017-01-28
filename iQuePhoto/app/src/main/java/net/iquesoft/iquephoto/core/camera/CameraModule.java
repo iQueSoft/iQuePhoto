@@ -28,7 +28,7 @@ import android.util.SparseIntArray;
 import android.view.Surface;
 import android.widget.Toast;
 
-import net.iquesoft.iquephoto.task.CameraImageSaver;
+import net.iquesoft.iquephoto.tasks.CameraImageSaver;
 
 import java.io.File;
 import java.util.ArrayList;

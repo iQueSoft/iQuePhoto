@@ -187,7 +187,7 @@ public class EditorVignette {
             } else if (angle >= 72 && angle <= 108) {
                 mMode = RESIZE_HEIGHT;
             } else {
-                mMode = RESIZE_WIDHT;
+                mMode = RESIZE_WIDTH;
             }
 
             Log.i("Angle", String.valueOf(angle));
@@ -223,7 +223,7 @@ public class EditorVignette {
             case RESIZE_HEIGHT:
                 mTempVignetteRect.inset(0, distanceY);
                 break;
-            case RESIZE_WIDHT:
+            case RESIZE_WIDTH:
                 mTempVignetteRect.inset(-distanceX, 0);
                 break;
         }

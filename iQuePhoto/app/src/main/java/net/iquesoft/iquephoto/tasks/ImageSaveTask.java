@@ -1,4 +1,4 @@
-package net.iquesoft.iquephoto.task;
+package net.iquesoft.iquephoto.tasks;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -40,7 +40,7 @@ public class ImageSaveTask extends AsyncTask<Void, Void, Void> {
         super.onPreExecute();
         mLoadingDialog.show();
     }
-    
+
     @Override
     protected Void doInBackground(Void... voids) {
         File file = getOutputMediaFile();

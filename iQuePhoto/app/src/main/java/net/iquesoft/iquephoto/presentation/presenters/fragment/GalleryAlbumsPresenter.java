@@ -6,16 +6,16 @@ import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
 import net.iquesoft.iquephoto.presentation.views.fragment.GalleryAlbumsView;
-import net.iquesoft.iquephoto.task.ImageLoaderTask;
+import net.iquesoft.iquephoto.tasks.ImageFetchTask;
 
 @InjectViewState
 public class GalleryAlbumsPresenter extends MvpPresenter<GalleryAlbumsView> {
 
     public void fetchImages(Context context) {
-        ImageLoaderTask imageLoaderTask = new ImageLoaderTask(context);
-        imageLoaderTask.execute();
+        ImageFetchTask imageFetchTask = new ImageFetchTask(context);
+        imageFetchTask.execute();
         
-        imageLoaderTask.setOnImageLoadedListener(albums -> {
+        imageFetchTask.setOnImageLoadedListener(albums -> {
             if (albums != null) {
                 getViewState().setupAdapter(albums);
             } else {

@@ -26,14 +26,14 @@ public class ColorCircleDrawable extends Drawable {
 
     @Override
     public void draw(@NonNull final Canvas canvas) {
-        final int mRadius = 40;
+        //final int mRadius = 40;
         final Rect bounds = getBounds();
 
         if (mIsSelected) {
-            canvas.drawCircle(bounds.centerX(), bounds.centerY(), mRadius + 15, mPaint);
+            canvas.drawCircle(bounds.centerX(), bounds.centerY(), bounds.height() / 2, mPaint);
         }
 
-        canvas.drawCircle(bounds.centerX(), bounds.centerY(), mRadius, mColorPaint);
+        canvas.drawCircle(bounds.centerX(), bounds.centerY(), bounds.height() / 3, mColorPaint);
     }
 
     @Override

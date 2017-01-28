@@ -1,4 +1,4 @@
-package net.iquesoft.iquephoto.task;
+package net.iquesoft.iquephoto.tasks;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -66,8 +66,6 @@ public class ImageCacheSaveTask extends AsyncTask<Void, Void, Uri> {
             if (outputStream != null) {
                 mBitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
             }
-
-            return uri;
         }
 
         return uri;

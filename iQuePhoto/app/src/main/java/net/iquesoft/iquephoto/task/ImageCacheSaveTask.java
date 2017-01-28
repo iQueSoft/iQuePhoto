@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 import android.support.v4.content.FileProvider;
 
 import net.iquesoft.iquephoto.BuildConfig;
-import net.iquesoft.iquephoto.ui.dialogs.LoadingDialog;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -47,12 +46,6 @@ public class ImageCacheSaveTask extends AsyncTask<Void, Void, Uri> {
     protected Uri doInBackground(Void... voids) {
         Uri uri = null;
 
-        /*try {
-            uri = Uri.fromFile(File.createTempFile("temp", ".jpeg", mContext.getCacheDir()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
-
         try {
             uri = FileProvider.getUriForFile(mContext,
                     BuildConfig.APPLICATION_ID + ".provider",
@@ -69,13 +62,15 @@ public class ImageCacheSaveTask extends AsyncTask<Void, Void, Uri> {
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
+
             if (outputStream != null) {
                 mBitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
             }
+
             return uri;
         }
 
-        return null;
+        return uri;
     }
 
     @Override

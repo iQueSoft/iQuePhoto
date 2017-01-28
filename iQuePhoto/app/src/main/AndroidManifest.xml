@@ -59,8 +59,5 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ui.activities.ShareActivity"
-            android:screenOrientation="portrait" />
     </application>
 </manifest>

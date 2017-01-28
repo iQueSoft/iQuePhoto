@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -38,6 +39,9 @@ import net.iquesoft.iquephoto.utils.ToolbarUtil;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static net.iquesoft.iquephoto.presentation.presenters.activity.EditorActivityPresenter.FACEBOOK_PACKAGE_NAME;
+import static net.iquesoft.iquephoto.presentation.presenters.activity.EditorActivityPresenter.INSTAGRAM_PACKAGE_NAME;
 
 public class EditorActivity extends MvpAppCompatActivity implements EditorActivityView {
     @InjectPresenter
@@ -101,9 +105,9 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorActivi
                 .commit();
 
 
-        Log.i("Backstack", String.valueOf(mFragmentManager.getBackStackEntryCount()));
+        Log.i("BackStack", String.valueOf(mFragmentManager.getBackStackEntryCount()));
     }
-
+    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_editor, menu);
@@ -139,10 +143,10 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorActivi
                             mPresenter.save(bitmap);
                             return true;
                         case R.id.action_instagram:
-                            mPresenter.share(bitmap, "com.instagram.android");
+                            mPresenter.share(bitmap, INSTAGRAM_PACKAGE_NAME);
                             return true;
                         case R.id.action_facebook:
-                            mPresenter.share(bitmap, "com.facebook.katana");
+                            mPresenter.share(bitmap, FACEBOOK_PACKAGE_NAME);
                             return true;
                         case R.id.action_more:
                             mPresenter.share(bitmap, null);
@@ -222,6 +226,25 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorActivi
                 .show();
     }
 
+    @Override
+    public void showApplicationNotExistAlertDialog(@StringRes int messageBody, @NonNull String packageName) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AlertDialog);
+        builder.setTitle(getString(R.string.application_does_not_exist));
+        builder.setMessage(getString(messageBody));
+        builder.setPositiveButton(getString(R.string.install), (dialogInterface, i) -> {
+            try {
+                startActivity(new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("market://details?id=" + packageName)));
+            } catch (android.content.ActivityNotFoundException e) {
+                startActivity(new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("https://play.google.com/store/apps/details?id=" + packageName)));
+            }
+        });
+
+        builder.setNegativeButton(getString(R.string.dismiss), (dialogInterface, i1) -> dialogInterface.dismiss());
+        builder.show();
+    }
+
     public void setupFragment(Fragment fragment) {
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
         fragmentTransaction.replace(mFragmentContainer.getId(), fragment)
@@ -258,9 +281,8 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorActivi
     public void share(@NonNull Uri uri, @Nullable String packageName) {
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("image/*");
-        // intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        //intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         intent.putExtra(Intent.EXTRA_STREAM, uri);
         if (packageName != null) {
             intent.setPackage(packageName);

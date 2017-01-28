@@ -422,8 +422,7 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
             } else if (editorSticker.isInFrontHandleButton(event)) {
                 mCurrentMode = EditorMode.NONE;
 
-                EditorSticker sticker = mStickers.remove(i);
-                mStickers.add(sticker);
+                mStickers.add(mStickers.remove(i));
 
                 getViewState().updateView();
                 return;

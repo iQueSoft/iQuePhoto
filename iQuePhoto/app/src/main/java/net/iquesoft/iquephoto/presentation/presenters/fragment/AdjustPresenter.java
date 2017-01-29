@@ -20,4 +20,8 @@ public class AdjustPresenter extends MvpPresenter<AdjustView> {
         App.getAppComponent().inject(this);
         getViewState().setupAdapter(mAdjusts);
     }
+
+    public void changeAdjust(Adjust adjust) {
+        getViewState().adjustChanged(adjust.getFragment());
+    }
 }

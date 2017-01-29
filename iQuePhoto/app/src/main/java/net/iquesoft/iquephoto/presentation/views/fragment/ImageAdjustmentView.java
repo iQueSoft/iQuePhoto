@@ -6,7 +6,7 @@ import com.arellomobile.mvp.MvpView;
 
 import net.iquesoft.iquephoto.core.editor.enums.EditorTool;
 
-public interface AdjustmentView extends MvpView {
+public interface ImageAdjustmentView extends MvpView {
     void changeToolbarTitle(@StringRes int title);
 
     void changeToolbarSubtitle(@StringRes int subtitle);

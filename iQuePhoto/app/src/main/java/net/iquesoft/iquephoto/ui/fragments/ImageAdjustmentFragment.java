@@ -9,13 +9,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.arellomobile.mvp.presenter.ProvidePresenter;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.core.editor.ImageEditorView;
 import net.iquesoft.iquephoto.core.editor.enums.EditorTool;
 import net.iquesoft.iquephoto.presentation.common.ToolFragment;
-import net.iquesoft.iquephoto.presentation.presenters.fragment.SliderControlPresenter;
-import net.iquesoft.iquephoto.presentation.views.fragment.AdjustmentView;
+import net.iquesoft.iquephoto.presentation.presenters.fragment.ImageAdjustmentPresenter;
+import net.iquesoft.iquephoto.presentation.views.fragment.ImageAdjustmentView;
 import net.iquesoft.iquephoto.utils.ToolbarUtil;
 
 import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
@@ -24,12 +25,17 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class AdjustmentFragment extends ToolFragment implements AdjustmentView {
+public class ImageAdjustmentFragment extends ToolFragment implements ImageAdjustmentView {
     public static final String ARG_PARAM = "command";
 
     @InjectPresenter
-    SliderControlPresenter presenter;
+    ImageAdjustmentPresenter mPresenter;
 
+    @ProvidePresenter
+    ImageAdjustmentPresenter provideImageAdjustmentPresenter() {
+        return new ImageAdjustmentPresenter(getArguments());
+    }
+    
     @BindView(R.id.minValueTextView)
     TextView minValueTextView;
 
@@ -46,18 +52,17 @@ public class AdjustmentFragment extends ToolFragment implements AdjustmentView {
 
     private ImageEditorView mImageEditorView;
 
-    public static AdjustmentFragment newInstance(EditorTool editorTool) {
-        AdjustmentFragment fragment = new AdjustmentFragment();
-
+    public static ImageAdjustmentFragment newInstance(EditorTool editorTool) {
         Bundle args = new Bundle();
         args.putSerializable(ARG_PARAM, editorTool);
 
+        ImageAdjustmentFragment fragment = new ImageAdjustmentFragment();
         fragment.setArguments(args);
 
         return fragment;
     }
 
-    public AdjustmentFragment() {
+    public ImageAdjustmentFragment() {
     }
 
     @Override
@@ -77,7 +82,7 @@ public class AdjustmentFragment extends ToolFragment implements AdjustmentView {
             @Override
             public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
                 currentValueTextView.setText(String.valueOf(value));
-                presenter.progressChanged(value);
+                mPresenter.progressChanged(value);
             }
 
             @Override
@@ -95,17 +100,9 @@ public class AdjustmentFragment extends ToolFragment implements AdjustmentView {
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        if (getArguments() != null) {
-            presenter.setupTool(getArguments());
-        }
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
-        presenter.onResume();
+        mPresenter.onResume();
     }
 
     @Override

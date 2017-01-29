@@ -10,6 +10,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
 import android.support.annotation.ColorInt;
+import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -26,7 +27,6 @@ import net.iquesoft.iquephoto.core.editor.model.EditorText;
 import net.iquesoft.iquephoto.core.editor.model.EditorTiltShiftRadial;
 import net.iquesoft.iquephoto.core.editor.model.EditorVignette;
 import net.iquesoft.iquephoto.models.Text;
-import net.iquesoft.iquephoto.ui.dialogs.LoadingDialog;
 
 import java.util.List;
 
@@ -38,9 +38,9 @@ public class ImageEditorView extends View implements EditorView {
 
     @ProvidePresenter
     ImageEditorViewPresenter provideImageEditorViewPresenter() {
-        return new ImageEditorViewPresenter(getContext());
+        return new ImageEditorViewPresenter();
     }
-
+    
     private MvpDelegate mParentDelegate;
     private MvpDelegate<ImageEditorView> mMvpDelegate;
 
@@ -75,12 +75,11 @@ public class ImageEditorView extends View implements EditorView {
 
     public ImageEditorView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        mVignette = new EditorVignette(this);
 
         mRadialTiltShift = new EditorTiltShiftRadial(this);
     }
 
-    public void init(MvpDelegate patentDelegate) {
+    public void setMvpDelegate(MvpDelegate patentDelegate) {
         mParentDelegate = patentDelegate;
 
         getMvpDelegate().onCreate();
@@ -233,33 +232,23 @@ public class ImageEditorView extends View implements EditorView {
     }
 
     public void setVignetteIntensity(int value) {
-        mVignette.updateMask(value);
-
-        invalidate();
+        mPresenter.changeVignetteMask(value);
     }
 
     public void setOverlayIntensity(int value) {
         mPresenter.changeOverlayIntensity(value);
     }
 
-    public void setBrightnessValue(int value) {
-        if (value != 0) {
-            mAdjustPaint.setColorFilter(
-                    new ColorMatrixColorFilter(AdjustColorFilter.getBrightnessMatrix(value))
-            );
-
-            invalidate();
-        }
+    public void setBrightnessValue(@IntRange(from = -100, to = 100) int value) {
+        mPresenter.changeBrightness(value);
     }
 
-    public void setContrastValue(int value) {
-        if (value != 0) {
-            mAdjustPaint.setColorFilter(
-                    new ColorMatrixColorFilter(AdjustColorFilter.getContrastMatrix(value))
-            );
+    public void setContrastValue(@IntRange(from = -100, to = 100) int value) {
+        mPresenter.changeContrast(value);
+    }
 
-            invalidate();
-        }
+    public void setSaturationValue(@IntRange(from = -100, to = 100) int value) {
+        mPresenter.changeSaturation(value);
     }
 
     public void setWarmthValue(int value) {
@@ -332,50 +321,6 @@ public class ImageEditorView extends View implements EditorView {
         }
     }
 
-    private void actionDown(MotionEvent event) {
-        switch (mCurrentTool) {
-            case VIGNETTE:
-                mVignette.actionDown(event);
-                break;
-            case TILT_SHIFT_RADIAL:
-                mRadialTiltShift.actionDown(event);
-                break;
-        }
-    }
-
-    private void actionPointerDown(MotionEvent event) {
-        switch (mCurrentTool) {
-            case VIGNETTE:
-                mVignette.actionPointerDown(event);
-            case TILT_SHIFT_RADIAL:
-                mRadialTiltShift.actionPointerDown(event);
-                break;
-        }
-    }
-
-    private void actionMove(MotionEvent event) {
-        switch (mCurrentTool) {
-            case VIGNETTE:
-                mVignette.actionMove(event);
-                break;
-            case TILT_SHIFT_RADIAL:
-                mRadialTiltShift.actionMove(event);
-                break;
-
-        }
-    }
-
-    private void actionUp(MotionEvent event) {
-        switch (mCurrentTool) {
-            case VIGNETTE:
-                mVignette.actionUp();
-                break;
-            case TILT_SHIFT_RADIAL:
-                mRadialTiltShift.actionUp();
-                break;
-        }
-    }
-
     private void drawing(Canvas canvas) {
         if (mDrawings != null) {
             if (!mDrawings.isEmpty()) {
@@ -410,6 +355,15 @@ public class ImageEditorView extends View implements EditorView {
     @Override
     public void toolChanged(EditorTool tool) {
         mCurrentTool = tool;
+
+        invalidate();
+    }
+
+    @Override
+    public void imageAdjusted(Paint paint) {
+        if (mAdjustPaint == null) {
+            mAdjustPaint = paint;
+        }
 
         invalidate();
     }
@@ -453,6 +407,15 @@ public class ImageEditorView extends View implements EditorView {
     public void stickerAdded(List<EditorSticker> stickers) {
         if (mStickers == null) {
             mStickers = stickers;
+        }
+
+        invalidate();
+    }
+
+    @Override
+    public void updateVignette(EditorVignette vignette) {
+        if (mVignette == null) {
+            mVignette = vignette;
         }
 
         invalidate();

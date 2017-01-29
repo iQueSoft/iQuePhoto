@@ -1,6 +1,7 @@
 package net.iquesoft.iquephoto.ui.fragments;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -30,10 +31,10 @@ import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.NONE;
 
 public class AdjustFragment extends ToolFragment implements AdjustView {
     @InjectPresenter
-    AdjustPresenter presenter;
+    AdjustPresenter mPresenter;
 
     @BindView(R.id.adjustRecyclerView)
-    RecyclerView recyclerView;
+    RecyclerView mRecyclerView;
 
     private Unbinder mUnbinder;
 
@@ -60,16 +61,20 @@ public class AdjustFragment extends ToolFragment implements AdjustView {
         super.onDestroyView();
         mUnbinder.unbind();
     }
-
+    
     @Override
     public void setupAdapter(List<Adjust> adjusts) {
         AdjustAdapter adapter = new AdjustAdapter(adjusts);
-        adapter.setOnAdjustClickListener(adjust ->
-                ((EditorActivity) getActivity())
-                        .setupFragment(AdjustmentFragment.newInstance(adjust.getCommand()))
+        adapter.setOnAdjustClickListener(adjust -> mPresenter.changeAdjust(adjust));
+        mRecyclerView.setLayoutManager(
+                new LinearLayoutManager(null, LinearLayout.HORIZONTAL, false)
         );
+        mRecyclerView.setAdapter(adapter);
+    }
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(null, LinearLayout.HORIZONTAL, false));
-        recyclerView.setAdapter(adapter);
+    @Override
+    public void adjustChanged(Fragment fragment) {
+        ((EditorActivity) getActivity())
+                .setupFragment(fragment);
     }
 }

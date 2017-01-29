@@ -78,21 +78,21 @@ public class TransformFragment extends MvpAppCompatFragment implements Transform
     @OnClick(R.id.transformHorizontalButton)
     void onClickTransformHorizontal() {
         mEditorActivity.setupFragment(
-                AdjustmentFragment.newInstance(TRANSFORM_HORIZONTAL)
+                ImageAdjustmentFragment.newInstance(TRANSFORM_HORIZONTAL)
         );
     }
 
     @OnClick(R.id.transformStraightenButton)
     void onClickTransformStraighten() {
         mEditorActivity.setupFragment(
-                AdjustmentFragment.newInstance(TRANSFORM_STRAIGHTEN)
+                ImageAdjustmentFragment.newInstance(TRANSFORM_STRAIGHTEN)
         );
     }
 
     @OnClick(R.id.transformVerticalButton)
     void onClickTransformVertical() {
         mEditorActivity.setupFragment(
-                AdjustmentFragment.newInstance(TRANSFORM_VERTICAL)
+                ImageAdjustmentFragment.newInstance(TRANSFORM_VERTICAL)
         );
     }
 }

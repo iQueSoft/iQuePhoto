@@ -15,13 +15,13 @@ import net.iquesoft.iquephoto.models.Overlay;
 import net.iquesoft.iquephoto.models.Sticker;
 import net.iquesoft.iquephoto.models.StickersSet;
 import net.iquesoft.iquephoto.models.Tool;
+import net.iquesoft.iquephoto.ui.fragments.ImageAdjustmentFragment;
 import net.iquesoft.iquephoto.ui.fragments.TextFragment;
 import net.iquesoft.iquephoto.ui.fragments.AdjustFragment;
 import net.iquesoft.iquephoto.ui.fragments.DrawingFragment;
 import net.iquesoft.iquephoto.ui.fragments.FiltersFragment;
 import net.iquesoft.iquephoto.ui.fragments.FramesFragment;
 import net.iquesoft.iquephoto.ui.fragments.OverlaysFragment;
-import net.iquesoft.iquephoto.ui.fragments.AdjustmentFragment;
 import net.iquesoft.iquephoto.ui.fragments.StickersSetFragment;
 import net.iquesoft.iquephoto.ui.fragments.TiltShiftFragment;
 import net.iquesoft.iquephoto.ui.fragments.TransformFragment;
@@ -34,13 +34,8 @@ import dagger.Provides;
 
 import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.BRIGHTNESS;
 import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.CONTRAST;
-import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.EXPOSURE;
-import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.FADE;
 import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.SATURATION;
-import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.SHADOWS;
-import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.TINT;
 import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.VIGNETTE;
-import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.WARMTH;
 
 @Module
 public class EditorModule {
@@ -53,7 +48,7 @@ public class EditorModule {
                 new Tool(R.string.stickers, R.drawable.ic_stiker, new StickersSetFragment()),
                 new Tool(R.string.frames, R.drawable.ic_frame, new FramesFragment()),
                 new Tool(R.string.transform, R.drawable.ic_transform, new TransformFragment()),
-                new Tool(R.string.vignette, R.drawable.ic_vignette, AdjustmentFragment.newInstance(VIGNETTE)),
+                new Tool(R.string.vignette, R.drawable.ic_vignette, ImageAdjustmentFragment.newInstance(VIGNETTE)),
                 new Tool(R.string.tilt_shift, R.drawable.ic_tilt_shift, new TiltShiftFragment()),
                 new Tool(R.string.drawing, R.drawable.ic_brush, new DrawingFragment()),
                 new Tool(R.string.text, R.drawable.ic_letters, new TextFragment())
@@ -164,22 +159,17 @@ public class EditorModule {
     @Provides
     List<Adjust> provideAdjust() {
         return Arrays.asList(
-                new Adjust(R.string.brightness, R.drawable.ic_brightness, BRIGHTNESS,
-                        -100, 100, 0),
-                new Adjust(R.string.contrast, R.drawable.ic_contrast, CONTRAST,
-                        -100, 100, 0),
-                new Adjust(R.string.saturation, R.drawable.ic_saturation, SATURATION,
-                        -100, 100, 0),
-                new Adjust(R.string.warmth, R.drawable.ic_warmth, WARMTH,
-                        -100, 100, 0),
-                new Adjust(R.string.shadows, R.drawable.ic_shadows, SHADOWS,
-                        -100, 100, 0),
-                new Adjust(R.string.tint, R.drawable.ic_fade, TINT,
-                        -100, 100, 0),
-                new Adjust(R.string.exposure, R.drawable.ic_exposure, EXPOSURE,
-                        -100, 100, 0),
-                new Adjust(R.string.fade, R.drawable.ic_fade, FADE,
-                        -100, 100, 0)
+                new Adjust(R.string.brightness, R.drawable.ic_brightness,
+                        ImageAdjustmentFragment.newInstance(BRIGHTNESS)),
+                new Adjust(R.string.contrast, R.drawable.ic_contrast,
+                        ImageAdjustmentFragment.newInstance(CONTRAST)),
+                new Adjust(R.string.saturation, R.drawable.ic_saturation,
+                        ImageAdjustmentFragment.newInstance(SATURATION))
+                //  TODO: new Adjust(R.string.warmth, R.drawable.ic_warmth, ),
+                //  TODO: new Adjust(R.string.shadows, R.drawable.ic_shadows, ),
+                // TODO: new Adjust(R.string.tint, R.drawable.ic_fade, TINT, ),
+                // TODO: new Adjust(R.string.exposure, R.drawable.ic_exposure, EXPOSURE, ),
+                // TODO: new Adjust(R.string.fade, R.drawable.ic_fade, )
         );
     }
 

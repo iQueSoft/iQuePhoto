@@ -31,9 +31,9 @@ import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.core.editor.EditorListener;
 import net.iquesoft.iquephoto.core.editor.ImageEditorView;
 import net.iquesoft.iquephoto.presentation.presenters.activity.EditorActivityPresenter;
+import net.iquesoft.iquephoto.presentation.views.activity.EditorActivityView;
 import net.iquesoft.iquephoto.tasks.ImageSaveTask;
 import net.iquesoft.iquephoto.ui.dialogs.LoadingDialog;
-import net.iquesoft.iquephoto.presentation.views.activity.EditorActivityView;
 import net.iquesoft.iquephoto.ui.fragments.ToolsFragment;
 import net.iquesoft.iquephoto.utils.ToolbarUtil;
 
@@ -87,7 +87,7 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorActivi
 
         mLoadingDialog = new LoadingDialog(this);
 
-        mImageEditorView.init(getMvpDelegate());
+        mImageEditorView.setMvpDelegate(getMvpDelegate());
 
         mImageEditorView.setUndoListener(new EditorListener() {
             @Override
@@ -204,17 +204,12 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorActivi
             mToolbar.setNavigationIcon(R.drawable.ic_close);
             ToolbarUtil.showTitle(false, this);
             navigateBack(true);
-
-            // TODO: Replays it to ToolsFragment.
-            if (mImageEditorView.hasChanges()) {
-                mUndoButton.setVisibility(View.VISIBLE);
-            }
         } else if (mFragmentManager.getBackStackEntryCount() > 1) {
             ToolbarUtil.updateSubtitle(null, this);
             navigateBack(true);
         }
     }
-
+    
     @Override
     public void startEditing(Bitmap bitmap) {
         mImageEditorView.setImageBitmap(bitmap);

@@ -48,7 +48,7 @@ public class AdjustAdapter extends RecyclerView.Adapter<AdjustAdapter.ViewHolder
     public void onBindViewHolder(AdjustAdapter.ViewHolder holder, int position) {
         final Adjust adjust = mAdjustList.get(position);
 
-        holder.adjustButton.setText(adjust.getValue() + "\n" + mContext.getText(adjust.getTitle()));
+        holder.adjustButton.setText(mContext.getText(adjust.getTitle()));
         holder.adjustButton.setCompoundDrawablesWithIntrinsicBounds(null,
                 ResourcesCompat.getDrawable(mContext.getResources(), adjust.getIcon(), null),
                 null, null);

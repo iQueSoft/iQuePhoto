@@ -12,6 +12,7 @@ import net.iquesoft.iquephoto.core.editor.enums.EditorTool;
 import net.iquesoft.iquephoto.core.editor.model.Drawing;
 import net.iquesoft.iquephoto.core.editor.model.EditorSticker;
 import net.iquesoft.iquephoto.core.editor.model.EditorText;
+import net.iquesoft.iquephoto.core.editor.model.EditorVignette;
 
 import java.util.List;
 
@@ -22,6 +23,8 @@ interface EditorView extends MvpView {
 
     void toolChanged(EditorTool tool);
 
+    void imageAdjusted(Paint paint);
+
     void overlayChanged(Bitmap bitmap, Matrix matrix, Paint paint);
 
     void filterChanged(Paint paint);
@@ -31,6 +34,8 @@ interface EditorView extends MvpView {
     void textAdded(List<EditorText> texts);
 
     void stickerAdded(List<EditorSticker> stickers);
+
+    void updateVignette(EditorVignette vignette);
 
     void updateDrawing(Paint paint, Path path);
 

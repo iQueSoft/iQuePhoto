@@ -1,6 +1,5 @@
 package net.iquesoft.iquephoto.core.editor.model;
 
-import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
@@ -11,11 +10,9 @@ import android.graphics.RadialGradient;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.support.annotation.NonNull;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 
-import net.iquesoft.iquephoto.core.editor.ImageEditorView;
 import net.iquesoft.iquephoto.core.editor.enums.EditorMode;
 import net.iquesoft.iquephoto.utils.LogHelper;
 import net.iquesoft.iquephoto.utils.MatrixUtil;
@@ -32,6 +29,9 @@ public class EditorVignette {
     private float mPreX;
     private float mPreY;
 
+    private int mViewWidth;
+    private int mViewHeight;
+
     private float mPreDistance;
 
     private float mGradientInset = 100;
@@ -39,18 +39,15 @@ public class EditorVignette {
 
     private boolean mIsShowHelpOval = true;
 
-    private final RectF mBitmapRect = new RectF();
-
+    private Paint mPaint = new Paint();
     private Paint mShaderPaint;
     private Paint mVignettePaint;
     private Paint mVignetteControlPaint;
 
-    private final Paint mPaint = new Paint();
-
+    private RectF mBitmapRect = new RectF();
     private RectF mVignetteRect;
-
-    private final RectF mTempVignetteRect = new RectF();
-    private final RectF mVignetteControlRect = new RectF();
+    private RectF mTempVignetteRect = new RectF();
+    private RectF mVignetteControlRect = new RectF();
 
     private RadialGradient mRadialGradient;
 
@@ -58,21 +55,17 @@ public class EditorVignette {
 
     private EditorMode mMode = NONE;
 
-    private ImageEditorView mImageEditorView;
+    public EditorVignette(int viewWidth, int viewHeight) {
+        mViewWidth = viewWidth;
+        mViewHeight = viewHeight;
 
-    public EditorVignette(ImageEditorView imageEditorView) {
-        mImageEditorView = imageEditorView;
-
-        initializeVignette(imageEditorView.getContext());
+        initializeVignette();
     }
 
-    private void initializeVignette(Context context) {
-        final DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-
+    private void initializeVignette() {
         mVignetteControlPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mVignetteControlPaint.setColor(Color.WHITE);
         mVignetteControlPaint.setStrokeWidth(5f);
-        //mVignetteControlPaint.setStrokeWidth(dp2px(metrics.density, 3.5f));
         mVignetteControlPaint.setStyle(Paint.Style.STROKE);
         mVignetteControlPaint.setAlpha(125);
         mVignetteControlPaint.setDither(true);
@@ -93,13 +86,11 @@ public class EditorVignette {
         mShaderPaint.setDither(true);
         mShaderPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OUT));
 
-        updateGradientShader(0.7f, mShaderPaint);
+        updateGradientShader(mFeather, mShaderPaint);
 
         mControlPointTolerance = mControlPointTolerance * 1.5f;
 
         mGradientInset = 0;
-
-        //mGradientInset = dp2px(metrics.density, 0);
     }
 
     public void updateMask(int value) {
@@ -119,8 +110,8 @@ public class EditorVignette {
     }
 
     private void updateGradientShader(float value, final Paint paint) {
-
         mFeather = value;
+
         final int[] colors = new int[]{0xff000000, 0xff000000, 0};
         final float[] anchors = new float[]{0, mFeather, 1};
 
@@ -138,6 +129,9 @@ public class EditorVignette {
         mRadialGradient.setLocalMatrix(mGradientMatrix);
     }
 
+    /**
+     * Reset the Vignette Rect when Tool changed.
+     */
     public void updateRect(RectF bitmapRect) {
         mVignetteRect.set(bitmapRect);
         mVignetteRect.inset(mControlPointTolerance, mControlPointTolerance);
@@ -160,6 +154,7 @@ public class EditorVignette {
             canvas.restore();
 
             if (mIsShowHelpOval) {
+                mVignetteControlRect.inset(mGradientInset * 2, mGradientInset * 2);
                 canvas.drawOval(mVignetteControlRect, mVignetteControlPaint);
             }
         }
@@ -207,8 +202,8 @@ public class EditorVignette {
             case ROTATE_AND_SCALE:
                 float dist = MotionEventUtil.getDelta(event);
                 float displayDistance = MotionEventUtil.getDisplayDistance(
-                        mImageEditorView.getWidth(),
-                        mImageEditorView.getHeight()
+                        mViewWidth,
+                        mViewHeight
                 );
 
                 float scale = ((dist - mPreDistance) / displayDistance);
@@ -238,14 +233,13 @@ public class EditorVignette {
             }
 
             updateGradientMatrix(mVignetteRect);
-
-            mImageEditorView.invalidate();
         }
     }
 
     public void actionUp() {
         mMode = NONE;
     }
+
 
     public void actionPointerUp() {
         mMode = MOVE;
@@ -281,9 +275,5 @@ public class EditorVignette {
                 mTempVignetteRect.centerX(),
                 mTempVignetteRect.centerY()
         );
-    }
-
-    private float dp2px(final float density, float dp) {
-        return density * dp;
     }
 }

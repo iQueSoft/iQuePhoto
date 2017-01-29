@@ -3,7 +3,6 @@ package net.iquesoft.iquephoto.presentation.views.fragment;
 import android.support.annotation.StringRes;
 
 import com.arellomobile.mvp.MvpView;
-import com.arellomobile.mvp.viewstate.strategy.SingleStateStrategy;
 import com.arellomobile.mvp.viewstate.strategy.SkipStrategy;
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 

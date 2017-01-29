@@ -1,6 +1,5 @@
 package net.iquesoft.iquephoto.core.editor;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -24,8 +23,8 @@ import net.iquesoft.iquephoto.core.editor.model.Drawing;
 import net.iquesoft.iquephoto.core.editor.model.EditorImage;
 import net.iquesoft.iquephoto.core.editor.model.EditorSticker;
 import net.iquesoft.iquephoto.core.editor.model.EditorText;
+import net.iquesoft.iquephoto.core.editor.model.EditorVignette;
 import net.iquesoft.iquephoto.models.Text;
-import net.iquesoft.iquephoto.utils.BitmapUtil;
 import net.iquesoft.iquephoto.utils.LogHelper;
 import net.iquesoft.iquephoto.utils.MatrixUtil;
 
@@ -44,15 +43,19 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
 
     private boolean mIsImageSet;
 
-    private EditorText mCurrentCheckedText;
-    private EditorSticker mCurrentCheckedSticker;
+    private EditorText mTouchedText;
+    private EditorSticker mTouchedSticker;
+
     private EditorTool mCurrentTool = NONE;
     private EditorMode mCurrentMode = EditorMode.NONE;
+
+    private EditorVignette mVignette;
+    private EditorListener mEditorListener;
 
     private Bitmap mImageBitmap;
     private Bitmap mSupportBitmap;
 
-    private Paint mDrawingPaint;
+    private Paint mDrawingPaint = new Paint();
     private Paint mBitmapPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Paint mFilterPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Paint mAdjustPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -60,54 +63,173 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
 
     private Path mDrawingPath = new Path();
 
-    private RectF mSrcRect = new RectF();
-    private RectF mDstRect = new RectF();
+    private RectF mImageRect = new RectF();
+    private RectF mViewRect = new RectF();
 
     private Matrix mImageMatrix = new Matrix();
     private Matrix mSupportMatrix = new Matrix();
     private Matrix mTransformMatrix = new Matrix();
+
+    private ColorMatrix mColorMatrix = new ColorMatrix();
 
     private List<EditorText> mTexts = new ArrayList<>();
     private List<EditorSticker> mStickers = new ArrayList<>();
     private List<Drawing> mDrawings = new ArrayList<>();
     private List<EditorImage> mImages = new ArrayList<>();
 
-    private EditorListener mEditorListener;
-
     private PublishSubject<MotionEvent> mTouchSubject = PublishSubject.create();
 
-    ImageEditorViewPresenter(@NonNull Context context) {
-        Observable<MotionEvent> touchObservable = mTouchSubject.asObservable();
+    ImageEditorViewPresenter() {
         mOverlayPaint.setAlpha(150);
         initDrawingPaint();
-        initMotionEventObservables(touchObservable);
+
+        initMotionEventObservables();
     }
 
-    void setupImage(float width, float height) {
-        if (!mIsImageSet) {
-            mDstRect.set(0, 0, width, height);
+    private void initDrawingPaint() {
+        mDrawingPaint.setStyle(Paint.Style.STROKE);
+        mDrawingPaint.setColor(Color.BLUE);
+        mDrawingPaint.setStrokeCap(Paint.Cap.ROUND);
+        mDrawingPaint.setStrokeJoin(Paint.Join.ROUND);
+        mDrawingPaint.setStrokeWidth(Drawing.DEFAULT_STROKE_WIDTH);
+    }
 
-            LogHelper.logRect("mDstRect", mDstRect);
+    private void initMotionEventObservables() {
+        Observable<MotionEvent> touchObservable = mTouchSubject.asObservable();
+
+        initActionDownObservable(touchObservable);
+        initActionPointerDownObservable(touchObservable);
+        initActionMoveObservable(touchObservable);
+        initActionUpObservable(touchObservable);
+    }
+
+    private void initActionDownObservable(Observable<MotionEvent> touchObservable) {
+        Observable<MotionEvent> actionDownObservable =
+                touchObservable.filter(event -> event.getActionMasked() == MotionEvent.ACTION_DOWN);
+        actionDownObservable.subscribe(event -> {
+            switch (mCurrentTool) {
+                case NONE:
+                    getViewState().showOriginalImage(true);
+                    break;
+                case DRAWING:
+                    brushActionDown(event);
+                    break;
+                case TEXT:
+                    textActionDown(event);
+                    break;
+                case STICKERS:
+                    stickerActionDown(event);
+                    break;
+                case VIGNETTE:
+                    mVignette.actionDown(event);
+                    getViewState().updateVignette(mVignette);
+                    break;
+            }
+        });
+    }
+
+    private void initActionPointerDownObservable(Observable<MotionEvent> touchObservable) {
+        Observable<MotionEvent> actionPointerDownObservable =
+                touchObservable.filter(event ->
+                        event.getActionMasked() == MotionEvent.ACTION_POINTER_DOWN
+                );
+        actionPointerDownObservable.subscribe(event -> {
+            switch (mCurrentTool) {
+                case NONE:
+                    break;
+                case VIGNETTE:
+                    mVignette.actionPointerDown(event);
+                    getViewState().updateVignette(mVignette);
+                    break;
+            }
+        });
+    }
+
+    private void initActionMoveObservable(Observable<MotionEvent> touchObservable) {
+        Observable<MotionEvent> actionMoveObservable =
+                touchObservable.filter(event -> event.getActionMasked() == MotionEvent.ACTION_MOVE);
+        actionMoveObservable.subscribe(event -> {
+            switch (mCurrentTool) {
+                case NONE:
+                    break;
+                case DRAWING:
+                    brushActionMove(event);
+                    break;
+                case TEXT:
+                    textActionMove(event);
+                    break;
+                case STICKERS:
+                    stickerActionMove(event);
+                    break;
+                case VIGNETTE:
+                    mVignette.actionMove(event);
+                    getViewState().updateVignette(mVignette);
+                    break;
+            }
+        });
+    }
+
+    private void initActionUpObservable(Observable<MotionEvent> touchObservable) {
+        Observable<MotionEvent> actionUpObservable =
+                touchObservable.filter(event -> event.getActionMasked() == MotionEvent.ACTION_UP);
+        actionUpObservable.subscribe(event -> {
+            mCurrentMode = EditorMode.NONE;
+            switch (mCurrentTool) {
+                case NONE:
+                    getViewState().showOriginalImage(false);
+                    break;
+                case DRAWING:
+                    brushActionUp();
+                    break;
+                case TEXT:
+                    if (mTouchedText != null) {
+                        mTouchedText.resetHelperFrameOpacity();
+                    }
+                    break;
+                case STICKERS:
+                    if (mTouchedSticker != null) {
+                        mTouchedSticker.setStickerTouched(false);
+
+                        getViewState().updateView();
+                    }
+                    break;
+                case VIGNETTE:
+                    mVignette.actionUp();
+                    getViewState().updateVignette(mVignette);
+                    break;
+            }
+        });
+    }
+
+    void setupImage(int width, int height) {
+        if (!mIsImageSet) {
+            mViewRect.set(0, 0, width, height);
+
+            LogHelper.logRect("mViewRect", mViewRect);
 
             mImageMatrix.reset();
-            mImageMatrix.setRectToRect(mSrcRect, mDstRect, Matrix.ScaleToFit.CENTER);
-            mImageMatrix.mapRect(mSrcRect);
+            mImageMatrix.setRectToRect(mImageRect, mViewRect, Matrix.ScaleToFit.CENTER);
+            mImageMatrix.mapRect(mImageRect);
 
             mTransformMatrix.set(mImageMatrix);
 
-            LogHelper.logRect("mSrcRect", mSrcRect);
+            LogHelper.logRect("mImageRect", mImageRect);
             LogHelper.logMatrix("mImageMatrix", mImageMatrix);
 
             mIsImageSet = true;
 
-            getViewState().setupImage(mImageBitmap, mImageMatrix, mSrcRect);
+            if (mVignette == null) {
+                mVignette = new EditorVignette(width, height);
+            }
+
+            getViewState().setupImage(mImageBitmap, mImageMatrix, mImageRect);
         }
     }
 
     void setImageBitmap(Bitmap bitmap) {
         mImageBitmap = bitmap;
 
-        mSrcRect.set(0, 0, bitmap.getWidth(), bitmap.getHeight());
+        mImageRect.set(0, 0, bitmap.getWidth(), bitmap.getHeight());
     }
 
     void viewTouched(MotionEvent event) {
@@ -134,6 +256,61 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
         mOverlayPaint.setAlpha(value);
     }
 
+    void changeVignetteMask(int value) {
+        mVignette.updateMask(value);
+
+        getViewState().updateVignette(mVignette);
+    }
+
+    void changeBrightness(int value) {
+        float brightness = value / 2;
+
+        mAdjustPaint.setColorFilter(
+                new ColorMatrixColorFilter(
+                        new float[]{
+                                1, 0, 0, 0, brightness,
+                                0, 1, 0, 0, brightness,
+                                0, 0, 1, 0, brightness,
+                                0, 0, 0, 1, 0
+                        }
+                )
+        );
+
+        getViewState().imageAdjusted(mAdjustPaint);
+    }
+
+    void changeContrast(int value) {
+        float input = value / 100;
+        float scale = input + 1f;
+        float contrast = (-0.5f * scale + 0.5f) * 255f;
+
+        mAdjustPaint.setColorFilter(
+                new ColorMatrixColorFilter(
+                        new ColorMatrix(
+                                new float[]{
+                                        scale, 0, 0, 0, contrast,
+                                        0, scale, 0, 0, contrast,
+                                        0, 0, scale, 0, contrast,
+                                        0, 0, 0, 1, 0}
+                        )
+                ));
+
+        getViewState().imageAdjusted(mAdjustPaint);
+    }
+
+    void changeSaturation(int value) {
+        float saturation = (value + 100) / 100f;
+
+        mColorMatrix.reset();
+        mColorMatrix.setSaturation(saturation);
+
+        mAdjustPaint.setColorFilter(
+                new ColorMatrixColorFilter(mColorMatrix)
+        );
+
+        getViewState().imageAdjusted(mAdjustPaint);
+    }
+
     void changeBrushSize(float size) {
         mDrawingPaint.setStrokeWidth(size);
     }
@@ -154,8 +331,8 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
 
     void addText(Text text) {
         EditorText editorText = new EditorText(text);
-        editorText.setX(mSrcRect.centerX());
-        editorText.setY(mSrcRect.centerY());
+        editorText.setX(mImageRect.centerX());
+        editorText.setY(mImageRect.centerY());
 
         mTexts.add(editorText);
 
@@ -163,117 +340,9 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
     }
 
     void addSticker(Bitmap bitmap) {
-        mStickers.add(new EditorSticker(bitmap, mSrcRect));
+        mStickers.add(new EditorSticker(bitmap, mImageRect));
 
         getViewState().stickerAdded(mStickers);
-    }
-    
-    private void initDrawingPaint() {
-        mDrawingPaint = new Paint();
-        mDrawingPaint.setStyle(Paint.Style.STROKE);
-        mDrawingPaint.setColor(Color.BLUE);
-        mDrawingPaint.setStrokeCap(Paint.Cap.ROUND);
-        mDrawingPaint.setStrokeJoin(Paint.Join.ROUND);
-        mDrawingPaint.setStrokeWidth(Drawing.DEFAULT_STROKE_WIDTH);
-    }
-
-    private void initMotionEventObservables(Observable<MotionEvent> touchObservable) {
-        initActionDownObservable(touchObservable);
-        initActionPointerDownObservable(touchObservable);
-        initActionMoveObservable(touchObservable);
-        initActionUpObservable(touchObservable);
-    }
-
-    private void initActionDownObservable(Observable<MotionEvent> touchObservable) {
-        Observable<MotionEvent> actionDownObservable =
-                touchObservable.filter(event -> event.getActionMasked() == MotionEvent.ACTION_DOWN);
-        actionDownObservable.subscribe(event -> {
-            switch (mCurrentTool) {
-                case NONE:
-                    getViewState().showOriginalImage(true);
-                    break;
-                case DRAWING:
-                    brushActionDown(event);
-                    break;
-                case TEXT:
-                    textActionDown(event);
-                    break;
-                case STICKERS:
-                    stickerActionDown(event);
-                    break;
-            }
-        });
-    }
-
-    private void initActionPointerDownObservable(Observable<MotionEvent> touchObservable) {
-        Observable<MotionEvent> actionPointerDownObservable =
-                touchObservable.filter(event ->
-                        event.getActionMasked() == MotionEvent.ACTION_POINTER_DOWN
-                );
-        actionPointerDownObservable.subscribe(event -> {
-            /*switch (mCurrentTool) {
-                case NONE:
-                    getViewState().showOriginalImage(true);
-                    break;
-                case DRAWING:
-                    brushActionDown(event);
-                    break;
-                case TEXT:
-                    textActionDown(event);
-                    break;
-                case STICKERS:
-                    stickerActionDown(event);
-                    break;
-            }*/
-        });
-    }
-
-    private void initActionMoveObservable(Observable<MotionEvent> touchObservable) {
-        Observable<MotionEvent> actionMoveObservable =
-                touchObservable.filter(event -> event.getActionMasked() == MotionEvent.ACTION_MOVE);
-        actionMoveObservable.subscribe(event -> {
-            switch (mCurrentTool) {
-                case NONE:
-                    break;
-                case DRAWING:
-                    brushActionMove(event);
-                    break;
-                case TEXT:
-                    textActionMove(event);
-                    break;
-                case STICKERS:
-                    stickerActionMove(event);
-                    break;
-            }
-        });
-    }
-
-    private void initActionUpObservable(Observable<MotionEvent> touchObservable) {
-        Observable<MotionEvent> actionUpObservable =
-                touchObservable.filter(event -> event.getActionMasked() == MotionEvent.ACTION_UP);
-        actionUpObservable.subscribe(event -> {
-            mCurrentMode = EditorMode.NONE;
-            switch (mCurrentTool) {
-                case NONE:
-                    getViewState().showOriginalImage(false);
-                    break;
-                case DRAWING:
-                    brushActionUp();
-                    break;
-                case TEXT:
-                    if (mCurrentCheckedText != null) {
-                        mCurrentCheckedText.resetHelperFrameOpacity();
-                    }
-                    break;
-                case STICKERS:
-                    if (mCurrentCheckedSticker != null) {
-                        mCurrentCheckedSticker.setStickerTouched(false);
-
-                        getViewState().updateView();
-                    }
-                    break;
-            }
-        });
     }
 
     public void changeTool(EditorTool tool) {
@@ -285,19 +354,15 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
         if (!mStickers.isEmpty()) {
             mStickers.clear();
         }
-        //if (!mDrawingPath.isEmpty())
+
         if (!mDrawings.isEmpty()) {
             mDrawings.clear();
         }
 
-        /*switch (mCurrentTool) {
+        switch (mCurrentTool) {
             case VIGNETTE:
                 mVignette.updateRect(mImageRect);
-                break;
-            case TILT_SHIFT_RADIAL:
-                mRadialTiltShift.updateRect(mImageRect);
-                return;
-        }*/
+        }
 
         getViewState().toolChanged(tool);
     }
@@ -312,18 +377,20 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
             mEditorListener.hasChanges(mImages.size());
 
             getViewState().imageChanged(getAlteredBitmap());
+        } else {
+            getViewState().imageChanged(null);
         }
     }
 
     private Matrix getSupportMatrix(Bitmap bitmap) {
-        float sX = mSrcRect.width() / bitmap.getWidth();
-        float sY = mSrcRect.height() / bitmap.getHeight();
+        float sX = mImageRect.width() / bitmap.getWidth();
+        float sY = mImageRect.height() / bitmap.getHeight();
 
         LogHelper.logMatrix("mSupportMatrix before (View)", mSupportMatrix);
 
         mSupportMatrix.reset();
         mSupportMatrix.postScale(sX, sY);
-        mSupportMatrix.postTranslate(mSrcRect.left, mSrcRect.top);
+        mSupportMatrix.postTranslate(mImageRect.left, mImageRect.top);
 
         LogHelper.logMatrix("mSupportMatrix after (View)", mSupportMatrix);
 
@@ -335,26 +402,26 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
             EditorText editorText = mTexts.get(i);
 
             if (editorText.isInside(event)) {
-                mCurrentCheckedText = editorText;
+                mTouchedText = editorText;
                 mCurrentMode = EditorMode.MOVE;
 
-                mCurrentCheckedText.setHelperFrameOpacity();
+                mTouchedText.setHelperFrameOpacity();
 
                 mLastX = event.getX();
                 mLastY = event.getY();
 
                 return;
             } else if (editorText.isInDeleteHandleButton(event)) {
-                mCurrentCheckedText = null;
+                mTouchedText = null;
                 mCurrentMode = EditorMode.NONE;
 
                 mTexts.remove(i);
                 //invalidate();
                 return;
             } else if (editorText.isInResizeAndScaleHandleButton(event)) {
-                mCurrentCheckedText = editorText;
+                mTouchedText = editorText;
 
-                mCurrentCheckedText.setHelperFrameOpacity();
+                mTouchedText.setHelperFrameOpacity();
 
                 mLastX = editorText.getRotateAndScaleHandleDstRect().centerX();
                 mLastY = editorText.getRotateAndScaleHandleDstRect().centerY();
@@ -362,7 +429,7 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
                 mCurrentMode = EditorMode.ROTATE_AND_SCALE;
                 return;
             } else if (editorText.isInTransparencyHandleButton(event)) {
-                mCurrentCheckedText = editorText;
+                mTouchedText = editorText;
 
                 mLastX = editorText.getResizeHandleDstRect().centerX();
                 mLastY = editorText.getResizeHandleDstRect().centerY();
@@ -377,7 +444,7 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
                 return;
             }
         }
-        mCurrentCheckedText = null;
+        mTouchedText = null;
         mCurrentMode = EditorMode.NONE;
     }
 
@@ -386,17 +453,17 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
             EditorSticker editorSticker = mStickers.get(i);
 
             if (editorSticker.isInside(event)) {
-                mCurrentCheckedSticker = editorSticker;
+                mTouchedSticker = editorSticker;
                 mCurrentMode = EditorMode.MOVE;
 
-                mCurrentCheckedSticker.setStickerTouched(true);
+                mTouchedSticker.setStickerTouched(true);
 
                 mLastX = event.getX();
                 mLastY = event.getY();
 
                 return;
             } else if (editorSticker.isInDeleteHandleButton(event)) {
-                mCurrentCheckedSticker = null;
+                mTouchedSticker = null;
 
                 mCurrentMode = EditorMode.NONE;
 
@@ -405,10 +472,10 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
                 getViewState().updateView();
                 return;
             } else if (editorSticker.isInScaleAndRotateHandleButton(event)) {
-                mCurrentCheckedSticker = editorSticker;
+                mTouchedSticker = editorSticker;
                 mCurrentMode = EditorMode.ROTATE_AND_SCALE;
 
-                mCurrentCheckedSticker.setStickerTouched(true);
+                mTouchedSticker.setStickerTouched(true);
 
                 mLastX = event.getX();
                 mLastY = event.getY();
@@ -425,7 +492,7 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
             }
         }
 
-        mCurrentCheckedSticker = null;
+        mTouchedSticker = null;
 
         mCurrentMode = EditorMode.NONE;
     }
@@ -468,24 +535,24 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
     }
 
     private void textActionMove(MotionEvent event) {
-        if (mCurrentCheckedText != null) {
+        if (mTouchedText != null) {
             switch (mCurrentMode) {
                 case MOVE:
                     float distanceX = event.getX() - mLastX;
                     float distanceY = event.getY() - mLastY;
 
-                    float newX = mCurrentCheckedText.getX() + distanceX;
-                    float newY = mCurrentCheckedText.getY() + distanceY;
+                    float newX = mTouchedText.getX() + distanceX;
+                    float newY = mTouchedText.getY() + distanceY;
 
-                    mCurrentCheckedText.setX(newX);
-                    mCurrentCheckedText.setY(newY);
+                    mTouchedText.setX(newX);
+                    mTouchedText.setY(newY);
 
                     mLastX = event.getX();
                     mLastY = event.getY();
 
                     break;
                 case ROTATE_AND_SCALE:
-                    mCurrentCheckedText.updateRotateAndScale(
+                    mTouchedText.updateRotateAndScale(
                             getDeltaX(event),
                             getDeltaY(event)
                     );
@@ -501,10 +568,10 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
     }
 
     private void stickerActionMove(MotionEvent event) {
-        if (mCurrentCheckedSticker != null) {
+        if (mTouchedSticker != null) {
             switch (mCurrentMode) {
                 case MOVE:
-                    mCurrentCheckedSticker.actionMove(
+                    mTouchedSticker.actionMove(
                             getDeltaX(event),
                             getDeltaY(event)
                     );
@@ -514,7 +581,7 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
 
                     break;
                 case ROTATE_AND_SCALE:
-                    mCurrentCheckedSticker.updateRotateAndScale(
+                    mTouchedSticker.updateRotateAndScale(
                             getDeltaX(event),
                             getDeltaY(event)
                     );

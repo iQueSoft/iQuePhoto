@@ -1,6 +1,7 @@
 package net.iquesoft.iquephoto.presentation.presenters.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.arellomobile.mvp.InjectViewState;
@@ -8,18 +9,18 @@ import com.arellomobile.mvp.MvpPresenter;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.core.editor.enums.EditorTool;
-import net.iquesoft.iquephoto.presentation.views.fragment.AdjustmentView;
-import net.iquesoft.iquephoto.ui.fragments.AdjustmentFragment;
+import net.iquesoft.iquephoto.presentation.views.fragment.ImageAdjustmentView;
+import net.iquesoft.iquephoto.ui.fragments.ImageAdjustmentFragment;
 
 import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.NONE;
 
 @InjectViewState
-public class SliderControlPresenter extends MvpPresenter<AdjustmentView> {
+public class ImageAdjustmentPresenter extends MvpPresenter<ImageAdjustmentView> {
     private EditorTool mCurrentCommand = NONE;
 
-    public void setupTool(Bundle bundle) {
+    public ImageAdjustmentPresenter(@NonNull Bundle bundle) {
         mCurrentCommand =
-                (EditorTool) bundle.getSerializable(AdjustmentFragment.ARG_PARAM);
+                (EditorTool) bundle.getSerializable(ImageAdjustmentFragment.ARG_PARAM);
 
         Log.i("Slider", "Current tool = " + mCurrentCommand.name());
 

@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -52,8 +53,17 @@ public class ToolsFragment extends MvpAppCompatFragment implements ToolsView {
     @Override
     public void onResume() {
         super.onResume();
-        ((ImageEditorView) getActivity().findViewById(R.id.imageEditorView))
-                .changeTool(NONE);
+        ImageEditorView imageEditorView =
+                (ImageEditorView) getActivity().findViewById(R.id.imageEditorView);
+        imageEditorView.changeTool(NONE);
+
+        Button undoButton = (Button) getActivity().findViewById(R.id.undoButton);
+        
+        if (imageEditorView.hasChanges()) {
+            undoButton.setVisibility(View.VISIBLE);
+        } else {
+            undoButton.setVisibility(View.GONE);
+        }
     }
 
     @Override

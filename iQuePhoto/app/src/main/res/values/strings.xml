@@ -23,28 +23,6 @@
     <string name="dismiss">Dismiss</string>
     <string name="share_more">Share image with:</string>
 
-    <string name="none">None</string>
-    <string name="autofix">Autofix</string>
-    <string name="bw">Min/Max Color Intensity</string>
-    <string name="brightness">Brightness</string>
-    <string name="contrast">Contrast</string>
-    <string name="crossprocess">Cross Process</string>
-    <string name="documentary">Documentary</string>
-    <string name="duotone">Duo Tone</string>
-    <string name="filllight">Fill Light</string>
-    <string name="fisheye">Fish Eye</string>
-    <string name="flipvert">Flip Vertical</string>
-    <string name="fliphor">Flip Horizontal</string>
-    <string name="grain">Grain</string>
-    <string name="grayscale">Grayscale</string>
-    <string name="lomoish">Lomoish</string>
-    <string name="negative">Negative</string>
-    <string name="posterize">Posterize</string>
-    <string name="saturate">Saturate</string>
-    <string name="sepia">Sepia</string>
-    <string name="sharpen">Sharpen</string>
-    <string name="temperature">Temperature</string>
-    <string name="vignette">Vignette</string>
 
     <string name="select_color">Select a color</string>
     <string name="color">Color</string>
@@ -154,6 +132,9 @@
     <!-- Font picker dialog - END. -->
 
     <!-- START - ADJUST. -->
+    <string name="brightness">Brightness</string>
+    <string name="contrast">Contrast</string>
+    <string name="vignette">Vignette</string>
     <string name="adjust">Adjust</string>
     <string name="warmth">Warmth</string>
     <string name="saturation">Saturation</string>

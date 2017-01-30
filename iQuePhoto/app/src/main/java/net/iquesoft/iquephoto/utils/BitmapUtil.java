@@ -34,7 +34,7 @@ public class BitmapUtil {
         final DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         return displayMetrics.density * dp;
     }
-    
+
     public static Uri getUriOfBitmap(Context context, Bitmap bitmap) {
         Uri uri = Uri.fromFile(new File(context.getCacheDir(), "altered"));
 
@@ -65,7 +65,7 @@ public class BitmapUtil {
         ScriptIntrinsicBlur theIntrinsic = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
         Allocation tmpIn = Allocation.createFromBitmap(rs, scaledBitmap);
         Allocation tmpOut = Allocation.createFromBitmap(rs, outputBitmap);
-        theIntrinsic.setRadius(3.75f);
+        theIntrinsic.setRadius(10f);
         theIntrinsic.setInput(tmpIn);
         theIntrinsic.forEach(tmpOut);
         tmpOut.copyTo(outputBitmap);

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.ColorMatrix;
-import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
@@ -22,9 +21,10 @@ import com.arellomobile.mvp.presenter.ProvidePresenter;
 
 import net.iquesoft.iquephoto.core.editor.enums.EditorTool;
 import net.iquesoft.iquephoto.core.editor.model.Drawing;
+import net.iquesoft.iquephoto.core.editor.model.EditorLinearTiltShift;
 import net.iquesoft.iquephoto.core.editor.model.EditorSticker;
 import net.iquesoft.iquephoto.core.editor.model.EditorText;
-import net.iquesoft.iquephoto.core.editor.model.EditorTiltShiftRadial;
+import net.iquesoft.iquephoto.core.editor.model.EditorRadialTiltShift;
 import net.iquesoft.iquephoto.core.editor.model.EditorVignette;
 import net.iquesoft.iquephoto.models.Text;
 
@@ -38,17 +38,17 @@ public class ImageEditorView extends View implements EditorView {
 
     @ProvidePresenter
     ImageEditorViewPresenter provideImageEditorViewPresenter() {
-        return new ImageEditorViewPresenter();
+        return new ImageEditorViewPresenter(getContext());
     }
-    
+
     private MvpDelegate mParentDelegate;
     private MvpDelegate<ImageEditorView> mMvpDelegate;
 
     private boolean mIsOriginalImageDisplayed;
 
     private Bitmap mImageBitmap;
-    private Bitmap mAlteredImageBitmap;
     private Bitmap mSupportBitmap;
+    private Bitmap mAlteredImageBitmap;
 
     private EditorTool mCurrentTool = NONE;
 
@@ -67,7 +67,8 @@ public class ImageEditorView extends View implements EditorView {
     private Paint mDrawingPaint;
 
     private EditorVignette mVignette;
-    private EditorTiltShiftRadial mRadialTiltShift;
+    private EditorRadialTiltShift mRadialTiltShift;
+    private EditorLinearTiltShift mLinearTiltShift;
 
     private List<Drawing> mDrawings;
     private List<EditorText> mTexts;
@@ -75,8 +76,6 @@ public class ImageEditorView extends View implements EditorView {
 
     public ImageEditorView(Context context, AttributeSet attrs) {
         super(context, attrs);
-
-        mRadialTiltShift = new EditorTiltShiftRadial(this);
     }
 
     public void setMvpDelegate(MvpDelegate patentDelegate) {
@@ -140,8 +139,11 @@ public class ImageEditorView extends View implements EditorView {
             case TRANSFORM_STRAIGHTEN:
                 canvas.drawBitmap(bitmap, mTransformMatrix, mBitmapPaint);
                 break;
-            case TILT_SHIFT_RADIAL:
+            case RADIAL_TILT_SHIFT:
                 mRadialTiltShift.draw(canvas, bitmap, mImageMatrix, mBitmapPaint);
+                break;
+            case LINEAR_TILT_SHIFT:
+                mLinearTiltShift.draw(canvas, bitmap, mImageMatrix, mBitmapPaint);
                 break;
             default:
                 canvas.drawBitmap(bitmap, mImageMatrix, mAdjustPaint);
@@ -227,15 +229,15 @@ public class ImageEditorView extends View implements EditorView {
         mPresenter.setOverlay(bitmap);
     }
 
-    public void setFilterIntensity(int value) {
+    public void setFilterIntensity(@IntRange(from = -100, to = 100) int value) {
         mPresenter.changeFilterIntensity(value);
     }
 
-    public void setVignetteIntensity(int value) {
+    public void setVignetteIntensity(@IntRange(from = -100, to = 100) int value) {
         mPresenter.changeVignetteMask(value);
     }
 
-    public void setOverlayIntensity(int value) {
+    public void setOverlayIntensity(@IntRange(from = -100, to = 100) int value) {
         mPresenter.changeOverlayIntensity(value);
     }
 
@@ -251,17 +253,11 @@ public class ImageEditorView extends View implements EditorView {
         mPresenter.changeSaturation(value);
     }
 
-    public void setWarmthValue(int value) {
-        if (value != 0) {
-            mAdjustPaint.setColorFilter(
-                    new ColorMatrixColorFilter(AdjustColorFilter.getWarmthMatrix(value))
-            );
-
-            invalidate();
-        }
+    public void setWarmthValue(@IntRange(from = -100, to = 100) int value) {
+        mPresenter.changeWarmth(value);
     }
 
-    public void setStraightenTransformValue(int value) {
+    public void setStraightenTransformValue(@IntRange(from = -30, to = 30) int value) {
         if (value != 0) {
             //mStraightenTransformValue = value;
 
@@ -416,6 +412,24 @@ public class ImageEditorView extends View implements EditorView {
     public void updateVignette(EditorVignette vignette) {
         if (mVignette == null) {
             mVignette = vignette;
+        }
+
+        invalidate();
+    }
+
+    @Override
+    public void updateRadialTiltShift(EditorRadialTiltShift radialTiltShift) {
+        if (mRadialTiltShift == null) {
+            mRadialTiltShift = radialTiltShift;
+        }
+
+        invalidate();
+    }
+
+    @Override
+    public void updateLinearTiltShift(EditorLinearTiltShift linearTiltShift) {
+        if (mLinearTiltShift == null) {
+            mLinearTiltShift = linearTiltShift;
         }
 
         invalidate();

@@ -1,8 +1,6 @@
 package net.iquesoft.iquephoto.core.editor.model;
 
 import android.animation.Animator;
-import android.animation.ObjectAnimator;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -13,20 +11,17 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.RadialGradient;
 import android.graphics.RectF;
 import android.graphics.Shader;
-import android.support.v4.view.ViewCompat;
-import android.util.DisplayMetrics;
+import android.support.annotation.NonNull;
 import android.view.MotionEvent;
 
-import net.iquesoft.iquephoto.core.editor.ImageEditorView;
 import net.iquesoft.iquephoto.core.editor.enums.EditorMode;
-import net.iquesoft.iquephoto.utils.BitmapUtil;
 import net.iquesoft.iquephoto.utils.MotionEventUtil;
 import net.iquesoft.iquephoto.utils.RectUtil;
 
 import static net.iquesoft.iquephoto.core.editor.enums.EditorMode.*;
 
 // TODO: FadeIn and FadeOut Animators.
-public class EditorTiltShiftRadial implements EditorTiltShift {
+public class EditorRadialTiltShift {
     private static final int FADEOUT_DELAY = 1000;
 
     private float mFeather = 0.7f;
@@ -37,9 +32,10 @@ public class EditorTiltShiftRadial implements EditorTiltShift {
     private float mPreX;
     private float mPreY;
 
-    private float mPreDistance;
+    private int mViewWidth;
+    private int mViewHeight;
 
-    private Context mContext;
+    private float mPreDistance;
 
     private Bitmap mBitmap;
     private Bitmap mBlurBitmap;
@@ -63,25 +59,18 @@ public class EditorTiltShiftRadial implements EditorTiltShift {
 
     private EditorMode mMode = NONE;
 
-    private ImageEditorView mImageEditorView;
-
-    public EditorTiltShiftRadial(ImageEditorView imageEditorView) {
-        mImageEditorView = imageEditorView;
-
-        mContext = mImageEditorView.getContext();
-
-        initialize(mContext);
+    public EditorRadialTiltShift(int viewWidth, int viewHeight) {
+        mViewWidth = viewWidth;
+        mViewHeight = viewHeight;
+        initialize();
     }
 
-    @Override
-    public void initialize(Context context) {
-        final DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-
+    public void initialize() {
         mPaint = new Paint();
 
         mTiltShiftRadialControlPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mTiltShiftRadialControlPaint.setColor(Color.WHITE);
-        mTiltShiftRadialControlPaint.setStrokeWidth(metrics.density * 3.5f);
+        mTiltShiftRadialControlPaint.setStrokeWidth(5f);
         mTiltShiftRadialControlPaint.setStyle(Paint.Style.STROKE);
         mTiltShiftRadialControlPaint.setAlpha(125);
         mTiltShiftRadialControlPaint.setDither(true);
@@ -109,13 +98,12 @@ public class EditorTiltShiftRadial implements EditorTiltShift {
 
         mGradientInset = 0;
 
-        mFadeInAnimator = ObjectAnimator.ofFloat(mImageEditorView, "paintAlpha", 0, 125);
-        mFadeOutAnimator = ObjectAnimator.ofFloat(mImageEditorView, "paintAlpha", 125, 0);
-        mFadeOutAnimator.setStartDelay(FADEOUT_DELAY);
+        //mFadeInAnimator = ObjectAnimator.ofFloat(mImageEditorView, "paintAlpha", 0, 125);
+        //mFadeOutAnimator = ObjectAnimator.ofFloat(mImageEditorView, "paintAlpha", 125, 0);
+        //mFadeOutAnimator.setStartDelay(FADEOUT_DELAY);
     }
 
-    @Override
-    public void draw(Canvas canvas, Bitmap bitmap, Matrix matrix, Paint paint) {
+    public void draw(@NonNull Canvas canvas, @NonNull Bitmap bitmap, @NonNull Matrix matrix, @NonNull Paint paint) {
         if (!mTiltShiftRadialRect.isEmpty()) {
 
             canvas.drawBitmap(bitmap, matrix, paint);
@@ -124,24 +112,6 @@ public class EditorTiltShiftRadial implements EditorTiltShift {
 
             mTiltShiftRadialControlRect.set(mTiltShiftRadialRect);
             mTiltShiftRadialControlRect.inset(-mGradientInset, -mGradientInset);
-
-            if (mBlurBitmap == null) {
-                mBitmap = bitmap;
-                mBlurBitmap = BitmapUtil.getBlurImage(
-                        mContext,
-                        bitmap,
-                        bitmap.getWidth(),
-                        bitmap.getHeight());
-            } else {
-                if (!mBitmap.sameAs(bitmap)) {
-                    mBitmap = bitmap;
-                    mBlurBitmap = BitmapUtil.getBlurImage(
-                            mContext,
-                            bitmap,
-                            bitmap.getWidth(),
-                            bitmap.getHeight());
-                }
-            }
 
             if (mBlurBitmap != null) {
                 canvas.drawBitmap(mBlurBitmap, matrix, paint);
@@ -167,7 +137,6 @@ public class EditorTiltShiftRadial implements EditorTiltShift {
         }
     }
 
-    @Override
     public void updateRect(RectF bitmapRect) {
         if (bitmapRect.height() <= bitmapRect.width()) {
             mFocusRadius = bitmapRect.height() / 3;
@@ -187,10 +156,9 @@ public class EditorTiltShiftRadial implements EditorTiltShift {
         updateGradientMatrix(mTiltShiftRadialRect);
 
         setPaintAlpha(125);
-        mFadeOutAnimator.start();
+        //mFadeOutAnimator.start();
     }
 
-    @Override
     public void updateGradientRect() {
         final int[] colors = new int[]{0xff000000, 0xff000000, 0};
         final float[] anchors = new float[]{0, mFeather, 1};
@@ -201,12 +169,14 @@ public class EditorTiltShiftRadial implements EditorTiltShift {
         updateGradientMatrix(mTiltShiftRadialRect);
     }
 
-    @Override
+    public void updateBlurBitmap(@NonNull Bitmap bitmap) {
+        mBlurBitmap = bitmap;
+    }
+
     public void updateGradientShader(float value, Paint paint) {
 
     }
 
-    @Override
     public void updateGradientMatrix(RectF rectF) {
         mGradientMatrix.reset();
         mGradientMatrix.postTranslate(rectF.centerX(), rectF.centerY());
@@ -214,12 +184,11 @@ public class EditorTiltShiftRadial implements EditorTiltShift {
         mRadialGradient.setLocalMatrix(mGradientMatrix);
     }
 
-    @Override
     public void actionDown(MotionEvent event) {
-        mFadeOutAnimator.cancel();
+        //mFadeOutAnimator.cancel();
 
         if (getPaintAlpha() != 125) {
-            mFadeInAnimator.start();
+            // mFadeInAnimator.start();
         }
 
         if (event.getPointerCount() == 1) {
@@ -230,7 +199,6 @@ public class EditorTiltShiftRadial implements EditorTiltShift {
         mPreY = event.getY();
     }
 
-    @Override
     public void actionMove(MotionEvent event) {
         mTempTiltShiftRadialRect.set(mTiltShiftRadialRect);
 
@@ -268,50 +236,40 @@ public class EditorTiltShiftRadial implements EditorTiltShift {
 
             updateGradientMatrix(mTiltShiftRadialRect);
 
-            mImageEditorView.invalidate();
+            //mImageEditorView.invalidate();
 
-            ViewCompat.postInvalidateOnAnimation(mImageEditorView);
+            //ViewCompat.postInvalidateOnAnimation(mImageEditorView);
         }
     }
 
-    @Override
     public void actionPointerDown(MotionEvent event) {
-
         if (event.getPointerCount() == 2) {
             mPreDistance = MotionEventUtil.getDelta(event);
             mMode = ROTATE_AND_SCALE;
         }
     }
 
-    @Override
     public void actionUp() {
-        mFadeOutAnimator.start();
+        // mFadeOutAnimator.start();
 
         mMode = NONE;
     }
 
-    @Override
     public void actionPointerUp() {
         mMode = NONE;
     }
 
-    @Override
     public void setPaintAlpha(int value) {
         mTiltShiftRadialControlPaint.setAlpha(value);
-        mImageEditorView.postInvalidate();
+        //mImageEditorView.postInvalidate();
     }
 
-    @Override
     public int getPaintAlpha() {
         return mTiltShiftRadialControlPaint.getAlpha();
     }
 
     private float displayDistance() {
-
-        float height = mImageEditorView.getHeight();
-        float width = mImageEditorView.getWidth();
-
-        return (float) Math.sqrt(width * width + height * height);
+        return (float) Math.sqrt(mViewWidth * mViewWidth + mViewHeight * mViewHeight);
     }
 
     private boolean isTiltShiftInRect() {

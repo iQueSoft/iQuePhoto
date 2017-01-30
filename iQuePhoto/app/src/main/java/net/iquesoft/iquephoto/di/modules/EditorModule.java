@@ -36,6 +36,7 @@ import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.BRIGHTNESS;
 import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.CONTRAST;
 import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.SATURATION;
 import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.VIGNETTE;
+import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.WARMTH;
 
 @Module
 public class EditorModule {
@@ -164,8 +165,9 @@ public class EditorModule {
                 new Adjust(R.string.contrast, R.drawable.ic_contrast,
                         ImageAdjustmentFragment.newInstance(CONTRAST)),
                 new Adjust(R.string.saturation, R.drawable.ic_saturation,
-                        ImageAdjustmentFragment.newInstance(SATURATION))
-                //  TODO: new Adjust(R.string.warmth, R.drawable.ic_warmth, ),
+                        ImageAdjustmentFragment.newInstance(SATURATION)),
+                new Adjust(R.string.warmth, R.drawable.ic_warmth,
+                        ImageAdjustmentFragment.newInstance(WARMTH))
                 //  TODO: new Adjust(R.string.shadows, R.drawable.ic_shadows, ),
                 // TODO: new Adjust(R.string.tint, R.drawable.ic_fade, TINT, ),
                 // TODO: new Adjust(R.string.exposure, R.drawable.ic_exposure, EXPOSURE, ),

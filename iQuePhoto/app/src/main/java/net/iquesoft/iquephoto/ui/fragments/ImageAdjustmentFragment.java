@@ -35,18 +35,18 @@ public class ImageAdjustmentFragment extends ToolFragment implements ImageAdjust
     ImageAdjustmentPresenter provideImageAdjustmentPresenter() {
         return new ImageAdjustmentPresenter(getArguments());
     }
-    
+
     @BindView(R.id.minValueTextView)
-    TextView minValueTextView;
+    TextView mMinValueTextView;
 
     @BindView(R.id.currentValueTextView)
-    TextView currentValueTextView;
+    TextView mCurrentValueTextView;
 
     @BindView(R.id.maxValueTextView)
-    TextView maxValueTextView;
+    TextView mMaxValueTextView;
 
     @BindView(R.id.toolSeekBar)
-    DiscreteSeekBar toolSeekBar;
+    DiscreteSeekBar mToolSeekBar;
 
     private Unbinder mUnbinder;
 
@@ -78,10 +78,9 @@ public class ImageAdjustmentFragment extends ToolFragment implements ImageAdjust
 
         mUnbinder = ButterKnife.bind(this, view);
 
-        toolSeekBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
+        mToolSeekBar.setOnProgressChangeListener(new DiscreteSeekBar.OnProgressChangeListener() {
             @Override
             public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
-                currentValueTextView.setText(String.valueOf(value));
                 mPresenter.progressChanged(value);
             }
 
@@ -122,36 +121,39 @@ public class ImageAdjustmentFragment extends ToolFragment implements ImageAdjust
     }
 
     @Override
-    public void onIntensityValueChanged(int value) {
+    public void onIntensityChanged(int value) {
         Log.i("Adjustment", "Filter intensity = " + String.valueOf(value));
 
         mImageEditorView.setFilterIntensity(value);
     }
 
     @Override
-    public void onBrightnessValueChanged(int value) {
-        Log.i("Adjustment", "Brightness = " + String.valueOf(value));
-
+    public void onBrightnessChanged(int value) {
         mImageEditorView.setBrightnessValue(value);
     }
 
     @Override
-    public void onContrastValueChanged(int value) {
+    public void onContrastChanged(int value) {
         mImageEditorView.setContrastValue(value);
     }
 
     @Override
-    public void onWarmthValueChanged(int value) {
+    public void onSaturationChanged(int value) {
+        mImageEditorView.setSaturationValue(value);
+    }
+
+    @Override
+    public void onWarmthChanged(int value) {
         mImageEditorView.setWarmthValue(value);
     }
 
     @Override
-    public void onStraightenValueChanged(int value) {
+    public void onStraightenTransformChanged(int value) {
         mImageEditorView.setStraightenTransformValue(value);
     }
 
     @Override
-    public void onVignetteValueChanged(int value) {
+    public void onVignetteChanged(int value) {
         mImageEditorView.setVignetteIntensity(value);
     }
 
@@ -162,13 +164,13 @@ public class ImageAdjustmentFragment extends ToolFragment implements ImageAdjust
 
     @Override
     public void initializeSlider(int minValue, int maxValue, int value) {
-        toolSeekBar.setMin(minValue);
-        minValueTextView.setText(String.valueOf(minValue));
+        mToolSeekBar.setMin(minValue);
+        mMinValueTextView.setText(String.valueOf(minValue));
 
-        toolSeekBar.setProgress(value);
-        currentValueTextView.setText(String.valueOf(value));
+        mToolSeekBar.setProgress(value);
+        mCurrentValueTextView.setText(String.valueOf(value));
 
-        toolSeekBar.setMax(maxValue);
-        maxValueTextView.setText(String.valueOf(maxValue));
+        mToolSeekBar.setMax(maxValue);
+        mMaxValueTextView.setText(String.valueOf(maxValue));
     }
 }

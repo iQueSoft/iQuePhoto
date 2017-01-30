@@ -11,17 +11,19 @@ public interface ImageAdjustmentView extends MvpView {
 
     void changeToolbarSubtitle(@StringRes int subtitle);
 
-    void onIntensityValueChanged(int value);
+    void onIntensityChanged(int value);
 
-    void onBrightnessValueChanged(int value);
+    void onBrightnessChanged(int value);
 
-    void onContrastValueChanged(int value);
+    void onContrastChanged(int value);
 
-    void onWarmthValueChanged(int value);
+    void onSaturationChanged(int value);
 
-    void onStraightenValueChanged(int value);
+    void onWarmthChanged(int value);
 
-    void onVignetteValueChanged(int value);
+    void onStraightenTransformChanged(int value);
+
+    void onVignetteChanged(int value);
 
     void setupImageEditorCommand(EditorTool command);
 

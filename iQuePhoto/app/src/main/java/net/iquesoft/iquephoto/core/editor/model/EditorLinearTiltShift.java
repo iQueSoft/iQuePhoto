@@ -11,11 +11,9 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.graphics.Shader;
-import android.support.v4.view.ViewCompat;
-import android.util.DisplayMetrics;
+import android.support.annotation.NonNull;
 import android.view.MotionEvent;
 
-import net.iquesoft.iquephoto.core.editor.ImageEditorView;
 import net.iquesoft.iquephoto.core.editor.enums.EditorMode;
 import net.iquesoft.iquephoto.utils.BitmapUtil;
 import net.iquesoft.iquephoto.utils.MotionEventUtil;
@@ -27,7 +25,7 @@ import static net.iquesoft.iquephoto.core.editor.enums.EditorMode.ROTATE_AND_SCA
 
 // TODO: Linear tilt shift.
 // TODO: Rotate linear tilt shift.
-public class EditorTiltShiftLinear implements EditorTiltShift {
+public class EditorLinearTiltShift {
     private float mFeather = 0.7f;
     private float mGradientInset = 100;
     private float mFocusHeight;
@@ -36,6 +34,9 @@ public class EditorTiltShiftLinear implements EditorTiltShift {
 
     private float mPreX;
     private float mPreY;
+
+    private int mViewWidth;
+    private int mViewHeight;
 
     private float mPreDistance;
 
@@ -46,7 +47,6 @@ public class EditorTiltShiftLinear implements EditorTiltShift {
     private Paint mTiltShiftLinearPaint;
     private Paint mTiltShiftLinearControlPaint;
 
-    private Bitmap mBitmap;
     private Bitmap mBlurBitmap;
 
     private RectF mBitmapRect;
@@ -60,26 +60,20 @@ public class EditorTiltShiftLinear implements EditorTiltShift {
 
     private EditorMode mMode = NONE;
 
-    private ImageEditorView mImageEditorView;
+    public EditorLinearTiltShift(int viewWidth, int viewHeight) {
+        mViewWidth = viewWidth;
+        mViewHeight = viewHeight;
 
-    public EditorTiltShiftLinear(ImageEditorView imageEditorView) {
-        mImageEditorView = imageEditorView;
-
-        mContext = imageEditorView.getContext();
-
-        initialize(mContext);
+        initialize();
     }
 
-    @Override
-    public void initialize(Context context) {
-        final DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-
+    private void initialize() {
         mPaint = new Paint();
 
         mTiltShiftLinearControlPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mTiltShiftLinearControlPaint.setColor(Color.WHITE);
         mTiltShiftLinearControlPaint.setStyle(Paint.Style.STROKE);
-        mTiltShiftLinearControlPaint.setStrokeWidth(metrics.density * 3.5f);
+        mTiltShiftLinearControlPaint.setStrokeWidth(5f);
         mTiltShiftLinearControlPaint.setAlpha(125);
         mTiltShiftLinearControlPaint.setDither(true);
 
@@ -107,8 +101,7 @@ public class EditorTiltShiftLinear implements EditorTiltShift {
         mGradientInset = 0;
     }
 
-    @Override
-    public void draw(Canvas canvas, Bitmap bitmap, Matrix matrix, Paint paint) {
+    public void draw(@NonNull Canvas canvas, @NonNull Bitmap bitmap, @NonNull Matrix matrix, @NonNull Paint paint) {
         if (!mTiltShiftLinearRect.isEmpty()) {
 
             canvas.drawBitmap(bitmap, matrix, paint);
@@ -117,24 +110,6 @@ public class EditorTiltShiftLinear implements EditorTiltShift {
 
             mTiltShiftLinearControlRect.set(mTiltShiftLinearRect);
             //mTiltShiftLinearControlRect.inset(-mGradientInset, -mGradientInset);
-
-            if (mBlurBitmap == null) {
-                mBitmap = bitmap;
-                mBlurBitmap = BitmapUtil.getBlurImage(
-                        mContext,
-                        bitmap,
-                        bitmap.getWidth(),
-                        bitmap.getHeight());
-            } else {
-                if (!mBitmap.sameAs(bitmap)) {
-                    mBitmap = bitmap;
-                    mBlurBitmap = BitmapUtil.getBlurImage(
-                            mContext,
-                            bitmap,
-                            bitmap.getWidth(),
-                            bitmap.getHeight());
-                }
-            }
 
             if (mBlurBitmap != null) {
                 canvas.drawBitmap(mBlurBitmap, matrix, paint);
@@ -169,7 +144,6 @@ public class EditorTiltShiftLinear implements EditorTiltShift {
         }
     }
 
-    @Override
     public void updateRect(RectF bitmapRect) {
         mFocusHeight = bitmapRect.height() / 2;
 
@@ -186,7 +160,10 @@ public class EditorTiltShiftLinear implements EditorTiltShift {
         setPaintAlpha(125);
     }
 
-    @Override
+    public void updateBlurBitmap(@NonNull Bitmap blurBitmap) {
+        mBlurBitmap = blurBitmap;
+    }
+
     public void updateGradientRect() {
         final float[] anchors = new float[]{0, mFeather, 1};
 
@@ -200,13 +177,10 @@ public class EditorTiltShiftLinear implements EditorTiltShift {
         updateGradientMatrix(mTiltShiftLinearRect);
     }
 
-    @Override
     public void updateGradientShader(float value, Paint paint) {
 
     }
 
-    // TODO: Check gradient matrix.
-    @Override
     public void updateGradientMatrix(RectF rectF) {
         mGradientMatrix.reset();
         mGradientMatrix.postTranslate(rectF.centerX(), rectF.centerY());
@@ -214,7 +188,6 @@ public class EditorTiltShiftLinear implements EditorTiltShift {
         mLinearGradient.setLocalMatrix(mGradientMatrix);
     }
 
-    @Override
     public void actionMove(MotionEvent event) {
         mTempTiltShiftLinearRect.set(mTiltShiftLinearRect);
 
@@ -251,13 +224,10 @@ public class EditorTiltShiftLinear implements EditorTiltShift {
 
             updateGradientMatrix(mTiltShiftLinearRect);
 
-            mImageEditorView.invalidate();
-
-            ViewCompat.postInvalidateOnAnimation(mImageEditorView);
+            //ViewCompat.postInvalidateOnAnimation(mImageEditorView);
         }
     }
 
-    @Override
     public void actionDown(MotionEvent event) {
         mPreX = event.getX();
         mPreY = event.getY();
@@ -265,37 +235,28 @@ public class EditorTiltShiftLinear implements EditorTiltShift {
         mMode = MOVE;
     }
 
-    @Override
     public void actionPointerDown(MotionEvent event) {
         mMode = ROTATE_AND_SCALE;
     }
 
-    @Override
     public void actionUp() {
         mMode = NONE;
     }
 
-    @Override
     public void actionPointerUp() {
         mMode = NONE;
     }
 
-    @Override
     public void setPaintAlpha(int value) {
 
     }
 
-    @Override
     public int getPaintAlpha() {
         return 0;
     }
 
     private float displayDistance() {
-
-        float height = mImageEditorView.getHeight();
-        float width = mImageEditorView.getWidth();
-
-        return (float) Math.sqrt(width * width + height * height);
+        return (float) Math.sqrt(mViewWidth * mViewWidth + mViewHeight * mViewHeight);
     }
 
     private boolean isTiltShiftInRect() {

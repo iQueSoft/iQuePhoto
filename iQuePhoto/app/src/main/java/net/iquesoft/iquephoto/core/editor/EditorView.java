@@ -10,8 +10,10 @@ import com.arellomobile.mvp.MvpView;
 
 import net.iquesoft.iquephoto.core.editor.enums.EditorTool;
 import net.iquesoft.iquephoto.core.editor.model.Drawing;
+import net.iquesoft.iquephoto.core.editor.model.EditorLinearTiltShift;
 import net.iquesoft.iquephoto.core.editor.model.EditorSticker;
 import net.iquesoft.iquephoto.core.editor.model.EditorText;
+import net.iquesoft.iquephoto.core.editor.model.EditorRadialTiltShift;
 import net.iquesoft.iquephoto.core.editor.model.EditorVignette;
 
 import java.util.List;
@@ -36,6 +38,10 @@ interface EditorView extends MvpView {
     void stickerAdded(List<EditorSticker> stickers);
 
     void updateVignette(EditorVignette vignette);
+
+    void updateRadialTiltShift(EditorRadialTiltShift radialTiltShift);
+
+    void updateLinearTiltShift(EditorLinearTiltShift linearTiltShift);
 
     void updateDrawing(Paint paint, Path path);
 

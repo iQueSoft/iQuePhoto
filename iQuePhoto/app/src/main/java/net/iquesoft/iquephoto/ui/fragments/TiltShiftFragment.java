@@ -19,8 +19,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.TILT_SHIFT_LINEAR;
-import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.TILT_SHIFT_RADIAL;
+import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.LINEAR_TILT_SHIFT;
+import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.RADIAL_TILT_SHIFT;
 
 public class TiltShiftFragment extends ToolFragment implements TiltShiftView {
     @InjectPresenter
@@ -29,7 +29,7 @@ public class TiltShiftFragment extends ToolFragment implements TiltShiftView {
     private Unbinder mUnbinder;
 
     private ImageEditorView mImageEditorView;
-
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +54,7 @@ public class TiltShiftFragment extends ToolFragment implements TiltShiftView {
     @Override
     public void onResume() {
         super.onResume();
-        mImageEditorView.changeTool(TILT_SHIFT_RADIAL);
+        mImageEditorView.changeTool(RADIAL_TILT_SHIFT);
         ToolbarUtil.updateTitle(R.string.tilt_shift, getActivity());
         ToolbarUtil.updateSubtitle(R.string.tilt_shift_radial, getActivity());
     }
@@ -78,11 +78,11 @@ public class TiltShiftFragment extends ToolFragment implements TiltShiftView {
 
     @OnClick(R.id.tiltShiftLinearButton)
     void onClickLinear() {
-        mPresenter.changeTiltShift(TILT_SHIFT_LINEAR);
+        mPresenter.changeTiltShift(LINEAR_TILT_SHIFT);
     }
 
     @OnClick(R.id.tiltShiftRadialButton)
     void onClickRadial() {
-        mPresenter.changeTiltShift(TILT_SHIFT_RADIAL);
+        mPresenter.changeTiltShift(RADIAL_TILT_SHIFT);
     }
 }

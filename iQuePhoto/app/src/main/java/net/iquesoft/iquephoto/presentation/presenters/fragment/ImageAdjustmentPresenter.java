@@ -22,7 +22,8 @@ public class ImageAdjustmentPresenter extends MvpPresenter<ImageAdjustmentView> 
         mCurrentCommand =
                 (EditorTool) bundle.getSerializable(ImageAdjustmentFragment.ARG_PARAM);
 
-        Log.i("Slider", "Current tool = " + mCurrentCommand.name());
+        assert mCurrentCommand != null;
+        Log.i("ImageAdjustment", "Current tool = " + mCurrentCommand.name());
 
         setupSlider();
     }
@@ -38,6 +39,8 @@ public class ImageAdjustmentPresenter extends MvpPresenter<ImageAdjustmentView> 
             case CONTRAST:
                 getViewState().changeToolbarSubtitle(R.string.contrast);
                 break;
+            case SATURATION:
+                getViewState().changeToolbarSubtitle(R.string.saturation);
             case WARMTH:
                 getViewState().changeToolbarSubtitle(R.string.warmth);
                 break;
@@ -53,19 +56,22 @@ public class ImageAdjustmentPresenter extends MvpPresenter<ImageAdjustmentView> 
     public void progressChanged(int value) {
         switch (mCurrentCommand) {
             case BRIGHTNESS:
-                getViewState().onBrightnessValueChanged(value);
+                getViewState().onBrightnessChanged(value);
                 break;
             case CONTRAST:
-                getViewState().onContrastValueChanged(value);
+                getViewState().onContrastChanged(value);
+                break;
+            case SATURATION:
+                getViewState().onSaturationChanged(value);
                 break;
             case WARMTH:
-                getViewState().onWarmthValueChanged(value);
+                getViewState().onWarmthChanged(value);
                 break;
             case TRANSFORM_STRAIGHTEN:
-                getViewState().onStraightenValueChanged(value);
+                getViewState().onStraightenTransformChanged(value);
                 break;
             case VIGNETTE:
-                getViewState().onVignetteValueChanged(value);
+                getViewState().onVignetteChanged(value);
                 break;
         }
     }

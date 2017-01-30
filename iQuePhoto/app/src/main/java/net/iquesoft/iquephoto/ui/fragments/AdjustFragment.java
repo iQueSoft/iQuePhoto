@@ -5,10 +5,12 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.adapters.AdjustAdapter;
@@ -29,7 +31,7 @@ import butterknife.Unbinder;
 
 import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.NONE;
 
-public class AdjustFragment extends ToolFragment implements AdjustView {
+public class AdjustFragment extends MvpAppCompatFragment implements AdjustView {
     @InjectPresenter
     AdjustPresenter mPresenter;
 
@@ -37,6 +39,12 @@ public class AdjustFragment extends ToolFragment implements AdjustView {
     RecyclerView mRecyclerView;
 
     private Unbinder mUnbinder;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -61,7 +69,13 @@ public class AdjustFragment extends ToolFragment implements AdjustView {
         super.onDestroyView();
         mUnbinder.unbind();
     }
-    
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        menu.removeItem(R.id.action_share);
+    }
+
     @Override
     public void setupAdapter(List<Adjust> adjusts) {
         AdjustAdapter adapter = new AdjustAdapter(adjusts);

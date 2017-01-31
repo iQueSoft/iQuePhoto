@@ -40,6 +40,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
+import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.subjects.PublishSubject;
 
 import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.NONE;
@@ -94,7 +96,7 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
     private List<EditorImage> mImages = new ArrayList<>();
 
     private PublishSubject<MotionEvent> mTouchSubject = PublishSubject.create();
-
+    
     ImageEditorViewPresenter(@NonNull Context context) {
         mOverlayPaint.setAlpha(150);
         initDrawingPaint();
@@ -114,165 +116,165 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
 
     private void initMotionEventObservables() {
         Observable<MotionEvent> touchObservable = mTouchSubject.asObservable();
-
-        initActionDownObservable(touchObservable);
-        initActionPointerDownObservable(touchObservable);
-        initActionMoveObservable(touchObservable);
-        initActionUpObservable(touchObservable);
-        initActionPointerUpObservable(touchObservable);
-    }
-
-    private void initActionDownObservable(Observable<MotionEvent> touchObservable) {
-        Observable<MotionEvent> actionDownObservable =
+        Observable<MotionEvent> mActionDownObservable =
                 touchObservable.filter(event -> event.getActionMasked() == MotionEvent.ACTION_DOWN);
-        actionDownObservable.subscribe(event -> {
-            Log.i("Observable", "Action: Down.");
-            switch (mCurrentTool) {
-                case NONE:
-                    getViewState().showOriginalImage(true);
-                    break;
-                case DRAWING:
-                    brushActionDown(event);
-                    break;
-                case TEXT:
-                    textActionDown(event);
-                    break;
-                case STICKERS:
-                    stickerActionDown(event);
-                    break;
-                case VIGNETTE:
-                    mVignette.actionDown(event);
-                    getViewState().onVignetteUpdated(mVignette);
-                    break;
-                case RADIAL_TILT_SHIFT:
-                    mRadialTiltShift.actionDown(event);
-                    getViewState().onRadialTiltShiftUpdated(mRadialTiltShift);
-                    break;
-            }
-        });
-    }
-
-    private void initActionPointerDownObservable(Observable<MotionEvent> touchObservable) {
-        Observable<MotionEvent> actionPointerDownObservable =
-                touchObservable.filter(event ->
-                        event.getActionMasked() == MotionEvent.ACTION_POINTER_DOWN
-                );
-        actionPointerDownObservable.subscribe(event -> {
-            Log.i("Observable", "Action: Pointer Down.");
-            switch (mCurrentTool) {
-                case NONE:
-                    break;
-                case VIGNETTE:
-                    mVignette.actionPointerDown(event);
-                    getViewState().onVignetteUpdated(mVignette);
-                    break;
-                case RADIAL_TILT_SHIFT:
-                    mRadialTiltShift.actionPointerDown(event);
-                    getViewState().onRadialTiltShiftUpdated(mRadialTiltShift);
-                    break;
-                case LINEAR_TILT_SHIFT:
-                    mLinearTiltShift.actionPointerDown(event);
-                    getViewState().onLinearTiltShiftUpdated(mLinearTiltShift);
-                    break;
-            }
-        });
-    }
-
-    private void initActionMoveObservable(Observable<MotionEvent> touchObservable) {
-        Observable<MotionEvent> actionMoveObservable =
-                touchObservable.filter(event -> event.getActionMasked() == MotionEvent.ACTION_MOVE);
-        actionMoveObservable.subscribe(event -> {
-            Log.i("Observable", "Action: Move.");
-            switch (mCurrentTool) {
-                case NONE:
-                    break;
-                case DRAWING:
-                    brushActionMove(event);
-                    break;
-                case TEXT:
-                    textActionMove(event);
-                    break;
-                case STICKERS:
-                    stickerActionMove(event);
-                    break;
-                case VIGNETTE:
-                    mVignette.actionMove(event);
-                    getViewState().onVignetteUpdated(mVignette);
-                    break;
-                case RADIAL_TILT_SHIFT:
-                    mRadialTiltShift.actionMove(event);
-                    getViewState().onRadialTiltShiftUpdated(mRadialTiltShift);
-                    break;
-                case LINEAR_TILT_SHIFT:
-                    mLinearTiltShift.actionMove(event);
-                    getViewState().onLinearTiltShiftUpdated(mLinearTiltShift);
-                    break;
-            }
-        });
-    }
-
-    private void initActionUpObservable(Observable<MotionEvent> touchObservable) {
-        Observable<MotionEvent> actionUpObservable =
-                touchObservable.filter(event -> event.getActionMasked() == MotionEvent.ACTION_UP);
-        actionUpObservable.subscribe(event -> {
-            Log.i("Observable", "Action: Up.");
-            mCurrentMode = EditorMode.NONE;
-            switch (mCurrentTool) {
-                case NONE:
-                    getViewState().showOriginalImage(false);
-                    break;
-                case DRAWING:
-                    brushActionUp();
-                    break;
-                case TEXT:
-                    if (mTouchedText != null) {
-                        mTouchedText.resetHelperFrameOpacity();
-                    }
-                    break;
-                case STICKERS:
-                    if (mTouchedSticker != null) {
-                        mTouchedSticker.setStickerTouched(false);
-
-                        getViewState().updateView();
-                    }
-                    break;
-                case VIGNETTE:
-                    mVignette.actionUp();
-                    getViewState().onVignetteUpdated(mVignette);
-                    break;
-                case RADIAL_TILT_SHIFT:
-                    mRadialTiltShift.actionUp();
-                    getViewState().onRadialTiltShiftUpdated(mRadialTiltShift);
-                    break;
-                case LINEAR_TILT_SHIFT:
-                    mLinearTiltShift.actionUp();
-                    getViewState().onLinearTiltShiftUpdated(mLinearTiltShift);
-                    break;
-            }
-        });
-    }
-
-    private void initActionPointerUpObservable(Observable<MotionEvent> touchObservable) {
-        Observable<MotionEvent> actionPointerUpObservable =
+        Observable<MotionEvent> mActionPointerDownObservable =
                 touchObservable.filter(event -> event.getActionMasked() == MotionEvent.ACTION_POINTER_DOWN);
-        actionPointerUpObservable.subscribe(event -> {
-            Log.i("Observable", "Action: Pointer Up.");
-            mCurrentMode = EditorMode.NONE;
-            switch (mCurrentTool) {
-                case VIGNETTE:
-                    mVignette.actionPointerUp();
-                    getViewState().onVignetteUpdated(mVignette);
-                    break;
-                case RADIAL_TILT_SHIFT:
-                    mRadialTiltShift.actionPointerUp();
-                    getViewState().onRadialTiltShiftUpdated(mRadialTiltShift);
-                    break;
-                case LINEAR_TILT_SHIFT:
-                    mLinearTiltShift.actionPointerUp();
-                    getViewState().onLinearTiltShiftUpdated(mLinearTiltShift);
-                    break;
-            }
+        Observable<MotionEvent> mActionMoveObservable =
+                touchObservable.filter(event -> event.getActionMasked() == MotionEvent.ACTION_MOVE);
+        Observable<MotionEvent> mActionUpObservable =
+                touchObservable.filter(event -> event.getActionMasked() == MotionEvent.ACTION_UP);
+        Observable<MotionEvent> mActionPointerUpObservable =
+                touchObservable.filter(event -> event.getActionMasked() == MotionEvent.ACTION_POINTER_UP);
+        mActionDownObservable.subscribe(event -> {
+            actionDown(event);
+            mActionMoveObservable.
+                    takeUntil(mActionUpObservable
+                            .doOnNext(upEvent ->
+                                    actionUp()
+                            ))
+                    .subscribe(this::actionMove);
         });
+        mActionPointerDownObservable.subscribe(event -> {
+                    actionPointerDown(event);
+                    mActionMoveObservable.takeUntil(
+                            mActionPointerUpObservable.doOnNext(pointerUpEvent ->
+                                    actionPointerUp()
+                            ))
+                            .subscribe(this::actionMove);
+                }
+        );
+    }
+
+    private void actionDown(MotionEvent event) {
+        Log.i("Observable", "Action: Down.");
+        switch (mCurrentTool) {
+            case NONE:
+                getViewState().showOriginalImage(true);
+                break;
+            case DRAWING:
+                brushActionDown(event);
+                break;
+            case TEXT:
+                textActionDown(event);
+                break;
+            case STICKERS:
+                stickerActionDown(event);
+                break;
+            case VIGNETTE:
+                mVignette.actionDown(event);
+                getViewState().onVignetteUpdated(mVignette);
+                break;
+            case RADIAL_TILT_SHIFT:
+                mRadialTiltShift.actionDown(event);
+                getViewState().onRadialTiltShiftUpdated(mRadialTiltShift);
+                break;
+        }
+    }
+
+    private void actionPointerDown(MotionEvent event) {
+        Log.i("Observable", "Action: Pointer Down.");
+        switch (mCurrentTool) {
+            case NONE:
+                break;
+            case VIGNETTE:
+                mVignette.actionPointerDown(event);
+                getViewState().onVignetteUpdated(mVignette);
+                break;
+            case RADIAL_TILT_SHIFT:
+                mRadialTiltShift.actionPointerDown(event);
+                getViewState().onRadialTiltShiftUpdated(mRadialTiltShift);
+                break;
+            case LINEAR_TILT_SHIFT:
+                mLinearTiltShift.actionPointerDown(event);
+                getViewState().onLinearTiltShiftUpdated(mLinearTiltShift);
+                break;
+        }
+    }
+
+    private void actionMove(MotionEvent event) {
+        Log.i("Observable", "Action: Move.");
+        switch (mCurrentTool) {
+            case NONE:
+                break;
+            case DRAWING:
+                brushActionMove(event);
+                break;
+            case TEXT:
+                textActionMove(event);
+                break;
+            case STICKERS:
+                stickerActionMove(event);
+                break;
+            case VIGNETTE:
+                mVignette.actionMove(event);
+                getViewState().onVignetteUpdated(mVignette);
+                break;
+            case RADIAL_TILT_SHIFT:
+                mRadialTiltShift.actionMove(event);
+                getViewState().onRadialTiltShiftUpdated(mRadialTiltShift);
+                break;
+            case LINEAR_TILT_SHIFT:
+                mLinearTiltShift.actionMove(event);
+                getViewState().onLinearTiltShiftUpdated(mLinearTiltShift);
+                break;
+        }
+    }
+
+    private void actionPointerUp() {
+        Log.i("Observable", "Action: Pointer Up.");
+        mCurrentMode = EditorMode.NONE;
+        switch (mCurrentTool) {
+            case VIGNETTE:
+                mVignette.actionPointerUp();
+                getViewState().onVignetteUpdated(mVignette);
+                break;
+            case RADIAL_TILT_SHIFT:
+                mRadialTiltShift.actionPointerUp();
+                getViewState().onRadialTiltShiftUpdated(mRadialTiltShift);
+                break;
+            case LINEAR_TILT_SHIFT:
+                mLinearTiltShift.actionPointerUp();
+                getViewState().onLinearTiltShiftUpdated(mLinearTiltShift);
+                break;
+        }
+    }
+
+    private void actionUp() {
+        Log.i("Observable", "Action: Up.");
+        mCurrentMode = EditorMode.NONE;
+        switch (mCurrentTool) {
+            case NONE:
+                getViewState().showOriginalImage(false);
+                break;
+            case DRAWING:
+                brushActionUp();
+                break;
+            case TEXT:
+                if (mTouchedText != null) {
+                    mTouchedText.resetHelperFrameOpacity();
+                }
+                break;
+            case STICKERS:
+                if (mTouchedSticker != null) {
+                    mTouchedSticker.setStickerTouched(false);
+
+                    getViewState().updateView();
+                }
+                break;
+            case VIGNETTE:
+                mVignette.actionUp();
+                getViewState().onVignetteUpdated(mVignette);
+                break;
+            case RADIAL_TILT_SHIFT:
+                mRadialTiltShift.actionUp();
+                getViewState().onRadialTiltShiftUpdated(mRadialTiltShift);
+                break;
+            case LINEAR_TILT_SHIFT:
+                mLinearTiltShift.actionUp();
+                getViewState().onLinearTiltShiftUpdated(mLinearTiltShift);
+                break;
+        }
     }
 
     void setupImage(int width, int height) {
@@ -480,7 +482,7 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
         if (!mDrawings.isEmpty()) {
             mDrawings.clear();
         }
-        
+
         switch (mCurrentTool) {
             case VIGNETTE:
                 mVignette.updateRect(mImageRect);

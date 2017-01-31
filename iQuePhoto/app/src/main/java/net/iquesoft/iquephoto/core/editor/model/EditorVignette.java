@@ -2,6 +2,7 @@ package net.iquesoft.iquephoto.core.editor.model;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.DashPathEffect;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
@@ -70,6 +71,10 @@ public class EditorVignette {
         mVignetteControlPaint.setStyle(Paint.Style.STROKE);
         mVignetteControlPaint.setAlpha(125);
         mVignetteControlPaint.setDither(true);
+        mVignetteControlPaint.setPathEffect(
+                new DashPathEffect(
+                        new float[]{10, 20}, 0)
+        );
 
         mVignettePaint = new Paint();
         mVignettePaint.setAntiAlias(true);

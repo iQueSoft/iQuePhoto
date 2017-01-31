@@ -169,7 +169,7 @@ public class EditorRadialTiltShift {
         updateGradientMatrix(mRadialTiltShiftRect);
         mShaderPaint.setShader(mRadialGradient);
     }
-
+    
     public void updateBlurBitmap(@NonNull Bitmap bitmap) {
         mBlurBitmap = bitmap;
     }

@@ -1,14 +1,12 @@
 package net.iquesoft.iquephoto.ui.fragments;
 
 import android.graphics.ColorMatrix;
-import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -19,7 +17,6 @@ import com.arellomobile.mvp.presenter.ProvidePresenter;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapters.FiltersAdapter;
 import net.iquesoft.iquephoto.core.editor.ImageEditorView;
-import net.iquesoft.iquephoto.models.ParcelablePaint;
 import net.iquesoft.iquephoto.presentation.common.ToolFragment;
 import net.iquesoft.iquephoto.models.Filter;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.FiltersPresenter;

@@ -4,6 +4,8 @@ import android.graphics.Bitmap;
 import android.support.annotation.StringRes;
 
 import com.arellomobile.mvp.MvpView;
+import com.arellomobile.mvp.viewstate.strategy.SkipStrategy;
+import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 
 import net.iquesoft.iquephoto.models.Sticker;
 
@@ -14,5 +16,6 @@ public interface StickersView extends MvpView {
 
     void setupToolbarSubtitle(@StringRes int subtitle);
 
+    @StateStrategyType(SkipStrategy.class)
     void addSticker(Bitmap bitmap);
 }

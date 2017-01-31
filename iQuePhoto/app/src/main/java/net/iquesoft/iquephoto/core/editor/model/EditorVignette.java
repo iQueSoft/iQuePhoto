@@ -22,6 +22,7 @@ import net.iquesoft.iquephoto.utils.RectUtil;
 import static net.iquesoft.iquephoto.core.editor.enums.EditorMode.*;
 
 public class EditorVignette {
+    private static final String TAG = "Vignette";
     private static final int FADEOUT_DELAY = 3000;
 
     private float mFeather = 0.7f;
@@ -95,10 +96,8 @@ public class EditorVignette {
 
     public void updateMask(int value) {
         if (value >= 0) {
-            mVignetteControlPaint.setColor(Color.WHITE);
             mVignettePaint.setColor(Color.BLACK);
         } else {
-            mVignetteControlPaint.setColor(Color.BLACK);
             mVignettePaint.setColor(Color.WHITE);
         }
 
@@ -138,9 +137,14 @@ public class EditorVignette {
 
         mBitmapRect.set(bitmapRect);
 
+        Log.i(TAG, "Is Reset!");
+
         updateGradientMatrix(mVignetteRect);
     }
 
+    /**
+     * @param canvas is a view canvas if you want to draw on image canvas call prepareToDraw().
+     */
     public void draw(@NonNull Canvas canvas) {
         if (!mVignetteRect.isEmpty()) {
             canvas.saveLayer(mBitmapRect, mPaint, Canvas.CLIP_TO_LAYER_SAVE_FLAG);
@@ -154,7 +158,7 @@ public class EditorVignette {
             canvas.restore();
 
             if (mIsShowHelpOval) {
-                mVignetteControlRect.inset(mGradientInset * 2, mGradientInset * 2);
+                mVignetteControlRect.inset(50, 50);
                 canvas.drawOval(mVignetteControlRect, mVignetteControlPaint);
             }
         }
@@ -162,6 +166,9 @@ public class EditorVignette {
 
     public void actionDown(MotionEvent motionEvent) {
         mMode = MOVE;
+
+        Log.i(TAG, "Action: Down \n" +
+                "Mode: " + mMode.name());
 
         mPreX = motionEvent.getX();
         mPreY = motionEvent.getY();
@@ -177,7 +184,6 @@ public class EditorVignette {
 
             if (angle > 36 && angle < 72 || angle > 108 && angle < 144) {
                 mPreDistance = MotionEventUtil.getDelta(event);
-
                 mMode = ROTATE_AND_SCALE;
             } else if (angle >= 72 && angle <= 108) {
                 mMode = RESIZE_HEIGHT;
@@ -185,7 +191,9 @@ public class EditorVignette {
                 mMode = RESIZE_WIDTH;
             }
 
-            Log.i("Angle", String.valueOf(angle));
+            Log.i(TAG, "Action: Pointer Down" + "\n"
+                    + "Angle: " + String.valueOf(angle) + "\n"
+                    + "Mode: " + mMode.name());
         }
     }
 
@@ -194,6 +202,9 @@ public class EditorVignette {
 
         float distanceX = event.getX() - mPreX;
         float distanceY = event.getY() - mPreY;
+
+        Log.i(TAG, "Action: Move \n" +
+                "Mode: " + mMode.name());
 
         switch (mMode) {
             case MOVE:
@@ -238,11 +249,14 @@ public class EditorVignette {
 
     public void actionUp() {
         mMode = NONE;
+        Log.i(TAG, "Action: Up \n" +
+                "Mode: " + mMode.name());
     }
-
 
     public void actionPointerUp() {
         mMode = MOVE;
+        Log.i(TAG, "Action: Pointer Up \n" +
+                "Mode: " + mMode.name());
     }
 
     public void prepareToDraw(@NonNull Canvas canvas, @NonNull Matrix matrix) {

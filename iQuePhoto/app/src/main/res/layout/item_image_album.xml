@@ -24,5 +24,4 @@
         android:textColor="@color/white"
         android:textSize="14sp"
         android:textStyle="bold" />
-
 </net.iquesoft.iquephoto.graphics.SquareFrameLayout>

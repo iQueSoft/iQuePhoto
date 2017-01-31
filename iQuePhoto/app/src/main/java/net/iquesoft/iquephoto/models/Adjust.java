@@ -5,8 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 
-import net.iquesoft.iquephoto.core.editor.enums.EditorTool;
-
 public class Adjust {
     @StringRes
     private int mTitle;
@@ -21,7 +19,7 @@ public class Adjust {
         mIcon = icon;
         mFragment = fragment;
     }
-    
+
     public int getTitle() {
         return mTitle;
     }

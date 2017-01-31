@@ -23,25 +23,27 @@ interface EditorView extends MvpView {
 
     void showOriginalImage(boolean display);
 
-    void toolChanged(EditorTool tool);
+    void onToolChanged(EditorTool tool);
 
-    void imageAdjusted(Paint paint);
+    void onImageAdjusted(Paint paint);
 
-    void overlayChanged(Bitmap bitmap, Matrix matrix, Paint paint);
+    void onOverlayChanged(Bitmap bitmap, Matrix matrix, Paint paint);
 
-    void filterChanged(Paint paint);
+    void onFilterChanged(Paint paint);
 
-    void frameChanged(Bitmap bitmap, Matrix matrix);
+    void onFrameChanged(Bitmap bitmap, Matrix matrix);
 
-    void textAdded(List<EditorText> texts);
+    void onTextAdded(List<EditorText> texts);
 
-    void stickerAdded(List<EditorSticker> stickers);
+    void onStickerAdded(List<EditorSticker> stickers);
 
-    void updateVignette(EditorVignette vignette);
+    void onVignetteUpdated(EditorVignette vignette);
 
-    void updateRadialTiltShift(EditorRadialTiltShift radialTiltShift);
+    void onRadialTiltShiftUpdated(EditorRadialTiltShift radialTiltShift);
 
-    void updateLinearTiltShift(EditorLinearTiltShift linearTiltShift);
+    void onLinearTiltShiftUpdated(EditorLinearTiltShift linearTiltShift);
+
+    void onStraightenTransformChanged(Matrix transformMatrix);
 
     void updateDrawing(Paint paint, Path path);
 

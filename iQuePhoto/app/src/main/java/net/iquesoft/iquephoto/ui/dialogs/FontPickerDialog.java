@@ -72,7 +72,7 @@ public class FontPickerDialog extends Dialog {
 
     /*@OnClick(R.id.applyFontButton)
     void onClickApply() {
-        mOnFontClickListener.onClick(mTypeface);
+        mOnFontClickListener.onFilterClicked(mTypeface);
         dismiss();
     }
 

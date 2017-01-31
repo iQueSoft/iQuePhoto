@@ -1,11 +1,14 @@
 package net.iquesoft.iquephoto.ui.fragments;
 
 import android.graphics.ColorMatrix;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -16,10 +19,12 @@ import com.arellomobile.mvp.presenter.ProvidePresenter;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapters.FiltersAdapter;
 import net.iquesoft.iquephoto.core.editor.ImageEditorView;
+import net.iquesoft.iquephoto.models.ParcelablePaint;
 import net.iquesoft.iquephoto.presentation.common.ToolFragment;
 import net.iquesoft.iquephoto.models.Filter;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.FiltersPresenter;
 import net.iquesoft.iquephoto.presentation.views.fragment.FiltersView;
+import net.iquesoft.iquephoto.ui.activities.EditorActivity;
 import net.iquesoft.iquephoto.utils.ToolbarUtil;
 
 import java.util.List;
@@ -57,9 +62,8 @@ public class FiltersFragment extends ToolFragment implements FiltersView {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        mImageEditorView = (ImageEditorView) getActivity().findViewById(R.id.imageEditorView);
-
         super.onCreate(savedInstanceState);
+        mImageEditorView = (ImageEditorView) getActivity().findViewById(R.id.imageEditorView);
     }
 
     @Override
@@ -92,8 +96,19 @@ public class FiltersFragment extends ToolFragment implements FiltersView {
     @Override
     public void setupFiltersAdapter(Uri uri, List<Filter> filters) {
         FiltersAdapter adapter = new FiltersAdapter(uri, filters);
-        adapter.setFiltersListener(filter ->
-                mPresenter.changeFilter(filter)
+        adapter.setFiltersListener(
+                new FiltersAdapter.OnFilterClickListener() {
+                    @Override
+                    public void onFilterClicked(Filter filter) {
+                        mPresenter.changeFilter(filter);
+                    }
+
+                    @Override
+                    public void onIntensityClicked() {
+                        // TODO: Filter intensity.
+                        //mPresenter.changeFilterIntensity(mImageEditorView.get);
+                    }
+                }
         );
 
         mFiltersRecyclerView.setLayoutManager(new LinearLayoutManager(null, LinearLayout.HORIZONTAL, false));
@@ -103,5 +118,10 @@ public class FiltersFragment extends ToolFragment implements FiltersView {
     @Override
     public void filterChanged(ColorMatrix colorMatrix) {
         mImageEditorView.setFilter(colorMatrix);
+    }
+
+    @Override
+    public void onChangeFilterIntensityClicked(Fragment fragment) {
+        ((EditorActivity) getActivity()).setupFragment(fragment);
     }
 }

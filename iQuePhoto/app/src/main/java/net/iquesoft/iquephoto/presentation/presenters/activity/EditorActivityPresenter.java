@@ -17,6 +17,7 @@ import net.iquesoft.iquephoto.presentation.views.activity.EditorActivityView;
 import net.iquesoft.iquephoto.tasks.ImageCacheSaveTask;
 import net.iquesoft.iquephoto.tasks.ImageSaveTask;
 import net.iquesoft.iquephoto.utils.BitmapUtil;
+import net.iquesoft.iquephoto.utils.LogHelper;
 
 import java.io.IOException;
 
@@ -28,7 +29,7 @@ public class EditorActivityPresenter extends MvpPresenter<EditorActivityView> {
     private Bitmap mBitmap;
 
     private Context mContext;
-    
+
     public EditorActivityPresenter(@NonNull Context context, @NonNull Intent intent) {
         mContext = context;
 
@@ -39,7 +40,7 @@ public class EditorActivityPresenter extends MvpPresenter<EditorActivityView> {
                     context.getContentResolver(), mUri
             );
 
-            BitmapUtil.logBitmapInfo("Cropped Bitmap", mBitmap);
+            LogHelper.logBitmap("Cropped Bitmap", mBitmap);
 
             getViewState().startEditing(mBitmap);
         } catch (IOException e) {

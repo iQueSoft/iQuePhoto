@@ -41,6 +41,7 @@ public class ImageAdjustmentPresenter extends MvpPresenter<ImageAdjustmentView> 
                 break;
             case SATURATION:
                 getViewState().changeToolbarSubtitle(R.string.saturation);
+                break;
             case WARMTH:
                 getViewState().changeToolbarSubtitle(R.string.warmth);
                 break;

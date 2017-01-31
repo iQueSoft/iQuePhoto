@@ -69,7 +69,7 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
 
     private Bitmap mImageBitmap;
     private Bitmap mSupportBitmap;
-    private Bitmap mBluredBitmap;
+    private Bitmap mBlurredBitmap;
 
     private Paint mDrawingPaint = new Paint();
     private Paint mBitmapPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -126,6 +126,7 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
         Observable<MotionEvent> actionDownObservable =
                 touchObservable.filter(event -> event.getActionMasked() == MotionEvent.ACTION_DOWN);
         actionDownObservable.subscribe(event -> {
+            Log.i("Observable", "Action: Down.");
             switch (mCurrentTool) {
                 case NONE:
                     getViewState().showOriginalImage(true);
@@ -141,11 +142,11 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
                     break;
                 case VIGNETTE:
                     mVignette.actionDown(event);
-                    getViewState().updateVignette(mVignette);
+                    getViewState().onVignetteUpdated(mVignette);
                     break;
                 case RADIAL_TILT_SHIFT:
                     mRadialTiltShift.actionDown(event);
-                    getViewState().updateRadialTiltShift(mRadialTiltShift);
+                    getViewState().onRadialTiltShiftUpdated(mRadialTiltShift);
                     break;
             }
         });
@@ -157,20 +158,21 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
                         event.getActionMasked() == MotionEvent.ACTION_POINTER_DOWN
                 );
         actionPointerDownObservable.subscribe(event -> {
+            Log.i("Observable", "Action: Pointer Down.");
             switch (mCurrentTool) {
                 case NONE:
                     break;
                 case VIGNETTE:
                     mVignette.actionPointerDown(event);
-                    getViewState().updateVignette(mVignette);
+                    getViewState().onVignetteUpdated(mVignette);
                     break;
                 case RADIAL_TILT_SHIFT:
                     mRadialTiltShift.actionPointerDown(event);
-                    getViewState().updateRadialTiltShift(mRadialTiltShift);
+                    getViewState().onRadialTiltShiftUpdated(mRadialTiltShift);
                     break;
                 case LINEAR_TILT_SHIFT:
                     mLinearTiltShift.actionPointerDown(event);
-                    getViewState().updateLinearTiltShift(mLinearTiltShift);
+                    getViewState().onLinearTiltShiftUpdated(mLinearTiltShift);
                     break;
             }
         });
@@ -180,6 +182,7 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
         Observable<MotionEvent> actionMoveObservable =
                 touchObservable.filter(event -> event.getActionMasked() == MotionEvent.ACTION_MOVE);
         actionMoveObservable.subscribe(event -> {
+            Log.i("Observable", "Action: Move.");
             switch (mCurrentTool) {
                 case NONE:
                     break;
@@ -194,15 +197,16 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
                     break;
                 case VIGNETTE:
                     mVignette.actionMove(event);
-                    getViewState().updateVignette(mVignette);
+                    getViewState().onVignetteUpdated(mVignette);
                     break;
                 case RADIAL_TILT_SHIFT:
                     mRadialTiltShift.actionMove(event);
-                    getViewState().updateRadialTiltShift(mRadialTiltShift);
+                    getViewState().onRadialTiltShiftUpdated(mRadialTiltShift);
                     break;
                 case LINEAR_TILT_SHIFT:
                     mLinearTiltShift.actionMove(event);
-                    getViewState().updateLinearTiltShift(mLinearTiltShift);
+                    getViewState().onLinearTiltShiftUpdated(mLinearTiltShift);
+                    break;
             }
         });
     }
@@ -211,6 +215,7 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
         Observable<MotionEvent> actionUpObservable =
                 touchObservable.filter(event -> event.getActionMasked() == MotionEvent.ACTION_UP);
         actionUpObservable.subscribe(event -> {
+            Log.i("Observable", "Action: Up.");
             mCurrentMode = EditorMode.NONE;
             switch (mCurrentTool) {
                 case NONE:
@@ -233,15 +238,15 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
                     break;
                 case VIGNETTE:
                     mVignette.actionUp();
-                    getViewState().updateVignette(mVignette);
+                    getViewState().onVignetteUpdated(mVignette);
                     break;
                 case RADIAL_TILT_SHIFT:
                     mRadialTiltShift.actionUp();
-                    getViewState().updateRadialTiltShift(mRadialTiltShift);
+                    getViewState().onRadialTiltShiftUpdated(mRadialTiltShift);
                     break;
                 case LINEAR_TILT_SHIFT:
                     mLinearTiltShift.actionUp();
-                    getViewState().updateLinearTiltShift(mLinearTiltShift);
+                    getViewState().onLinearTiltShiftUpdated(mLinearTiltShift);
                     break;
             }
         });
@@ -251,19 +256,20 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
         Observable<MotionEvent> actionPointerUpObservable =
                 touchObservable.filter(event -> event.getActionMasked() == MotionEvent.ACTION_POINTER_DOWN);
         actionPointerUpObservable.subscribe(event -> {
+            Log.i("Observable", "Action: Pointer Up.");
             mCurrentMode = EditorMode.NONE;
             switch (mCurrentTool) {
                 case VIGNETTE:
                     mVignette.actionPointerUp();
-                    getViewState().updateVignette(mVignette);
+                    getViewState().onVignetteUpdated(mVignette);
                     break;
                 case RADIAL_TILT_SHIFT:
                     mRadialTiltShift.actionPointerUp();
-                    getViewState().updateRadialTiltShift(mRadialTiltShift);
+                    getViewState().onRadialTiltShiftUpdated(mRadialTiltShift);
                     break;
                 case LINEAR_TILT_SHIFT:
                     mLinearTiltShift.actionPointerUp();
-                    getViewState().updateLinearTiltShift(mLinearTiltShift);
+                    getViewState().onLinearTiltShiftUpdated(mLinearTiltShift);
                     break;
             }
         });
@@ -283,6 +289,10 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
             mImageMatrix.mapRect(mImageRect);
 
             mTransformMatrix.set(mImageMatrix);
+
+            if (mVignette == null) {
+                mVignette = new EditorVignette(mViewWidth, mViewHeight);
+            }
 
             LogHelper.logRect("mImageRect", mImageRect);
             LogHelper.logMatrix("mImageMatrix", mImageMatrix);
@@ -310,13 +320,13 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
     public void setFilter(ColorMatrix colorMatrix) {
         mFilterPaint.setColorFilter(new ColorMatrixColorFilter(colorMatrix));
 
-        getViewState().filterChanged(mFilterPaint);
+        getViewState().onFilterChanged(mFilterPaint);
     }
 
     void changeFilterIntensity(int value) {
         mFilterPaint.setAlpha(value);
 
-        getViewState().filterChanged(mFilterPaint);
+        getViewState().onFilterChanged(mFilterPaint);
     }
 
     void changeOverlayIntensity(int value) {
@@ -326,7 +336,7 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
     void changeVignetteMask(int value) {
         mVignette.updateMask(value);
 
-        getViewState().updateVignette(mVignette);
+        getViewState().onVignetteUpdated(mVignette);
     }
 
     void changeBrightness(int value) {
@@ -343,7 +353,7 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
                 )
         );
 
-        getViewState().imageAdjusted(mAdjustPaint);
+        getViewState().onImageAdjusted(mAdjustPaint);
     }
 
     void changeContrast(int value) {
@@ -362,7 +372,7 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
                         )
                 ));
 
-        getViewState().imageAdjusted(mAdjustPaint);
+        getViewState().onImageAdjusted(mAdjustPaint);
     }
 
     void changeSaturation(int value) {
@@ -373,7 +383,7 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
 
         mAdjustPaint.setColorFilter(new ColorMatrixColorFilter(mColorMatrix));
 
-        getViewState().imageAdjusted(mAdjustPaint);
+        getViewState().onImageAdjusted(mAdjustPaint);
     }
 
     void changeWarmth(int value) {
@@ -389,7 +399,7 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
                 });
         mAdjustPaint.setColorFilter(new ColorMatrixColorFilter(mColorMatrix));
 
-        getViewState().imageAdjusted(mAdjustPaint);
+        getViewState().onImageAdjusted(mAdjustPaint);
     }
 
     void changeBrushSize(float size) {
@@ -400,14 +410,45 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
         mDrawingPaint.setColor(color);
     }
 
+    void changeStraightenTransform(int value) {
+        mTransformMatrix.set(mImageMatrix);
+
+        float width = mImageRect.width();
+        float height = mImageRect.height();
+
+        if (width >= height) {
+            width = mImageRect.height();
+            height = mImageRect.width();
+        }
+
+        float alpha = (float) Math.atan(height / width);
+
+        float length1 = (width / 2) / (float) Math.cos(alpha - Math.abs(Math.toRadians(value)));
+        float length2 = (float) Math.sqrt(Math.pow(width / 2, 2) + Math.pow(height / 2, 2));
+
+        float scale = length2 / length1;
+
+        float centerX = mImageRect.centerX();
+        float centerY = mImageRect.centerY();
+
+        float dX = centerX * (1 - scale);
+        float dY = centerY * (1 - scale);
+
+        mTransformMatrix.postScale(scale, scale);
+        mTransformMatrix.postTranslate(dX, dY);
+        mTransformMatrix.postRotate(value, centerX, centerY);
+
+        getViewState().onStraightenTransformChanged(mTransformMatrix);
+    }
+
     public void setFrame(Bitmap bitmap) {
-        getViewState().frameChanged(bitmap, getSupportMatrix(bitmap));
+        getViewState().onFrameChanged(bitmap, getSupportMatrix(bitmap));
     }
 
     public void setOverlay(Bitmap bitmap) {
         mSupportBitmap = bitmap;
 
-        getViewState().overlayChanged(bitmap, getSupportMatrix(bitmap), mOverlayPaint);
+        getViewState().onOverlayChanged(bitmap, getSupportMatrix(bitmap), mOverlayPaint);
     }
 
     void addText(Text text) {
@@ -417,13 +458,13 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
 
         mTexts.add(editorText);
 
-        getViewState().textAdded(mTexts);
+        getViewState().onTextAdded(mTexts);
     }
 
     void addSticker(Bitmap bitmap) {
         mStickers.add(new EditorSticker(bitmap, mImageRect));
 
-        getViewState().stickerAdded(mStickers);
+        getViewState().onStickerAdded(mStickers);
     }
 
     public void changeTool(EditorTool tool) {
@@ -439,47 +480,43 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
         if (!mDrawings.isEmpty()) {
             mDrawings.clear();
         }
-
+        
         switch (mCurrentTool) {
             case VIGNETTE:
-                if (mVignette == null) {
-                    mVignette = new EditorVignette(mViewWidth, mViewHeight);
-                }
                 mVignette.updateRect(mImageRect);
-                getViewState().updateVignette(mVignette);
+                getViewState().onVignetteUpdated(mVignette);
                 break;
             case RADIAL_TILT_SHIFT:
                 if (mRadialTiltShift == null) {
                     mRadialTiltShift = new EditorRadialTiltShift(mViewWidth, mViewHeight);
                 }
-                mBluredBitmap =
-                        BitmapUtil.getBlurImage(
-                                mContext,
-                                getAlteredBitmap(),
+                mBlurredBitmap =
+                        getBlurBitmap(
+                                mContext, getAlteredBitmap(),
                                 mImageBitmap.getWidth(),
                                 mImageBitmap.getHeight()
                         );
                 mRadialTiltShift.updateRect(mImageRect);
-                mRadialTiltShift.updateBlurBitmap(mBluredBitmap);
-                getViewState().updateRadialTiltShift(mRadialTiltShift);
+                mRadialTiltShift.updateBlurBitmap(mBlurredBitmap);
+                getViewState().onRadialTiltShiftUpdated(mRadialTiltShift);
                 break;
             case LINEAR_TILT_SHIFT:
                 if (mLinearTiltShift == null) {
                     mLinearTiltShift = new EditorLinearTiltShift(mViewWidth, mViewHeight);
                 }
-                mBluredBitmap =
+                mBlurredBitmap =
                         getBlurBitmap(
                                 mContext, getAlteredBitmap(),
                                 mImageBitmap.getWidth(),
                                 mImageBitmap.getHeight()
                         );
                 mLinearTiltShift.updateRect(mImageRect);
-                mLinearTiltShift.updateBlurBitmap(mBluredBitmap);
-                getViewState().updateLinearTiltShift(mLinearTiltShift);
+                mLinearTiltShift.updateBlurBitmap(mBlurredBitmap);
+                getViewState().onLinearTiltShiftUpdated(mLinearTiltShift);
                 break;
         }
 
-        getViewState().toolChanged(tool);
+        getViewState().onToolChanged(tool);
     }
 
     void setEditorListener(EditorListener editorListener) {
@@ -531,7 +568,7 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
                 mCurrentMode = EditorMode.NONE;
 
                 mTexts.remove(i);
-                //invalidate();
+                getViewState().updateView();
                 return;
             } else if (editorText.isInResizeAndScaleHandleButton(event)) {
                 mTouchedText = editorText;
@@ -543,22 +580,18 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
 
                 mCurrentMode = EditorMode.ROTATE_AND_SCALE;
                 return;
-            } else if (editorText.isInTransparencyHandleButton(event)) {
-                mTouchedText = editorText;
 
-                mLastX = editorText.getResizeHandleDstRect().centerX();
-                mLastY = editorText.getResizeHandleDstRect().centerY();
-
-                mCurrentMode = EditorMode.NONE;
-                return;
             } else if (editorText.isInFrontHandleButton(event)) {
                 EditorText temp = mTexts.remove(i);
                 mTexts.add(temp);
-
-                //invalidate();
+                getViewState().updateView();
+                return;
+            } else if (editorText.isInTransparencyHandleButton(event)) {
+                mEditorListener.onTransparencyHandleButtonClicked(editorText.getPaint());
                 return;
             }
         }
+
         mTouchedText = null;
         mCurrentMode = EditorMode.NONE;
     }
@@ -603,7 +636,8 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
                 getViewState().updateView();
                 return;
             } else if (editorSticker.isInTransparencyHandleButton(event)) {
-
+                mEditorListener.onTransparencyHandleButtonClicked(editorSticker.getPaint());
+                return;
             }
         }
 

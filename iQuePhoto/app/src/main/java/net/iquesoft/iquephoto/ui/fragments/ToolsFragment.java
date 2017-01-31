@@ -58,11 +58,11 @@ public class ToolsFragment extends MvpAppCompatFragment implements ToolsView {
         imageEditorView.changeTool(NONE);
 
         Button undoButton = (Button) getActivity().findViewById(R.id.undoButton);
-        
-        if (imageEditorView.hasChanges()) {
-            undoButton.setVisibility(View.VISIBLE);
-        } else {
+
+        if (undoButton.getText().equals("0")) {
             undoButton.setVisibility(View.GONE);
+        } else {
+            undoButton.setVisibility(View.VISIBLE);
         }
     }
 

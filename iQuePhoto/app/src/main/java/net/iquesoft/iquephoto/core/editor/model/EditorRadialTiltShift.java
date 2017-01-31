@@ -46,9 +46,9 @@ public class EditorRadialTiltShift {
     private Paint mTiltShiftRadialControlPaint;
 
     private RectF mBitmapRect = new RectF();
-    private RectF mTiltShiftRadialRect;
-    private RectF mTempTiltShiftRadialRect;
-    private RectF mTiltShiftRadialControlRect;
+    private RectF mRadialTiltShiftRect;
+    private RectF mRadialTiltShiftTempRect;
+    private RectF mRadialTiltShiftControlRect;
 
     private Matrix mGradientMatrix;
 
@@ -82,9 +82,9 @@ public class EditorRadialTiltShift {
 
         mGradientMatrix = new Matrix();
 
-        mTempTiltShiftRadialRect = new RectF();
-        mTiltShiftRadialRect = new RectF();
-        mTiltShiftRadialControlRect = new RectF();
+        mRadialTiltShiftRect = new RectF();
+        mRadialTiltShiftControlRect = new RectF();
+        mRadialTiltShiftTempRect = new RectF();
 
         mShaderPaint = new Paint();
         mShaderPaint.setAntiAlias(true);
@@ -92,7 +92,7 @@ public class EditorRadialTiltShift {
         mShaderPaint.setDither(true);
         mShaderPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OUT));
 
-        updateGradientRect();
+        updateGradientShader();
 
         mControlPointTolerance *= 1.5f;
 
@@ -104,33 +104,33 @@ public class EditorRadialTiltShift {
     }
 
     public void draw(@NonNull Canvas canvas, @NonNull Bitmap bitmap, @NonNull Matrix matrix, @NonNull Paint paint) {
-        if (!mTiltShiftRadialRect.isEmpty()) {
+        if (!mRadialTiltShiftRect.isEmpty()) {
 
             canvas.drawBitmap(bitmap, matrix, paint);
 
             canvas.saveLayer(mBitmapRect, mPaint, Canvas.CLIP_TO_LAYER_SAVE_FLAG);
 
-            mTiltShiftRadialControlRect.set(mTiltShiftRadialRect);
-            mTiltShiftRadialControlRect.inset(-mGradientInset, -mGradientInset);
+            mRadialTiltShiftControlRect.set(mRadialTiltShiftRect);
+            mRadialTiltShiftControlRect.inset(-mGradientInset, -mGradientInset);
 
             if (mBlurBitmap != null) {
                 canvas.drawBitmap(mBlurBitmap, matrix, paint);
             }
 
             canvas.drawCircle(
-                    mTiltShiftRadialControlRect.centerX(),
-                    mTiltShiftRadialControlRect.centerY(),
+                    mRadialTiltShiftControlRect.centerX(),
+                    mRadialTiltShiftControlRect.centerY(),
                     mFocusRadius,
                     mShaderPaint
             );
 
             canvas.restore();
 
-            mTiltShiftRadialControlRect.set(mTiltShiftRadialRect);
+            mRadialTiltShiftControlRect.set(mRadialTiltShiftRect);
 
             canvas.drawCircle(
-                    mTiltShiftRadialRect.centerX(),
-                    mTiltShiftRadialRect.centerY(),
+                    mRadialTiltShiftRect.centerX(),
+                    mRadialTiltShiftRect.centerY(),
                     mFocusRadius,
                     mTiltShiftRadialControlPaint
             );
@@ -144,40 +144,37 @@ public class EditorRadialTiltShift {
             mFocusRadius = bitmapRect.width() / 3;
         }
 
-        mTiltShiftRadialRect.set(0, 0, mFocusRadius, mFocusRadius);
+        mRadialTiltShiftRect.set(0, 0, mFocusRadius, mFocusRadius);
 
-        mTiltShiftRadialRect.offsetTo(
+        mRadialTiltShiftRect.offsetTo(
                 bitmapRect.centerX() - mFocusRadius / 2,
                 bitmapRect.centerY() - mFocusRadius / 2
         );
 
         mBitmapRect.set(bitmapRect);
 
-        updateGradientMatrix(mTiltShiftRadialRect);
+        updateGradientMatrix(mRadialTiltShiftRect);
 
         setPaintAlpha(125);
         //mFadeOutAnimator.start();
     }
 
-    public void updateGradientRect() {
+    private void updateGradientShader() {
         final int[] colors = new int[]{0xff000000, 0xff000000, 0};
         final float[] anchors = new float[]{0, mFeather, 1};
 
         mRadialGradient = new android.graphics.RadialGradient(
                 0, 0, 1, colors, anchors, Shader.TileMode.CLAMP
         );
-        updateGradientMatrix(mTiltShiftRadialRect);
+        updateGradientMatrix(mRadialTiltShiftRect);
+        mShaderPaint.setShader(mRadialGradient);
     }
 
     public void updateBlurBitmap(@NonNull Bitmap bitmap) {
         mBlurBitmap = bitmap;
     }
 
-    public void updateGradientShader(float value, Paint paint) {
-
-    }
-
-    public void updateGradientMatrix(RectF rectF) {
+    private void updateGradientMatrix(RectF rectF) {
         mGradientMatrix.reset();
         mGradientMatrix.postTranslate(rectF.centerX(), rectF.centerY());
         mGradientMatrix.postScale(rectF.height() / 2, rectF.height() / 2, rectF.centerX(), rectF.centerY());
@@ -200,14 +197,14 @@ public class EditorRadialTiltShift {
     }
 
     public void actionMove(MotionEvent event) {
-        mTempTiltShiftRadialRect.set(mTiltShiftRadialRect);
+        mRadialTiltShiftTempRect.set(mRadialTiltShiftRect);
 
         switch (mMode) {
             case MOVE:
                 float distanceX = event.getX() - mPreX;
                 float distanceY = event.getY() - mPreY;
 
-                mTempTiltShiftRadialRect.offset(distanceX, distanceY);
+                mRadialTiltShiftTempRect.offset(distanceX, distanceY);
                 break;
             case ROTATE_AND_SCALE:
                 float dist = MotionEventUtil.getDelta(event);
@@ -218,27 +215,24 @@ public class EditorRadialTiltShift {
                 scale += 1;
                 scale *= scale;
 
-                RectUtil.scaleRect(mTempTiltShiftRadialRect, scale);
+                RectUtil.scaleRect(mRadialTiltShiftTempRect, scale);
 
-                mFocusRadius = mTempTiltShiftRadialRect.height();
+                mFocusRadius = mRadialTiltShiftTempRect.height();
 
                 break;
         }
 
-        if (mTempTiltShiftRadialRect.width() > mControlPointTolerance
-                && mTempTiltShiftRadialRect.height() > mControlPointTolerance) {
+        if (mRadialTiltShiftTempRect.width() > mControlPointTolerance
+                && mRadialTiltShiftTempRect.height() > mControlPointTolerance) {
             if (isTiltShiftInRect()) {
-                mTiltShiftRadialRect.set(mTempTiltShiftRadialRect);
+                mRadialTiltShiftRect.set(mRadialTiltShiftTempRect);
 
                 mPreX = event.getX();
                 mPreY = event.getY();
             }
 
-            updateGradientMatrix(mTiltShiftRadialRect);
+            updateGradientMatrix(mRadialTiltShiftRect);
 
-            //mImageEditorView.invalidate();
-
-            //ViewCompat.postInvalidateOnAnimation(mImageEditorView);
         }
     }
 
@@ -274,8 +268,8 @@ public class EditorRadialTiltShift {
 
     private boolean isTiltShiftInRect() {
         return mBitmapRect.contains(
-                mTempTiltShiftRadialRect.centerX(),
-                mTempTiltShiftRadialRect.centerY()
+                mRadialTiltShiftTempRect.centerX(),
+                mRadialTiltShiftTempRect.centerY()
         );
     }
 }

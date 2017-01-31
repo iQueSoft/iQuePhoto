@@ -31,7 +31,9 @@ public class FiltersAdapter extends RecyclerView.Adapter<FiltersAdapter.ViewHold
     private OnFilterClickListener mOnFilterClickListener;
 
     public interface OnFilterClickListener {
-        void onClick(Filter filter);
+        void onFilterClicked(Filter filter);
+
+        void onIntensityClicked();
     }
 
     public void setFiltersListener(OnFilterClickListener onFilterClickListener) {
@@ -68,15 +70,19 @@ public class FiltersAdapter extends RecyclerView.Adapter<FiltersAdapter.ViewHold
         holder.filterImageView.setColorFilter(new ColorMatrixColorFilter(filter.getColorMatrix()));
 
         if (mCurrentPosition == position) {
-            mOnFilterClickListener.onClick(filter);
+            mOnFilterClickListener.onFilterClicked(filter);
             holder.filterChecked.setVisibility(View.VISIBLE);
         } else
             holder.filterChecked.setVisibility(View.GONE);
 
         holder.filterImageView.setOnClickListener(view -> {
             notifyItemChanged(mCurrentPosition);
-            mCurrentPosition = position;
-            notifyItemChanged(position);
+            if (mCurrentPosition != position) {
+                mCurrentPosition = position;
+                notifyItemChanged(position);
+            } else {
+                mOnFilterClickListener.onIntensityClicked();
+            }
         });
     }
 

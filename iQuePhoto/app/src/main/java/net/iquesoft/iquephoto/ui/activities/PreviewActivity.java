@@ -22,6 +22,7 @@ import net.iquesoft.iquephoto.presentation.presenters.activity.PreviewPresenter;
 import net.iquesoft.iquephoto.presentation.views.activity.PreviewView;
 import net.iquesoft.iquephoto.ui.dialogs.LoadingDialog;
 import net.iquesoft.iquephoto.utils.BitmapUtil;
+import net.iquesoft.iquephoto.utils.LogHelper;
 
 import java.io.File;
 
@@ -138,7 +139,7 @@ public class PreviewActivity extends MvpAppCompatActivity implements PreviewView
     public void setupImage(Bitmap bitmap) {
         mCropImageView.setImageBitmap(bitmap);
 
-        BitmapUtil.logBitmapInfo("Preview", bitmap);
+        LogHelper.logBitmap("Preview Bitmap", bitmap);
     }
 
     @Override

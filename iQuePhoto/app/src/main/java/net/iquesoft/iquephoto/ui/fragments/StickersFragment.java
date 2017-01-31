@@ -2,6 +2,7 @@ package net.iquesoft.iquephoto.ui.fragments;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -44,8 +45,8 @@ public class StickersFragment extends ToolFragment implements StickersView {
     RecyclerView mRecyclerView;
 
     private Unbinder mUnbinder;
-    
-    public static StickersFragment newInstance(@StringRes int title, ArrayList<Sticker> stickers) {
+
+    public static StickersFragment newInstance(@StringRes int title, @NonNull ArrayList<Sticker> stickers) {
         StickersFragment fragment = new StickersFragment();
 
         Bundle args = new Bundle();

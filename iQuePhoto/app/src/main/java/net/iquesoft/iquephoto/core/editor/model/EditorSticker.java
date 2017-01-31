@@ -280,6 +280,10 @@ public class EditorSticker {
         return mTransparencyHandleDstRect.contains(event.getX(), event.getY());
     }
 
+    public Paint getPaint() {
+        return mPaint;
+    }
+
     public void prepareToDraw(@NonNull Matrix matrix) {
         float imageX = MatrixUtil.getMatrixX(matrix);
         float imageY = MatrixUtil.getMatrixY(matrix);

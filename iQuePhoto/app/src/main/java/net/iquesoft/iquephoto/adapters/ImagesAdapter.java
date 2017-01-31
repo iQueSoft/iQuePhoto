@@ -6,7 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import net.iquesoft.iquephoto.R;
@@ -55,11 +57,19 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ViewHolder
                 .load("file://" + image.getPath())
                 .resize(250, 250)
                 .centerCrop()
-                .into(holder.galleryImage);
+                .into(holder.galleryImage, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        holder.progressBar.setVisibility(View.GONE);
+                    }
 
-        holder.galleryImage.setOnClickListener(v -> {
-            mListener.onClick(image);
-        });
+                    @Override
+                    public void onError() {
+
+                    }
+                });
+
+        holder.galleryImage.setOnClickListener(v -> mListener.onClick(image));
     }
 
     @Override
@@ -68,9 +78,11 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ViewHolder
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-
         @BindView(R.id.galleryImage)
         ImageView galleryImage;
+
+        @BindView(R.id.galleryImageProgressBar)
+        ProgressBar progressBar;
 
         public ViewHolder(View itemView) {
             super(itemView);

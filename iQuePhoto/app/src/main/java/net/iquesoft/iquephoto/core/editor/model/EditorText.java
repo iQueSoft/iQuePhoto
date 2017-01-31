@@ -58,7 +58,7 @@ public class EditorText {
     private RectF mFrontHandleDstRect;
     private RectF mTransparencyHandleDstRect;
     private RectF mResizeAndScaleHandleDstRect;
-    
+
     @Inject
     EditorFrame mEditorFrame;
 
@@ -283,5 +283,9 @@ public class EditorText {
         );
 
         mIsDrawHelperFrame = false;
+    }
+
+    public Paint getPaint() {
+        return mTextPaint;
     }
 }

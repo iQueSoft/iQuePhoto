@@ -17,4 +17,3 @@ public class Font {
         return "fonts/" + mPath;
     }
 }
-

@@ -2,6 +2,7 @@ package net.iquesoft.iquephoto.ui.activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -34,6 +35,7 @@ import net.iquesoft.iquephoto.presentation.presenters.activity.EditorActivityPre
 import net.iquesoft.iquephoto.presentation.views.activity.EditorActivityView;
 import net.iquesoft.iquephoto.tasks.ImageSaveTask;
 import net.iquesoft.iquephoto.ui.dialogs.LoadingDialog;
+import net.iquesoft.iquephoto.ui.fragments.TransparencyFragment;
 import net.iquesoft.iquephoto.ui.fragments.ToolsFragment;
 import net.iquesoft.iquephoto.utils.ToolbarUtil;
 
@@ -96,11 +98,16 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorActivi
             }
 
             @Override
+            public void onTransparencyHandleButtonClicked(Paint paint) {
+                setupFragment(TransparencyFragment.newInstance(paint));
+            }
+
+            @Override
             public void hasChanges(int count) {
                 if (count != 0) {
                     mUndoButton.setText(String.valueOf(count));
-                    mUndoButton.setVisibility(View.VISIBLE);
                 } else {
+                    mUndoButton.setText(String.valueOf(0));
                     mUndoButton.setVisibility(View.GONE);
                 }
             }
@@ -209,7 +216,7 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorActivi
             navigateBack(true);
         }
     }
-    
+
     @Override
     public void startEditing(Bitmap bitmap) {
         mImageEditorView.setImageBitmap(bitmap);

@@ -258,39 +258,7 @@ public class ImageEditorView extends View implements EditorView {
     }
 
     public void setStraightenTransformValue(@IntRange(from = -30, to = 30) int value) {
-        if (value != 0) {
-            //mStraightenTransformValue = value;
-
-            mTransformMatrix.set(mImageMatrix);
-
-            float width = mImageRect.width();
-            float height = mImageRect.height();
-
-            if (width >= height) {
-                width = mImageRect.height();
-                height = mImageRect.width();
-            }
-
-            float alpha = (float) Math.atan(height / width);
-
-            float length1 = (width / 2) / (float) Math.cos(alpha - Math.abs(Math.toRadians(value)));
-
-            float length2 = (float) Math.sqrt(Math.pow(width / 2, 2) + Math.pow(height / 2, 2));
-
-            float scale = length2 / length1;
-
-            float centerX = mImageRect.centerX();
-            float centerY = mImageRect.centerY();
-
-            float dX = centerX * (1 - scale);
-            float dY = centerY * (1 - scale);
-
-            mTransformMatrix.postScale(scale, scale);
-            mTransformMatrix.postTranslate(dX, dY);
-            mTransformMatrix.postRotate(value, centerX, centerY);
-
-            invalidate();
-        }
+        mPresenter.changeStraightenTransform(value);
     }
 
     public void setBrushColor(@ColorInt int color) {
@@ -349,14 +317,14 @@ public class ImageEditorView extends View implements EditorView {
     }
 
     @Override
-    public void toolChanged(EditorTool tool) {
+    public void onToolChanged(EditorTool tool) {
         mCurrentTool = tool;
 
         invalidate();
     }
 
     @Override
-    public void imageAdjusted(Paint paint) {
+    public void onImageAdjusted(Paint paint) {
         if (mAdjustPaint == null) {
             mAdjustPaint = paint;
         }
@@ -365,7 +333,7 @@ public class ImageEditorView extends View implements EditorView {
     }
 
     @Override
-    public void overlayChanged(Bitmap bitmap, Matrix matrix, Paint paint) {
+    public void onOverlayChanged(Bitmap bitmap, Matrix matrix, Paint paint) {
         mSupportBitmap = bitmap;
         mSupportMatrix = matrix;
         mOverlayPaint = paint;
@@ -374,7 +342,7 @@ public class ImageEditorView extends View implements EditorView {
     }
 
     @Override
-    public void filterChanged(Paint paint) {
+    public void onFilterChanged(Paint paint) {
         if (mFilterPaint == null) {
             mFilterPaint = paint;
         }
@@ -383,7 +351,7 @@ public class ImageEditorView extends View implements EditorView {
     }
 
     @Override
-    public void frameChanged(Bitmap bitmap, Matrix matrix) {
+    public void onFrameChanged(Bitmap bitmap, Matrix matrix) {
         mSupportBitmap = bitmap;
         mSupportMatrix = matrix;
 
@@ -391,7 +359,7 @@ public class ImageEditorView extends View implements EditorView {
     }
 
     @Override
-    public void textAdded(List<EditorText> texts) {
+    public void onTextAdded(List<EditorText> texts) {
         if (mTexts == null) {
             mTexts = texts;
         }
@@ -400,7 +368,7 @@ public class ImageEditorView extends View implements EditorView {
     }
 
     @Override
-    public void stickerAdded(List<EditorSticker> stickers) {
+    public void onStickerAdded(List<EditorSticker> stickers) {
         if (mStickers == null) {
             mStickers = stickers;
         }
@@ -409,7 +377,7 @@ public class ImageEditorView extends View implements EditorView {
     }
 
     @Override
-    public void updateVignette(EditorVignette vignette) {
+    public void onVignetteUpdated(EditorVignette vignette) {
         if (mVignette == null) {
             mVignette = vignette;
         }
@@ -418,7 +386,7 @@ public class ImageEditorView extends View implements EditorView {
     }
 
     @Override
-    public void updateRadialTiltShift(EditorRadialTiltShift radialTiltShift) {
+    public void onRadialTiltShiftUpdated(EditorRadialTiltShift radialTiltShift) {
         if (mRadialTiltShift == null) {
             mRadialTiltShift = radialTiltShift;
         }
@@ -427,9 +395,18 @@ public class ImageEditorView extends View implements EditorView {
     }
 
     @Override
-    public void updateLinearTiltShift(EditorLinearTiltShift linearTiltShift) {
+    public void onLinearTiltShiftUpdated(EditorLinearTiltShift linearTiltShift) {
         if (mLinearTiltShift == null) {
             mLinearTiltShift = linearTiltShift;
+        }
+
+        invalidate();
+    }
+
+    @Override
+    public void onStraightenTransformChanged(Matrix transformMatrix) {
+        if (mTransformMatrix == null) {
+            mTransformMatrix = transformMatrix;
         }
 
         invalidate();

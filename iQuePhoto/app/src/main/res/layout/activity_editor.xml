@@ -26,13 +26,13 @@
                 android:layout_gravity="center"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:drawableLeft="@drawable/ic_undo"
-                android:text="1"
+                android:text="0"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:visibility="gone" />
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
-
+    
     <net.iquesoft.iquephoto.core.editor.ImageEditorView
         android:id="@+id/imageEditorView"
         android:layout_width="match_parent"

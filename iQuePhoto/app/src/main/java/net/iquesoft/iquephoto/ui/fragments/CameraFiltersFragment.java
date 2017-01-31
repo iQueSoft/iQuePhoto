@@ -70,7 +70,7 @@ public class CameraFiltersFragment extends MvpAppCompatFragment implements Camer
     public void setupFiltersAdapter(List<Filter> filters) {
         /*FiltersAdapter adapter = new FiltersAdapter(filters);
         adapter.setFiltersListener(filter ->
-                mPresenter.onFilterClick(filter)
+                mPresenter.onFilterClicked(filter)
         );
 
         mRecyclerView.setLayoutManager(new

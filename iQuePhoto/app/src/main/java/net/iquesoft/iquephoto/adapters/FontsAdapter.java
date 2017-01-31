@@ -66,7 +66,7 @@ public class FontsAdapter extends RecyclerView.Adapter<FontsAdapter.ViewHolder> 
         });
 
         /*if (mSelectedFontPosition == position) {
-            mOnFontClickListener.onClick(font);
+            mOnFontClickListener.onFilterClicked(font);
             holder.fontSelectedImageView.setVisibility(View.VISIBLE);
         } else {
             holder.fontSelectedImageView.setVisibility(View.GONE);

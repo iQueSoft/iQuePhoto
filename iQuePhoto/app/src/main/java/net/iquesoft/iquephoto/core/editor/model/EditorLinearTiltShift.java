@@ -122,25 +122,6 @@ public class EditorLinearTiltShift {
             //mTiltShiftLinearControlRect.set(mTiltShiftLinearRect);
 
             canvas.drawRect(mTiltShiftLinearControlRect, mTiltShiftLinearControlPaint);
-
-            /* TODO: Line for linear tilt shift
-            canvas.drawLine(
-                    mTiltShiftLinearControlRect.left,
-                    mTiltShiftLinearControlRect.top,
-                    mTiltShiftLinearControlRect.left + mTiltShiftLinearControlRect.width(),
-                    mTiltShiftLinearControlRect.top + mTiltShiftLinearControlRect.width(),
-                    mTiltShiftLinearControlPaint
-            );
-
-            canvas.drawLine(
-                    mTiltShiftLinearControlRect.right - mTiltShiftLinearControlRect.width(),
-                    mTiltShiftLinearControlRect.bottom - mTiltShiftLinearControlRect.width(),
-                    mTiltShiftLinearControlRect.right,
-                    mTiltShiftLinearControlRect.bottom,
-                    mTiltShiftLinearControlPaint
-            );*/
-
-
         }
     }
 
@@ -178,10 +159,23 @@ public class EditorLinearTiltShift {
     }
 
     public void updateGradientShader(float value, Paint paint) {
+        mFeather = value;
 
+        final int[] colors = new int[]{0xff000000, 0xff000000, 0};
+        final float[] positions = new float[]{0, 0, 1, 1};
+
+        /*mRadialGradient = new android.graphics.RadialGradient(
+                0, 0, 1, colors, anchors, Shader.TileMode.CLAMP
+        );*/
+
+        mLinearGradient = new android.graphics.LinearGradient(
+                0, 0, 2, 2, colors, positions, Shader.TileMode.CLAMP
+        );
+        paint.setShader(mLinearGradient);
+        updateGradientMatrix(mTiltShiftLinearRect);
     }
 
-    public void updateGradientMatrix(RectF rectF) {
+    private void updateGradientMatrix(RectF rectF) {
         mGradientMatrix.reset();
         mGradientMatrix.postTranslate(rectF.centerX(), rectF.centerY());
         mGradientMatrix.postScale(rectF.height() / 2, rectF.height() / 2, rectF.centerX(), rectF.centerY());

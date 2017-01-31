@@ -151,7 +151,7 @@ public class ImageAdjustmentFragment extends ToolFragment implements ImageAdjust
     public void onStraightenTransformChanged(int value) {
         mImageEditorView.setStraightenTransformValue(value);
     }
-
+    
     @Override
     public void onVignetteChanged(int value) {
         mImageEditorView.setVignetteIntensity(value);

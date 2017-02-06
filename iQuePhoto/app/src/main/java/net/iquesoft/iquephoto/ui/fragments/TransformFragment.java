@@ -10,7 +10,7 @@ import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.core.editor.ImageEditorView;
+import net.iquesoft.iquephoto.core.ImageEditorView;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.TransformPresenter;
 import net.iquesoft.iquephoto.presentation.views.fragment.TransformView;
 import net.iquesoft.iquephoto.ui.activities.EditorActivity;
@@ -20,10 +20,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.TRANSFORM;
-import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.TRANSFORM_HORIZONTAL;
-import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.TRANSFORM_STRAIGHTEN;
-import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.TRANSFORM_VERTICAL;
+import static net.iquesoft.iquephoto.core.enums.EditorTool.TRANSFORM;
+import static net.iquesoft.iquephoto.core.enums.EditorTool.TRANSFORM_HORIZONTAL;
+import static net.iquesoft.iquephoto.core.enums.EditorTool.TRANSFORM_STRAIGHTEN;
+import static net.iquesoft.iquephoto.core.enums.EditorTool.TRANSFORM_VERTICAL;
 
 public class TransformFragment extends MvpAppCompatFragment implements TransformView {
     @InjectPresenter
@@ -57,7 +57,7 @@ public class TransformFragment extends MvpAppCompatFragment implements Transform
     @Override
     public void onResume() {
         super.onResume();
-        ((ImageEditorView) getActivity().findViewById(R.id.imageEditorView))
+        ((ImageEditorView) getActivity().findViewById(R.id.image_editor_view))
                 .changeTool(TRANSFORM);
         ToolbarUtil.updateTitle(R.string.transform, getActivity());
         ToolbarUtil.updateSubtitle(null, getActivity());

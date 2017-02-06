@@ -50,23 +50,23 @@ public class ToolsAdapter extends RecyclerView.Adapter<ToolsAdapter.ViewHolder> 
     public void onBindViewHolder(ToolsAdapter.ViewHolder holder, int position) {
         final Tool tool = mToolsList.get(position);
 
-        holder.toolButton.setText(mContext.getResources().getString(tool.getTitle()));
+        holder.button.setText(mContext.getResources().getString(tool.getTitle()));
 
-        holder.toolButton.setCompoundDrawablesWithIntrinsicBounds(null,
+        holder.button.setCompoundDrawablesWithIntrinsicBounds(null,
                 ResourcesCompat.getDrawable(mContext.getResources(), tool.getIcon(), null),
                 null, null);
 
-        holder.toolButton.setOnClickListener(view -> mOnToolsClickListener.onClick(tool));
+        holder.button.setOnClickListener(view -> mOnToolsClickListener.onClick(tool));
     }
-
+    
     @Override
     public int getItemCount() {
         return mToolsList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.toolButton)
-        Button toolButton;
+        @BindView(R.id.button_tool)
+        Button button;
 
         public ViewHolder(View itemView) {
             super(itemView);

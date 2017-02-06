@@ -2,8 +2,8 @@ package net.iquesoft.iquephoto.di;
 
 import android.content.Context;
 
-import net.iquesoft.iquephoto.core.editor.model.EditorSticker;
-import net.iquesoft.iquephoto.core.editor.model.EditorText;
+import net.iquesoft.iquephoto.core.model.EditorSticker;
+import net.iquesoft.iquephoto.core.model.EditorText;
 import net.iquesoft.iquephoto.di.modules.AppModule;
 import net.iquesoft.iquephoto.di.modules.EditorModule;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.AdjustPresenter;

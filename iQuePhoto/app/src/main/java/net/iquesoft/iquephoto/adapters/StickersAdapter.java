@@ -54,9 +54,9 @@ public class StickersAdapter extends RecyclerView.Adapter<StickersAdapter.ViewHo
                 .fit()
                 .centerCrop()
                 .noPlaceholder()
-                .into(holder.stickerImage);
+                .into(holder.sticker);
 
-        holder.stickerImage.setOnClickListener(view -> mOnStickerClickListener.onClick(sticker));
+        holder.sticker.setOnClickListener(view -> mOnStickerClickListener.onClick(sticker));
     }
 
     @Override
@@ -65,8 +65,8 @@ public class StickersAdapter extends RecyclerView.Adapter<StickersAdapter.ViewHo
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.stickerImageView)
-        ImageView stickerImage;
+        @BindView(R.id.image_view_sticker)
+        ImageView sticker;
 
         public ViewHolder(View itemView) {
             super(itemView);

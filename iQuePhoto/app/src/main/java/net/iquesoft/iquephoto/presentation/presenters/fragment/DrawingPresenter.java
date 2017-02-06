@@ -16,19 +16,21 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import dagger.Lazy;
+
 @InjectViewState
 public class DrawingPresenter extends MvpPresenter<DrawingView> {
     @Inject
-    List<BrushSize> mSizes;
+    Lazy<List<BrushSize>> mSizes;
 
     @Inject
-    List<EditorColor> mColors;
+    Lazy<List<EditorColor>> mColors;
 
     public DrawingPresenter() {
         App.getAppComponent().inject(this);
 
-        getViewState().setupSizesAdapter(mSizes);
-        getViewState().setupColorsAdapter(mColors);
+        getViewState().setupSizesAdapter(mSizes.get());
+        getViewState().setupColorsAdapter(mColors.get());
     }
 
     public void changeBrushColor(@NonNull Context context, EditorColor editorColor) {

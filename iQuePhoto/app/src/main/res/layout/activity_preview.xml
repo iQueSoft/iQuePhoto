@@ -22,7 +22,7 @@
     </android.support.design.widget.AppBarLayout>
 
     <com.isseiaoki.simplecropview.CropImageView
-        android:id="@+id/cropImageView"
+        android:id="@+id/crop_image_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
@@ -54,13 +54,14 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
+            android:layout_weight="1"
             android:gravity="center"
             android:orientation="horizontal">
 
             <ImageButton
-                android:id="@+id/buttonFlipVertical"
+                android:id="@+id/button_flip_vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -68,10 +69,10 @@
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
                 android:paddingTop="10dp"
-                android:src="@drawable/ic_v_flip" />
+                android:src="@drawable/ic_v_flip_white_35dp" />
 
             <ImageButton
-                android:id="@+id/buttonRotateLeft"
+                android:id="@+id/button_rotate_left"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -79,10 +80,10 @@
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
                 android:paddingTop="10dp"
-                android:src="@drawable/ic_rotate_left" />
+                android:src="@drawable/ic_rotate_left_white_35dp" />
 
             <ImageButton
-                android:id="@+id/buttonRotateRight"
+                android:id="@+id/button_rotate_right"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -90,10 +91,10 @@
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
                 android:paddingTop="10dp"
-                android:src="@drawable/ic_rotate_right" />
+                android:src="@drawable/ic_rotate_right_white_35dp" />
 
             <ImageButton
-                android:id="@+id/buttonFlipHorizontal"
+                android:id="@+id/button_flip_horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -101,14 +102,15 @@
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
                 android:paddingTop="10dp"
-                android:src="@drawable/ic_h_flip" />
+                android:src="@drawable/ic_h_flip_white_35dp" />
         </LinearLayout>
 
         <android.support.design.widget.TabLayout
-            android:id="@+id/cropTabLayout"
+            android:id="@+id/tab_layout_crop"
             style="@style/TabLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
             custom:tabIndicatorColor="@color/white"
             custom:tabMode="scrollable"
             custom:tabSelectedTextColor="@color/white"

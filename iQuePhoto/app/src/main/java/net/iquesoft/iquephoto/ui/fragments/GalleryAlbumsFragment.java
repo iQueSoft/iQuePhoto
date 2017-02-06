@@ -30,10 +30,10 @@ public class GalleryAlbumsFragment extends MvpAppCompatFragment implements Galle
     @InjectPresenter
     GalleryAlbumsPresenter mPresenter;
 
-    @BindView(R.id.albumsRecyclerView)
+    @BindView(R.id.recycler_view_albums)
     RecyclerView mRecyclerView;
 
-    @BindView(R.id.noImagesLinearLayout)
+    @BindView(R.id.linear_layout_no_images)
     LinearLayout mNoImagesLinearLayout;
 
     private Unbinder mUnbinder;
@@ -87,7 +87,7 @@ public class GalleryAlbumsFragment extends MvpAppCompatFragment implements Galle
         mRecyclerView.setAdapter(adapter);
     }
 
-    @OnClick(R.id.takePhotoButton)
+    @OnClick(R.id.button_take_photo)
     void onClickTakePhoto() {
         Intent intent = new Intent("app.intent.action.Camera");
         startActivity(intent);

@@ -20,7 +20,7 @@
             android:background="?attr/colorPrimary">
 
             <Button
-                android:id="@+id/undoButton"
+                android:id="@+id/button_undo"
                 android:layout_width="45dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -32,15 +32,15 @@
                 android:visibility="gone" />
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
-    
-    <net.iquesoft.iquephoto.core.editor.ImageEditorView
-        android:id="@+id/imageEditorView"
+
+    <net.iquesoft.iquephoto.core.ImageEditorView
+        android:id="@+id/image_editor_view"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
         android:layout_weight="1" />
 
     <FrameLayout
-        android:id="@+id/fragmentContainer"
+        android:id="@+id/frame_layout_fragment_container"
         android:layout_width="match_parent"
         android:layout_height="@dimen/tool_height"
         android:background="@color/colorPrimaryDark" />

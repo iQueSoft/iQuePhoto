@@ -5,12 +5,12 @@
     android:background="@color/colorBackground">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/albumsRecyclerView"
+        android:id="@+id/recycler_view_albums"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
     <LinearLayout
-        android:id="@+id/noImagesLinearLayout"
+        android:id="@+id/linear_layout_no_images"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -21,7 +21,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_disappointed" />
+            android:src="@drawable/ic_disappointed_white_150dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -43,7 +43,7 @@
             android:textStyle="bold" />
 
         <Button
-            android:id="@+id/takePhotoButton"
+            android:id="@+id/button_take_photo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="TAKE PHOTO"
@@ -51,4 +51,3 @@
             android:theme="@style/RaisedButton" />
     </LinearLayout>
 </FrameLayout>
-

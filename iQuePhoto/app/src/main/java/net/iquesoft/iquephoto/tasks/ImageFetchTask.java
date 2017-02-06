@@ -61,7 +61,7 @@ public class ImageFetchTask extends AsyncTask<Void, Void, List<ImageAlbum>> {
                     File file = new File(path);
                     if (file.exists()) {
                         Image image = new Image(id, path);
-                        
+
                         ImageAlbum imageAlbum = folderMap.get(folderName);
                         if (imageAlbum == null) {
                             imageAlbum = new ImageAlbum(folderName);

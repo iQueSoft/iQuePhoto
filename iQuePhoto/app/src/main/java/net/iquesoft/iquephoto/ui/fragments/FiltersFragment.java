@@ -16,8 +16,7 @@ import com.arellomobile.mvp.presenter.ProvidePresenter;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapters.FiltersAdapter;
-import net.iquesoft.iquephoto.core.editor.ImageEditorView;
-import net.iquesoft.iquephoto.presentation.common.ToolFragment;
+import net.iquesoft.iquephoto.core.ImageEditorView;
 import net.iquesoft.iquephoto.models.Filter;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.FiltersPresenter;
 import net.iquesoft.iquephoto.presentation.views.fragment.FiltersView;
@@ -30,7 +29,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.FILTERS;
+import static net.iquesoft.iquephoto.core.enums.EditorTool.FILTERS;
 
 public class FiltersFragment extends ToolFragment implements FiltersView {
     @InjectPresenter
@@ -43,7 +42,7 @@ public class FiltersFragment extends ToolFragment implements FiltersView {
         );
     }
 
-    @BindView(R.id.filtersRecyclerView)
+    @BindView(R.id.recycler_view_filters)
     RecyclerView mFiltersRecyclerView;
 
     private Unbinder mUnbinder;
@@ -60,7 +59,7 @@ public class FiltersFragment extends ToolFragment implements FiltersView {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mImageEditorView = (ImageEditorView) getActivity().findViewById(R.id.imageEditorView);
+        mImageEditorView = (ImageEditorView) getActivity().findViewById(R.id.image_editor_view);
     }
 
     @Override

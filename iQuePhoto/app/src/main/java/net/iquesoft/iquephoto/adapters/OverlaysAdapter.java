@@ -19,7 +19,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class OverlaysAdapter extends RecyclerView.Adapter<OverlaysAdapter.ViewHolder> {
-
     private int mCurrentPosition = 0;
 
     private Context mContext;
@@ -81,13 +80,13 @@ public class OverlaysAdapter extends RecyclerView.Adapter<OverlaysAdapter.ViewHo
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.overlayTitle)
+        @BindView(R.id.text_view_overlay_title)
         TextView title;
 
-        @BindView(R.id.overlayImageView)
+        @BindView(R.id.image_view_overlay)
         ImageView image;
 
-        @BindView(R.id.overlayChecked)
+        @BindView(R.id.image_view_overlay_checked)
         ImageView overlaySelected;
 
         public ViewHolder(View itemView) {
@@ -97,4 +96,3 @@ public class OverlaysAdapter extends RecyclerView.Adapter<OverlaysAdapter.ViewHo
         }
     }
 }
-

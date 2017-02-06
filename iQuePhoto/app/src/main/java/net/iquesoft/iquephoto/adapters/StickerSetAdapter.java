@@ -45,7 +45,7 @@ public class StickerSetAdapter extends RecyclerView.Adapter<StickerSetAdapter.Vi
 
         return new ViewHolder(view);
     }
-    
+
     @Override
     public void onBindViewHolder(StickerSetAdapter.ViewHolder holder, int position) {
         final StickersSet stickersSet = mStickersSets.get(position);
@@ -61,17 +61,17 @@ public class StickerSetAdapter extends RecyclerView.Adapter<StickerSetAdapter.Vi
 
         holder.itemView.setOnClickListener(view -> mOnStickersSetClickListener.onClick(stickersSet));
     }
-
+    
     @Override
     public int getItemCount() {
         return mStickersSets.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.stickerSetTitle)
+        @BindView(R.id.text_view_stickers_sets_title)
         TextView title;
 
-        @BindView(R.id.stickerSetImage)
+        @BindView(R.id.image_view_stickers_sets_image)
         ImageView image;
 
         public ViewHolder(View itemView) {

@@ -35,7 +35,7 @@ public class FiltersAdapter extends RecyclerView.Adapter<FiltersAdapter.ViewHold
 
         void onIntensityClicked();
     }
-
+    
     public void setFiltersListener(OnFilterClickListener onFilterClickListener) {
         mOnFilterClickListener = onFilterClickListener;
     }
@@ -92,13 +92,13 @@ public class FiltersAdapter extends RecyclerView.Adapter<FiltersAdapter.ViewHold
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.filterTitle)
+        @BindView(R.id.text_view_filter_title)
         TextView filterTitle;
 
-        @BindView(R.id.filterImageView)
+        @BindView(R.id.image_view_filter)
         ImageView filterImageView;
 
-        @BindView(R.id.filterChecked)
+        @BindView(R.id.image_view_filter_checked)
         ImageView filterChecked;
 
         public ViewHolder(View itemView) {

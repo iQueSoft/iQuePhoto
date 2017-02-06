@@ -65,9 +65,9 @@
     </style>
 
     <style name="TabLayoutTextAppearance" parent="TextAppearance.Design.Tab">
-        <item name="textAllCaps">true</item>
+        <item name="android:textAllCaps">true</item>
         <item name="android:textStyle">bold</item>
-        <item name="textSize">22sp</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
     <style name="CircularProgress" parent="@android:style/Widget.Material.Light.ProgressBar.Large">

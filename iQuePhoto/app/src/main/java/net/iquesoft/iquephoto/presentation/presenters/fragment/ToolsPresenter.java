@@ -11,13 +11,15 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import dagger.Lazy;
+
 @InjectViewState
 public class ToolsPresenter extends MvpPresenter<ToolsView> {
     @Inject
-    List<Tool> mTools;
+    Lazy<List<Tool>> mTools;
 
     public ToolsPresenter() {
         App.getAppComponent().inject(this);
-        getViewState().setupTools(mTools);
+        getViewState().setupTools(mTools.get());
     }
 }

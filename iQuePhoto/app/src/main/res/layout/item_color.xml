@@ -5,7 +5,7 @@
     android:padding="5dp">
 
     <ImageView
-        android:id="@+id/colorImageView"
+        android:id="@+id/image_view_color"
         android:layout_width="40dp"
         android:layout_height="40dp" />
 </FrameLayout>

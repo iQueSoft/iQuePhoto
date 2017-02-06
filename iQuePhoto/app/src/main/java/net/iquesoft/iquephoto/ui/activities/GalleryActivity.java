@@ -10,7 +10,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.models.ImageAlbum;
-import net.iquesoft.iquephoto.presentation.presenters.activity.GalleryPresenter;
+import net.iquesoft.iquephoto.presentation.presenters.activity.GalleryActivityPresenter;
 import net.iquesoft.iquephoto.presentation.views.activity.GalleryView;
 import net.iquesoft.iquephoto.ui.fragments.GalleryAlbumsFragment;
 import net.iquesoft.iquephoto.ui.fragments.GalleryImagesFragment;
@@ -20,9 +20,9 @@ import butterknife.ButterKnife;
 
 public class GalleryActivity extends MvpAppCompatActivity implements GalleryView {
     @InjectPresenter
-    GalleryPresenter mPresenter;
+    GalleryActivityPresenter mPresenter;
 
-    @BindView(R.id.toolbar)
+    @BindView(R.id.toolbar_gallery)
     Toolbar mToolbar;
 
     private FragmentManager mFragmentManager;
@@ -33,12 +33,12 @@ public class GalleryActivity extends MvpAppCompatActivity implements GalleryView
         setContentView(R.layout.activity_gallery);
 
         ButterKnife.bind(this);
-        
+
         setSupportActionBar(mToolbar);
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            mToolbar.setNavigationIcon(R.drawable.ic_close);
+            mToolbar.setNavigationIcon(R.drawable.ic_close_white_24dp);
         }
 
         mFragmentManager = getSupportFragmentManager();
@@ -58,7 +58,7 @@ public class GalleryActivity extends MvpAppCompatActivity implements GalleryView
     public void onBackPressed() {
         if (mFragmentManager.getBackStackEntryCount() == 1) {
             super.onBackPressed();
-            mToolbar.setNavigationIcon(R.drawable.ic_close);
+            mToolbar.setNavigationIcon(R.drawable.ic_close_white_24dp);
             mToolbar.setTitle(R.string.gallery);
         } else {
             finish();
@@ -75,10 +75,5 @@ public class GalleryActivity extends MvpAppCompatActivity implements GalleryView
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .addToBackStack(null)
                 .commit();
-    }
-
-    @Override
-    public void editImage(String imagePath) {
-
     }
 }

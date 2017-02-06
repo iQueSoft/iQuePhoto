@@ -14,9 +14,7 @@ import com.arellomobile.mvp.MvpPresenter;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.presentation.views.activity.EditorActivityView;
-import net.iquesoft.iquephoto.tasks.ImageCacheSaveTask;
 import net.iquesoft.iquephoto.tasks.ImageSaveTask;
-import net.iquesoft.iquephoto.utils.BitmapUtil;
 import net.iquesoft.iquephoto.utils.LogHelper;
 
 import java.io.IOException;
@@ -26,6 +24,8 @@ public class EditorActivityPresenter extends MvpPresenter<EditorActivityView> {
     public static final String INSTAGRAM_PACKAGE_NAME = "com.instagram.android";
     public static final String FACEBOOK_PACKAGE_NAME = "com.facebook.katana";
 
+    private Uri mUri;
+
     private Bitmap mBitmap;
 
     private Context mContext;
@@ -34,7 +34,7 @@ public class EditorActivityPresenter extends MvpPresenter<EditorActivityView> {
         mContext = context;
 
         try {
-            Uri mUri = intent.getData();
+            mUri = intent.getData();
 
             mBitmap = MediaStore.Images.Media.getBitmap(
                     context.getContentResolver(), mUri
@@ -56,37 +56,26 @@ public class EditorActivityPresenter extends MvpPresenter<EditorActivityView> {
         }
     }
 
+    public void setAlteredImageUri(@NonNull Uri uri) {
+        mUri = uri;
+    }
+
     public void save(@NonNull Bitmap bitmap) {
         new ImageSaveTask(mContext, bitmap).execute();
     }
 
-    public void share(@NonNull Bitmap bitmap, @Nullable String packageName) {
+    public void share(@Nullable String packageName) {
         if (isApplicationExist(mContext, packageName)) {
-            ImageCacheSaveTask imageCacheSaveTask = new ImageCacheSaveTask(mContext, bitmap);
-            imageCacheSaveTask.setOnImageLoadedListener(new ImageCacheSaveTask.OnImageCacheSaveListener() {
-                @Override
-                public void onSaveStarted() {
-                    getViewState().showLoading();
-                }
-
-                @Override
-                public void onImageSaved(Uri uri) {
-                    getViewState().share(uri, packageName);
-                }
-
-                @Override
-                public void onSaveFinished() {
-                    getViewState().hideLoading();
-                }
-            });
-            imageCacheSaveTask.execute();
+            getViewState().share(mUri, packageName);
         } else {
             switch (packageName) {
                 case INSTAGRAM_PACKAGE_NAME:
-                    getViewState().showApplicationNotExistAlertDialog(R.string.instagram_alert, packageName);
+                    getViewState().
+                            showApplicationNotExistAlertDialog(R.string.instagram_alert, packageName);
                     break;
                 case FACEBOOK_PACKAGE_NAME:
-                    getViewState().showApplicationNotExistAlertDialog(R.string.facebook_alert, packageName);
+                    getViewState().
+                            showApplicationNotExistAlertDialog(R.string.facebook_alert, packageName);
                     break;
             }
         }

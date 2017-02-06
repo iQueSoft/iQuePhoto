@@ -18,10 +18,9 @@ import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.isseiaoki.simplecropview.CropImageView;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.presentation.presenters.activity.PreviewPresenter;
+import net.iquesoft.iquephoto.presentation.presenters.activity.PreviewActivityPresenter;
 import net.iquesoft.iquephoto.presentation.views.activity.PreviewView;
 import net.iquesoft.iquephoto.ui.dialogs.LoadingDialog;
-import net.iquesoft.iquephoto.utils.BitmapUtil;
 import net.iquesoft.iquephoto.utils.LogHelper;
 
 import java.io.File;
@@ -34,20 +33,20 @@ public class PreviewActivity extends MvpAppCompatActivity implements PreviewView
     public static final String IMAGE_PATH = "image path";
 
     @InjectPresenter
-    PreviewPresenter mPresenter;
+    PreviewActivityPresenter mPresenter;
 
     @ProvidePresenter
-    PreviewPresenter providePreviewPresenter() {
-        return new PreviewPresenter(getIntent());
+    PreviewActivityPresenter providePreviewPresenter() {
+        return new PreviewActivityPresenter(this, getIntent());
     }
 
     @BindView(R.id.toolbar_preview)
     Toolbar mToolbar;
 
-    @BindView(R.id.cropTabLayout)
+    @BindView(R.id.tab_layout_crop)
     TabLayout mTabLayout;
 
-    @BindView(R.id.cropImageView)
+    @BindView(R.id.crop_image_view)
     CropImageView mCropImageView;
 
     private LoadingDialog mLoadingDialog;
@@ -66,8 +65,7 @@ public class PreviewActivity extends MvpAppCompatActivity implements PreviewView
 
         mLoadingDialog = new LoadingDialog(this);
 
-        mToolbar.setNavigationIcon(R.drawable.ic_close);
-
+        mToolbar.setNavigationIcon(R.drawable.ic_close_white_24dp);
         mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -110,23 +108,22 @@ public class PreviewActivity extends MvpAppCompatActivity implements PreviewView
         return super.onSupportNavigateUp();
     }
 
-    // FIXME: Flip bug.
-    @OnClick(R.id.buttonFlipHorizontal)
+    @OnClick(R.id.button_flip_horizontal)
     void onClickFlipHorizontal() {
         mPresenter.flipImageHorizontal(mCropImageView.getImageBitmap());
     }
 
-    @OnClick(R.id.buttonFlipVertical)
+    @OnClick(R.id.button_flip_vertical)
     void onClickFlipVertical() {
         mPresenter.flipImageVertical(mCropImageView.getImageBitmap());
     }
 
-    @OnClick(R.id.buttonRotateLeft)
+    @OnClick(R.id.button_rotate_left)
     void onClickRotateLeft() {
         mCropImageView.rotateImage(CropImageView.RotateDegrees.ROTATE_M90D);
     }
 
-    @OnClick(R.id.buttonRotateRight)
+    @OnClick(R.id.button_rotate_right)
     void onClickRotateRight() {
         mCropImageView.rotateImage(CropImageView.RotateDegrees.ROTATE_90D);
     }

@@ -14,13 +14,13 @@
         android:padding="2.5dp">
 
         <ImageView
-            android:id="@+id/overlayImageView"
+            android:id="@+id/image_view_overlay"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop" />
 
         <ImageView
-            android:id="@+id/overlayChecked"
+            android:id="@+id/image_view_overlay_checked"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -33,7 +33,7 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/overlayTitle"
+            android:id="@+id/text_view_overlay_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

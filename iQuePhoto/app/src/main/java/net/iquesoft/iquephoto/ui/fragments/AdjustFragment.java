@@ -15,9 +15,8 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.adapters.AdjustAdapter;
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.core.editor.ImageEditorView;
+import net.iquesoft.iquephoto.core.ImageEditorView;
 import net.iquesoft.iquephoto.models.Adjust;
-import net.iquesoft.iquephoto.presentation.common.ToolFragment;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.AdjustPresenter;
 import net.iquesoft.iquephoto.presentation.views.fragment.AdjustView;
 import net.iquesoft.iquephoto.ui.activities.EditorActivity;
@@ -29,13 +28,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.NONE;
+import static net.iquesoft.iquephoto.core.enums.EditorTool.NONE;
 
 public class AdjustFragment extends MvpAppCompatFragment implements AdjustView {
     @InjectPresenter
     AdjustPresenter mPresenter;
 
-    @BindView(R.id.adjustRecyclerView)
+    @BindView(R.id.recycler_view_adjust)
     RecyclerView mRecyclerView;
 
     private Unbinder mUnbinder;
@@ -58,7 +57,7 @@ public class AdjustFragment extends MvpAppCompatFragment implements AdjustView {
     @Override
     public void onResume() {
         super.onResume();
-        ((ImageEditorView) getActivity().findViewById(R.id.imageEditorView))
+        ((ImageEditorView) getActivity().findViewById(R.id.image_editor_view))
                 .changeTool(NONE);
         ToolbarUtil.updateTitle(R.string.adjust, getActivity());
         ToolbarUtil.updateSubtitle(null, getActivity());

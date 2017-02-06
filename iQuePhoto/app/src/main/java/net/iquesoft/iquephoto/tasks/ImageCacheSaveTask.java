@@ -23,8 +23,6 @@ public class ImageCacheSaveTask extends AsyncTask<Void, Void, Uri> {
         void onSaveStarted();
 
         void onImageSaved(Uri uri);
-
-        void onSaveFinished();
     }
 
     public void setOnImageLoadedListener(OnImageCacheSaveListener onImageCacheSaveListener) {
@@ -76,7 +74,6 @@ public class ImageCacheSaveTask extends AsyncTask<Void, Void, Uri> {
         super.onPostExecute(uri);
 
         mOnImageCacheSaveListener.onImageSaved(uri);
-        mOnImageCacheSaveListener.onSaveFinished();
     }
 
     private File getTempFile(Context context) throws IOException {

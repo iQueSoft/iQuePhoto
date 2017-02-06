@@ -29,8 +29,8 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.core.editor.EditorListener;
-import net.iquesoft.iquephoto.core.editor.ImageEditorView;
+import net.iquesoft.iquephoto.core.EditorListener;
+import net.iquesoft.iquephoto.core.ImageEditorView;
 import net.iquesoft.iquephoto.presentation.presenters.activity.EditorActivityPresenter;
 import net.iquesoft.iquephoto.presentation.views.activity.EditorActivityView;
 import net.iquesoft.iquephoto.tasks.ImageSaveTask;
@@ -58,13 +58,13 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorActivi
     @BindView(R.id.toolbar_editor)
     Toolbar mToolbar;
 
-    @BindView(R.id.undoButton)
+    @BindView(R.id.button_undo)
     Button mUndoButton;
 
-    @BindView(R.id.imageEditorView)
+    @BindView(R.id.image_editor_view)
     ImageEditorView mImageEditorView;
 
-    @BindView(R.id.fragmentContainer)
+    @BindView(R.id.frame_layout_fragment_container)
     FrameLayout mFragmentContainer;
 
     private MenuPopupHelper mMenuPopupHelper;
@@ -84,7 +84,7 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorActivi
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            mToolbar.setNavigationIcon(R.drawable.ic_close);
+            mToolbar.setNavigationIcon(R.drawable.ic_close_white_24dp);
         }
 
         mLoadingDialog = new LoadingDialog(this);
@@ -92,11 +92,6 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorActivi
         mImageEditorView.setMvpDelegate(getMvpDelegate());
 
         mImageEditorView.setUndoListener(new EditorListener() {
-            @Override
-            public void imageProcessingStarted() {
-                mLoadingDialog.show();
-            }
-
             @Override
             public void onTransparencyHandleButtonClicked(Paint paint) {
                 setupFragment(TransparencyFragment.newInstance(paint));
@@ -113,9 +108,14 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorActivi
             }
 
             @Override
-            public void imageProcessingFinished() {
-                mLoadingDialog.dismiss();
-                onBackPressed();
+            public void onAppliedImageSaved(Uri uri) {
+                // set the image uri from cache for share this image later
+                mPresenter.setAlteredImageUri(uri);
+
+                // ToolsFragment.class.getSimpleName();
+
+                // return to ToolsFragment
+                mFragmentManager.popBackStack();
             }
         });
 
@@ -123,8 +123,9 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorActivi
 
         mFragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-        fragmentTransaction.add(mFragmentContainer.getId(), new ToolsFragment())
-                .commit();
+        fragmentTransaction.add(
+                mFragmentContainer.getId(), new ToolsFragment(), ToolsFragment.class.getSimpleName()
+        ).commit();
 
 
         Log.i("BackStack", String.valueOf(mFragmentManager.getBackStackEntryCount()));
@@ -164,13 +165,13 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorActivi
                             mPresenter.save(bitmap);
                             return true;
                         case R.id.action_instagram:
-                            mPresenter.share(bitmap, INSTAGRAM_PACKAGE_NAME);
+                            mPresenter.share(INSTAGRAM_PACKAGE_NAME);
                             return true;
                         case R.id.action_facebook:
-                            mPresenter.share(bitmap, FACEBOOK_PACKAGE_NAME);
+                            mPresenter.share(FACEBOOK_PACKAGE_NAME);
                             return true;
                         case R.id.action_more:
-                            mPresenter.share(bitmap, null);
+                            mPresenter.share(null);
                             return true;
                     }
                     return false;
@@ -208,7 +209,7 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorActivi
         if (mFragmentManager.getBackStackEntryCount() == 0) {
             mPresenter.onBackPressed(mImageEditorView.getAlteredImageBitmap());
         } else if (mFragmentManager.getBackStackEntryCount() == 1) {
-            mToolbar.setNavigationIcon(R.drawable.ic_close);
+            mToolbar.setNavigationIcon(R.drawable.ic_close_white_24dp);
             ToolbarUtil.showTitle(false, this);
             navigateBack(true);
         } else if (mFragmentManager.getBackStackEntryCount() > 1) {
@@ -309,7 +310,7 @@ public class EditorActivity extends MvpAppCompatActivity implements EditorActivi
         startActivity(intent);
     }
 
-    @OnClick(R.id.undoButton)
+    @OnClick(R.id.button_undo)
     void onClickUndo() {
         mImageEditorView.undo();
     }

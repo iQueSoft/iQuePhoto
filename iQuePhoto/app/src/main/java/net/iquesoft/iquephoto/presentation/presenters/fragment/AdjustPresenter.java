@@ -11,14 +11,16 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import dagger.Lazy;
+
 @InjectViewState
 public class AdjustPresenter extends MvpPresenter<AdjustView> {
     @Inject
-    List<Adjust> mAdjusts;
+    Lazy<List<Adjust>> mAdjusts;
 
     public AdjustPresenter() {
         App.getAppComponent().inject(this);
-        getViewState().setupAdapter(mAdjusts);
+        getViewState().setupAdapter(mAdjusts.get());
     }
 
     public void changeAdjust(Adjust adjust) {

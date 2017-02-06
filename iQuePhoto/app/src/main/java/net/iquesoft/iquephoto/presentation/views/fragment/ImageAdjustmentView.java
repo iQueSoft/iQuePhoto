@@ -4,7 +4,7 @@ import android.support.annotation.StringRes;
 
 import com.arellomobile.mvp.MvpView;
 
-import net.iquesoft.iquephoto.core.editor.enums.EditorTool;
+import net.iquesoft.iquephoto.core.enums.EditorTool;
 
 public interface ImageAdjustmentView extends MvpView {
     void changeToolbarTitle(@StringRes int title);
@@ -25,7 +25,7 @@ public interface ImageAdjustmentView extends MvpView {
 
     void onVignetteChanged(int value);
 
-    void setupImageEditorCommand(EditorTool command);
+    void setEditorTool(EditorTool tool);
 
-    void initializeSlider(int minValue, int maxValue, int value);
+    void setSeekBarValues(int minValue, int maxValue, int value);
 }

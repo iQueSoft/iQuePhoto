@@ -14,7 +14,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.core.editor.ImageEditorView;
+import net.iquesoft.iquephoto.core.ImageEditorView;
 import net.iquesoft.iquephoto.models.ParcelablePaint;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.TransparencyPresenter;
 import net.iquesoft.iquephoto.presentation.views.fragment.IntensityView;
@@ -40,7 +40,7 @@ public class TransparencyFragment extends MvpAppCompatFragment implements Intens
     TransparencyPresenter provideTransparencyPresenter() {
         return new TransparencyPresenter(getArguments());
     }
-
+    
     @BindView(R.id.transparencySeekBar)
     DiscreteSeekBar mSeekBar;
 
@@ -72,7 +72,7 @@ public class TransparencyFragment extends MvpAppCompatFragment implements Intens
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         mImageEditorView =
-                (ImageEditorView) getActivity().findViewById(R.id.imageEditorView);
+                (ImageEditorView) getActivity().findViewById(R.id.image_editor_view);
     }
 
     @Override

@@ -16,14 +16,16 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import dagger.Lazy;
+
 @InjectViewState
 public class FramesPresenter extends MvpPresenter<FramesView> {
     @Inject
-    List<Frame> mFrames;
+    Lazy<List<Frame>> mFrames;
 
     public FramesPresenter() {
         App.getAppComponent().inject(this);
-        getViewState().setupAdapter(mFrames);
+        getViewState().setupAdapter(mFrames.get());
     }
 
     public void changeOverlay(@NonNull Context context, Frame frame) {

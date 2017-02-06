@@ -13,7 +13,7 @@
     android:paddingTop="20dp">
 
     <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
-        android:id="@+id/toolSeekBar"
+        android:id="@+id/seek_bar_adjust"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -30,7 +30,7 @@
         android:id="@+id/minValueTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/toolSeekBar"
+        android:layout_below="@id/seek_bar_adjust"
         android:text="-100"
         android:textColor="@color/white"
         android:textSize="18sp"
@@ -40,7 +40,7 @@
         android:id="@+id/currentValueTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/toolSeekBar"
+        android:layout_below="@id/seek_bar_adjust"
         android:layout_centerInParent="true"
         android:text="0"
         android:textColor="@color/white"
@@ -52,7 +52,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_below="@id/toolSeekBar"
+        android:layout_below="@id/seek_bar_adjust"
         android:text="100"
         android:textColor="@color/white"
         android:textSize="18sp"

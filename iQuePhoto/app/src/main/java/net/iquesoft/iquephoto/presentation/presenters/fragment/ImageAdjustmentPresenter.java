@@ -8,11 +8,11 @@ import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.core.editor.enums.EditorTool;
+import net.iquesoft.iquephoto.core.enums.EditorTool;
 import net.iquesoft.iquephoto.presentation.views.fragment.ImageAdjustmentView;
 import net.iquesoft.iquephoto.ui.fragments.ImageAdjustmentFragment;
 
-import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.NONE;
+import static net.iquesoft.iquephoto.core.enums.EditorTool.NONE;
 
 @InjectViewState
 public class ImageAdjustmentPresenter extends MvpPresenter<ImageAdjustmentView> {
@@ -51,7 +51,7 @@ public class ImageAdjustmentPresenter extends MvpPresenter<ImageAdjustmentView> 
         }
 
         getViewState().changeToolbarTitle(getToolTitle());
-        getViewState().setupImageEditorCommand(mCurrentCommand);
+        getViewState().setEditorTool(mCurrentCommand);
     }
 
     public void progressChanged(int value) {
@@ -79,35 +79,20 @@ public class ImageAdjustmentPresenter extends MvpPresenter<ImageAdjustmentView> 
 
     private void setupSlider() {
         switch (mCurrentCommand) {
-            case BRIGHTNESS:
-                getViewState().initializeSlider(-100, 100, 0);
-                break;
-            case CONTRAST:
-                getViewState().initializeSlider(-100, 100, 0);
-                break;
-            case SATURATION:
-                getViewState().initializeSlider(-100, 100, 0);
-                break;
-            case WARMTH:
-                getViewState().initializeSlider(-100, 100, 0);
-                break;
-            case EXPOSURE:
-                getViewState().initializeSlider(-100, 100, 0);
-                break;
             case VIGNETTE:
-                getViewState().initializeSlider(-100, 100, 70);
-                break;
-            case TINT:
-                getViewState().initializeSlider(-100, 100, 0);
+                getViewState().setSeekBarValues(-100, 100, 70);
                 break;
             case TRANSFORM_HORIZONTAL:
-                getViewState().initializeSlider(-30, 30, 0);
+                getViewState().setSeekBarValues(-30, 30, 0);
                 break;
             case TRANSFORM_STRAIGHTEN:
-                getViewState().initializeSlider(-30, 30, 0);
+                getViewState().setSeekBarValues(-30, 30, 0);
                 break;
             case TRANSFORM_VERTICAL:
-                getViewState().initializeSlider(-30, 30, 0);
+                getViewState().setSeekBarValues(-30, 30, 0);
+                break;
+            default:
+                getViewState().setSeekBarValues(-100, 100, 0);
                 break;
         }
     }

@@ -6,8 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import net.iquesoft.iquephoto.R;
@@ -19,7 +21,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class ImageAlbumsAdapter extends RecyclerView.Adapter<ImageAlbumsAdapter.ViewHolder> {
-
     private Context mContext;
 
     private List<ImageAlbum> mImageAlbums;
@@ -31,7 +32,7 @@ public class ImageAlbumsAdapter extends RecyclerView.Adapter<ImageAlbumsAdapter.
     }
 
     public interface OnAlbumClickListener {
-        void onFolderClick(ImageAlbum imageAlbum);
+        void onAlbumClick(ImageAlbum imageAlbum);
     }
 
     public ImageAlbumsAdapter(List<ImageAlbum> imageAlbums) {
@@ -55,14 +56,24 @@ public class ImageAlbumsAdapter extends RecyclerView.Adapter<ImageAlbumsAdapter.
                 .load("file://" + imageAlbum.getImages().get(0).getPath())
                 .resize(250, 250)
                 .centerCrop()
-                .into(holder.folderImage);
+                .into(holder.folderImage, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        holder.progressBar.setVisibility(View.GONE);
+                    }
 
-        holder.folderName.setText(
+                    @Override
+                    public void onError() {
+
+                    }
+                });
+
+        holder.title.setText(
                 imageAlbum.getName() + " (" + String.valueOf(imageAlbum.getImages().size()) + ")"
         );
 
         holder.itemView.setOnClickListener(view -> {
-            mOnAlbumClickListener.onFolderClick(imageAlbum);
+            mOnAlbumClickListener.onAlbumClick(imageAlbum);
         });
     }
 
@@ -72,12 +83,14 @@ public class ImageAlbumsAdapter extends RecyclerView.Adapter<ImageAlbumsAdapter.
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.text_view_album_title)
+        TextView title;
 
-        @BindView(R.id.albumImageView)
+        @BindView(R.id.image_view_album_image)
         ImageView folderImage;
 
-        @BindView(R.id.albumTitleTextView)
-        TextView folderName;
+        @BindView(R.id.progress_bar_gallery_album)
+        ProgressBar progressBar;
 
         public ViewHolder(View itemView) {
             super(itemView);

@@ -12,8 +12,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapters.OverlaysAdapter;
-import net.iquesoft.iquephoto.core.editor.ImageEditorView;
-import net.iquesoft.iquephoto.presentation.common.ToolFragment;
+import net.iquesoft.iquephoto.core.ImageEditorView;
 import net.iquesoft.iquephoto.models.Overlay;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.OverlaysPresenter;
 import net.iquesoft.iquephoto.presentation.views.fragment.OverlaysView;
@@ -25,13 +24,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.OVERLAY;
+import static net.iquesoft.iquephoto.core.enums.EditorTool.OVERLAY;
 
 public class OverlaysFragment extends ToolFragment implements OverlaysView {
     @InjectPresenter
     OverlaysPresenter mPresenter;
 
-    @BindView(R.id.overlayRecyclerView)
+    @BindView(R.id.recycler_view_overlays)
     RecyclerView mRecyclerView;
 
     private Unbinder mUnbinder;
@@ -42,7 +41,7 @@ public class OverlaysFragment extends ToolFragment implements OverlaysView {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mImageEditorView =
-                (ImageEditorView) getActivity().findViewById(R.id.imageEditorView);
+                (ImageEditorView) getActivity().findViewById(R.id.image_editor_view);
     }
 
     @Override

@@ -13,10 +13,9 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapters.ColorAdapter;
 import net.iquesoft.iquephoto.adapters.SizesAdapter;
-import net.iquesoft.iquephoto.core.editor.ImageEditorView;
+import net.iquesoft.iquephoto.core.ImageEditorView;
 import net.iquesoft.iquephoto.models.BrushSize;
 import net.iquesoft.iquephoto.models.EditorColor;
-import net.iquesoft.iquephoto.presentation.common.ToolFragment;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.DrawingPresenter;
 import net.iquesoft.iquephoto.presentation.views.fragment.DrawingView;
 import net.iquesoft.iquephoto.utils.ToolbarUtil;
@@ -27,16 +26,16 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.DRAWING;
+import static net.iquesoft.iquephoto.core.enums.EditorTool.DRAWING;
 
 public class DrawingFragment extends ToolFragment implements DrawingView {
     @InjectPresenter
     DrawingPresenter mPresenter;
 
-    @BindView(R.id.sizesRecyclerView)
+    @BindView(R.id.recycler_view_sizes)
     RecyclerView mSizesRecyclerView;
 
-    @BindView(R.id.colorsRecyclerView)
+    @BindView(R.id.recycler_view_colors)
     RecyclerView mColorsRecyclerView;
 
     private Unbinder mUnbinder;
@@ -50,7 +49,7 @@ public class DrawingFragment extends ToolFragment implements DrawingView {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mImageEditorView = (ImageEditorView) getActivity().findViewById(R.id.imageEditorView);
+        mImageEditorView = (ImageEditorView) getActivity().findViewById(R.id.image_editor_view);
     }
 
     @Override

@@ -16,8 +16,7 @@ import android.widget.Toast;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.core.editor.ImageEditorView;
-import net.iquesoft.iquephoto.presentation.common.ToolFragment;
+import net.iquesoft.iquephoto.core.ImageEditorView;
 import net.iquesoft.iquephoto.models.Text;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.AddTextPresenter;
 import net.iquesoft.iquephoto.presentation.views.fragment.AddTextView;
@@ -29,16 +28,13 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.TEXT;
+import static net.iquesoft.iquephoto.core.enums.EditorTool.TEXT;
 
 public class TextFragment extends ToolFragment implements AddTextView {
     @InjectPresenter
     AddTextPresenter mPresenter;
 
-    @BindView(R.id.textSettingsLayout)
-    LinearLayout textSettingsLayout;
-
-    @BindView(R.id.textField)
+    @BindView(R.id.edit_text)
     EditText mEditText;
 
     private Context mContext;
@@ -59,7 +55,7 @@ public class TextFragment extends ToolFragment implements AddTextView {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mImageEditorView = (ImageEditorView) getActivity().findViewById(R.id.imageEditorView);
+        mImageEditorView = (ImageEditorView) getActivity().findViewById(R.id.image_editor_view);
     }
 
     @Override

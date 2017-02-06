@@ -10,11 +10,8 @@ import net.iquesoft.iquephoto.tasks.ImageFetchTask;
 
 @InjectViewState
 public class GalleryAlbumsPresenter extends MvpPresenter<GalleryAlbumsView> {
-
     public void fetchImages(Context context) {
         ImageFetchTask imageFetchTask = new ImageFetchTask(context);
-        imageFetchTask.execute();
-        
         imageFetchTask.setOnImageLoadedListener(albums -> {
             if (albums != null) {
                 getViewState().setupAdapter(albums);
@@ -22,5 +19,6 @@ public class GalleryAlbumsPresenter extends MvpPresenter<GalleryAlbumsView> {
                 getViewState().showNoImages();
             }
         });
+        imageFetchTask.execute();
     }
 }

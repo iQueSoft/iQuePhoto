@@ -13,12 +13,12 @@
         android:layout_gravity="center">
 
         <ImageView
-            android:id="@+id/filterImageView"
+            android:id="@+id/image_view_filter"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
         <ImageView
-            android:id="@+id/filterChecked"
+            android:id="@+id/image_view_filter_checked"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -27,7 +27,7 @@
     </FrameLayout>
 
     <TextView
-        android:id="@+id/filterTitle"
+        android:id="@+id/text_view_filter_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

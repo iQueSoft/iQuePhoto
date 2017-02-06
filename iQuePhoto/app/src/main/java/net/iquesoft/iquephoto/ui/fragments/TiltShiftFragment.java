@@ -8,9 +8,8 @@ import android.view.ViewGroup;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.core.editor.ImageEditorView;
-import net.iquesoft.iquephoto.core.editor.enums.EditorTool;
-import net.iquesoft.iquephoto.presentation.common.ToolFragment;
+import net.iquesoft.iquephoto.core.ImageEditorView;
+import net.iquesoft.iquephoto.core.enums.EditorTool;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.TiltShiftFragmentPresenter;
 import net.iquesoft.iquephoto.presentation.views.fragment.TiltShiftView;
 import net.iquesoft.iquephoto.utils.ToolbarUtil;
@@ -19,8 +18,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.LINEAR_TILT_SHIFT;
-import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.RADIAL_TILT_SHIFT;
+import static net.iquesoft.iquephoto.core.enums.EditorTool.LINEAR_TILT_SHIFT;
+import static net.iquesoft.iquephoto.core.enums.EditorTool.RADIAL_TILT_SHIFT;
 
 public class TiltShiftFragment extends ToolFragment implements TiltShiftView {
     @InjectPresenter
@@ -29,12 +28,12 @@ public class TiltShiftFragment extends ToolFragment implements TiltShiftView {
     private Unbinder mUnbinder;
 
     private ImageEditorView mImageEditorView;
-    
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mImageEditorView =
-                (ImageEditorView) getActivity().findViewById(R.id.imageEditorView);
+                (ImageEditorView) getActivity().findViewById(R.id.image_editor_view);
     }
 
     @Override
@@ -70,18 +69,12 @@ public class TiltShiftFragment extends ToolFragment implements TiltShiftView {
         mImageEditorView.changeTool(command);
     }
 
-    @Override
-    public void applyTiltShift(EditorTool command) {
-        mImageEditorView.applyChanges();
-        //onClickBack();
-    }
-
-    @OnClick(R.id.tiltShiftLinearButton)
+    @OnClick(R.id.button_linear_tilt_shift)
     void onClickLinear() {
         mPresenter.changeTiltShift(LINEAR_TILT_SHIFT);
     }
 
-    @OnClick(R.id.tiltShiftRadialButton)
+    @OnClick(R.id.button_radial_tilt_shift)
     void onClickRadial() {
         mPresenter.changeTiltShift(RADIAL_TILT_SHIFT);
     }

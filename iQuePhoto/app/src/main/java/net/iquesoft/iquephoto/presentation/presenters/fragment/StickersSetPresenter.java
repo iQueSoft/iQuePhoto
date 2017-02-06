@@ -1,11 +1,5 @@
 package net.iquesoft.iquephoto.presentation.presenters.fragment;
 
-import android.content.Context;
-import android.content.res.Resources;
-import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.res.ResourcesCompat;
-
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
@@ -19,14 +13,16 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import dagger.Lazy;
+
 @InjectViewState
 public class StickersSetPresenter extends MvpPresenter<StickersSetView> {
     @Inject
-    List<StickersSet> stickersSets;
+    Lazy<List<StickersSet>> mStickersSets;
 
     public StickersSetPresenter() {
         App.getAppComponent().inject(this);
-        getViewState().setupAdapter(stickersSets);
+        getViewState().setupAdapter(mStickersSets.get());
     }
 
     public void stickersSetClicked(StickersSet stickersSet) {

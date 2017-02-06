@@ -12,9 +12,8 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
 
 import net.iquesoft.iquephoto.R;
-import net.iquesoft.iquephoto.core.editor.ImageEditorView;
-import net.iquesoft.iquephoto.core.editor.enums.EditorTool;
-import net.iquesoft.iquephoto.presentation.common.ToolFragment;
+import net.iquesoft.iquephoto.core.ImageEditorView;
+import net.iquesoft.iquephoto.core.enums.EditorTool;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.ImageAdjustmentPresenter;
 import net.iquesoft.iquephoto.presentation.views.fragment.ImageAdjustmentView;
 import net.iquesoft.iquephoto.utils.ToolbarUtil;
@@ -45,7 +44,7 @@ public class ImageAdjustmentFragment extends ToolFragment implements ImageAdjust
     @BindView(R.id.maxValueTextView)
     TextView mMaxValueTextView;
 
-    @BindView(R.id.toolSeekBar)
+    @BindView(R.id.seek_bar_adjust)
     DiscreteSeekBar mToolSeekBar;
 
     private Unbinder mUnbinder;
@@ -69,7 +68,7 @@ public class ImageAdjustmentFragment extends ToolFragment implements ImageAdjust
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mImageEditorView =
-                (ImageEditorView) getActivity().findViewById(R.id.imageEditorView);
+                (ImageEditorView) getActivity().findViewById(R.id.image_editor_view);
     }
 
     @Override
@@ -151,19 +150,19 @@ public class ImageAdjustmentFragment extends ToolFragment implements ImageAdjust
     public void onStraightenTransformChanged(int value) {
         mImageEditorView.setStraightenTransformValue(value);
     }
-    
+
     @Override
     public void onVignetteChanged(int value) {
         mImageEditorView.setVignetteIntensity(value);
     }
 
     @Override
-    public void setupImageEditorCommand(EditorTool command) {
-        mImageEditorView.changeTool(command);
+    public void setEditorTool(EditorTool tool) {
+        mImageEditorView.changeTool(tool);
     }
 
     @Override
-    public void initializeSlider(int minValue, int maxValue, int value) {
+    public void setSeekBarValues(int minValue, int maxValue, int value) {
         mToolSeekBar.setMin(minValue);
         mMinValueTextView.setText(String.valueOf(minValue));
 

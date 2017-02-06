@@ -13,9 +13,8 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapters.FontsAdapter;
-import net.iquesoft.iquephoto.core.editor.ImageEditorView;
+import net.iquesoft.iquephoto.core.ImageEditorView;
 import net.iquesoft.iquephoto.models.Font;
-import net.iquesoft.iquephoto.presentation.common.ToolFragment;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.FontsPresenter;
 import net.iquesoft.iquephoto.presentation.views.fragment.FontsView;
 import net.iquesoft.iquephoto.utils.ToolbarUtil;
@@ -26,7 +25,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.TEXT;
+import static net.iquesoft.iquephoto.core.enums.EditorTool.TEXT;
 
 public class FontsFragment extends ToolFragment implements FontsView {
     @InjectPresenter
@@ -46,7 +45,7 @@ public class FontsFragment extends ToolFragment implements FontsView {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mImageEditorView = (ImageEditorView) getActivity().findViewById(R.id.imageEditorView);
+        mImageEditorView = (ImageEditorView) getActivity().findViewById(R.id.image_editor_view);
     }
 
     @Override

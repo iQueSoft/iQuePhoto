@@ -18,7 +18,7 @@ import butterknife.ButterKnife;
 
 public class AdjustAdapter extends RecyclerView.Adapter<AdjustAdapter.ViewHolder> {
     private Context mContext;
-
+    
     private List<Adjust> mAdjustList;
 
     private OnAdjustClickListener mOnAdjustClickListener;
@@ -48,14 +48,12 @@ public class AdjustAdapter extends RecyclerView.Adapter<AdjustAdapter.ViewHolder
     public void onBindViewHolder(AdjustAdapter.ViewHolder holder, int position) {
         final Adjust adjust = mAdjustList.get(position);
 
-        holder.adjustButton.setText(mContext.getText(adjust.getTitle()));
-        holder.adjustButton.setCompoundDrawablesWithIntrinsicBounds(null,
+        holder.button.setText(mContext.getText(adjust.getTitle()));
+        holder.button.setCompoundDrawablesWithIntrinsicBounds(null,
                 ResourcesCompat.getDrawable(mContext.getResources(), adjust.getIcon(), null),
                 null, null);
 
-        holder.adjustButton.setOnClickListener(view -> {
-            mOnAdjustClickListener.onAdjustClick(adjust);
-        });
+        holder.button.setOnClickListener(view -> mOnAdjustClickListener.onAdjustClick(adjust));
     }
 
     @Override
@@ -64,8 +62,8 @@ public class AdjustAdapter extends RecyclerView.Adapter<AdjustAdapter.ViewHolder
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.adjustButton)
-        Button adjustButton;
+        @BindView(R.id.button_adjust)
+        Button button;
 
         ViewHolder(View itemView) {
             super(itemView);

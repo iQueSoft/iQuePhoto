@@ -51,18 +51,18 @@ public class ColorAdapter extends RecyclerView.Adapter<ColorAdapter.ViewHolder> 
     public void onBindViewHolder(ColorAdapter.ViewHolder holder, int position) {
         final EditorColor color = mEditorColorsList.get(position);
 
-        holder.colorView.setImageDrawable(new ColorCircleDrawable(
+        holder.imageView.setImageDrawable(new ColorCircleDrawable(
                 ResourcesCompat.getColor(mContext.getResources(), color.getColor(), null))
         );
 
         if (mSelectedColorPosition == holder.getAdapterPosition()) {
             mOnColorClickListener.onClick(color);
-            ((ColorCircleDrawable) holder.colorView.getDrawable()).setSelected(true);
+            ((ColorCircleDrawable) holder.imageView.getDrawable()).setSelected(true);
         } else {
-            ((ColorCircleDrawable) holder.colorView.getDrawable()).setSelected(false);
+            ((ColorCircleDrawable) holder.imageView.getDrawable()).setSelected(false);
         }
 
-        holder.colorView.setOnClickListener(view -> {
+        holder.imageView.setOnClickListener(view -> {
             notifyItemChanged(mSelectedColorPosition);
             mSelectedColorPosition = holder.getAdapterPosition();
             notifyItemChanged(holder.getAdapterPosition());
@@ -76,8 +76,8 @@ public class ColorAdapter extends RecyclerView.Adapter<ColorAdapter.ViewHolder> 
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.colorImageView)
-        ImageView colorView;
+        @BindView(R.id.image_view_color)
+        ImageView imageView;
 
         public ViewHolder(View itemView) {
             super(itemView);

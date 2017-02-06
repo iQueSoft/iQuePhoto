@@ -57,7 +57,7 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ViewHolder
                 .load("file://" + image.getPath())
                 .resize(250, 250)
                 .centerCrop()
-                .into(holder.galleryImage, new Callback() {
+                .into(holder.image, new Callback() {
                     @Override
                     public void onSuccess() {
                         holder.progressBar.setVisibility(View.GONE);
@@ -69,7 +69,7 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ViewHolder
                     }
                 });
 
-        holder.galleryImage.setOnClickListener(v -> mListener.onClick(image));
+        holder.image.setOnClickListener(v -> mListener.onClick(image));
     }
 
     @Override
@@ -78,10 +78,10 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ViewHolder
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.galleryImage)
-        ImageView galleryImage;
+        @BindView(R.id.image_view_gallery_image)
+        ImageView image;
 
-        @BindView(R.id.galleryImageProgressBar)
+        @BindView(R.id.progress_bar_gallery_image)
         ProgressBar progressBar;
 
         public ViewHolder(View itemView) {

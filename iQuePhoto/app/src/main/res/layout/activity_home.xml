@@ -20,7 +20,7 @@
         android:textStyle="bold" />
 
     <Button
-        android:id="@+id/galleryButton"
+        android:id="@+id/gallery_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignEnd="@+id/applicationName"
@@ -28,7 +28,7 @@
         android:layout_below="@+id/applicationName"
         android:layout_marginTop="59dp"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:drawableTop="@drawable/ic_gallery"
+        android:drawableTop="@drawable/ic_gallery_white_100dp"
         android:text="@string/gallery"
         android:textAllCaps="false"
         android:textColor="@color/white"
@@ -36,11 +36,11 @@
         android:textStyle="bold" />
 
     <Button
-        android:id="@+id/cameraButton"
+        android:id="@+id/button_camera"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/galleryButton"
-        android:layout_alignBottom="@+id/galleryButton"
+        android:layout_alignBaseline="@+id/gallery_button"
+        android:layout_alignBottom="@+id/gallery_button"
         android:layout_alignLeft="@+id/applicationName"
         android:layout_alignStart="@+id/applicationName"
         android:background="?attr/selectableItemBackgroundBorderless"

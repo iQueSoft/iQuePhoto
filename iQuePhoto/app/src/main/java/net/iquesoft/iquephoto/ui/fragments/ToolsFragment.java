@@ -13,7 +13,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapters.ToolsAdapter;
-import net.iquesoft.iquephoto.core.editor.ImageEditorView;
+import net.iquesoft.iquephoto.core.ImageEditorView;
 import net.iquesoft.iquephoto.models.Tool;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.ToolsPresenter;
 import net.iquesoft.iquephoto.presentation.views.fragment.ToolsView;
@@ -25,13 +25,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.NONE;
+import static net.iquesoft.iquephoto.core.enums.EditorTool.NONE;
 
 public class ToolsFragment extends MvpAppCompatFragment implements ToolsView {
     @InjectPresenter
     ToolsPresenter mPresenter;
 
-    @BindView(R.id.toolsRecyclerView)
+    @BindView(R.id.recycler_view_tools)
     RecyclerView mRecyclerView;
 
     private Unbinder mUnbinder;
@@ -54,10 +54,10 @@ public class ToolsFragment extends MvpAppCompatFragment implements ToolsView {
     public void onResume() {
         super.onResume();
         ImageEditorView imageEditorView =
-                (ImageEditorView) getActivity().findViewById(R.id.imageEditorView);
+                (ImageEditorView) getActivity().findViewById(R.id.image_editor_view);
         imageEditorView.changeTool(NONE);
 
-        Button undoButton = (Button) getActivity().findViewById(R.id.undoButton);
+        Button undoButton = (Button) getActivity().findViewById(R.id.button_undo);
 
         if (undoButton.getText().equals("0")) {
             undoButton.setVisibility(View.GONE);

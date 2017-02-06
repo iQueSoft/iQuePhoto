@@ -12,9 +12,8 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import net.iquesoft.iquephoto.R;
 import net.iquesoft.iquephoto.adapters.StickerSetAdapter;
-import net.iquesoft.iquephoto.core.editor.ImageEditorView;
+import net.iquesoft.iquephoto.core.ImageEditorView;
 import net.iquesoft.iquephoto.models.Sticker;
-import net.iquesoft.iquephoto.presentation.common.ToolFragment;
 import net.iquesoft.iquephoto.models.StickersSet;
 import net.iquesoft.iquephoto.presentation.presenters.fragment.StickersSetPresenter;
 import net.iquesoft.iquephoto.presentation.views.fragment.StickersSetView;
@@ -28,7 +27,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-import static net.iquesoft.iquephoto.core.editor.enums.EditorTool.STICKERS;
+import static net.iquesoft.iquephoto.core.enums.EditorTool.STICKERS;
 
 public class StickersSetFragment extends ToolFragment implements StickersSetView {
     @InjectPresenter
@@ -44,7 +43,7 @@ public class StickersSetFragment extends ToolFragment implements StickersSetView
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mImageEditorView = (ImageEditorView) getActivity().findViewById(R.id.imageEditorView);
+        mImageEditorView = (ImageEditorView) getActivity().findViewById(R.id.image_editor_view);
     }
 
     @Override

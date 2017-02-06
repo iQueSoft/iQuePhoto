@@ -1,34 +1,28 @@
 package net.iquesoft.iquephoto.ui.activities;
 
-import android.Manifest;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.provider.Settings;
+import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
-import android.widget.TextView;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
-import com.tbruyelle.rxpermissions.RxPermissions;
 
 import net.iquesoft.iquephoto.R;
+import net.iquesoft.iquephoto.presentation.presenters.activity.HomeActivityPresenter;
 import net.iquesoft.iquephoto.presentation.views.activity.HomeView;
-import net.iquesoft.iquephoto.presentation.presenters.activity.HomePresenter;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-// TODO: Make real time permissions without RxPermission library.
 public class HomeActivity extends MvpAppCompatActivity implements HomeView {
-    private static final int REQ_CAMERA = 1;
+    public static final int REQ_CAMERA = 1;
 
     @InjectPresenter
-    HomePresenter mPresenter;
-
-    @BindView(R.id.applicationName)
-    TextView applicationTextView;
+    HomeActivityPresenter mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,79 +33,58 @@ public class HomeActivity extends MvpAppCompatActivity implements HomeView {
         ButterKnife.bind(this);
     }
 
-    @OnClick(R.id.cameraButton)
+    @OnClick(R.id.button_camera)
     void onClickCamera() {
-        mPresenter.openCamera();
+        mPresenter.openCamera(this);
     }
 
-    @OnClick(R.id.galleryButton)
+    @OnClick(R.id.gallery_button)
     void onClickGallery() {
-        mPresenter.openGallery();
+        mPresenter.openGallery(this);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Intent intent = new Intent(HomeActivity.this, PreviewActivity.class);
-
-        switch (requestCode) {
-            case REQ_CAMERA:
-                startActivity(intent);
-                break;
-        }
+        mPresenter.startEditing(requestCode, resultCode);
     }
-    
+
     @Override
     public void startGallery() {
-        RxPermissions.getInstance(this)
-                .request(Manifest.permission.READ_EXTERNAL_STORAGE)
-                .subscribe(granted -> {
-                    if (granted) {
-                        Intent intent = new Intent(HomeActivity.this, GalleryActivity.class);
-                        startActivity(intent);
-                    } else {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AlertDialog)
-                                .setTitle(getString(R.string.permission_denied))
-                                .setMessage(getString(R.string.read_storage_permission))
-                                .setPositiveButton(getString(R.string.go_to_app_settings), (dialogInterface, i) -> {
-                                    Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + "net.iquesoft.iquephoto"));
-                                    intent.addCategory(Intent.CATEGORY_DEFAULT);
-                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    startActivity(intent);
-                                    finish();
-                                })
-                                .setNegativeButton(getString(R.string.ok), (dialogInterface, i1) -> {
-                                    dialogInterface.dismiss();
-                                });
-                        builder.show();
-                    }
-                });
+        Intent intent = new Intent(HomeActivity.this, GalleryActivity.class);
+        startActivity(intent);
     }
 
     @Override
-    public void startCamera() {
-        RxPermissions.getInstance(this)
-                .request(Manifest.permission.CAMERA)
-                .subscribe(granted -> {
-                    if (granted) {
-                        /*Intent intent = new Intent(HomeActivity.this, CameraActivity.class);
-                        startActivity(intent);*/
-                    } else {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AlertDialog)
-                                .setTitle(getString(R.string.permission_denied))
-                                .setMessage(getString(R.string.camera_storage_permission))
-                                .setPositiveButton(getString(R.string.go_to_app_settings), (dialogInterface, i) -> {
-                                    Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + "net.iquesoft.iquephoto"));
-                                    intent.addCategory(Intent.CATEGORY_DEFAULT);
-                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    startActivity(intent);
-                                    finish();
-                                })
-                                .setNegativeButton(getString(R.string.ok), (dialogInterface, i1) -> {
-                                    dialogInterface.dismiss();
-                                });
-                        builder.show();
-                    }
-                });
+    public void startCamera(Uri uri) {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+            startActivityForResult(intent, REQ_CAMERA);
+        }
+    }
+
+    @Override
+    public void startEditing(String photoPath) {
+        Intent intent = new Intent(HomeActivity.this, PreviewActivity.class);
+        intent.putExtra(PreviewActivity.IMAGE_PATH, photoPath);
+        startActivity(intent);
+    }
+
+    @Override
+    public void showPermissionDenied(@StringRes int message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AlertDialog)
+                .setTitle(getString(R.string.permission_denied))
+                .setMessage(getString(message))
+                .setPositiveButton(getString(R.string.go_to_app_settings), (dialogInterface, i) -> {
+                    Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                            Uri.parse("package:" + "net.iquesoft.iquephoto"));
+                    intent.addCategory(Intent.CATEGORY_DEFAULT);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                    finish();
+                })
+                .setNegativeButton(getString(R.string.dismiss), (dialogInterface, i1) -> dialogInterface.dismiss());
+        builder.show();
     }
 }

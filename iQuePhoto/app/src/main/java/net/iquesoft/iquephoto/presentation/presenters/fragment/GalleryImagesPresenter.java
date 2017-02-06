@@ -12,7 +12,6 @@ import net.iquesoft.iquephoto.ui.fragments.GalleryImagesFragment;
 
 @InjectViewState
 public class GalleryImagesPresenter extends MvpPresenter<GalleryImagesView> {
-
     public GalleryImagesPresenter(@NonNull Bundle bundle) {
         setupAlbumImages(bundle);
     }
@@ -28,6 +27,4 @@ public class GalleryImagesPresenter extends MvpPresenter<GalleryImagesView> {
     public void setImageForEdit(Image image) {
         getViewState().editImage(image.getPath());
     }
-
-
 }

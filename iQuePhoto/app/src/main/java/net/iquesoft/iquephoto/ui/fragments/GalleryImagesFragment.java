@@ -37,22 +37,21 @@ public class GalleryImagesFragment extends MvpAppCompatFragment implements Galle
         return new GalleryImagesPresenter(getArguments());
     }
 
-    @BindView(R.id.imagesRecyclerView)
+    @BindView(R.id.recycler_view_images)
     RecyclerView mRecyclerView;
 
     private Unbinder mUnbinder;
 
     public static GalleryImagesFragment newInstance(ArrayList<Image> images) {
-        GalleryImagesFragment fragment = new GalleryImagesFragment();
-
         Bundle args = new Bundle();
         args.putParcelableArrayList(ARG_PARAM, images);
 
+        GalleryImagesFragment fragment = new GalleryImagesFragment();
         fragment.setArguments(args);
 
         return fragment;
     }
-
+    
     public GalleryImagesFragment() {
     }
 
@@ -75,9 +74,7 @@ public class GalleryImagesFragment extends MvpAppCompatFragment implements Galle
     public void setupAdapter(List<Image> images) {
         ImagesAdapter adapter = new ImagesAdapter(images);
 
-        adapter.setOnImageClickListener(image -> {
-            mPresenter.setImageForEdit(image);
-        });
+        adapter.setOnImageClickListener(image -> mPresenter.setImageForEdit(image));
 
         mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
         mRecyclerView.setAdapter(adapter);
@@ -85,7 +82,7 @@ public class GalleryImagesFragment extends MvpAppCompatFragment implements Galle
 
     @Override
     public void editImage(String imagePath) {
-        Intent intent = new Intent("app.intent.action.Preview");
+        Intent intent = new Intent(getActivity(), PreviewActivity.class);
         intent.putExtra(PreviewActivity.IMAGE_PATH, imagePath);
         startActivity(intent);
         getActivity().finish();

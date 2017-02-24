@@ -337,7 +337,8 @@ public class ImageEditorViewPresenter extends MvpPresenter<EditorView> {
     }
 
     void applyChanges(@NonNull Bitmap bitmap) {
-        mImages.add(new EditorImage(mCurrentTool, bitmap));
+        Bitmap b = Bitmap.createBitmap(bitmap);
+        mImages.add(new EditorImage(mCurrentTool, b));
 
         ImageCacheSaveTask imageCacheSaveTask = new ImageCacheSaveTask(mContext, bitmap);
         imageCacheSaveTask.setOnImageLoadedListener(new ImageCacheSaveTask.OnImageCacheSaveListener() {

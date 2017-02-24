@@ -58,8 +58,8 @@ public class FiltersFragment extends ToolFragment implements FiltersView {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         mImageEditorView = (ImageEditorView) getActivity().findViewById(R.id.image_editor_view);
+        super.onCreate(savedInstanceState);
     }
 
     @Override
